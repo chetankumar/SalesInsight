@@ -1,0 +1,45 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.CompanyView
+
+<table class="data_table table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Active</th>
+            @if (ViewBag.AccessRule.HasStatusesReasonsLostAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+            {
+                <th></th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (RedHill.SalesInsight.Web.Html5.Models.ReasonLossView c in Model.ReasonsForLoss)
+        {
+            <tr>
+                <td>@c.Reason</td>
+                <td>
+                    @{
+            if (@c.Active)
+            {
+                <span class="glyphicon glyphicon-ok">
+                    @if (@c.Active)
+                    {<span style="display:none">1</span>}
+                </span>
+            }
+            else
+            {
+                <span class="glyphicon glyphicon-remove"></span>
+            }
+                }
+            </td>
+            @if (ViewBag.AccessRule.HasStatusesReasonsLostAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+            {
+                <td>
+                    <a href="/Home/EditReasonsForLoss/@c.ReasonLossId" class="btn btn-xs btn-primary" title="Edit Reason">
+                        <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                </td>
+            }
+        </tr>
+        }
+    </tbody>
+</table>

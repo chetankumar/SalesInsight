@@ -1,0 +1,160 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ProjectView
+@using (Html.BeginForm("UpdateJobInformation", "Home", FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @Html.HiddenFor(m => m.ProjectId)
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="control-label col-sm-3">Address</label>
+            <div class="col-sm-9">
+                @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-3">City</label>
+            <div class="col-sm-9">
+                @Html.TextBoxFor(m => m.City, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-3">State</label>
+            <div class="col-sm-3">
+                @Html.TextBoxFor(m => m.State, new { @class = "form-control" })
+            </div>
+            <label class="control-label col-sm-3">ZipCode</label>
+            <div class="col-sm-3">
+                @Html.TextBoxFor(m => m.Zipcode, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-3">To Job</label>
+            <div class="col-sm-3">
+                <div class="input-group">
+                    @Html.TextBoxFor(m => m.ToJobMinutes, new { @class = "form-control" })
+                    <span class="input-group-addon">mins</span>
+                </div>
+                <label class="field_error">@Html.ValidationMessageFor(model => model.ToJobMinutes)</label>
+            </div>
+            <label class="control-label col-sm-3">Wait on Job</label>
+            <div class="col-sm-3">
+                <div class="input-group">
+                    @Html.TextBoxFor(m => m.WaitOnJob, new { @class = "form-control" })
+                    <span class="input-group-addon">mins</span>
+                </div>
+                <label class="field_error">@Html.ValidationMessageFor(model => model.WaitOnJob)</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-3">Wash</label>
+            <div class="col-sm-3">
+                <div class="input-group">
+                    @Html.TextBoxFor(m => m.WashMinutes, new { @class = "form-control" })
+                    <span class="input-group-addon">mins</span>
+                </div>
+                <label class="field_error">@Html.ValidationMessageFor(model => model.WashMinutes)</label>
+            </div>
+            <label class="control-label col-sm-3">Return</label>
+            <div class="col-sm-3">
+                <div class="input-group">
+                    @Html.TextBoxFor(m => m.ReturnMinutes, new { @class = "form-control" })
+                    <span class="input-group-addon">mins</span>
+                </div>
+                <label class="field_error">@Html.ValidationMessageFor(model => model.ReturnMinutes)</label>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="control-label col-sm-3">Customer Job Ref</label>
+            <div class="col-sm-9">
+                @Html.TextBoxFor(m => m.CustomerRefName, new { @class = "form-control" })
+                <label class="field_error">@Html.ValidationMessageFor(model => model.CustomerRefName)</label>
+            </div>
+        </div>
+    </div>
+    
+    
+    <div class="form-group">
+        <div class="col-sm-12 ">
+            <input type="submit" class="pull-right btn btn-primary" id="bid_info_save_btn" value="Update" />
+        </div>
+    </div>
+}
+<br />
+<script type="text/ecmascript">
+    $(document).ready(function () {
+        $("#bid_info_save_btn").click(function () {
+            try {
+                removeCommas("Profit");
+                removeCommas("Spread");
+                removeCommas("Price");
+                removeCommas("Volume");
+                removeCommas("Valuation");
+                removeCommas("ToJobMinutes");
+                removeCommas("WashMinutes");
+                removeCommas("ReturnMinutes");
+                
+
+                p1 = parseInt($("#Profit").val());
+                p2 = parseInt($("#Spread").val());
+                p3 = parseInt($("#Price").val());
+                toJob = parseInt($("#ToJobMinutes").val());
+                wash = parseInt($("#WashMinutes").val());
+                ret = parseInt($("#ReturnMinutes").val());
+                waitOnJob = 10;
+                unload = 20;
+                
+                concern = true;
+                if (p1 > 1000) {
+                    concern = confirm("That's a pretty big 'per yard' value for Profit. Are you sure?");
+                    console.log(concern);
+                }
+                if (p2 > 1000) {
+                    concern = concern && confirm("That's a pretty big 'per yard' value for Spread. Are you sure?");
+                    console.log(concern);
+                }
+                if (p3 > 1000) {
+                    concern = concern && confirm("That's a pretty big 'per yard' value for Price. Are you sure?");
+                    console.log(concern);
+                }
+                if (toJob > 120) {
+                    concern = confirm("That's a lot of minutes for To Job. Are you sure?");
+                    console.log(concern);
+                }
+                if (wash > 60) {
+                    concern = concern && confirm("That's a lot of minutes for Wash. Are you sure?");
+                    console.log(concern);
+                }
+                if (waitOnJob > 20) {
+                    concern = confirm("That's a lot of minutes for To Job. Are you sure?");
+                    console.log(concern);
+                }
+                if (unload > 20) {
+                    concern = concern && confirm("That's a lot of minutes for Unload. Are you sure?");
+                    console.log(concern);
+                }
+                if (ret > 120) {
+                    concern = concern && confirm("That's a lot of minutes for Return. Are you sure?");
+                    console.log(concern);
+                }
+                if (!concern) {
+                    return false;
+                }
+            }
+            catch (ex) {
+                console.log(ex);
+                alert("Please check the values");
+                return false;
+            }
+        });
+        function removeCommas(id) {
+            element = $("#" + id);
+            value = element.val();
+            value = value.replace(/\,/g, '');
+            element.val(value);
+        }
+    });
+
+</script>
+
+
+

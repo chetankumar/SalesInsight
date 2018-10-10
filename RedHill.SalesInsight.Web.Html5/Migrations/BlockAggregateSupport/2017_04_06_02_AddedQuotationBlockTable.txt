@@ -1,0 +1,48 @@
+﻿/****** Object:  Table [dbo].[QuotationBlock]    Script Date: 06-04-2017 12:08:30 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[QuotationBlock](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[QuotationId] [bigint] NULL,
+	[Position] [int] NULL,
+	[BlockProductId] [bigint] NULL,
+	[QuotedDescription] [text] NULL,
+	[Volume] [float] NULL,
+	[Price] [money] NULL,
+	[AvgLoad] [float] NULL,
+	[AddonCost] [money] NULL,
+	[MixCost] [money] NULL,
+	[Unload] [int] NULL,
+	[Spread] [money] NULL,
+	[Contribution] [money] NULL,
+	[Profit] [money] NULL,
+	[PrivateNotes] [text] NULL,
+	[PublicNotes] [text] NULL,
+	[CydHour] [float] NULL,
+	[CreatedAt] [DateTime] NULL
+ CONSTRAINT [PK_QuotationBlock] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[QuotationBlock]  WITH NOCHECK ADD  CONSTRAINT [FK_QuotationBlock_BlockProduct] FOREIGN KEY([BlockProductId])
+REFERENCES [dbo].[BlockProduct] ([Id])
+GO
+
+ALTER TABLE [dbo].[QuotationBlock] CHECK CONSTRAINT [FK_QuotationBlock_BlockProduct]
+GO
+
+ALTER TABLE [dbo].[QuotationBlock]  WITH NOCHECK ADD  CONSTRAINT [FK_QuotationBlock_Quotation] FOREIGN KEY([QuotationId])
+REFERENCES [dbo].[Quotation] ([Id])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[QuotationBlock] CHECK CONSTRAINT [FK_QuotationBlock_Quotation]
+GO

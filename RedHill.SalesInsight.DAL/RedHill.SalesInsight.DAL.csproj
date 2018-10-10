@@ -1,0 +1,278 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D889292A-ED90-46AB-9AB2-85DFADCE61E6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RedHill.SalesInsight.DAL</RootNamespace>
+    <AssemblyName>RedHill.SalesInsight.DAL</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EPPlus">
+      <HintPath>..\RedHill.SalesInsight.Web.Html5\bin\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.Entity">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Attributes\DisplayAttribute.cs" />
+    <Compile Include="Constants\ESIPeriodType.cs" />
+    <Compile Include="Constants\ESIReportType.cs" />
+    <Compile Include="DataClasses1.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataClasses1.dbml</DependentUpon>
+    </Compile>
+    <Compile Include="DataTypes\ActualsHistory.cs" />
+    <Compile Include="DataTypes\PasswordHistoryLimit.cs" />
+    <Compile Include="DataTypes\ProductType.cs" />
+    <Compile Include="DataTypes\SIMarketSegment.cs" />
+    <Compile Include="DataTypes\SIMixFormulationCalculations.cs" />
+    <Compile Include="DataTypes\SIMixIngredientPriceSheet.cs" />
+    <Compile Include="DataTypes\SINotificationStatuses.cs" />
+    <Compile Include="DataTypes\SICustomer.cs" />
+    <Compile Include="DataTypes\SICustomerContact.cs" />
+    <Compile Include="DataTypes\SIAdditionalProduct.cs" />
+    <Compile Include="DataTypes\SIAdditionalProductPlant.cs" />
+    <Compile Include="DataTypes\SIAdditionalProductSummary.cs" />
+    <Compile Include="DataTypes\SIConcreteProduct.cs" />
+    <Compile Include="DataTypes\SIConcreteProductPlant.cs" />
+    <Compile Include="DataTypes\SIConcreteProductSummary.cs" />
+    <Compile Include="DataTypes\SIForecastResults.cs" />
+    <Compile Include="DataTypes\SIPipelineResults.cs" />
+    <Compile Include="DataTypes\SIProject.cs" />
+    <Compile Include="DataTypes\SIProjectSuccessMajorJobSummary.cs" />
+    <Compile Include="DataTypes\SIProjectSuccessMarketShareSummary.cs" />
+    <Compile Include="DataTypes\SIProjectSuccessSalesStaffSummary.cs" />
+    <Compile Include="DataTypes\SIForecastProject.cs" />
+    <Compile Include="DataTypes\SIForecastProjects.cs" />
+    <Compile Include="DataTypes\SIForecastVersusPlan.cs" />
+    <Compile Include="DataTypes\SIOperation.cs" />
+    <Compile Include="DataTypes\SIOperationType.cs" />
+    <Compile Include="DataTypes\SIPipelineProject.cs" />
+    <Compile Include="DataTypes\SIPlantProjections.cs" />
+    <Compile Include="DataTypes\SIPlantTargetColumn.cs" />
+    <Compile Include="DataTypes\SIPlantTargetOperation.cs" />
+    <Compile Include="DataTypes\SIPlantTargetOperationType.cs" />
+    <Compile Include="DataTypes\SIPlantTargetRow.cs" />
+    <Compile Include="DataTypes\SIPlantTargetColumnType.cs" />
+    <Compile Include="DataTypes\SIProductType.cs" />
+    <Compile Include="DataTypes\SIProjectedActualAssetProductivity.cs" />
+    <Compile Include="DataTypes\SIProjectionAccuracy.cs" />
+    <Compile Include="DataTypes\SIProjectProjection.cs" />
+    <Compile Include="DataTypes\SIQuotationMixIngredient.cs" />
+    <Compile Include="DataTypes\SISalesStaff.cs" />
+    <Compile Include="DataTypes\SISaveCustomerStatus.cs" />
+    <Compile Include="DataTypes\SISavedProduct.cs" />
+    <Compile Include="DataTypes\SISegmentationAnalysis.cs" />
+    <Compile Include="DataTypes\SIStandardMixPlant.cs" />
+    <Compile Include="DataTypes\SIStatusType.cs" />
+    <Compile Include="DataTypes\SISuperUserSettings.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DataTypes\SIUser.cs" />
+    <Compile Include="DataTypes\SIUserPasswordVerification.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DataTypes\SIViewProjectBidderDetails.cs" />
+    <Compile Include="DataTypes\SIViewProjectCompetitorDetails.cs" />
+    <Compile Include="DataTypes\SIViewProjectDetails.cs" />
+    <Compile Include="DataTypes\SIViewProjectNoteDetails.cs" />
+    <Compile Include="DataTypes\SIViewProjectPlants.cs" />
+    <Compile Include="DataTypes\SIViewProjectProjectionDetails.cs" />
+    <Compile Include="DataTypes\SIViewProjectSalesStaffDetails.cs" />
+    <Compile Include="Enumerations.cs" />
+    <Compile Include="Models\AggregateProduct.cs" />
+    <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="Models\APIFetchHistory.cs" />
+    <Compile Include="Models\AddOn.cs" />
+    <Compile Include="Models\BlockProduct.cs" />
+    <Compile Include="Models\POCO\AutoCompleteBasic.cs" />
+    <Compile Include="Models\Comparers.cs" />
+    <Compile Include="Models\POCO\ChatMessageModel.cs" />
+    <Compile Include="Models\POCO\ChatNotificationItem.cs" />
+    <Compile Include="Models\POCO\ChatNotificationModel.cs" />
+    <Compile Include="Models\POCO\ChatSubscriber.cs" />
+    <Compile Include="Models\POCO\CustomerBasic.cs" />
+    <Compile Include="Models\POCO\ProjectBasic.cs" />
+    <Compile Include="Models\POCO\ReportDimensionConfig.cs" />
+    <Compile Include="Models\POCO\SyncHistory.cs" />
+    <Compile Include="Models\RawMaterial.cs" />
+    <Compile Include="Models\RawMaterialCostProjection.cs" />
+    <Compile Include="Models\ReportConfiguration.cs" />
+    <Compile Include="Models\StandardMixConstituents.cs" />
+    <Compile Include="SalesInsight.cs">
+      <DependentUpon>SalesInsight.dbml</DependentUpon>
+    </Compile>
+    <Compile Include="SalesInsight.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SalesInsight.dbml</DependentUpon>
+    </Compile>
+    <Compile Include="SalesInsightDataContext.cs" />
+    <Compile Include="DataTypes\SIRoleAccess.cs" />
+    <Compile Include="SalesInsight_LiveDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SalesInsight_LiveDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="ESI_SIDAL.cs" />
+    <Compile Include="SIDAL2.cs" />
+    <Compile Include="DataTypes\SIMixIngredientPriceSheetRow.cs" />
+    <Compile Include="Utilities\DateUtils.cs" />
+    <Compile Include="Utilities\DynamicLibrary.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="SIDAL.cs" />
+    <Compile Include="Utilities\ExcelImporter.cs" />
+    <Compile Include="Utilities\FileUtils.cs" />
+    <Compile Include="Utilities\MailerUtils.cs" />
+    <Compile Include="Utilities\PasswordUtility.cs" />
+    <Compile Include="Utilities\PredicateBuilder.cs" />
+    <Compile Include="Utilities\ReflectionUtils.cs" />
+    <Compile Include="Utilities\RegexUtils.cs" />
+    <Compile Include="Utilities\SIBusinessUnits.cs" />
+    <Compile Include="Utilities\SIDeepCopy.cs" />
+    <Compile Include="Utilities\SIProfitability.cs" />
+    <Compile Include="Utilities\SIRijndael.cs" />
+    <Compile Include="Utilities\SIRolePermissionLevelConstants.cs" />
+    <Compile Include="Utilities\StringUtils.cs" />
+    <Compile Include="Utilities\TokenValidation.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DataClasses1.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>DataClasses1.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DataClasses1.dbml.layout">
+      <DependentUpon>DataClasses1.dbml</DependentUpon>
+    </None>
+    <None Include="packages.config" />
+    <None Include="SalesInsight_LiveDataSet.xsc">
+      <DependentUpon>SalesInsight_LiveDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="SalesInsight_LiveDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>SalesInsight_LiveDataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="SalesInsight_LiveDataSet.xss">
+      <DependentUpon>SalesInsight_LiveDataSet.xsd</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="SalesInsight.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>SalesInsight.designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SalesInsight.dbml.layout">
+      <DependentUpon>SalesInsight.dbml</DependentUpon>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DatabaseChanges.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MVC-FIO\FioLabs.MVC.CarePackage.csproj">
+      <Project>{e76976e7-7df9-4e2c-aed3-326c8471a513}</Project>
+      <Name>FioLabs.MVC.CarePackage</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

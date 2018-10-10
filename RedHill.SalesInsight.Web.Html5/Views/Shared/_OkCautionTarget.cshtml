@@ -1,0 +1,36 @@
+﻿@model RedHill.SalesInsight.Web.Html5.IndicatorModel
+@if (Model != null){
+    if (Model.LessIsBetter)
+    {
+        if (Model.Actual - Model.Target < Model.Ok)
+        {
+            <i class="fa fa-1x fa-check-circle green"  title="Variance Less than @Model.Ok"></i>
+        }
+        if (Model.Actual - Model.Target >= Model.Ok && Model.Actual - Model.Target <=  Model.Caution)
+        {
+            <i class="fa fa-1x fa-exclamation-circle yellow"  title="Variance Between than @Model.Ok and @Model.Caution"></i>
+        }
+        if (Model.Actual - Model.Target > Model.Caution)
+        {
+            <i class="fa fa-1x fa-times-circle red" title="Variance More than @Model.Caution"></i>
+        }
+    }
+    else
+    {
+        if (Model.Actual - Model.Target > -1 * Model.Ok)
+        {
+            <i class="fa fa-1x fa-check-circle green" title="Variance More than @Model.Ok"></i>
+        }
+        if (Model.Actual - Model.Target <= -1 * Model.Ok && Model.Actual - Model.Target >=  -1 * Model.Caution)
+        {
+            <i class="fa fa-1x fa-exclamation-circle yellow" title="Variance Between @Model.Caution and @Model.Ok "></i>
+        }
+        if (Model.Actual - Model.Target < -1 * Model.Caution)
+        {
+            <i class="fa fa-1x fa-times-circle red" title="Variance Less than @Model.Caution"></i>
+        }
+    }
+}
+
+
+

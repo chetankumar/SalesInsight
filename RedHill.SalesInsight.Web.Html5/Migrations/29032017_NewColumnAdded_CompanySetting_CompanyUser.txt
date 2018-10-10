@@ -1,0 +1,11 @@
+﻿---------- 2017-29-03 2:00 PM -- New Column added to the Company Setting
+ALTER TABLE [dbo].[CompanySettings]
+ADD	[MaxUsers] [int] NULL,
+	[MaxSalesStaff] [int] NULL
+Go
+
+--------- 2017-29-03 2:00 PM New Column added to the Company User
+AlTER TABLE [dbo].CompanyUser
+ADD [IsMaxUsersExempt] [bit] NULL
+GO
+  

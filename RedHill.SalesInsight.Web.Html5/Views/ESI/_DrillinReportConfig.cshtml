@@ -1,0 +1,391 @@
+﻿@* Report Setting pop-up  *@
+<div class="modal fade" id="reportConfig_DrillIn">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Report Configuration</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="esi-control-group">
+                            <div>
+                                <label class="control-label">Select Dimension</label>
+                            </div>
+                            <div>
+                                <div class="form-group">
+                                    <select id="metric_opt" class="form-control metric_type">
+                                        @if (Model.DimensionNameList != null)
+                                        {
+                                            <option value="select">---Select---</option>
+                                            foreach (var item in Model.DimensionNameList)
+                                            {
+                                                <option @(item.Selected ? "selected" : "") value="@item.Value">@item.Text</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="esi-control-group">
+                            <div>
+                                <label class="control-label" title="Optional">Dimension Title</label>
+                            </div>
+                            <div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="dimension_Title" value="@(Model.DimensionTitle !=null ? Model.DimensionTitle : "" )" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="esi-control-group">
+                            <div>
+                                <label class="control-label">Select Columns</label>
+                            </div>
+                            <div>
+                                <div class="form-group">
+                                    <select id="column_opt" class="form-control column_type multiselect" multiple="multiple" required="required">
+                                        @if (Model.ColumnTypeDefinitionList.Count != 0)
+                                        {
+                                            foreach (var metric in Model.ColumnTypeDefinitionList)
+                                            {
+                                                <option @(metric.Selected ? "selected" : "") value="@metric.Value">@metric.Text</option>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <option value="0">No Target Metric</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="esi-control-group">
+                            <div>
+                                <label class="control-label">Selected Columns</label><button type="button" class="btn btn-primary sort-columns">Sort A-Z</button>
+                            </div>
+                            <div>
+                                <div class="selectDivArea">
+                                    <div class="selected_column">
+                                        @if (Model.DrillinReportConfigSetting.ReportColumnConfigList != null)
+                                        {
+                                            foreach (var item in Model.DrillinReportConfigSetting.ReportColumnConfigList)
+                                            {
+                                                <div class="selectDivBox" columnId="@item.MetricDefinitionId">
+                                                    @(item.DisplayName.Trim())
+                                                    @*<input name="filterColumn" type="radio" class="pull-right" column-name=@(item.DisplayName.Trim()) title="Select to apply speciality filter on this column" />*@
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="">
+                            <div>
+                                <label class="control-label">Special Filters</label>
+                            </div>
+                            <div class="selectDivArea">
+                                <div class="esi-control-group">
+                                    <div class="form-inline">
+                                        <h6 class="control-label col-sm-2" style="font-weight:700;">Dimension</h6>
+
+                                        <select id="custom_column_opt" class="form-control" >
+                                            <option value="" selected>---Select---</option>
+                                            @if (Model.DrillinReportConfigSetting.ReportColumnDefinitionList != null)
+                                            {
+                                                foreach (var item in Model.DrillinReportConfigSetting.ReportColumnDefinitionList)
+                                                {
+                                                    <option @(item.Selected ? "selected" : "") value="@item.Text">@item.Text</option>
+                                                }
+                                            }
+                                        </select>
+                                        </div>
+                                        <h6 class="control-label col-sm-2" style="font-weight:700;">Show</h6>
+                                    <div class="form-inline">
+                                        <select id="filterDirection" class="form-control">
+                                            <option value="">---Select---</option>
+                                            @foreach (var item in Model.DrillinReportConfigSetting.SortDirectionList)
+                                            {
+                                                <option @(item.Selected ? "selected" : "") value="@item.Value">@item.Text</option>
+                                            }
+                                        </select>
+
+                                        <input type="text" id="count" value="@(Model.DrillinReportConfigSetting.SpecialReportConfig != null ? Model.DrillinReportConfigSetting.SpecialReportConfig.SortCount : "")" class="form-control" placeholder="Limit"/>
+
+
+                                        <select id="filterType" class="form-control">
+                                            <option value="">---Select---</option>
+                                            @foreach (var item in Model.DrillinReportConfigSetting.SortTypeList)
+                                            {
+                                                <option @(item.Selected ? "selected" : "") value="@item.Value">@item.Text</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @*<div class="row">
+                        <div class="col-sm-12">
+                            <div class="esi-control-group">
+                                <div>
+                                    <label class="control-label">Speciality Filters</label>
+                                </div>
+                                <div>
+                                    <div class="selectDivArea">
+                                        <div class="spec-filter">
+
+                                            <div class="col-sm-6">
+                                                <div>
+                                                    <label class="control-label">Select Order</label>
+                                                </div>
+                                                <div>
+                                                    <div class="form-group">
+                                                        <select id="metric_opt" class="form-control metric_type">
+                                                            <option value="">---Select---</option>
+                                                            <option value="1">Ascending</option>
+                                                            <option value="-1">Descending</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div>
+                                                    <label class="control-label">Top</label>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-md-6">
+                                                        <input type="text" class="form-control" id="recordCount" name="recordCount" value="" />
+                                                    </div>
+                                                    <input type="checkbox" name="withPercentage" /> In Percentage
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>*@
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default reportSetting_close_btn" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary reportSetting_Save_btn">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".sort-columns").on("click", function () {
+            var columns = [];
+            var columnNames = [];
+            $(".selected_column div").each(function (i,val) {
+                columnNames.push($(this).context.innerText);
+                columns.push({ id: $(this).attr("columnid"), name: $(this).context.innerText, position: i });
+
+            });
+            columns.sort((x, y) => {
+                var xN = x.name.toLowerCase(), yN = y.name.toLowerCase();
+                if (xN > yN) return 1;
+                if (xN === yN) return 0;
+                if (xN < yN) return -1;
+            });
+            renderSortedColumns(columns);
+        });
+
+        var parentColumnArea = $('.selected_column');
+        var parentColumnDimension = $('#custom_column_opt');
+        var dimensionColumnDetails = {};
+        var columnTypeList = [];
+        var dimensionDetails = [];
+        var selectedMetrics = [];
+        var specialFilters = "";
+        var customFilter = [];
+        //Make column and metric dragable
+        makeDivDraggable();
+
+        //Reset the sumo select values.
+        $('#metric_opt').change(function(){
+            //$('select.column_type')[0].sumo.unSelectAll();
+            var dimTitle = $("#metric_opt option:selected").val().length? $("#metric_opt option:selected").text():"";
+            $('#dimension_Title').val(dimTitle);
+        });
+
+        var selectedOption = [];
+        $('#column_opt').on('change', function (evt, params) {
+
+            var currentSelectedMetrics = [];
+            var finalMetrics = [];
+            var currentSelectedDimension = [];
+            var currentSelection;
+
+            //Get all current selected value
+            $('#column_opt option:selected').each(function (i, e) {
+                var $this = $(this);
+
+                currentSelectedMetrics.push({ id: $this.val(), name: $this.text().trim(), position: i });
+            });
+
+              //Get all last selected value
+            $(".selected_column .selectDivBox").each(function (i, e) {
+                var $this = $(this);
+                finalMetrics.push(currentSelectedMetrics.filter(function (x) {
+                    return x.id == $this.attr("columnid");
+                }));
+                selectedOption.push($this.attr("columnid"));
+            });
+
+            if (selectedOption) {
+                var currentValues = $(this).val();
+                currentSelection = currentValues.filter(function (el) {
+                    return selectedOption.indexOf(el) < 0;
+                });
+            }
+            selectedOption = $(this).val();
+
+            if (currentSelection) {
+                finalMetrics.push(currentSelectedMetrics.filter(function (x) {
+                    return x.id == currentSelection;
+                }));
+            }
+            renderSelectedColumns(finalMetrics);
+            renderSelectedDimension(finalMetrics);// adding dimension to speciality filter dropdown
+        });
+
+        function renderSortedColumns(metrics) {
+            var isTrue = false;
+            var selectedValue = $('#custom_column_opt').val();//for keeping selected value
+            parentColumnArea.empty();
+            parentColumnDimension.empty();
+            parentColumnDimension.append($('<option>', { "value": "", "text": "---Select---" }));
+            $(metrics).each(function (i, e) {
+                    parentColumnArea.append($('<div>', { "class": "selectDivBox", "columnId": e.id })
+                    .append(e.name));
+                parentColumnDimension.append($('<option>', { "value": e.name, "text": e.name }));
+                if (selectedValue === e.name) {
+                    isTrue = true;
+                }
+            });
+            if (isTrue) {
+                $('#custom_column_opt').val(selectedValue);//for selected value
+            }
+        }
+
+
+        function renderSelectedColumns(metrics) {
+            parentColumnArea.empty();
+            $(metrics).each(function (i, e) {
+                if (e.length) {
+                parentColumnArea.append($('<div>', { "class": "selectDivBox", "columnId": e[0].id })
+                        .append(e[0].name));
+                }
+            });
+        }
+
+        function renderSelectedDimension(metrics) {
+            var isTrue = false;
+            var selectedValue = $('#custom_column_opt').val();//for keeping selected value
+            parentColumnDimension.empty();
+            parentColumnDimension.append($('<option>', { "value": "", "text": "---Select---" }));
+            $(metrics).each(function (i, e) {
+                if (e.length) {
+                    parentColumnDimension.append($('<option>', { "value": e[0].name, "text": e[0].name }));
+                    if (selectedValue === e[0].name) {
+                        isTrue = true;
+                    }
+                }
+            });
+            if (isTrue) {
+                $('#custom_column_opt').val(selectedValue);//for selected value
+            }
+        }
+
+        function makeDivDraggable() {
+            //make the column dragable
+            $(".selected_column").sortable({
+                items: "> .selectDivBox",
+                appendTo: "parent",
+                helper: "clone"
+            }).disableSelection();
+        }
+
+        function getSpecialFilters() {
+            specialFilters = {
+                ReportId: @Model.ReportId,
+                CustomFilterDimension: $('#custom_column_opt').val(),
+                SortDirection : $('#filterDirection').val(),
+                SortCount : $('#count').val(),
+                SortType : $('#filterType').val(),
+            }
+
+        }
+
+        function getColumnArrangementOrder() {
+            columnTypeList = [];
+            $('.selected_column .selectDivBox').each(
+                function (i, e) {
+                    var columnOderWithName = {};
+                    columnOderWithName.ReportId = @Model.ReportId;
+                    columnOderWithName.Order = i;
+                    columnOderWithName.ColumnId = $(this).attr('columnId');
+                    columnOderWithName.DisplayName =  $(e).text().trim();
+                    columnOderWithName.ColumnName = $(e).text().trim();
+                    columnTypeList.push(columnOderWithName);
+                });
+        }
+        // Make a ajax call to save the report setting.
+        $('.reportSetting_Save_btn').on('click', function () {
+            $(this).attr("disabled",true);
+            $(this).prepend("<i>");
+            $(this).find("i").addClass("fa fa-spinner fa-spin");
+            getColumnArrangementOrder();
+            getSpecialFilters();
+            dimensionColumnDetails = {};
+            if ($('#metric_opt').val() !='select') {
+                dimensionColumnDetails.ReportId = @Model.ReportId;
+                dimensionColumnDetails.DimensionName = $('#metric_opt option:selected').val();
+                dimensionColumnDetails.DimensionTitle = $('#dimension_Title').val();
+                if (!dimensionColumnDetails.DimensionTitle) {
+                    dimensionColumnDetails.DimensionTitle = $("#metric_opt option:selected").text();
+                }
+            }
+            dimensionDetails.push(dimensionColumnDetails);
+            if (columnTypeList.length > 0) {
+                $.post("/ESI/AddDrillinReportConfiguration", { reportId: eval(@Model.ReportId), dimensionDetails: JSON.stringify(dimensionDetails), columnTypeList: JSON.stringify(columnTypeList), customFilter: JSON.stringify(specialFilters) },
+                    function (data) {
+                        if (data == "OK") {
+                            var url = $(location).attr("href")
+                            if (url.indexOf("IsNewReport") == -1) {
+                                window.location.reload();
+
+                            } else {
+                                window.location = url.replace(/\?.+/, '');
+
+                            }
+                        }
+                    });
+            }
+        });
+    });
+
+</script>

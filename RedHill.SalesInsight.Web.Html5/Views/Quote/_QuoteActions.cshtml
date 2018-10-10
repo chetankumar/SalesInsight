@@ -1,0 +1,88 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.QuotationProfile
+@{  bool aujsAPIEnabled = (ViewBag.AUJSAPIEnabled != null && ViewBag.AUJSAPIEnabled == true);}
+
+<div class="">
+    @if (Model.Status != "APPROVED")
+    {
+        if (ViewBag.UserCanApprove != null && ViewBag.UserCanApprove)
+        {
+            <button class="btn btn-default" data-toggle="modal" data-target="#approve_quote_modal" data-page="approve_quote">
+                <i class="glyphicon glyphicon-check"></i>
+                Approve Quote
+            </button>
+        }
+        else
+        {
+            <button class="btn btn-default" data-toggle="modal" data-target="#request_approval_modal" data-page="approve_quote">
+                <i class="glyphicon glyphicon-check"></i>
+                Request Approval
+            </button>
+        }
+    }
+    else
+    {
+        if (!Model.EnableEdit)
+        {
+            <button class="btn btn-default" data-toggle="modal" data-target="#enable_edit_quote_modal" data-page="edit_quote">
+                <i class="glyphicon glyphicon-edit"></i>
+                Enable Editing
+            </button>
+        }
+        else
+        {
+            <a class="btn btn-danger" href="/Quote/EnableQuoteEdit/@Model.QuoteId?enableEdit=false">
+                <i class="glyphicon glyphicon-edit"></i>
+                Disable Editing
+            </a>
+        }
+        <span class="btn btn-success">
+            <i class="fa fa-fw fa-check"></i>
+            Approved
+        </span>
+    }
+    <button class="btn btn-default" data-toggle="modal" data-target="#send_comments_modal" data-page="edit_quote">
+        <i class="glyphicon glyphicon-comment"></i>
+        Comment
+    </button>
+    <a class="btn btn-default cant-disable" href="/Quote/PreviewQuotation/@Model.QuoteId">
+        <span class="glyphicon glyphicon-eye-open"></span>Preview Quote
+    </a>
+    <a class="btn btn-default cant-disable" style='display: @(aujsAPIEnabled?"none":"")' href="/Quote/ProjectEntryForm/@Model.QuoteId">
+        <span class="glyphicon glyphicon-cog"></span>Project Entry Form
+    </a>
+    @if (aujsAPIEnabled)
+    {
+        if (Model.Awarded && Model.Status == "APPROVED")
+        {
+            if (!string.IsNullOrWhiteSpace(Model.CustomerDispatchId))
+            {
+                if (Model.LastPushedAt == null)
+                {
+                    <a class="btn btn-default" href="/Quote/PushToAPI/@Model.QuoteId">
+                        <span class="fa fa-paper-plane-o"></span> Send to Dispatch
+                    </a>
+                }
+                else
+                {
+                    <a class="btn" href="javascript:void(0);" data-toggle="tooltip" title="Last sent to dispatch at @Model.LastPushedAt by @Model.PushedBy">
+                        <span class="fa fa-paper-plane-o"></span>Send to Dispatch
+                    </a>
+                }
+
+            }
+            else
+            {
+                <button class="btn btn-default" onclick="Sync()" data-toggle="modal" data-entity="selectCustomer" data-target="#assign_customer_model">
+                    <i class="fa fa-paper-plane-o"></i>
+                    Send to Dispatch
+                </button>
+            }
+        }
+        else
+        {
+            <a class="btn" href="javascript:void(0);" data-toggle="tooltip" title="Quote must be Approved & Awarded before it can be sent to dispatch.">
+                <span class="fa fa-paper-plane-o"></span>Send to Dispatch
+            </a>
+        }
+    }
+</div>

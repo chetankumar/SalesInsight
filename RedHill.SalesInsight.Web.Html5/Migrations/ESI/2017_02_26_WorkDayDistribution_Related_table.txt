@@ -1,0 +1,85 @@
+
+/****** Object:  Table [dbo].[WorkDayException]    Script Date: 25/02/2017 02:22:37 PM ******/
+
+USE [ESI_Test]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[WorkDayException](
+	[Id] [bigint] NOT NULL,
+	[ExceptionDate] [datetime] NOT NULL,
+	[Description] [varchar](max) NULL,
+	[Percentage] [int] NOT NULL,
+ CONSTRAINT [PK_WorkDayException] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+ 
+ 
+/****** Object:  Table [dbo].[WorkDayDistribution]    Script Date: 25/02/2017 02:22:28 PM ******/ 
+USE [ESI_Test]
+GO
+
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[WorkDayDistribution](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[OperationDate] [datetime] NOT NULL,
+	[Distribution] [int] NOT NULL,
+ CONSTRAINT [PK_Work1DayDistribution] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+
+/****** Object:  Table [dbo].[WeekDayDistribution]    Script Date: 25/02/2017 02:22:18 PM ******/
+
+USE [ESI_Test]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[WeekDayDistribution](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[Sunday] [int] NOT NULL,
+	[Monday] [int] NOT NULL,
+	[Tuesday] [int] NOT NULL,
+	[Wednesday] [int] NOT NULL,
+	[Thursday] [int] NOT NULL,
+	[Friday] [int] NOT NULL,
+	[Saturday] [int] NOT NULL,
+ CONSTRAINT [PK_WorkDayDistribution] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+
+

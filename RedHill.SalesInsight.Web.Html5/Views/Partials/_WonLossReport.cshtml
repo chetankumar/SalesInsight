@@ -1,0 +1,192 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ReportFilter
+
+@using (Html.BeginForm("WonLossReport", "Reports", FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    <div class="row @(Model.FilterByBidDate ? "" : "disable")">
+        <div class="col-md-1"></div>
+        <div class="col-md-2">
+            <div class="form-group">
+                @Html.HiddenFor(x => x.Print)
+                <div class="checkbox">
+                    <label>@Html.CheckBoxFor(m => m.FilterByBidDate) Filter by Bid Date</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <div class="col-md-7 right">
+                    <label class="control-label right">Bid Date Begin</label>
+                </div>
+                <div class="col-md-5 control-group">
+                    @Html.TextBoxFor(m => m.BidDateBegin, "{0:M/d/yyyy}", new { @class = "form-control datepicker" })
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <div class="col-md-7 right">
+                    <label class="control-label">Bid Date End</label>
+                </div>
+                <div class="col-md-5 control-group">
+                    @Html.TextBoxFor(m => m.BidDateEnd, "{0:M/d/yyyy}", new { @class = "form-control datepicker" })
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+
+    <div class="row @(Model.FilterByStartDate ? "" : "disable")">
+        <div class="col-md-1"></div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>@Html.CheckBoxFor(m => m.FilterByStartDate) Filter by Start Date</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <div class="col-md-7 right">
+                    <label class="control-label">Start Date Begin</label>
+                </div>
+                <div class="col-md-5 control-group">
+                    @Html.TextBoxFor(m => m.StartDateBegin, "{0:M/d/yyyy}", new { @class = "form-control datepicker" })
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <div class="col-md-7 right">
+                    <label class="control-label">Start Date End</label>
+                </div>
+                <div class="col-md-5 control-group">
+                    @Html.TextBoxFor(m => m.StartDateEnd, "{0:M/d/yyyy}", new { @class = "form-control datepicker" })
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+
+    <div class="row @(Model.FilterByWLDate ? "" : "disable")">
+        <div class="col-md-1"></div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>@Html.CheckBoxFor(m => m.FilterByWLDate) Filter by Won/Lost Date</label>
+                </div>
+            </div>
+            <div class="form-group">
+                @if (RedHill.SalesInsight.Web.Html5.Helpers.ConfigurationHelper.AggregateEnabled || RedHill.SalesInsight.Web.Html5.Helpers.ConfigurationHelper.BlockEnabled)
+                {
+                    @Html.DropDownListFor(x => x.SelectProductTypeId, new SelectList(RedHill.SalesInsight.Web.Html5.Helpers.ConfigurationHelper.ProductTypes, "Value", "Text"), new { @style = "margin-left: 5px;", @class = "form-control product_toggle" })
+                }
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <div class="col-md-7 right">
+                    <label class="control-label">Won/Lost Date Begin</label>
+                </div>
+                <div class="col-md-5 control-group">
+                    @Html.TextBoxFor(m => m.WLDateBegin, "{0:M/d/yyyy}", new { @class = "form-control datepicker" })
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <div class="col-md-7 right">
+                    <label class="control-label">Won/Lost Date End</label>
+                </div>
+                <div class="col-md-5 control-group">
+                    @Html.TextBoxFor(m => m.WLDateEnd, "{0:M/d/yyyy}", new { @class = "form-control datepicker" })
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Regions
+                </div>
+                <div class="panel-body" style="height: 200px; overflow-y: scroll;">
+                    @foreach (SelectListItem item in Model.RegionList)
+                    {
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" value="@item.Value" name="Regions" @(item.Selected ? "checked='checked'" : "") />
+                                @item.Text
+                            </label>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Districts
+                </div>
+                <div class="panel-body" style="height: 200px; overflow-y: scroll;">
+                    <div data-selector="region">Select region to populate</div>
+                    @foreach (SelectListItem item in Model.DistrictList)
+                    {
+                        <div class="checkbox" style="display: none">
+                            <label>
+                                <input type="checkbox" value="@item.Value" name="Districts" @(item.Selected ? "checked='checked'" : "") disabled="disabled" />
+                                @item.Text
+                            </label>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Plants
+                </div>
+                <div class="panel-body" style="height: 200px; overflow-y: scroll;">
+                    <div data-selector="district">Select district to populate</div>
+                    @foreach (SelectListItem item in Model.PlantList)
+                    {
+                        <div class="checkbox" style="display: none">
+                            <label>
+                                <input type="checkbox" value="@item.Value" name="Plants" @(item.Selected ? "checked='checked'" : "") disabled="disabled" />
+                                @item.Text
+                            </label>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Staff
+                </div>
+                <div class="panel-body" style="height: 200px; overflow-y: scroll;">
+                    <div data-selector="district">Select district to populate</div>
+                    @foreach (SelectListItem item in Model.StaffList)
+                    {
+                        <div class="checkbox" style="display: none">
+                            <label>
+                                <input type="checkbox" value="@item.Value" @(item.Selected ? "checked='checked'" : "") name="Staffs" disabled="disabled" />
+                                @item.Text
+                            </label>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="form-group col-md-1 col-md-offset-5">
+        <button class="btn btn-primary">Run Report</button>
+    </div>
+}
+
+
+

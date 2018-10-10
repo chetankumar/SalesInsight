@@ -1,0 +1,71 @@
+﻿-- Chetan : Done
+-- Bharat : Done
+-- Shelly :
+-- Avnish : Done
+-- Dinesh : Done
+/****** Object:  Table [dbo].[DailyPlantSummary]    Script Date: 28/02/2017 04:56:06 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[DailyPlantSummary](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[DayDateTime] [datetime] NOT NULL,
+	[PlantId] [int] NOT NULL,
+	[ProducedVolume] [float] NULL,
+	[TrucksAssigned] [float] NULL,
+	[TruckAvailable] [float] NULL,
+	[DriversOnPayroll] [float] NULL,
+	[DriversAvailable] [float] NULL,
+	[PlantInterruptions] [float] NULL,
+	[BadOrRejectedLoads] [float] NULL,
+	[Accidents] [float] NULL,
+	[TotalLoads] [float] NULL,
+	[TotalOrders] [float] NULL,
+	[FirstLoadOnTimePercent] [float] NULL,
+	[DriverDeliveredVolume] [float] NULL,
+	[ScheduledVolume] [float] NULL,
+	[ScheduledTrucks] [float] NULL,
+	[TotalClockHours] [float] NULL,
+	[DriversUtilized] [float] NULL,
+	[AverageLoadSize] [float] NULL,
+	[StartUpTime] [float] NULL,
+	[ShutdownTime] [float] NULL,
+	[InYardTime] [float] NULL,
+	[TicketTime] [float] NULL,
+	[LoadTime] [float] NULL,
+	[TemperingTime] [float] NULL,
+	[ToJobTime] [float] NULL,
+	[WaitOnJobTime] [float] NULL,
+	[PourTime] [float] NULL,
+	[WashOnJobTime] [float] NULL,
+	[FromJobTime] [float] NULL,
+	[TruckBreakdowns] [float] NULL,
+	[NonDeliveryHours] [float] NULL,
+	[Notes] [varchar](max) NULL,
+	RefId  bigint NULL,
+	IsMongoUpdated BIT NOT NULL DEFAULT 0,
+ CONSTRAINT [PK_DailyPlantSummary] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[DailyPlantSummary]  WITH CHECK ADD  CONSTRAINT [FK_DailyPlantSummary_Plant] FOREIGN KEY([PlantId])
+REFERENCES [dbo].[Plant] ([PlantId])
+GO
+
+ALTER TABLE [dbo].[DailyPlantSummary] CHECK CONSTRAINT [FK_DailyPlantSummary_Plant]
+GO
+ 
+

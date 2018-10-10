@@ -1,0 +1,39 @@
+﻿New Table ProjectPlants
+	PlantId  FK
+	ProjectId  FK
+	Volume	int
+
+New Table ReasonsForLoss
+	int CompanyId;
+	int ReasonForLossId;
+	string Reason
+	bool Active
+
+
+New Column Table Project
+	WinningCompetitorId	money
+	ReasonLostId int  FK
+	PriceLost	Money
+	NotesOnLoss	varchar(512)
+
+
+Added Columns for Contractor
+	Address 1
+	Address 2
+	Address 3
+	City
+	State
+	Zip
+	Phone
+	Fax
+	Email
+
+	All varchar(50)/255
+
+Added Column PlantId in ProjectProjection
+
+	update ProjectProjection set PlantId = p.ConcretePlantId 
+	from ProjectProjection pp
+	inner join Project p
+	on
+	 pp.ProjectId = p.ProjectId;

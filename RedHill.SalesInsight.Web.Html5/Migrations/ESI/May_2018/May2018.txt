@@ -1,0 +1,13 @@
+﻿  ----------------5/8/2018 -- Avnish
+    Delete from WeekDayDistribution
+DBCC checkIdent(WeekDayDistribution,reseed,0)
+
+------05/05/2018 Sudhakar--------
+ALTER TABLE [WeekDayDistribution]
+  ADD DistrictId int NOT NULL;
+
+ ------17/05/2018 Sudhakar--------
+  ALTER TABLE [WorkDayExceptions]
+  ADD DistrictId int;
+
+  

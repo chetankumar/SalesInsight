@@ -1,0 +1,61 @@
+﻿@model string
+<ul class="nav nav-tabs">
+    @if (ViewBag.AccessRule.HasCustomersAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+    {
+        <li class="@(Model == "customers" ? "active" : "")"><a href="/Home/Companies/customers">Customers</a></li>
+    }
+    @if (ViewBag.AccessRule.HasCompetitorsAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+    {
+        <li class="@(Model == "competitors" ? "active" : "")"><a href="/Home/Companies/competitors">Competitors</a></li>
+    }
+    @if (ViewBag.AccessRule.HasSalesStaffAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+    {
+        <li class="@(Model == "salesstaff" ? "active" : "")"><a href="/Home/Companies/salesstaff">Sales Staff</a></li>
+    }
+    @if (ViewBag.AccessRule.HasGCAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+    {
+        <li class="@(Model == "contractors" ? "active" : "")"><a href="/Home/Companies/contractors">GCs</a></li>
+    }
+    @if (ViewBag.AccessRule.HasMarketSegmentsAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+    {
+        <li class="@(Model == "marketsegments" ? "active" : "")"><a href="/Home/Companies/marketsegments">Market Segments</a></li>
+    }
+    @if (ViewBag.AccessRule.HasStatusesReasonsLostAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+    {
+        <li class="@(Model == "statuses" ? "active" : "")"><a href="/Home/Companies/statuses">Statuses / Reasons Lost</a></li>
+    }
+    @if (ViewBag.AccessRule.HasStructureAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+    {
+        <li class="@(Model == "structure" ? "active" : "")"><a href="/Home/Companies/structure">Structure</a></li>
+    }
+    @if (ViewBag.AccessRule.HasRawMaterialsAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+    {
+        <li class="@(Model == "rawmaterials" ? "active" : "")"><a href="/Admin/ManageRawMaterials">Raw Materials</a></li>
+    }
+    @if (ViewBag.AccessRule.HasAddonsAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+    {
+        <li class="@(Model == "addons" ? "active" : "")"><a href="/Admin/ManageAddons">Add-Ons</a></li>
+    }
+    @if (ViewBag.AccessRule.HasMixDesignsAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+    {
+        <li class="@(Model == "mixdesigns" ? "active" : "")"><a href="/Admin/ManageMixDesigns">Mix Designs</a></li>
+    }
+    @if (ViewBag.AccessRule.HasSackPricingAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+    {
+        <li class="@(Model == "5skPricings" ? "active" : "")"><a href="/Admin/ManageFSKPrices">Sack Pricing</a></li>
+    }
+    @if (ViewBag.AccessRule.HasMiscellaneousAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+    {
+        <li class="@(Model == "misc" ? "active" : "")"><a href="/Admin/ManageMiscSettings">Misc</a></li>
+    }
+    @if (ViewBag.ShowESIModules != false)
+    {
+        <li class="@(Model == "esi" ? "active" : "")"><a href="/Admin/ManageESIData">ESI</a></li>
+    }
+    
+    @*<li class="@(Model == "workdaydistribution" ? "active" : "")"><a href="/Admin/WorkDayDistribution">Workdays</a></li>*@
+
+    @*<li class="@(Model == "esicustomMetrics" ? "active" : "")"><a href="/Admin/CustomMetrics">Daily Plant Summary</a></li>*@
+
+    @*<li class="@(Model == "initialsetup" ? "active" : "")"><a href="/Admin/InitialSetup">Intial Setup</a></li>*@
+</ul>

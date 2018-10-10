@@ -1,0 +1,14 @@
+﻿----2017-04-10 -Add Columns To QuotationAggregate and QuotationBlock----Avnish
+
+ALTER TABLE QuotationAggregate
+ADD [Freight] [decimal](18, 0) NULL,
+	[TotalPrice] [decimal](18, 0) NULL,
+	[TotalRevenue] [decimal](18, 0) NULL
+	GO
+
+ALTER TABLE QuotationBlock
+ADD [Freight] [decimal](18, 0) NULL,
+	[TotalPrice] [decimal](18, 0) NULL,
+	[TotalRevenue] [decimal](18, 0) NULL
+	GO
+

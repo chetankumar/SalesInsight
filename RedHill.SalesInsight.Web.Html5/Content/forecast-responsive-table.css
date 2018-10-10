@@ -1,0 +1,27 @@
+﻿@media screen and (max-width: 200px)        {.fc-1    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 300px)        {.fc-2    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 366px)        {.fc-3    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 431px)        {.fc-4    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 500px)        {.fc-5    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 580px)        {.fc-6    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 640px)        {.fc-7    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 700px)        {.fc-8    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 760px)        {.fc-9    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 820px)        {.fc-10   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 880px)        {.fc-11   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 940px)        {.fc-12   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 1024px)       {.fc-13   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 1074px)       {.fc-14   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 1124px)       {.fc-15   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 1174px)       {.fc-16   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 1224px)       {.fc-17   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 1274px)       {.fc-18   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 1324px)       {.fc-19   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 1344px)       {.fc-20   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 1350px)       {.fc-21   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 1360px)       {.fc-22   {display:none!important;visibility:hidden!important}}
+
+.optional_column {
+    display:none;
+    visibility:hidden;
+}

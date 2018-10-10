@@ -1,0 +1,41 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.CompanyView
+
+<table class="data_table table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Status Type</th>
+            <th>Active</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (RedHill.SalesInsight.Web.Html5.Models.StatusView c in Model.Statuses)
+        {
+            <tr>
+                <td>@c.Name</td>
+                <td>@c.StatusTypeName</td>
+                <td>
+                    @{
+            if (@c.Active)
+            {
+                <span class="glyphicon glyphicon-ok">
+                    @if (@c.Active)
+                    {<span style="display:none">1</span>}
+                </span>
+            }
+            else
+            {
+                <span class="glyphicon glyphicon-remove"></span>
+            }
+                    }
+                </td>
+                <td>
+                    <a href="/Home/EditProjectStatus/@c.ProjectStatusId" class="btn btn-xs btn-primary" title="Edit Project Status">
+                        <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,298 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ESI.DashboardSettingsView
+@using (Html.BeginForm("DashBoard", "ESI", FormMethod.Post, new { @id = "form_widget_detail", onsubmit = "return validateForm()" }))
+{
+    <div class="modal fade" id="AddEdit_Widget">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Add Widget</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="widget-detail preloader" style="display:none;">
+                        <i class="fa fa-spinner fa-spin fa-3x"></i>
+                        Saving changes...
+                    </div>
+                    <div class="alert alert-danger alert-dismissable form-validation" style="display:none;">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong><i class="fa fa-warning"></i></strong> Title is required.
+                    </div>
+                    <div class="form-horizontal form-box">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Title</label>
+                            <div class="col-md-6">
+                                <input type="hidden" name="WidgetId" value="0" />
+                                <input type="hidden" name="Position" value="" />
+                                <input type="hidden" name="DashboardId" value="@Model.Id" />
+                                <input type="text" class="form-control" name="Title" value="" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Metric Type</label>
+                            <div class="col-md-6">
+                                @Html.DropDownList("MetricType", Model.Widget.MetricTypeList, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Rounding(Decimal Places)</label>
+                            <div class="col-md-6">
+                                @Html.DropDownList("DecimalPlaces", Model.Widget.RoundingOptions, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group line-below">
+                            <label class="control-label col-md-3">Background Color</label>
+                            <div class="col-md-6">
+                                @*  <input type="hidden" name="BackgroundColor" id="BackgroundColor" value="#e3e3e3" />*@
+                                @* <a class="advanced" data-id="BackgroundColor" href="#" style="background-color:#e3e3e3"></a>*@
+                                @*<input type='color' name="BackgroundColorPicker" id="BackgroundColorPicker" value="" />*@
+                                <input type='text' name="BackgroundColor"  id="BackgroundColor" value="" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Primary Metric</label>
+                            <div class="col-md-6">
+                                @Html.DropDownList("PrimaryMetricDefinitionId", Model.Widget.MetricDefinitionList, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Primary Metric Period</label>
+                            <div class="col-md-6">
+                                @Html.DropDownList("PrimaryMetricPeriod", Model.Widget.MetricPeriodList, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Comparison Metric</label>
+                            <div class="col-md-6">
+                                @Html.DropDownList("ComparisonMetricDefinitionId", Model.Widget.MetricDefinitionList, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Comparison Metric Period</label>
+                            <div class="col-md-6">
+                                @Html.DropDownList("ComparisonMetricPeriod", Model.Widget.MetricPeriodList, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-6 col-sm-offset-3">
+                                <div class="checkbox">
+                                    <label>
+                                        @Html.CheckBox("ShowActionIcon", new { @data_toggle = "collapse", @data_target = ".action_limit" })
+                                        Show Action Icon
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group action_limit collapse in">
+                            <label class="control-label col-md-3">
+                                <i class="fa fa-check text-success"></i>
+                                Limit
+                            </label>
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="SuccessLimitPercent" value="" />
+                                    <span class="input-group-addon">
+                                        %
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group action_limit collapse in">
+                            <label class="control-label col-md-3">
+                                <i class="fa fa-exclamation-triangle text-warning"></i>
+                                Limit
+                            </label>
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="AlertLimitPercent" value="" />
+                                    <span class="input-group-addon">
+                                        %
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="selectedonlyOne">
+                            <div class="form-group line-above ">
+                                <label class="control-label col-md-3">Bar Graph</label>
+                                <div class="col-md-1">
+                                    @Html.RadioButton("VisualIndicationType", "HasBarGraph", true, new { id = "BarIndicator" })
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-inline">
+                                        <input name="BarGraphDaysPerBar" class="form-control" type="number" min="0" max="362" value="" />
+                                        <span>Days Per Bar</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Frequency Distribution</label>
+                                <div class="col-md-6">
+                                    <div class="radio">
+                                        <label>
+                                            @Html.RadioButton("VisualIndicationType", "HasFrequencyDistribution", new { id = "FrequencyIndicator" })
+                                            (3 Std Dev Around Comparison)
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Line Graph</label>
+                                <div class="col-md-1">
+                                    <div class="radio">
+                                        <label>
+                                            @Html.RadioButton("VisualIndicationType", "HasLineGraph", new { id = "LineIndicator" })
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="graphline">
+                                        <div class="form-inline">
+                                            <span>Last</span>
+                                            <input name="LineGraphRangeInDays" class="form-control" type="number" min="0" max="362" value="" />
+                                            <span>Days</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Period-Over-Period Summary</label>
+                                <div class="col-md-6">
+                                    <div class="radio">
+                                        <label>
+                                            @Html.RadioButton("VisualIndicationType", "HasPOPSummary", new { id = "PopIndicator" })
+                                            (Variance & Directional Indicator)
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group line-below">
+                                <label class="control-label col-md-3">Static Message</label>
+                                <div class="col-md-1">
+                                    <div class="radio">
+                                        <label>
+                                            @Html.RadioButton("VisualIndicationType", "HasStaticMessage", new { id = "StaticIndicator" })
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" name="StaticMessage" placeholder="Enter Message" value="" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Goal Analysis</label>
+                            <div class="col-md-6">
+                                <select name="GoalAnalysisReportId" class="form-control multiselect">
+                                    <option value="0">-Select Report-</option>
+                                    @if (Model.GoalAnalysisSavedReports != null)
+                                    {
+                                        foreach (var item in @Model.GoalAnalysisSavedReports)
+                                        {
+                                            <optgroup label="@item.Key">
+                                                @foreach (var report in item.Value)
+                                                {
+                                                    if (report == null)
+                                                    {
+                                                        <option value="">No Report</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@report.Id">@report.ReportName</option>
+                                                    }
+                                                }
+                                            </optgroup>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Benchmark</label>
+                            <div class="col-md-6">
+                                <select name="BenchmarkReportId" class="form-control multiselect">
+                                    <option value="0">-Select Report-</option>
+                                    @if (Model.BenchmarkAnalysisSavedReports != null)
+                                    {
+                                        foreach (var item in @Model.BenchmarkAnalysisSavedReports)
+                                        {
+                                            <optgroup label="@item.Key">
+                                                @foreach (var report in item.Value)
+                                                {
+                                                    if (report == null)
+                                                    {
+                                                        <option value="">No Report</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@report.Id">@report.ReportName</option>
+                                                    }
+                                                }
+                                            </optgroup>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Trend</label>
+                            <div class="col-md-6">
+                                <select name="TrendAnalysisReportId" class="form-control multiselect">
+                                    <option value="0">-Select Report-</option>
+                                    @if (Model.TrendAnalysisSavedReports != null)
+                                    {
+                                        foreach (var item in Model.TrendAnalysisSavedReports)
+                                        {
+                                            <optgroup label="@item.Key">
+                                                @foreach (var report in item.Value)
+                                                {
+                                                    if (report == null)
+                                                    {
+                                                        <option value="">No Report</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@report.Id">@report.ReportName</option>
+                                                    }
+                                                }
+                                            </optgroup>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Drill-In</label>
+                            <div class="col-md-6">
+                                <select name="DrillInReportId" class="form-control multiselect">
+                                    <option value="0">-Select Report-</option>
+                                    @if (Model.DrillInAnalysisSavedReports != null)
+                                    {
+                                        foreach (var item in Model.DrillInAnalysisSavedReports)
+                                        {
+                                            <optgroup label="@item.Key">
+                                                @foreach (var report in item.Value)
+                                                {
+                                                    if (report == null)
+                                                    {
+                                                        <option value="">No Report</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@report.Id">@report.ReportName</option>
+                                                    }
+                                                }
+                                            </optgroup>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary btn_save_widget">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

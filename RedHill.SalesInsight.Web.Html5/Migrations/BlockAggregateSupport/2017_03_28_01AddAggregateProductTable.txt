@@ -1,0 +1,31 @@
+﻿/****** Object:  Table [dbo].[AggregateProduct]    Script Date: 28/03/2017 22:57:04 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[AggregateProduct](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[Code] [nvarchar](200) NOT NULL,
+	[Description] [nvarchar](500) NULL,
+	[UomId] [bigint] NULL,
+	[Active] [bit] NULL,
+	[DispatchId] [nvarchar](1000) NULL,
+	[CreatedAt] [datetime] NULL,
+ CONSTRAINT [PK_AggregateProduct] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[AggregateProduct]  WITH CHECK ADD  CONSTRAINT [FK_AggregateProduct_Uom] FOREIGN KEY([UomId])
+REFERENCES [dbo].[Uom] ([Id])
+GO
+
+ALTER TABLE [dbo].[AggregateProduct] CHECK CONSTRAINT [FK_AggregateProduct_Uom]
+GO
+
+

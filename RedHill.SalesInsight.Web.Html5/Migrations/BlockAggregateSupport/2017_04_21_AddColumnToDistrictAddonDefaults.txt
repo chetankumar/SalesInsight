@@ -1,0 +1,6 @@
+﻿--- 2017-04-21 -- New Column Added to the DistrictAddonDefaults --- Avnish
+
+ALTER TABLE DistrictAddonDefaults
+ADD 
+[IsAggregateDefault] [bit] NULL,
+[IsBlockDefault] [bit] NULL

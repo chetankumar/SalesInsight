@@ -1,0 +1,13 @@
+﻿---Shelly -  Done
+---Chetan -  
+---Bharat - Done
+---Avnish - Done
+---Dinesh - Done
+---Server - Done
+
+/****** Object:  Table [dbo].[MetricDefinition]    Script Date: 05/03/2017 12:46:50 Dinesh ******/ 
+
+ALTER TABLE MetricDefinition
+ADD DefaultDisplayFormat NVARCHAR(50) NULL,
+	DisplayName NVARCHAR(500) NULL,
+	[Description] NVARCHAR(MAX) NULL;

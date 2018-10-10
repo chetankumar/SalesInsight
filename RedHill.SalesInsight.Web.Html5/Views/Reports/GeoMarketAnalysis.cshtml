@@ -1,0 +1,955 @@
+﻿@using RedHill.SalesInsight.Web.Html5.Helpers;
+@model RedHill.SalesInsight.Web.Html5.Models.GeoMarketAnalysisReport
+@{
+    ViewBag.Title = "Geo-Market Analysis";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.UsingDatePicker = true;
+    var company = ConfigurationHelper.Company;
+}
+
+<div class="page-head">
+    <h2>Geo-Market Analysis</h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Reports/Index">Reports</a></li>
+        <li class="active">Geo-Market Analysis</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="block-flat">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <i class="fa fa-fw fa-filter"></i>Filter
+                </div>
+            </div>
+            <div class="panel-body">
+                @using (Html.BeginForm("GeoMarketAnalysis", "Reports", FormMethod.Post, new { @class = "form-inline form", @id = "filter_form" }))
+                {
+                    <div class="form-group">
+                        <label class="control-label">District</label>
+                        @Html.DropDownListFor(x => x.DistrictId, Model.AllDistricts, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Start Date</label>
+                        @Html.TextBoxFor(x => x.StartDate, "{0:M/d/yyyy}", new { @class = "form-control datepicker" })
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">End Date</label>
+                        @Html.TextBoxFor(x => x.EndDate, "{0:M/d/yyyy}", new { @class = "form-control datepicker" })
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" value="Run Report" class="btn btn-primary">Run Report</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="panel panel-primary" id="wonlost_map">
+            <div class="panel-heading">
+                <div class="panel-title form-inline">Won/Lost Map<button onclick="printMap('wonlost_map')" class="btn btn-primary pull-right geo-printBtn"><i class="fa fa-print"></i>Print Map</button></div>
+            </div>
+            <div class="panel-body clearfix">
+                <div class="well">
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>VOLUME</h2>
+                            <div>
+                                <i class="fa fa-fw fa-list"></i>Total
+                                <br>
+                            </div>
+                        </div>
+                        <div class="stat bold">
+                            @(Model.AllProjects.Sum(x => x.Volume.GetValueOrDefault()).ToString("N0")) @company.DeliveryQtyUomPlural
+                        </div>
+                    </div>
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>VOLUME</h2>
+                            <div>
+                                <i class="fa fa-fw fa-check"></i>Sold
+                                <br>
+                            </div>
+                        </div>
+                        <div class="stat bold">
+                            @(Model.WonProjects.Sum(x => x.Volume.GetValueOrDefault()).ToString("N0")) @company.DeliveryQtyUomPlural
+                        </div>
+                    </div>
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>VOLUME</h2>
+                            <div>
+                                <i class="fa fa-fw fa-close"></i>Lost
+                                <br>
+                            </div>
+                        </div>
+                        <div class="stat bold">
+                            @(Model.LostProjects.Sum(x => x.Volume.GetValueOrDefault()).ToString("N0")) @company.DeliveryQtyUomPlural
+                        </div>
+                    </div>
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>Win Rate</h2>
+                            <div>
+                                <i class="fa fa-fw fa-list"></i>Overall
+                                <br>
+                            </div>
+                        </div>
+                        <div class="stat bold">
+                            @(Model.WinRate.ToString("N2")) %
+                        </div>
+                    </div>
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>PRICE</h2>
+                            <div>
+                                <i class="fa fa-fw fa-check"></i>Average Sold
+                                <br>
+                            </div>
+                        </div>
+                        <div class="stat bold">
+                            $ @(Model.WonPrice.ToString("N2"))
+                        </div>
+                    </div>
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>PRICE</h2>
+                            <div>
+                                <i class="fa fa-fw fa-close"></i>Average Lost
+                                <br>
+                            </div>
+                        </div>
+                        <div class="stat bold">
+                            $ @(Model.LostPrice.ToString("N2"))
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2 col-xs-2 col-md-2 thin-grey-bordered">
+                    <div>
+                        <h4 class="text-center underlined">LEGEND</h4>
+                        <div class="legend-block">
+                            <div class="legend-item col-xs-10 col-sm-12 col-md-12 col-lg-12">
+                                <i class="fa fa-1x fa-circle lost_jobs_color"></i><span class="legend_name">Lost Jobs</span>
+                            </div>
+                            <div class="legend-item col-xs-10 col-sm-12 col-md-12 col-lg-12">
+                                <i class="fa fa-1x fa-circle won_jobs_color"></i><span class="legend_name">Won Jobs</span>
+                            </div>
+                            <div class="col-xs-12 spacer"></div>
+                            <div class="legend-item col-xs-10 col-sm-12 col-md-12 col-lg-12">
+                                <i class="fa fa-1x fa-star our_plants_color"></i><span class="legend_name">Our Plants</span>
+                            </div>
+                            @{var i = 0;}
+                            @{var idToColors = new Dictionary<string, string>();}
+                            @foreach (var competitor in Model.CompetitorPlants.Select(x => x.Competitor.Name).Distinct())
+                            {
+                                <div class="legend-item col-xs-6 col-sm-12 col-md-12 col-lg-12">
+                                    <i class="fa fa-1x fa-square competitor_@i"></i>@competitor
+                                </div>
+                                { idToColors.Add(competitor, "competitor_" + i); }
+                                { i += 1; }
+                            }
+                        </div>
+                    </div>
+                    <div class="col-xs-12 spacer"></div>
+                    <div style="clear: both">
+                        <h4 class="text-center underlined">LAYERS</h4>
+                        <div class="legend-block form-group clearfix">
+                            <label class="col-xs-12">
+                                <input type="checkbox" checked="checked" data-map-id="won_lost" data-layer-id="won_jobs" class="layer_control" />
+                                <span class="legend_name"> Won jobs</span>
+                            </label>
+                            <label class="col-xs-12">
+                                <input type="checkbox" checked="checked" data-map-id="won_lost" data-layer-id="lost_jobs" class="layer_control" />
+                                <span class="legend_name">Lost jobs</span>
+                            </label>
+                            <label class="col-xs-12">
+                                <input type="checkbox" checked="checked" data-map-id="won_lost" data-layer-id="competitors" class="layer_control" />
+                                <span class="legend_name">Competitors</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-10 col-xs-10 col-md-10">
+                    <div id="won_lost_map" style="width: 100%; height: 400px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="panel panel-primary" id="spread_section">
+            <div class="panel-heading">
+                <div class="panel-title">Spread Map<button onclick="printMap('spread_section')" class="btn btn-primary pull-right geo-printBtn"> <i class="fa fa-print"></i>Print Map</button></div>
+            </div>
+            <div class="panel-body clearfix">
+                <div class="well">
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>VOLUME</h2>
+                            <div>
+                                <i class="fa fa-fw fa-list"></i>Total
+                                <br>
+                            </div>
+                        </div>
+                        <div class="stat bold">
+                            @(Model.AllProjects.Sum(x => x.Volume.GetValueOrDefault()).ToString("N0")) @company.DeliveryQtyUomPlural
+                        </div>
+                    </div>
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>VOLUME</h2>
+                            <div>
+                                <i class="fa fa-fw fa-check"></i>Sold
+                                <br>
+                            </div>
+                        </div>
+                        <div class="stat bold">
+                            @(Model.WonProjects.Sum(x => x.Volume.GetValueOrDefault()).ToString("N0")) @company.DeliveryQtyUomPlural
+                        </div>
+                    </div>
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>VOLUME</h2>
+                            <div>
+                                <i class="fa fa-fw fa-close"></i>Lost
+                                <br>
+                            </div>
+                        </div>
+                        <div class="stat bold">
+                            @(Model.LostProjects.Sum(x => x.Volume.GetValueOrDefault()).ToString("N0")) @company.DeliveryQtyUomPlural
+                        </div>
+                    </div>
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>Spread</h2>
+                            <div>
+                                <i class="fa fa-fw fa-list"></i>Overall
+                                <br>
+                            </div>
+                        </div>
+                        <div class="stat bold">
+                            $ @(Model.OverallSpread.ToString("N2"))
+                        </div>
+                    </div>
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>Spread</h2>
+                            <div>
+                                <i class="fa fa-fw fa-check"></i>Sold
+                                <br>
+                            </div>
+                        </div>
+                        <div class="stat bold">
+                            $ @(Model.WonSpread.ToString("N2"))
+                        </div>
+                    </div>
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>SPREAD</h2>
+                            <div>
+                                <i class="fa fa-fw fa-close"></i>Lost
+                                <br>
+                            </div>
+                        </div>
+                        <div class="stat bold">
+                            $ @(Model.LostSpread.ToString("N2"))
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2 col-xs-2 col-md-2 thin-grey-bordered">
+                    <div>
+                        <h4 class="text-center underlined">LEGEND</h4>
+                        <div class="legend-block">
+                            @for (int k = Model.SpreadRanges.Count() - 1; k >= 0; k--)
+                            {
+
+                                if (k == @Model.SpreadRanges.Count() - 1)
+                                {
+                                    <div class="legend-item col-xs-10 col-sm-12 col-md-12 col-lg-12">
+                                        <i class="fa fa-circle fa-1x spread_6"></i>
+                                        &gt;$@Model.SpreadRanges.Last() <span class="legend_name">Spread</span>
+                                    </div>
+                                }
+
+                                if (k < (@Model.SpreadRanges.Count() - 1) && k >= 0)
+                                {
+                                    <div class="legend-item col-xs-10 col-sm-12 col-md-12 col-lg-12">
+                                        <i class="fa fa-circle fa-1x spread_@(k + 1)"></i>
+                                        $@Model.SpreadRanges[k] - $@Model.SpreadRanges[k + 1] <span class="legend_name">Spread</span>
+                                    </div>
+                                }
+
+                                if (k == 0)
+                                {
+                                    <div class="legend-item col-xs-10 col-sm-12 col-md-12 col-lg-12">
+                                        <i class="fa fa-circle fa-1x spread_0"></i>
+                                        &lt;$@Model.SpreadRanges.First() <span class="legend_name">Spread</span>
+                                    </div>
+                                }
+                            }
+                            <div class="col-xs-12 spacer"></div>
+                            <div class="legend-item col-xs-10 col-sm-12 col-md-12 col-lg-12">
+                                <i class="fa fa-1x fa-star our_plants_color"></i><span class="legend_name">Our Plants</span>
+                            </div>
+                            @{var j = 0;}
+                            @foreach (var competitor in Model.CompetitorPlants.Select(x => x.Competitor.Name).Distinct())
+                            {
+                                <div class="legend-item col-xs-6 col-sm-12 col-md-12 col-lg-12">
+                                    <i class="fa fa-1x fa-square competitor_@j"></i><span class="legend_name">@competitor</span>
+                                </div>
+                                { j += 1; }
+                            }
+                        </div>
+                    </div>
+                    <div class="col-xs-12 spacer"></div>
+                    <div style="clear: both">
+                        <h4 class="text-center underlined">LAYERS</h4>
+                        <div class="legend-block form-group clearfix">
+                            <label class="col-xs-12">
+                                <input type="checkbox" checked="checked" data-map-id="spread" data-layer-id="won_jobs" class="layer_control" />
+                                <span class="legend_name">Won jobs</span>
+                            </label>
+                            <label class="  col-xs-12">
+                                <input type="checkbox" checked="checked" data-map-id="spread" data-layer-id="lost_jobs" class="layer_control" />
+                                <span class="legend_name">Lost jobs</span>
+                            </label>
+                            <label class="  col-xs-12">
+                                <input type="checkbox" checked="checked" data-map-id="spread" data-layer-id="competitors" class="layer_control" />
+                                <span class="legend_name">Competitors</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-10 col-sm-10 col-xs-10">
+                    <div id="spread_map" style="width: 100%; height: 400px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="panel panel-primary" id="contr_map">
+            <div class="panel-heading">
+                <div class="panel-title">Contribution Map<button onclick="printMap('contr_map')" class="btn btn-primary pull-right geo-printBtn"> <i class="fa fa-print"></i>Print Map</button></div>
+            </div>
+            <div class="panel-body clearfix">
+                <div class="well">
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>VOLUME</h2>
+                            <div>
+                                <i class="fa fa-fw fa-list"></i>Total
+                                <br>
+                            </div>
+                        </div>
+                        <div class="stat bold">
+                            @(Model.AllProjects.Sum(x => x.Volume.GetValueOrDefault()).ToString("N0")) @company.DeliveryQtyUomPlural
+                        </div>
+                    </div>
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>VOLUME</h2>
+                            <div>
+                                <i class="fa fa-fw fa-check"></i>Sold
+                                <br>
+                            </div>
+                        </div>
+                        <div class="stat bold">
+                            @(Model.WonProjects.Sum(x => x.Volume.GetValueOrDefault()).ToString("N0")) @company.DeliveryQtyUomPlural
+                        </div>
+                    </div>
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>VOLUME</h2>
+                            <div>
+                                <i class="fa fa-fw fa-close"></i>Lost
+                                <br>
+                            </div>
+                        </div>
+                        <div class="stat bold">
+                            @(Model.LostProjects.Sum(x => x.Volume.GetValueOrDefault()).ToString("N0")) @company.DeliveryQtyUomPlural
+                        </div>
+                    </div>
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>CONTRIBUTION</h2>
+                            <div>
+                                <i class="fa fa-fw fa-list"></i>Overall
+                                <br>
+                            </div>
+                        </div>
+                        <div class="stat bold">
+                            $ @(Model.OverallContribution.ToString("N2"))
+                        </div>
+                    </div>
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>CONTRIBUTION</h2>
+                            <div>
+                                <i class="fa fa-fw fa-check"></i>Sold
+                                <br>
+                            </div>
+                        </div>
+                        <div class="stat bold">
+                            $ @(Model.WonContribution.ToString("N2"))
+                        </div>
+                    </div>
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>CONTRIBUTION</h2>
+                            <div>
+                                <i class="fa fa-fw fa-close"></i>Lost
+                                <br>
+                            </div>
+                        </div>
+                        <div class="stat bold">
+                            $ @(Model.LostContribution.ToString("N2"))
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-2 thin-grey-bordered">
+                    <div>
+                        <h4 class="text-center underlined">LEGEND</h4>
+                        <div class="legend-block">
+                            @for (int k = Model.ContributionRanges.Count() - 1; k >= 0; k--)
+                            {
+                                if (k == @Model.ContributionRanges.Count() - 1)
+                                {
+                                    <div class="legend-item col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <i class="fa fa-circle fa-1x contribution_6"></i>
+                                        &gt;$@Model.ContributionRanges.Last() <span class="legend_name">Contribution</span>
+                                    </div>
+                                }
+
+                                if (k < (@Model.ContributionRanges.Count() - 1) && k >= 0)
+                                {
+                                    <div class="legend-item col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <i class="fa fa-circle fa-1x contribution_@(k + 1)"></i>
+                                        $@Model.ContributionRanges[k] - $@Model.ContributionRanges[k + 1] <span class="legend_name">Contribution</span>
+                                    </div>
+                                }
+
+                                if (k == 0)
+                                {
+                                    <div class="legend-item col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <i class="fa fa-circle fa-1x contribution_0"></i>
+                                        &lt;$@Model.ContributionRanges.First() <span class="legend_name">Contribution</span>
+                                    </div>
+                                }
+                            }
+                            <div class="col-xs-12 spacer"></div>
+                            <div class="legend-item col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <i class="fa fa-1x fa-star our_plants_color"></i><span class="legend_name">Our Plants</span>
+                            </div>
+                            @{var Cj = 0;}
+                            @foreach (var competitor in Model.CompetitorPlants.Select(x => x.Competitor.Name).Distinct())
+                            {
+                                <div class="legend-item col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                    <i class="fa fa-1x fa-square competitor_@Cj"></i><span class="legend_name">@competitor</span>
+                                </div>
+                                { Cj += 1; }
+                            }
+                        </div>
+                    </div>
+                    <div class="col-xs-12 spacer"></div>
+                    <div style="clear: both">
+                        <h4 class="text-center underlined">LAYERS</h4>
+                        <div class="legend-block form-group clearfix">
+                            <label class="col-xs-12">
+                                <input type="checkbox" checked="checked" data-map-id="contribution" data-layer-id="won_jobs" class="layer_control" />
+                                <span class="legend_name">Won jobs</span>
+                            </label>
+                            <label class="  col-xs-12">
+                                <input type="checkbox" checked="checked" data-map-id="contribution" data-layer-id="lost_jobs" class="layer_control" />
+                                <span class="legend_name">Lost jobs</span>
+                            </label>
+                            <label class="  col-xs-12">
+                                <input type="checkbox" checked="checked" data-map-id="contribution" data-layer-id="competitors" class="layer_control" />
+                                <span class="legend_name">Competitors</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-10 col-sm-10 col-xs-10">
+                    <div id="contribution_map" style="width: 100%; height: 400px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+<style type="text/css">
+        @@media print {
+            .leaflet-control-container {
+            display:none;
+            }
+
+            .geo-printBtn {
+                display: none;
+            }
+
+            .panel-title {
+                color: white;
+            }
+
+            .panel-body {
+                border: 1px solid #337ab7 !important;
+            }
+
+
+            .panel-heading {
+                background-color: #337ab7 !important;
+                border-color: #337ab7 !important;
+            }
+
+            .well {
+                background-color: #f5f5f5 !important;
+            }
+
+            .butpro {
+                width: 133px !important;
+                /*border: 1px solid #e3e3e3 !important;*/
+                background-color: white !important;
+            }
+        }
+</style>
+    <script src='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.js'></script>
+    <link href='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.css' rel='stylesheet' />
+    <link href="~/Content/competitor_colors.css" rel="stylesheet" />
+    <link href="~/Content/spread_colors.css" rel="stylesheet" />
+    <link href="~/Content/map_color.css" rel="stylesheet" />
+    <script type="text/javascript">
+        //function printMap(mapId)
+        //{
+        //    var districtName = $("#DistrictId option:selected").text();;
+        //    var startDate = $("#StartDate").val();
+        //    var endDate = $("#EndDate").val();
+
+        //    document.title = districtName + " {"+startDate+" - "+endDate+"}";
+
+        //    var newstr = document.all.item(mapId).innerHTML;
+        //    var oldstr = document.body.innerHTML;
+        //    document.body.innerHTML = newstr;
+
+        //    window.print();
+        //    document.body.innerHTML = oldstr;
+        //    return false;
+        //}
+        function printMap(mapId) {
+            var body = $('body');
+            var mapContainer = $('#'+mapId);
+            var mapContainerParent = mapContainer.parent();
+            console.log(mapContainerParent);
+            var printContainer = $('<div>');
+            var districtName = $("#DistrictId option:selected").text();;
+            var startDate = $("#StartDate").val();
+            var endDate = $("#EndDate").val();
+            printContainer
+                .addClass('print-container')
+                .css('position', 'relative') // Print Container
+                .height(mapContainer.height())
+                .append(mapContainer)
+                .prependTo(body);
+
+            var content = body
+                .children()
+                .not('script')
+                .not(printContainer)
+                .detach();
+
+            var patchedStyle = $('<style>')
+                .attr('media', 'print')
+                .text('img { max-width: none !important; }' +
+                      'a[href]:after { content: ""; }')
+                .appendTo('head');
+            document.title = districtName + " {"+startDate+" - "+endDate+"}";
+            window.print();
+            body.prepend(content);
+            mapContainerParent.append(mapContainer);
+
+            printContainer.remove();
+            patchedStyle.remove();
+            document.title = "Geo-Analysis Analysis";
+        }
+
+        var ourPlantsFeatures = @Html.Raw(Model.PlantsJson);
+        var competitorPlants = @Html.Raw(Model.CompetitorPlantsJson);
+        var wonJobs = @Html.Raw(Model.WonJobsJson);
+        var lostJobs = @Html.Raw(Model.LostJobsJson);
+
+        var wonJobsSpread = null ;
+        var lostJobsSpread = null ;
+
+        var idToColor = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(idToColors));
+
+        function getColor(spread){
+            spreads = [@String.Join(",", Model.SpreadRanges)];
+            colors = ['#d73027','#fc8d59','#fee08b','#3288bd','#d9ef8b','#91cf60'];
+            for(i = 0;i<spreads.length;i++){
+                currentSpread = spreads[i];
+                if (spread < currentSpread){
+                    return colors[i];
+                }
+            }
+            return '#1a9850';
+        }
+
+        function getContibutionColor(contribution){
+            //console.log("contribution "+contribution);
+            contributions = [@String.Join(",", Model.ContributionRanges)];
+            //console.log("contributions "+contributions);
+            colors = ['#d73027','#fc8d59','#fee08b','#3288bd','#d9ef8b','#91cf60'];
+            for(i = 0;i<contributions.length;i++){
+                currentContribution = contributions[i];
+                if (contribution < currentContribution){
+                    return colors[i];
+                }
+            }
+            return '#1a9850';
+        }
+
+        L.mapbox.accessToken =  'pk.eyJ1IjoiY2hldGFua3VtYXI5OTkiLCJhIjoiY2lpNXhtYnV5MDFpcHRma3FwNzZxMjBtbyJ9.WnfKk9Kk8Ve9oFHAvvVAWw';
+
+        var map = null;
+        var map2 = null;
+        var map3 = null;
+
+        var plantLayer1 = null;
+        var competitorPlantLayer1 = null;
+        var wonJobsLayer1 = null;
+        var lostJobsLayer1 = null;
+
+        var plantLayer2 = null;
+        var competitorPlantLayer2 = null;
+        var wonJobsLayer2 = null;
+        var lostJobsLayer2 = null;
+
+        var plantLayer3 = null;
+        var competitorPlantLayer3 = null;
+        var wonJobsLayer3 = null;
+        var lostJobsLayer3 = null;
+
+        function toggleLayers(mapId,layerId,show){
+            currentMap = null;
+            layer = null;
+            if (mapId == "won_lost"){
+                currentMap = map;
+                if (layerId == "won_jobs")
+                    layer = wonJobsLayer1;
+                if (layerId == "lost_jobs")
+                    layer = lostJobsLayer1;
+                if (layerId == "competitors")
+                    layer = competitorPlantLayer1;
+            }
+            if (mapId == "spread"){
+                currentMap = map2;
+                if (layerId == "won_jobs")
+                    layer = wonJobsLayer2;
+                if (layerId == "lost_jobs")
+                    layer = lostJobsLayer2;
+                if (layerId == "competitors")
+                    layer = competitorPlantLayer2;
+            }
+            if (mapId == "contribution"){
+                currentMap = map3;
+                if (layerId == "won_jobs")
+                    layer = wonJobsLayer3;
+                if (layerId == "lost_jobs")
+                    layer = lostJobsLayer3;
+                if (layerId == "competitors")
+                    layer = competitorPlantLayer3;
+            }
+
+            if (show)
+            {
+                if (!currentMap.hasLayer(layer))
+                    currentMap.addLayer(layer);
+            }
+            else
+            {
+                if (currentMap.hasLayer(layer))
+                    currentMap.removeLayer(layer);
+            }
+        }
+
+        $(document).ready(function () {
+            $('.datepicker').datepicker({
+                format: "m/d/yyyy",
+            }).on("changeDate", function (e) {
+                $("#filter-form").submit();
+                $(this).datepicker('hide');
+            });
+
+            $(".layer_control").change(function(e){
+                show = $(this).is(":checked");
+                console.log(show);
+                toggleLayers($(this).data("map-id"),$(this).data("layer-id"),show);
+            });
+
+            //
+            // WON LOST MAP
+            //
+
+            map = L.mapbox.map('won_lost_map', 'mapbox.streets-basic').setView([parseFloat(@(Model.District.MapCenterLat == null ? "0" : Model.District.MapCenterLat)),parseFloat(@(Model.District.MapCenterLong == null ? "0" : Model.District.MapCenterLong))], parseFloat(@(Model.District.MapZoomLevel == null ? 0 : Model.District.MapZoomLevel)));
+            map2 = L.mapbox.map('spread_map', 'mapbox.streets-basic').setView([parseFloat(@(Model.District.MapCenterLat == null ? "0" : Model.District.MapCenterLat)),parseFloat(@(Model.District.MapCenterLong == null ? "0" : Model.District.MapCenterLong))], parseFloat(@(Model.District.MapZoomLevel == null ? 0 : Model.District.MapZoomLevel)));
+            map3 = L.mapbox.map('contribution_map', 'mapbox.streets-basic').setView([parseFloat(@(Model.District.MapCenterLat == null ? "0" : Model.District.MapCenterLat)),parseFloat(@(Model.District.MapCenterLong == null ? "0" : Model.District.MapCenterLong))], parseFloat(@(Model.District.MapZoomLevel == null ? 0 : Model.District.MapZoomLevel)));
+
+            try
+            {
+                plantLayer1 = L.mapbox.featureLayer();
+                competitorPlantLayer1 = L.mapbox.featureLayer();
+
+                plantLayer1.on('layeradd', function(e) {
+                    var marker = e.layer,
+                    feature = marker.feature;
+                    marker.setIcon(L.divIcon({
+                        // specify a class name that we can refer to in styles, as we
+                        // do above.
+                        className: 'fa-icon',
+                        // html here defines what goes in the div created for each marker
+                        html: '<i class="fa fa-1x fa-star our_plants_color"></i>',
+                        // and the marker width and height
+                        iconSize: [40, 40]
+                    }));
+                });
+                plantLayer1.setGeoJSON(ourPlantsFeatures);
+                plantLayer1.addTo(map);
+
+                competitorPlantLayer1.on('layeradd', function(e) {
+                    var marker = e.layer,
+                    feature = marker.feature;
+                    style = idToColor[marker.feature.properties.description];
+                    marker.setIcon(L.divIcon({
+                        // specify a class name that we can refer to in styles, as we
+                        // do above.
+                        className: 'fa-icon',
+                        // html here defines what goes in the div created for each marker
+                        html: '<i class="'+style+' fa fa-square fa-1x"></i>',
+                        // and the marker width and height
+                        iconSize: [40, 40]
+                    }));
+                });
+                competitorPlantLayer1.setGeoJSON(competitorPlants);
+                competitorPlantLayer1.addTo(map);
+
+
+                wonJobsLayer1 = L.mapbox.featureLayer(wonJobs,{
+                    pointToLayer: function(feature, latlon) {
+                        marker= L.circleMarker(latlon,
+                            {
+                                radius:feature.properties.radius,
+                                color: "#888",
+                                stroke:true,
+                                weight:1,
+                                fillColor:'#1a9850',
+                                fillOpacity:0.3,
+                                zIndexOffset : 100,
+                                opacity:1
+                            }
+                        ).on("dblclick",function(){
+                            window.open("/Home/EditProject/"+feature.properties.projectId,"_blank");
+                        });
+                        return marker;
+                    }
+                }).addTo(map);
+
+                lostJobsLayer1 = L.mapbox.featureLayer(lostJobs,{
+                    pointToLayer: function(feature, latlon) {
+                        marker =  L.circleMarker(latlon,
+                            {
+                                radius:feature.properties.radius,
+                                color: "#888",
+                                stroke:true,
+                                weight:1,
+                                fillColor: '#700a17',
+                                stroke:true,
+                                fillOpacity:0.3,
+                                zIndexOffset : 20,
+                                opacity:1
+                            }
+                        ).on("dblclick",function(){
+                            window.open("/Home/EditProject/"+feature.properties.projectId,"_blank");
+                        });;
+                        return marker;
+                    }
+                }).addTo(map);
+
+            }catch(ex){
+                console.log(ex);
+            }
+
+            //
+            // SPREAD MAP
+            //
+
+            try
+            {
+                plantLayer2 = L.mapbox.featureLayer();
+                plantLayer2.on('layeradd', function(e) {
+                    var marker = e.layer,
+                    feature = marker.feature;
+                    marker.setIcon(L.divIcon({
+                        // specify a class name that we can refer to in styles, as we
+                        // do above.
+                        className: 'fa-icon',
+                        // html here defines what goes in the div created for each marker
+                        html: '<i class="fa fa-1x fa-star our_plants_color"></i>',
+                        // and the marker width and height
+                        iconSize: [40, 40]
+                    }));
+                });
+                plantLayer2.setGeoJSON(ourPlantsFeatures);
+                plantLayer2.addTo(map2);
+
+                competitorPlantLayer2 = L.mapbox.featureLayer();
+                competitorPlantLayer2.on('layeradd', function(e) {
+                    var marker = e.layer,
+                    feature = marker.feature;
+                    style = idToColor[marker.feature.properties.description];
+                    marker.setIcon(L.divIcon({
+                        // specify a class name that we can refer to in styles, as we
+                        // do above.
+                        className: 'fa-icon',
+                        // html here defines what goes in the div created for each marker
+                        html: '<i class="'+style+' fa fa-square fa-1x"></i>',
+                        // and the marker width and height
+                        iconSize: [40, 40]
+                    }));
+                });
+                competitorPlantLayer2.setGeoJSON(competitorPlants);
+                competitorPlantLayer2.addTo(map2);
+
+                wonJobsLayer2 = L.mapbox.featureLayer(wonJobs,{
+                    pointToLayer: function(feature, latlon) {
+                        color = getColor(feature.properties.spread);
+                        return L.circleMarker(latlon,
+                            {
+                                radius:feature.properties.radius,
+                                color: "#888",
+                                stroke:true,
+                                weight:1,
+                                fillColor: color,
+                                fillOpacity:0.5,
+                                opacity:1
+                            }
+                        ).on("dblclick",function(){
+                            window.open("/Home/EditProject/"+feature.properties.projectId,"_blank");
+                        });;
+                    }
+                }).addTo(map2);
+
+                lostJobsLayer2 = L.mapbox.featureLayer(lostJobs,{
+                    pointToLayer: function(feature, latlon) {
+                        color = getColor(feature.properties.spread);
+                        return L.circleMarker(latlon,
+                            {
+                                radius: feature.properties.radius,
+                                color: "#888",
+                                stroke:true,
+                                weight:1,
+                                fillColor: color,
+                                fillOpacity:0.5,
+                                opacity:1
+                            }
+                        ).on("dblclick",function(){
+                            window.open("/Home/EditProject/"+feature.properties.projectId,"_blank");
+                        });;
+                    }
+                }).addTo(map2);
+
+            }catch(ex){
+                console.log(ex);
+            }
+
+
+            //
+            // CONTRIBUTION MAP
+            //
+
+            try
+            {
+                plantLayer3 = L.mapbox.featureLayer();
+                plantLayer3.on('layeradd', function(e) {
+                    var marker = e.layer,
+                    feature = marker.feature;
+                    marker.setIcon(L.divIcon({
+                        // specify a class name that we can refer to in styles, as we
+                        // do above.
+                        className: 'fa-icon',
+                        // html here defines what goes in the div created for each marker
+                        html: '<i class="fa fa-1x fa-star our_plants_color"></i>',
+                        // and the marker width and height
+                        iconSize: [40, 40]
+                    }));
+                });
+                plantLayer3.setGeoJSON(ourPlantsFeatures);
+                plantLayer3.addTo(map3);
+
+                competitorPlantLayer3 = L.mapbox.featureLayer();
+                competitorPlantLayer3.on('layeradd', function(e) {
+                    var marker = e.layer,
+                    feature = marker.feature;
+                    style = idToColor[marker.feature.properties.description];
+                    marker.setIcon(L.divIcon({
+                        // specify a class name that we can refer to in styles, as we
+                        // do above.
+                        className: 'fa-icon',
+                        // html here defines what goes in the div created for each marker
+                        html: '<i class="'+style+' fa fa-square fa-1x"></i>',
+                        // and the marker width and height
+                        iconSize: [40, 40]
+                    }));
+                });
+                competitorPlantLayer3.setGeoJSON(competitorPlants);
+                competitorPlantLayer3.addTo(map3);
+
+                wonJobsLayer3 = L.mapbox.featureLayer(wonJobs,{
+                    pointToLayer: function(feature, latlon) {
+                        color = getContibutionColor(feature.properties.contribution);
+                        return L.circleMarker(latlon,
+                            {
+                                radius:feature.properties.radius,
+                                color: "#888",
+                                stroke:true,
+                                weight:1,
+                                fillColor: color,
+                                fillOpacity:0.5,
+                                opacity:1
+                            }
+                        ).on("dblclick",function(){
+                            window.open("/Home/EditProject/"+feature.properties.projectId,"_blank");
+                        });
+                    }
+                }).addTo(map3);
+
+                lostJobsLayer3 = L.mapbox.featureLayer(lostJobs,{
+                    pointToLayer: function(feature, latlon) {
+                        color = getContibutionColor(feature.properties.contribution);
+                        return L.circleMarker(latlon,
+                            {
+                                radius: feature.properties.radius,
+                                color: "#888",
+                                stroke:true,
+                                weight:1,
+                                fillColor: color,
+                                fillOpacity:0.5,
+                                opacity:1
+                            }
+                        ).on("dblclick",function(){
+                            window.open("/Home/EditProject/"+feature.properties.projectId,"_blank");
+                        });;
+                    }
+                }).addTo(map3);
+
+            }catch(ex){
+                console.log(ex);
+            }
+        });
+    </script>
+}
+
+
+

@@ -1,0 +1,318 @@
+﻿-- CEMEX IMPORTED
+-- GCC IMPORTED
+-- PBM IMPORTED
+-- TEST IMPORTED
+-----------------------------------------------------API Fetch History
+CREATE TABLE [dbo].[APIFetchHistory](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[EntityType] [nvarchar](500) NULL,
+	[LastImportDate] [datetime] NULL,
+	[StartDate] [datetime] NULL,
+	[Status] [nvarchar](200) NULL,
+	[RecordCount] [int] NULL,
+	[Message] [nvarchar](max) NULL,
+ CONSTRAINT [PK_APIFetchHistory] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+-------------------------------------------------------Company Setting
+CREATE TABLE [dbo].[CompanySettings](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[EnableAPI] [bit] NULL CONSTRAINT [DF_CompanySetting_EnableAPI]  DEFAULT ((0)),
+	[APIEndPoint] [nvarchar](max) NULL,
+	[ClientId] [nvarchar](200) NULL,
+	[ClientKey] [nvarchar](max) NULL,
+	[UserName] [nvarchar](200) NULL,
+	[Password] [nvarchar](200) NULL,
+	[ImportCustomers] [bit] NULL,
+	[ImportProducts] [bit] NULL,
+	[ImportSalesStaff] [bit] NULL,
+	[ImportPlants] [bit] NULL,
+	[ImportRawMaterialsAndTypes] [bit] NULL,
+	[ImportStatusTypes] [bit] NULL,
+	[ImportTaxStatus] [bit] NULL,
+	[ImportMarketSegments] [bit] NULL,
+	[ImportUOMTypes] [bit] NULL,
+	[PushQuotes] [bit] NULL,
+	[CreatedAt] [datetime] NULL,
+	[UpdatedAt] [datetime] NULL,
+ CONSTRAINT [PK_CompanySettings] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+
+-------------------------------------------Customer
+BEGIN TRY  
+ALTER TABLE Customer
+ADD DispatchId NVARCHAR(200) NULL;
+END TRY  
+BEGIN CATCH 
+PRINT 'Dispatch Id Exist in Customer'
+END CATCH
+
+BEGIN TRY  
+ALTER TABLE Customer
+ADD Synced BIT NULL;
+END TRY  
+BEGIN CATCH 
+PRINT 'Synced Exist in Customer'
+END CATCH 
+--------------------------------------
+Alter TABLE Customer 
+Add Source NVARCHAR(100) NULL;
+-------------------------------------------MarketSegment
+BEGIN TRY  
+ALTER TABLE MarketSegment
+ADD DispatchId NVARCHAR(200) NULL;
+END TRY  
+BEGIN CATCH 
+PRINT 'Dispatch Id Exist in MarketSegment'
+END CATCH 
+
+BEGIN TRY  
+ALTER TABLE MarketSegment
+ADD Synced BIT NULL;
+END TRY  
+BEGIN CATCH 
+PRINT 'Synced Exist in MarketSegment'
+END CATCH 
+
+-------------------------------------------Plant
+BEGIN TRY  
+ALTER TABLE Plant
+ADD DispatchId NVARCHAR(200) NULL;
+END TRY  
+BEGIN CATCH 
+PRINT 'Dispatch Id Exist in Plant'
+END CATCH 
+BEGIN TRY  
+ALTER TABLE Plant
+ADD Synced BIT NULL;
+END TRY  
+BEGIN CATCH 
+PRINT 'Synced Exist in Plant'
+END CATCH 
+-------------------------------------------ProjectStatus
+BEGIN TRY  
+ALTER TABLE ProjectStatus
+ADD DispatchId NVARCHAR(200) NULL;
+END TRY  
+BEGIN CATCH 
+PRINT 'Dispatch Id Exist in ProjectStatus'
+END CATCH 
+
+BEGIN TRY  
+ALTER TABLE ProjectStatus
+ADD Synced BIT NULL;
+END TRY  
+BEGIN CATCH 
+PRINT 'Synced Exist in ProjectStatus'
+END CATCH 
+
+-------------------------------------------Quotation
+BEGIN TRY  
+ALTER TABLE Quotation
+ADD DispatchId NVARCHAR(200) NULL;
+END TRY  
+BEGIN CATCH 
+PRINT 'Dispatch Id Exist in Quotation'
+END CATCH 
+
+BEGIN TRY  
+ALTER TABLE Quotation
+ADD Synced BIT NULL;
+END TRY  
+BEGIN CATCH 
+PRINT 'Synced Exist in Quotation'
+END CATCH 
+-------------------------------------------RawMaterial
+BEGIN TRY  
+ALTER TABLE RawMaterial
+ADD DispatchId NVARCHAR(200) NULL;
+END TRY  
+BEGIN CATCH 
+PRINT 'Dispatch Id Exist in RawMaterial'
+END CATCH 
+
+BEGIN TRY  
+ALTER TABLE RawMaterial
+ADD Synced BIT NULL;
+END TRY  
+BEGIN CATCH 
+PRINT 'Synced Exist in RawMaterial'
+END CATCH 
+-------------------------------------------RawMaterialType
+BEGIN TRY  
+ALTER TABLE RawMaterialType
+ADD DispatchId NVARCHAR(200) NULL;
+END TRY  
+BEGIN CATCH 
+PRINT 'Dispatch Id Exist in RawMaterialType'
+END CATCH 
+
+BEGIN TRY  
+ALTER TABLE RawMaterialType
+ADD Synced BIT NULL;
+END TRY  
+BEGIN CATCH 
+PRINT 'Synced Exist in RawMaterialType'
+END CATCH 
+-------------------------------------------SalesStaff
+BEGIN TRY  
+ALTER TABLE SalesStaff
+ADD DispatchId NVARCHAR(200) NULL;
+END TRY  
+BEGIN CATCH 
+PRINT 'Dispatch Id Exist in SalesStaff'
+END CATCH 
+
+BEGIN TRY  
+ALTER TABLE SalesStaff
+ADD Synced BIT NULL;
+END TRY  
+BEGIN CATCH 
+PRINT 'Synced Exist in SalesStaff'
+END CATCH 
+-------------------------------------------StandardMix
+BEGIN TRY  
+ALTER TABLE StandardMix
+ADD DispatchId NVARCHAR(200) NULL;
+END TRY  
+BEGIN CATCH 
+PRINT 'Dispatch Id Exist in StandardMix'
+END CATCH 
+
+BEGIN TRY  
+ALTER TABLE StandardMix
+ADD Synced BIT NULL;
+END TRY  
+BEGIN CATCH 
+PRINT 'Synced Exist in StandardMix'
+END CATCH 
+-------------------------------------------TaxCode
+BEGIN TRY  
+ALTER TABLE TaxCode
+ADD DispatchId NVARCHAR(200) NULL;
+END TRY  
+BEGIN CATCH 
+PRINT 'Dispatch Id Exist in TaxCode'
+END CATCH 
+
+BEGIN TRY  
+ALTER TABLE TaxCode
+ADD Synced BIT NULL;
+END TRY  
+BEGIN CATCH 
+PRINT 'Synced Exist in TaxCode'
+END CATCH 
+-------------------------------------------Uom
+BEGIN TRY  
+ALTER TABLE Uom
+ADD DispatchId NVARCHAR(200) NULL;
+END TRY  
+BEGIN CATCH 
+PRINT 'Dispatch Id Exist in Uom'
+END CATCH 
+
+BEGIN TRY  
+ALTER TABLE Uom
+ADD Synced BIT NULL;
+END TRY  
+BEGIN CATCH 
+PRINT 'Synced Exist in Uom'
+END CATCH 
+-------------------------------------------Addons
+BEGIN TRY  
+ALTER TABLE Addon
+ADD DispatchId NVARCHAR(200) NULL;
+END TRY  
+BEGIN CATCH 
+PRINT 'Dispatch Id Exist in Addons'
+END CATCH 
+
+BEGIN TRY  
+ALTER TABLE Addon
+ADD Synced BIT NULL;
+END TRY  
+BEGIN CATCH 
+PRINT 'Synced Exist in Addons'
+END CATCH 
+-------------------------------------------Quotation
+ALTER TABLE Quotation
+  ADD LastPushedAt datetime NULL,
+        PushedBy varchar(50) NULL;
+---------------------------------------------------Project Bidder
+CREATE TABLE [dbo].[ProjectBidder](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[ProjectId] [int] NOT NULL,
+	[CustomerId] [int] NOT NULL,
+	[Notes] [varchar](200) NULL,
+	[UserId] [uniqueidentifier] NOT NULL,
+	[CreatedTime] [datetime] NULL,
+	[LastEditedTime] [datetime] NULL,
+ CONSTRAINT [PK_ProjectBidder] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[ProjectBidder]  WITH CHECK ADD  CONSTRAINT [FK_ProjectBidder_aspnet_Users] FOREIGN KEY([UserId])
+REFERENCES [dbo].[aspnet_Users] ([UserId])
+GO
+
+ALTER TABLE [dbo].[ProjectBidder] CHECK CONSTRAINT [FK_ProjectBidder_aspnet_Users]
+GO
+
+ALTER TABLE [dbo].[ProjectBidder]  WITH CHECK ADD  CONSTRAINT [FK_ProjectBidder_Customer] FOREIGN KEY([CustomerId])
+REFERENCES [dbo].[Customer] ([CustomerId])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[ProjectBidder] CHECK CONSTRAINT [FK_ProjectBidder_Customer]
+GO
+
+ALTER TABLE [dbo].[ProjectBidder]  WITH CHECK ADD  CONSTRAINT [FK_ProjectBidder_Project] FOREIGN KEY([ProjectId])
+REFERENCES [dbo].[Project] ([ProjectId])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[ProjectBidder] CHECK CONSTRAINT [FK_ProjectBidder_Project]
+GO
+	  
+------------------------------------Quotaton
+ALTER TABLE Quotation
+  ADD EnableEdit BIT NULL,
+       ProjectFormNotificationDate datetime NULL,
+	   PDFGeneratedDate datetime NULL;
+
+--------------------------------------------------UOM
+Alter Table Uom
+	   Add Priority2 smallint NOT NULL DEFAULT (0);
+
+----------------------------------------------------------Project Note-----10/14/16
+ALter table projectnote
+ADD FileName varchar(200) null,
+      FileContentype varchar(200) null,
+	    FileSize varchar(50) null,
+		  FileKey varchar(200) null;
+
+------------------------------------------------------------QuotationMix -----10/18/16
+ALTER TABLE dbo.QuotationMix
+  ALTER COLUMN CustomMixId VARCHAR(200);
+
+  ------------------------------------------------------------- 
+
+ALTER TABLE MixFormulation
+ADD IsScrubbed Bit DEFAULT (0)
+

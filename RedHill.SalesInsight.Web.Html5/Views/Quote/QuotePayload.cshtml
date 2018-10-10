@@ -1,0 +1,47 @@
+﻿@{
+    ViewBag.Title = "Quote Payload Tester";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="page-head">
+    <h2>Quote Payload Tester</h2>
+</div>
+<div class="cl-mcont">
+   <div class="block-flat">
+       <div id="message" class="alert alert-info" style="display:none;"></div>
+       <label>Paste the Payload here</label>
+       <textarea id="data_box" name="data" style="height: 400px; width: 100%; margin-top: 0px; margin-bottom: 0px;" placeholder="Paste the Payload here..."></textarea>
+       <button id="UploadPayload" class="btn btn-primary">Push</button>
+   </div>
+</div>
+@section Scripts{
+    <script>
+        $(function () {
+            $("#UploadPayload").on("click", function () {
+                var btn = $(this);
+                var mbox = $("#message");
+                var dataToPost = $("#data_box").val();
+                btn.text("Pushing...");
+                btn.attr("disabled", "disabled");
+                $.ajax({
+                    url: '/Quote/QuotePayload',
+                    method: "POST",
+                    data: { data: dataToPost },
+                    success: function (res) {
+                        res = JSON.parse(res);
+                        mbox.html(res.message);
+                        mbox.show();
+                        setTimeout(function () {
+                            mbox.html("")
+                            mbox.hide();
+                        }, 5000);
+                    },
+                    complete: function (res) {
+                        btn.removeAttr("disabled");
+                        btn.text("Push");
+                    }
+                });
+            });
+        });
+    </script>
+
+}

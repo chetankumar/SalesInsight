@@ -1,0 +1,30 @@
+﻿@media screen and (max-width: 320px)    {.pl-1    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 360px)    {.pl-2    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 400px)    {.pl-3    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 442px)    {.pl-4    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 484px)    {.pl-5    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 526px)    {.pl-6    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 568px)    {.pl-7    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 610px)    {.pl-8    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 652px)    {.pl-9    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 694px)    {.pl-10   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 736px)    {.pl-11   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 778px)    {.pl-12   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 820px)    {.pl-13   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 862px)    {.pl-14   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 904px)    {.pl-15   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 964px)    {.pl-16   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 988px)    {.pl-17   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 1030px)   {.pl-18   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 1072px)   {.pl-19   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 1114px)   {.pl-20   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 1156px)   {.pl-21   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 1198px)   {.pl-22   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 1240px)   {.pl-23   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 1282px)   {.pl-24   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 1324px)   {.pl-25   {display:none!important;visibility:hidden!important}}
+
+.optional_column {
+    display:none;
+    visibility:hidden;
+}

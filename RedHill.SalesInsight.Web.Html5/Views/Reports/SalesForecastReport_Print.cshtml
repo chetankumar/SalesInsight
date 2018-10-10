@@ -1,0 +1,309 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ReportFilter
+
+@{
+    ViewBag.Title = "Sales Forecast Report";
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+    ViewBag.UsingDatePicker = true;
+    ViewBag.UsingChartJs = true;
+}
+
+<div class="logo-container">
+    <div class="col-md-3 pull-left">
+        <img src="/home/logo" height="50px" />
+    </div>
+    <div class="pull-right" style="text-align:right">
+        <p>
+            <b>Sales Forecast</b>
+        </p>
+        <p>
+            @(String.Join(", ", ViewBag.DistrictNames))
+        </p>
+        <p>
+            @Model.ProjectionMonth
+        </p>
+    </div>
+</div>
+<div style="clear:both"></div>
+<div class="row">
+    <div class="col-1">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">District Forecast Versus Plan</div>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <div id="forecastversusplan"></div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">Plant Projections</div>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <table class="table table-condensed table-striped">
+                        <thead>
+                            <tr>
+                                <th>Plant</th>
+                                @foreach (String month in ViewBag.PlantProjectionMonths){
+                                    <th class="right">@month</th>   
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (String plant in ViewBag.PlantProjectionPlants)
+                            {
+                                if (plant == "Total" || plant == "Budget" || (((List<RedHill.SalesInsight.DAL.DataTypes.SIPlantProjections>)ViewBag.PlantProjections).Where(x => x.PlantName == plant).Where(x=>x.MonthName != "Backlog").Where(x => x.DisplayQuantity != "0").Count() > 0))
+                                {
+                                <tr class="@(plant.Replace(" ","_"))@(plant.Equals("Total") ? " bold" : "")">
+                                    <td>@plant</td>
+                                    @foreach (String month in ViewBag.PlantProjectionMonths){
+                                    <td class="right">@(((List<RedHill.SalesInsight.DAL.DataTypes.SIPlantProjections>)ViewBag.PlantProjections).Where(m => m.MonthName == month).Where(m => m.PlantName == plant).FirstOrDefault() == null ? "" : ((List<RedHill.SalesInsight.DAL.DataTypes.SIPlantProjections>)ViewBag.PlantProjections).Where(m=>m.MonthName == month).Where(m=>m.PlantName == plant).FirstOrDefault().DisplayQuantity)</td>   
+                                    }   
+                                </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">Segmentation Analysis</div>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <table class="table table-condensed table-striped">
+                        <thead>
+                            <tr>
+                                <th>Market Segment</th>
+                                @foreach (String month in ViewBag.SegMonths){
+                                    <th class="right">@month</th>   
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (String segment in ViewBag.SegmentNames)
+                            {
+                                <tr class="@(segment.Equals("Total") ? "bold" : "")">
+                                    <td>@segment</td>
+                                    @foreach (String month in ViewBag.SegMonths){
+                                    <td class="right">@(((List<RedHill.SalesInsight.DAL.DataTypes.SISegmentationAnalysis>)ViewBag.SegmentationAnalysis).Where(m => m.MonthName == month).Where(m => m.MarketSegmentName == segment).Count() == 0 ? "0" : ((List<RedHill.SalesInsight.DAL.DataTypes.SISegmentationAnalysis>)ViewBag.SegmentationAnalysis).Where(m=>m.MonthName == month).Where(m=>m.MarketSegmentName == segment).FirstOrDefault().ForecastQuantity.ToString("N0"))</td>   
+                                    }   
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-2">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">Projection Accuracy</div>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <table class="table table-condensed table-striped">
+                        <thead>
+                            <tr>
+                                <th class="right">Salesperson</th>
+                                <th class="right">Actual</th>
+                                <th class="right">Proj</th>
+                                <th class="right">Variance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (RedHill.SalesInsight.DAL.DataTypes.SIProjectionAccuracy accuracy in ViewBag.ProjectionAccuracy)
+                            {
+                                <tr class="@(accuracy.SalesStaffName.Equals("Current Month Total") ? "bold" : "")">
+                                    <td class="right">@accuracy.SalesStaffName</td>
+                                    <td class="right">@accuracy.ActualQuantity.ToString("###,###")</td>
+                                    <td class="right">@accuracy.ForecastQuantity.ToString("###,###")</td>
+                                    <td class="right Variance">@(((accuracy.ActualQuantity - accuracy.ForecastQuantity)/(1.00*accuracy.ForecastQuantity) * 100.00).ToString("N2"))%</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">Asset Productivity</div>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <table class="table table-condensed table-striped">
+                        <thead>
+                            <tr>
+                                @foreach(String header in ViewBag.AssetProductivity.Headers){
+                                <th class="right">@header</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                                @foreach(List<String> row in ViewBag.AssetProductivity.Cells){
+                                <tr class="@(row.First().Equals("Total") ? "bold" : "")">
+                                    @foreach(String cell in row){
+                                    <td class="right">@cell</td>
+                                    }
+                                </tr>
+                                }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">Current Month Market Segmentation</div>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <div id="marketShareSummary"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="clear:both"></div>
+</div>
+
+
+@section Scripts{
+    <style type="text/css">
+        @@page {
+            margin: 0.5cm;
+            min-width:768px;
+        }
+        @@media print {
+            html, body {
+                
+            }
+        }
+        .noPrint {
+            display:none;
+        }
+        body {
+            margin: 0;
+            padding: 0 !important;
+            min-width: 768px;
+            font-size:10px;
+        }
+        .logo-container {
+            height:50px;
+            clear:both;
+        }
+        .panel {
+            margin-top:30px;
+        }
+        .panel-heading {
+            text-align:center;
+            margin-bottom:10px;
+            font-weight:bold;
+            font-size:12px;
+        }
+        table {
+            width:100%;
+        }
+        .pull-left {
+            float:left;
+        }
+        .pull-right {
+            float:right;
+        }
+        .panel-body {
+            border:thin solid #eee;
+        }
+        .col-1 {
+            width:380px;
+            margin-right:20px;
+            float:left;
+        }
+        .col-2 {
+            width:350px;
+            float:left;
+        }
+        .container {
+            margin: auto;
+            width: 750px;
+        }
+        .navbar {
+            display:none;
+        }
+    </style>
+    <script type="text/javascript" src="~/Scripts/jquery.mtz.monthpicker.js"></script>
+    <script type="text/javascript">
+        options = {
+            pattern: 'mmm, yyyy', // Default is 'mm/yyyy' and separator char is not mandatory
+            selectedYear: @DateTime.Now.Year,
+            startYear: @(DateTime.Now.Year - 5),
+            finalYear: @DateTime.Now.AddMonths(6).Year
+        };
+        $(document).ready(function () {
+
+            $(".Variance td,.Variance_CYDs td,td.Variance").each(function(index,item){
+                try{
+                    d = parseFloat($(item).text().replace("%",""));
+                    console.log(d);
+                    if (!isNaN(d)){
+                        if (d<0){
+                            $(item).addClass("red");
+                        }else{
+                            $(item).addClass("green");
+                        }
+                    }
+                }
+                catch(ex){
+                    console.log(ex);
+                }
+            });
+
+            var formatter = new google.visualization.NumberFormat({ pattern: '###,###' });
+
+            function drawChart() {
+                var data = google.visualization.arrayToDataTable(
+                    @(Html.Raw(ViewBag.CurrentSegments))
+                    );
+
+                formatter.format(data, 1);
+
+                var options = {
+                    title: '',
+                    height:200,
+                    chartArea: { left: 0, width: 300,top:10 },
+                    legend: {position:"right",maxlines:3}
+                };
+
+                var chart = new google.visualization.PieChart(document.getElementById('marketShareSummary'));
+                chart.draw(data, options);
+            }
+            google.setOnLoadCallback(drawChart);
+
+            function drawBarChart() {
+                // Some raw data (not necessarily accurate)
+                var data = google.visualization.arrayToDataTable(@Html.Raw(ViewBag.ForecastPlans));
+
+                formatter.format(data, 1);
+                formatter.format(data, 2);
+
+                var options = {
+                    title : '',
+                    hAxis: {title: "Month"},
+                    seriesType: "bars",
+                    series: {1: {type: "line"}},
+                    legend: {position:"top"}
+                };
+
+                var chart = new google.visualization.ComboChart(document.getElementById('forecastversusplan'));
+                chart.draw(data, options);
+            }
+            google.setOnLoadCallback(drawBarChart);
+            alert("Please wait a few seconds for the charts to load completely. If the print preview does not open automatically, please use the browser to print this report.")
+            setTimeout(function(){print()},5000);
+        });
+    </script>
+}

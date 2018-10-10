@@ -1,0 +1,62 @@
+﻿-- On "Use Sack Pricing"
+	-- Call Calculate Base Sack Price
+-- On "Not Use Sack Pricing"
+	-- Call Calculate Base Sack Price
+-- After "Add new Quotation"
+	-- Call Calculate Base Sack Price
+-- Delete Quotation
+-- Awarded Quotation
+-- Unaward Quotation
+
+Calculate Base Sack Price
+	-- If the quote is awarded
+		Use that 
+	-- Else
+		Find all quotes where pricing city is not null.
+			-- Do a Volume Weighted Avg of Base Sack Price
+	-- Save that against the project
+
+
+
+1. Send For Approval 
+	-- Get the UserIds for the people that are tagged.
+	-- If the conversation is not created
+		-- Create the conversation around the quotation ID.
+		-- Add the userIds to the conversation as participants.
+		-- Also add the user himself to the conversation as participant.
+	-- Else 
+		-- Add users not yet tagged to the conversation as participants
+	-- Create a message 
+		-- Fill the text.
+		-- Add the Message Mentions.
+		-- Save the message.
+	-- Create notifications for all the users.
+2. Send Comments
+	-- Get the UserIds for the people that are tagged.
+	-- If the conversation is not created
+		-- Create the conversation around the quotation ID.
+		-- Add the userIds to the conversation as participants.
+		-- Also add the user himself to the conversation as participant.
+	-- Else 
+		-- Add users not yet tagged to the conversation as participants
+	-- Create a message 
+		-- Fill the text.
+		-- Add the Message Mentions.
+		-- Save the message.
+	-- Create notifications for all the users.
+3. Send to Customer
+	-- Get the Users that are CC'd
+	-- If the conversation is not created
+		-- Create the conversation around the quotation ID.
+		-- Add the userIds to the conversation as participants.
+		-- Also add the user himself to the conversation as participant.
+	-- Else 
+		-- Add users not yet tagged to the conversation as participants
+	-- Create a message 
+		-- Fill the text.
+		-- Add the Message Mentions.
+		-- Save the message.
+	-- Create notifications for all the users.
+4. Send General Comments
+	-- Get all the users tagged to the conversation not on mute
+	-- Generate notifications for them for the quotation or project involved.

@@ -1,0 +1,280 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.StandardMixView
+
+@{
+    ViewBag.Title = (Model.Id == 0 ? "New" : "Mix# " + Model.Number);
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    bool aujsAPIEnabled = (ViewBag.AUJSAPIEnabled != null && ViewBag.AUJSAPIEnabled == true);
+}
+
+<div class="page-head">
+    <h2>
+        @if (Model.Id > 0)
+        {
+            <span>Edit Mix Design</span>
+        }
+        else
+        {
+            <span>Add Mix Design</span>
+        }
+    </h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Home/Settings">Settings</a></li>
+        <li><a href="/Home/Companies">Manage Company Settings</a></li>
+        <li><a href="/Admin/ManageMixDesigns">Mix Designs</a></li>
+        <li>@(Model.Id == 0 ? "New" : "Mix# " + Model.Number)</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="block-flat">
+        @using (Html.BeginForm("UpdateStandardMix", "Admin", FormMethod.Post, new { @class = "form-horizontal" }))
+        {
+            @Html.Partial("_ErrorView")
+
+            <fieldset>
+                <legend>
+                    General Specifications
+                </legend>
+
+                @Html.HiddenFor(model => model.Id, new { @class = "form-control" })
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Number</label>
+                        <div class="col-md-10">
+                            @if (Model.Id == 0)
+                            {
+                                @Html.TextBoxFor(model => model.Number, aujsAPIEnabled ? (object)new { @class = "form-control", @readonly = "readonly" } : (object)new { @class = "form-control" })
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(model => model.Number, new { @class = "form-control", @readonly = "readonly" })
+                            }
+                            @Html.ValidationMessageFor(model => model.Number, string.Empty, new { @class = "help-inline" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Description</label>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.Description, aujsAPIEnabled ? (object)new { @class = "form-control", @readonly = "readonly" } : (object)new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Description, string.Empty, new { @class = "help-inline" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Sales Description</label>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.SalesDescription, aujsAPIEnabled ? (object)new { @class = "form-control", @readonly = "readonly" } : (object)new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.SalesDescription, string.Empty, new { @class = "help-inline" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">PSI</label>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.Psi, aujsAPIEnabled ? (object)new { @class = "form-control", @readonly = "readonly" } : (object)new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Psi, string.Empty, new { @class = "help-inline" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Slump</label>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.Slump, aujsAPIEnabled ? (object)new { @class = "form-control", @readonly = "readonly" } : (object)new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Slump, string.Empty, new { @class = "help-inline" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Air</label>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.Air, aujsAPIEnabled ? (object)new { @class = "form-control", @readonly = "readonly" } : (object)new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Air, string.Empty, new { @class = "help-inline" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">@Model.Setting.MD1</label>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.MD1, aujsAPIEnabled ? (object)new { @class = "form-control", @readonly = "readonly" } : (object)new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.MD1, string.Empty, new { @class = "help-inline" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">@Model.Setting.MD2</label>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.MD2, aujsAPIEnabled ? (object)new { @class = "form-control", @readonly = "readonly" } : (object)new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.MD2, string.Empty, new { @class = "help-inline" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">@Model.Setting.MD3</label>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.MD3, aujsAPIEnabled ? (object)new { @class = "form-control", @readonly = "readonly" } : (object)new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.MD3, string.Empty, new { @class = "help-inline" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">@Model.Setting.MD4</label>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.MD4, aujsAPIEnabled ? (object)new { @class = "form-control", @readonly = "readonly" } : (object)new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.MD4, string.Empty, new { @class = "help-inline" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Active</label>
+                        <div class="col-md-10">
+                            <p class="form-control-static">
+                                @if (!aujsAPIEnabled)
+                                {
+                                    @Html.CheckBoxFor(x => x.Active)
+                                }
+                                else
+                                {
+                                    @Html.CheckBoxFor(x => x.Active, new { @disabled = "disabled" })
+                                    @Html.HiddenFor(x=>x.Active)
+                                }
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-10 col-md-offset-1">
+                    <button class="btn btn-primary" type="submit">Save</button>
+                </div>
+            </fieldset>
+        }
+
+        <div class="small col-md-12 strong">
+            <span class="pull-right">
+                Last Updated on: @(Model.UpdatedOn != null ? Model.UpdatedOn.GetValueOrDefault().ToString("M/d/yyyy hh:mm") : "") by @Model.UpdatedBy
+            </span>
+        </div>
+
+        @if (Model.Id > 0)
+        {
+            <h3>
+                Formulations
+            </h3>
+
+            <div class="panel-body">
+                <div class="col-md-10">
+                    <table id="draggable" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Plant Name</th>
+                                <th>Formulation </th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (RedHill.SalesInsight.DAL.Plant plant in Model.Plants.Where(x => x.Active == true))
+                            {
+                                <tr>
+                                    <td>@plant.Name</td>
+                                    @{var formulation = Model.FindFormulation(plant.PlantId);}
+                                    <td>
+                                        @if (formulation != null)
+                                        {
+                                            <span class="glyphicon glyphicon-ok"></span>
+                                        }
+                                        else
+                                        {
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (formulation != null)
+                                        {
+                                            <a class="btn btn-primary btn-sm addEdit-formulation" title="Edit" href="/Admin/AddEditMixFormulation/@Model.Id?plant=@plant.PlantId">
+                                                <i class="glyphicon glyphicon-edit"></i>
+                                            </a>
+                                            <a class="btn btn-primary btn-sm copy_btn" @(aujsAPIEnabled ? "disabled" : "") data-id="@plant.PlantId" title="Copy" data-toggle="modal" data-target="#copy_modal">
+                                                <i class="fa fa-fw fa-copy"></i>
+                                            </a>
+                                            <a class="btn btn-danger btn-sm" @(aujsAPIEnabled ? "disabled" : "") title="Delete" data-confirm="Are you sure you want to delete this formulation?"
+                                               href="/Admin/DeleteMixFormulation/@Model.Id?plant=@plant.PlantId">
+                                                <i class="fa fa-fw fa-trash"></i>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-primary btn-sm" @(aujsAPIEnabled ? "disabled" : "") title="Create new" href="/Admin/AddEditMixFormulation/@Model.Id?plant=@plant.PlantId">
+                                                <i class="fa fa-fw fa-plus"></i>
+                                            </a>
+                                        }
+                                    </td>
+                                </tr>
+                                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+                                        }
+    </div>
+</div>
+
+<div class="modal fade" id="copy_modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Html.BeginForm("CopyMixFormulation", "Admin", FormMethod.Post))
+            {
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Copy Formulation</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-group form-horizontal">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Copy Formulation to</label>
+                            <div class="col-md-9">
+                                @Html.Hidden("SourcePlantId", "")
+                                @Html.Hidden("Mix", Model.Id)
+                                @Html.ListBox("PlantIds", new SelectList(Model.Plants, "PlantId", "Name"), new { @class = "selectize" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Copy</button>
+                </div>
+            }
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+@section Scripts {
+    <script type="text/javascript" src="/Scripts/selectize.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/Content/selectize.bootstrap3.css" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var competitorAccess = '@(ViewBag.AccessRule.HasMixDesignsAccess == SIRolePermissionLevelConstants.FULL_ACCESS)';
+            if (competitorAccess == 'False')
+            { disableEveryThing('.addEdit-formulation'); }
+
+            $(".copy_btn").click(function () {
+                $("#SourcePlantId").val($(this).data("id"));
+                return true;
+            });
+            $(".selectize").selectize({
+                plugins: ['remove_button'],
+                delimiter: ',',
+                placeholder: '',
+                persist: false,
+                create: function (input) {
+                    return {
+                        value: input,
+                        text: input
+                    }
+                }
+            });
+
+        });
+    </script>
+}
+
+
+
+
+
+

@@ -1,0 +1,8 @@
+﻿----Add Columns To Quotation----
+ALTER TABLE Quotation
+ADD AggregatePlantId INT NULL,
+	BlockPlantId INT NULL;
+
+ALTER TABLE Quotation
+ADD FOREIGN KEY (AggregatePlantId) REFERENCES Plant(PlantId),
+	FOREIGN KEY (BlockPlantId) REFERENCES Plant(PlantId);

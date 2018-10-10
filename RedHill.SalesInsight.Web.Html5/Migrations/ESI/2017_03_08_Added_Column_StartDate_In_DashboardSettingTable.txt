@@ -1,0 +1,12 @@
+﻿---Shelly - 
+---Chetan - 
+---Bharat - Done
+---Avnish - Done
+---Dinesh - Done
+-- Server : Done
+
+
+----- 2017_03_08 3:17 AM New Column added to the DashboardSettings Table ---Avnish
+ALTER TABLE DashboardSettings
+ ADD [StartDate] [datetime] NULL
+ GO

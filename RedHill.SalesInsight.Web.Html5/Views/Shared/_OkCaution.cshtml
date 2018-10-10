@@ -1,0 +1,36 @@
+﻿@model Tuple<Double, RedHill.SalesInsight.DAL.MetricIndicatorAllowance>
+@if (Model.Item2 != null){
+    if (Model.Item2.LessIsBetter.GetValueOrDefault())
+    {
+        if (Model.Item1 < Model.Item2.Ok)
+        {
+            <i class="fa fa-1x fa-check-circle green"></i>
+        }
+        if (Model.Item1 >= Model.Item2.Ok && Model.Item1 <=  Model.Item2.Caution)
+        {
+            <i class="fa fa-1x fa-exclamation-circle yellow"></i>
+        }
+        if (Model.Item1 > Model.Item2.Caution)
+        {
+            <i class="fa fa-1x fa-times-circle red"></i>
+        }
+    }
+    else
+    {
+        if (Model.Item1 > -1 * Model.Item2.Ok)
+        {
+            <i class="fa fa-1x fa-check-circle green"></i>
+        }
+        if (Model.Item1 <= -1* Model.Item2.Ok && Model.Item1 >=  -1*Model.Item2.Caution)
+        {
+            <i class="fa fa-1x fa-exclamation-circle yellow"></i>
+        }
+        if (Model.Item1 < -1 * Model.Item2.Caution)
+        {
+            <i class="fa fa-1x fa-times-circle red"></i>
+        }
+    }
+}
+
+
+

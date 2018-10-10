@@ -1,0 +1,59 @@
+﻿@model RedHill.SalesInsight.DAL.DataTypes.ActualsHistory
+@{
+    Layout = null;
+}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Actuals History</title>
+</head>
+<body>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Actuals History</h4>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-6">
+                <table class="table table-bordered table-condensed table-striped">
+                    <thead>
+                        <tr>
+                            <th class="center" colspan="2">Previous 6 month</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (RedHill.SalesInsight.DAL.DataTypes.DateValue dv in Model.LSActuals)
+                        {
+                            <tr>
+                                <td class="right">@dv.Date</td>
+                                <td class="right">@dv.Value.ToString("N0")</td>
+                            </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <table class="table table-bordered table-condensed table-striped">
+                    <thead>
+                        <tr>
+                            <th class="center" colspan="2">Last Year Trend</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (RedHill.SalesInsight.DAL.DataTypes.DateValue dv in Model.LYTrend)
+                        {
+                            <tr>
+                                <td class="right">@dv.Date</td>
+                                <td class="right">@dv.Value.ToString("N0")</td>
+                            </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+    </div>
+</body>
+</html>

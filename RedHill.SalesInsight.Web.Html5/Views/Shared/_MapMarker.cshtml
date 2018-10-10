@@ -1,0 +1,182 @@
+﻿@model Boolean
+<div class="modal fade" id="map_modal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                @if (Model)
+                {
+                    <h4 class="modal-title">Set Map Location</h4>
+                    <div><small>Enter Address/City/State or drag orange marker to desired location; then click[Set Location].</small></div>
+                }
+                else
+                {
+                    <h4 class="modal-title">Set Boundary and Zoom</h4>
+                    <div><small>Center the map and zoom to fit the desired view port. </small></div>
+                }
+            </div>
+            <div class="modal-body map-modal">
+                <div class="map-modal form">
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <input type="text" id="pu_address" class="form-control input-sm" placeholder="Address" />
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="pu_state" class="form-control input-sm" placeholder="State" />
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="pu_city" class="form-control input-sm" placeholder="City" />
+                        </div>
+                     
+                        @*<div class="form-group">
+                          <button id="print_map" onclick="printMap()" class="btn btn-default">Print</button>
+                        </div>*@
+                    </div>
+                </div>
+                <div>
+                    <div id="map" style="width: 100%; height: 400px;"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default set-location" data-dismiss="modal">Set Location</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<script src="https://maps.googleapis.com/maps/api/js?sensor=false&key=AIzaSyBZa9RTnjaTF9Z3_NB288cc7u2no9RxCU4&signed_in=true&callback=initMap"></script>*@
+<script type="text/javascript">
+    var geocoder;
+    var map;
+    var latlng;
+    var currentClinic;
+
+    function initMap() {
+    }
+    
+    $(window).load(function () {
+        $("body").on("click", ".map_marker_btn", function () {
+            geocoder = new google.maps.Geocoder();
+            lat = $(this).data("latitude");
+            lng = $(this).data("longitude");
+            def_lat = $(this).data("default-latitude");
+            def_lng = $(this).data("default-longitude");
+            address = $(this).data("address");
+            zoom = $(this).data("zoom");
+            if (zoom == undefined) {
+                zoom = 14;
+            }
+            default_lat_lng = new google.maps.LatLng(40.1133472, -99.1702885);
+            if (lat == "" || lat == undefined || lng == "" || lng == undefined) {
+                if (def_lat == "" || def_lng == "" || def_lat == undefined || def_lng == undefined) {
+                    if (address != undefined) {
+                        geocoder.geocode({ 'address': address }, function (results, status) {
+                            if (status == google.maps.GeocoderStatus.OK) {
+                                latlng = results[0].geometry.location;
+                            } else {
+                                console.log("setting static");
+                                latlng = default_lat_lng;
+                                zoom = 4;
+                            }
+                        });
+                    } else {
+                        console.log("setting static");
+                        latlng = default_lat_lng;
+                        zoom = 4;
+                    }
+                } else {
+                    console.log("setting defaults");
+                    proximity_latlng = new google.maps.LatLng(parseFloat(def_lat), parseFloat(def_lng));
+                    console.log(address);
+                    if (address != undefined) {
+                        geocoder.geocode({ 'address': address, 'location': proximity_latlng }, function (results, status) {
+                            if (status == google.maps.GeocoderStatus.OK) {
+                                latlng = results[0].geometry.location;
+                            } else {
+                                console.log("setting default");
+                                zoom = 10;
+                                latlng = proximity_latlng;
+                            }
+                        });
+                    } else {
+                        console.log("setting default");
+                        zoom = 10;
+                        latlng = proximity_latlng;
+                    }
+                }
+            }
+            else {
+                console.log("setting normal");
+                latlng = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
+            }
+            $("#map_modal").modal("show");
+        });
+
+        $("#map_modal").on("shown.bs.modal", function () {
+            $("#pu_address, #pu_city, #pu_state").val("");
+
+            var mapOptions = {
+                zoom: zoom,
+                center: latlng,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            }
+            map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+            @if (Model)
+            {
+                <text>
+            marker = new google.maps.Marker({
+                map: map,
+                draggable: true,
+                animation: google.maps.Animation.DROP,
+                position: latlng
+            });
+
+            marker.addListener('dragend', function (e) {
+                latlng = e.latLng;
+                var event = $.Event("MarkerMoved", { "latitude": latlng.lat(), "longitude": latlng.lng(), "zoom": map.getZoom(), "center_lat": map.getCenter().lat(), "center_lng": map.getCenter().lng() });
+                $("body").trigger(event);
+            });
+            //Set default if marker not moved
+            var event = $.Event("MarkerMoved", { "zoom": map.getZoom(), "latitude": latlng.lat(), "longitude": latlng.lng(), "center_lat": map.getCenter().lat(), "center_lng": map.getCenter().lng() });
+            $("body").trigger(event);
+
+                </text>
+            }
+            map.addListener('zoom_changed', function () {
+                var event = $.Event("MapMoved", { "zoom": map.getZoom(), "center_lat": map.getCenter().lat(), "center_lng": map.getCenter().lng() });
+                $("body").trigger(event);
+            });
+            map.addListener('center_changed', function () {
+                var event = $.Event("MapMoved", { "zoom": map.getZoom(), "center_lat": map.getCenter().lat(), "center_lng": map.getCenter().lng() });
+                $("body").trigger(event);
+            });
+        });
+
+        $(document).on("change", "#pu_address, #pu_city, #pu_state", function (e) {
+            geocoder = new google.maps.Geocoder();
+            var puAddress = $("#pu_address").val(), puCity = $("#pu_city").val(), puState = $("#pu_state").val();
+            var newAddressArr = [];
+            puAddress.length && newAddressArr.push(puAddress);
+            puCity.length && newAddressArr.push(puCity);
+            puState.length && newAddressArr.push(puState);
+
+            var newAddress = newAddressArr.join(',');
+            if (newAddress != undefined) {
+                geocoder.geocode({ 'address': newAddress }, function (results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        latlng = results[0].geometry.location;
+                        marker.setPosition(latlng);
+                        map.setCenter(latlng);
+
+                        var event = $.Event("MarkerMoved", { "latitude": latlng.lat(), "longitude": latlng.lng(), "zoom": map.getZoom(), "center_lat": map.getCenter().lat(), "center_lng": map.getCenter().lng() });
+                        $("body").trigger(event);
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+
+

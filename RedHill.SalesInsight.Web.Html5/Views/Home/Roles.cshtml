@@ -1,0 +1,773 @@
+﻿@using RedHill.SalesInsight.Web.Html5.Models;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "View all Roles";
+    ViewBag.UsingMultiselect = true;
+}
+<style>
+    table td {
+        border-left: 0 solid #DADADA !important;
+        text-align: center;
+    }
+
+    .table-bordered {
+        border: 0px solid #ddd !important;
+    }
+
+    .fixedtd {
+        position: absolute;
+        left: 0;
+        border: 1px solid #fff !important;
+    }
+
+    .form-group {
+        margin-bottom: 28px !important;
+    }
+
+    .form-group {
+        margin-top: 0px !important;
+    }
+
+    .wrapper1, .wrapper2 {
+        /*width: 300px;*/
+        border: none 0px RED;
+        overflow-x: scroll;
+        overflow-y: hidden;
+    }
+
+    .wrapper1 {
+        height: 20px;
+        /*height: 31px;
+        background: antiquewhite;*/
+    }
+
+    .wrapper2 {
+        height: 2241px;
+        /*1881px1860px*/
+    }
+
+    .div1 {
+        width: 100%;
+        height: 20px;
+    }
+
+    .div2 {
+        width: 100%;
+        height: 1832px;
+        background-color: white;
+    }
+
+    .table-div {
+        width: 100%;
+    }
+</style>
+
+<div class="page-head">
+    <h2>Manage Roles</h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Home/Settings">Settings</a></li>
+        <li class="active">Roles</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="block-flat">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="col-md-2 form-group">
+                    <select multiple="multiple" class="pipeline_optional_columns_select form-control multiselect">
+                        @foreach (RoleAccessView role in @ViewBag.RoleViews)
+                        {
+                            <option value=@role.RoleId>@role.RoleName</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-offset-8 col-md-2 form-group">
+                    @if (ViewBag.AccessRule.HasRolesAccess == SIRolePermissionLevelConstants.FULL_ACCESS || ViewBag.AccessRule.HasRolesAccess == SIRolePermissionLevelConstants.EDIT_ONLY)
+                    {
+                        <a class="btn btn-primary pull-right" data-toggle="modal" data-target="#add_roleName" id="create_new_btn">
+                            <i class="fa fa-plus"></i>
+                            Role
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="block-flat">
+        <div class="roledv">
+            <div class="wrapper1">
+                <div class="div1">
+                    <div class="table-div">
+                        &nbsp;
+                    </div>
+                </div>
+            </div>
+            <div class="wrapper2">
+                <div class="div2">
+                    <table id="user_table" class="table-bordered table-striped" style="display: block;">
+                        <tr>
+                            <td class="fixedtd">
+                                <table class="roleheader">
+                                    <tr>
+                                        <th>Role Name</th>
+                                    </tr>
+                                    @if (ViewBag.AccessRule.HasRolesAccess == SIRolePermissionLevelConstants.FULL_ACCESS || ViewBag.AccessRule.HasRolesAccess == SIRolePermissionLevelConstants.EDIT_ONLY)
+                                    {
+                                        <tr>
+                                            <th>Actions</th>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <th>Add-Ons Access</th>
+                                    </tr>
+                                    @if (ViewBag.ShowESIModules)
+                                    {
+                                        <tr>
+                                            <th>Alerts Management Access</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Benchmark Analysis Access</th>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <th>Competitors Access</th>
+                                    </tr>
+                                    @if (ViewBag.ShowESIModules)
+                                    {
+                                        <tr>
+                                            <th>Custom Web Data Form Access</th>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <th>Customers Access</th>
+                                    </tr>
+                                    @if (ViewBag.ShowESIModules)
+                                    {
+                                        <tr>
+                                            <th>Dashboard Access</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Drill-In Access</th>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <th>Forecast Access</th>
+                                    </tr>
+                                    <tr>
+                                        <th>GC Access</th>
+                                    </tr>
+                                    @if (ViewBag.ShowESIModules)
+                                    {
+                                        <tr>
+                                            <th>Goal Analysis Access</th>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <th>Market Segments Access</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Miscellaneous Access</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Mix Designs Access</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Pipeline Access</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Quotations Access</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Raw Materials Access</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Reports Access</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Report Settings Access</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Roles Access</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Sack Pricing Access</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Sales Staff Access</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Statuses/Reasons Lost Access</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Structure Access</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Targets Access</th>
+                                    </tr>
+                                    @if (ViewBag.ShowESIModules)
+                                    {
+                                        <tr>
+                                            <th>Trend Analysis Access</th>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <th>Users Access</th>
+                                    </tr>
+
+                                    <tr>
+                                        <th>Edit Actual Volume</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Edit Non-Future Projection</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Exclude Custom Mixes</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Print Unapproved Quotes</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Upload Add-on Prices/Costs</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Upload Mixes/Formulations</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Upload Raw Material Cost</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Merge Customers</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Enable Sack Pricing</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Require Project Location</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Hide Price</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Hide Spread</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Hide Contribution</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Hide Profit</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Min Spread</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Max Spread</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Min Contribution</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Max Contribution</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Min Profit</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Max Profit</th>
+                                    </tr>
+
+                                </table>
+                            </td>
+                            @foreach (RoleAccessView role in @ViewBag.RoleViews)
+                            {
+                                <td id="@role.RoleId" class="movable">
+                                    <table id="@role.RoleId" class="rolebody">
+                                        <tr>
+                                            <td><strong><b>@role.RoleName</b></strong></td>
+                                        </tr>
+                                        @if (ViewBag.AccessRule.HasRolesAccess == SIRolePermissionLevelConstants.FULL_ACCESS || ViewBag.AccessRule.HasRolesAccess == SIRolePermissionLevelConstants.EDIT_ONLY)
+                                        {
+                                            <tr>
+                                                <td class="text-center">
+                                                    <a href="javascript:void(0)" data-toggle="modal" data-id="@(role.RoleId)" class="@(role.IsAdmin?"disabled":"") btn btn-primary btn-xs edit_role_Name">
+                                                        <i class="glyphicon glyphicon-edit"></i>
+                                                    </a>
+                                                    @if (ViewBag.AccessRule.HasRolesAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                                                    {
+                                                        if (!role.IsAdmin)
+                                                        {
+                                                            <a data-confirm="Are you sure you want to delete the role: @role.RoleName?" href="/home/DeleteRole/@role.RoleId" class="btn btn-danger btn-xs">
+                                                                <i class="fa fa-trash-o"></i>
+                                                            </a>
+                                                        }
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                        <tr>
+                                            <td>@Html.DropDownList("addonsAccess", @role.GetAddonsAccessList(), role.IsAdmin ? (object)new { @class = "form-control", @disabled = "disabled" } : (object)new { @class = "form-control" })</td>
+                                        </tr>
+                                        @if (ViewBag.ShowESIModules)
+                                        {
+                                            <tr>
+                                                <td>@Html.DropDownList("alertsManagementAccess", @role.GetAlertsManagementAccessList(), role.IsAdmin ? (object)new { @class = "form-control", @disabled = "disabled" } : (object)new { @class = "form-control" })</td>
+                                            </tr>
+                                            <tr>
+                                                <td>@Html.DropDownList("benchmarkAnalysisAccess", @role.GetBenchmarkAnalysisAccessList(), role.IsAdmin ? (object)new { @class = "form-control", @disabled = "disabled" } : (object)new { @class = "form-control" })</td>
+                                            </tr>
+                                        }
+                                        <tr>
+                                            <td>@Html.DropDownList("competitorsAccess", @role.GetCompetitorsAccessList(), role.IsAdmin ? (object)new { @class = "form-control", @disabled = "disabled" } : (object)new { @class = "form-control" })</td>
+                                        </tr>
+                                        @if (ViewBag.ShowESIModules)
+                                        {
+                                            <tr>
+                                                <td>@Html.DropDownList("customWebDataFormAccess", @role.GetCustomWebDataFormAccessList(), role.IsAdmin ? (object)new { @class = "form-control", @disabled = "disabled" } : (object)new { @class = "form-control" })</td>
+                                            </tr>
+                                        }
+                                        <tr>
+                                            <td>@Html.DropDownList("customersAccess", @role.GetCustomersAccessList(), role.IsAdmin ? (object)new { @class = "form-control", @disabled = "disabled" } : (object)new { @class = "form-control" })</td>
+                                        </tr>
+                                        @if (ViewBag.ShowESIModules)
+                                        {
+                                            <tr>
+                                                <td>@Html.DropDownList("dashboardAccess", @role.GetDashboardAccessList(), role.IsAdmin ? (object)new { @class = "form-control", @disabled = "disabled" } : (object)new { @class = "form-control" })</td>
+                                            </tr>
+                                            <tr>
+                                                <td>@Html.DropDownList("drillInAccess", @role.GetDrillInAccessList(), role.IsAdmin ? (object)new { @class = "form-control", @disabled = "disabled" } : (object)new { @class = "form-control" })</td>
+                                            </tr>
+                                        }
+                                        <tr>
+                                            <td>@Html.DropDownList("forecastAccess", @role.GetForecastAccessList(), role.IsAdmin ? (object)new { @class = "form-control", @disabled = "disabled" } : (object)new { @class = "form-control" })</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.DropDownList("gcAccess", @role.GetGCAccessList(), role.IsAdmin ? (object)new { @class = "form-control", @disabled = "disabled" } : (object)new { @class = "form-control" })</td>
+                                        </tr>
+                                        @if (ViewBag.ShowESIModules)
+                                        {
+                                            <tr>
+                                                <td>@Html.DropDownList("goalAnalysisAccess", @role.GetGoalAnalysisAccessList(), role.IsAdmin ? (object)new { @class = "form-control", @disabled = "disabled" } : (object)new { @class = "form-control" })</td>
+                                            </tr>
+                                        }
+                                        <tr>
+                                            <td>@Html.DropDownList("marketSegmentsAccess", @role.GetMarketSegmentsAccessList(), role.IsAdmin ? (object)new { @class = "form-control", @disabled = "disabled" } : (object)new { @class = "form-control" })</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.DropDownList("miscellaneousAccess", @role.GetMiscellaneousAccessList(), role.IsAdmin ? (object)new { @class = "form-control", @disabled = "disabled" } : (object)new { @class = "form-control" })</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.DropDownList("mixDesignsAccess", @role.GetMixDesignsAccessList(), role.IsAdmin ? (object)new { @class = "form-control", @disabled = "disabled" } : (object)new { @class = "form-control" })</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.DropDownList("pipelineAccess", @role.GetPipelineAccessList(), role.IsAdmin ? (object)new { @class = "form-control", @disabled = "disabled" } : (object)new { @class = "form-control" })</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.DropDownList("quotationAccess", @role.GetQuotationAccessList(), role.IsAdmin ? (object)new { @class = "form-control", @disabled = "disabled" } : (object)new { @class = "form-control" })</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.DropDownList("rawMaterialsAccess", @role.GetRawMaterialsAccessList(), role.IsAdmin ? (object)new { @class = "form-control", @disabled = "disabled" } : (object)new { @class = "form-control" })</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.DropDownList("reportsAccess", @role.GetReportsAccessList(), role.IsAdmin ? (object)new { @class = "form-control", @disabled = "disabled" } : (object)new { @class = "form-control" })</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.DropDownList("reportSettingsAccess", @role.GetReportSettingsAccessList(), role.IsAdmin ? (object)new { @class = "form-control", @disabled = "disabled" } : (object)new { @class = "form-control" })</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.DropDownList("rolesAccess", @role.GetRolesAccessList(), role.IsAdmin ? (object)new { @class = "form-control", @disabled = "disabled" } : (object)new { @class = "form-control" })</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.DropDownList("sackpricingAccess", @role.GetSackPricingAccessList(), role.IsAdmin ? (object)new { @class = "form-control", @disabled = "disabled" } : (object)new { @class = "form-control" })</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.DropDownList("salesStaffAccess", @role.GetSalesStaffAccessList(), role.IsAdmin ? (object)new { @class = "form-control", @disabled = "disabled" } : (object)new { @class = "form-control" })</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.DropDownList("statusesReasonsLostAccess", @role.GetStatusesReasonsLostAccessList(), role.IsAdmin ? (object)new { @class = "form-control", @disabled = "disabled" } : (object)new { @class = "form-control" })</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.DropDownList("structureAccess", @role.GetStructureAccessList(), role.IsAdmin ? (object)new { @class = "form-control", @disabled = "disabled" } : (object)new { @class = "form-control" })</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.DropDownList("targetsAccess", @role.GetTargetsAccessList(), role.IsAdmin ? (object)new { @class = "form-control", @disabled = "disabled" } : (object)new { @class = "form-control" })</td>
+                                        </tr>
+                                        @if (ViewBag.ShowESIModules)
+                                        {
+                                            <tr>
+                                                <td>@Html.DropDownList("trendAnalysisAccess", @role.GetTrendAnalysisAccessList(), role.IsAdmin ? (object)new { @class = "form-control", @disabled = "disabled" } : (object)new { @class = "form-control" })</td>
+                                            </tr>
+                                        }
+                                        <tr>
+                                            <td>@Html.DropDownList("userAccess", @role.GetUserAccessList(), role.IsAdmin ? (object)new { @class = "form-control", @disabled = "disabled" } : (object)new { @class = "form-control" })</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.CheckBox("editActualAccess", @role.CanEditActual)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.CheckBox("editFutureAccess", @role.CanEditNonFutureProjections)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.CheckBox("excludeCustomMix", @role.ExcludeCustomMix)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.CheckBox("canPrintQuote", @role.CanPrintQuotes)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.CheckBox("canUploadAddonPricesCosts", @role.CanUploadAddonPricesCosts)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.CheckBox("canUploadMixesFormulations", @role.CanUploadMixesFormulations)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.CheckBox("canUploadRawMaterialCost", @role.CanUploadRawMaterialCost)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                @Html.CheckBox("mergeCustomers", @role.MergeCustomers)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.CheckBox("enable5skPricing", @role.Enable5skPricing)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.CheckBox("requireProjectLocation", @role.RequireProjectLocation)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.CheckBox("hidePrice", @role.HidePrice)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.CheckBox("hideSpread", @role.HideSpread)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.CheckBox("hideContribution", @role.HideContribution)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>@Html.CheckBox("hideProfit", @role.HideProfit)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                @Html.TextBox("minSpread", @role.MinSpread, new { @class = "form-control enable-float" })
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                @Html.TextBox("maxSpread", @role.MaxSpread, new { @class = "form-control enable-float" })
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                @Html.TextBox("minContribution", @role.MinContribution, new { @class = "form-control enable-float" })
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                @Html.TextBox("maxContribution", @role.MaxContribution, new { @class = "form-control enable-float" })
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                @Html.TextBox("minProfit", @role.MinProfit, new { @class = "form-control enable-float" })
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                @Html.TextBox("maxProfit", @role.MaxProfit, new { @class = "form-control enable-float" })
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            }
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form form-horizontal">
+        <div class="modal fade" id="edit_roleName">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Edit Role Name</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="errors-report">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Role Name</label>
+                            <div class="col-md-8">
+                                @Html.Hidden("role_id", "", new { @class = "form-control role_id_field" })
+                                @Html.TextBox("role_name", "", new { @class = "form-control role_name_field" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary update_role_btn">Update</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+    </div>
+    <div class="form form-horizontal">
+        <div class="modal fade" id="add_roleName">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Add Role</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="add_errors-report">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Role Name</label>
+                            <div class="col-md-8">
+                                @Html.Hidden("roleid", "", new { @class = "form-control" })
+                                @Html.TextBox("roleName", "", new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary add_role_btn">Add</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+    </div>
+    <div class="modal fade" id="edit_roleNameError">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"></h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(function () {
+        $(".wrapper1").scroll(function () {
+            $(".wrapper2")
+                .scrollLeft($(".wrapper1").scrollLeft());
+        });
+        $(".wrapper2").scroll(function () {
+            $(".wrapper1")
+                .scrollLeft($(".wrapper2").scrollLeft());
+        });
+    });
+
+
+    $(document).ready(function (e) {
+        var offset = $(".wrapper1").offset();
+        var wrapperWidth = $(".roleheader").width();
+        var roleHeaderOffset = offset.left - wrapperWidth;
+        $(".roleheader").offset({ left: roleHeaderOffset })
+
+        var w = GetWidths('.movable');
+        function GetWidths(id) {
+            var i = 0;
+            $(id).each(function (index) {
+                i += parseInt($(this).width(), 10);
+                countTotalNoOfMovableColumns = index;
+            });
+            return i;
+        }
+        if (countTotalNoOfMovableColumns == 4) {
+            $(".table-div").width(parseInt(w));
+            $(".wrapper1, .wrapper2").css("overflow-x", "hidden");
+        }
+        else {
+            if (countTotalNoOfMovableColumns < 4)
+            {
+                $(".wrapper1, .wrapper2").css("overflow-x","hidden");
+            }
+            else {
+                $(".wrapper1, .wrapper2").css("overflow-x", "scroll");
+                $(".table-div").width(parseInt(w) + countTotalNoOfMovableColumns + 3);
+            }
+        }
+
+        var roleAccess = '@(ViewBag.AccessRule.HasRolesAccess == SIRolePermissionLevelConstants.FULL_ACCESS || ViewBag.AccessRule.HasRolesAccess == SIRolePermissionLevelConstants.EDIT_ONLY)';
+
+        if (roleAccess == 'False') {
+            $(":input").not(".pipeline_optional_columns_select").attr("disabled", true);
+        }
+        $("select[multiple=multiple]").change(function () {
+            $(".movable").hide();
+            var i = 0;
+            $("select[multiple=multiple] option:selected").each(function (index) {
+                $("td[id=" + $(this).val() + "]").show();
+                i += parseInt($("td[id=" + $(this).val() + "]").width(), 10);
+                countTotalColumn = index;
+            });
+            if (countTotalColumn == 4) {
+                $(".table-div").width(parseInt(i));
+                $(".wrapper1, .wrapper2").css("overflow-x", "hidden");
+            }
+            else {
+                if (countTotalColumn < 4) {
+                    $(".wrapper1, .wrapper2").css("overflow-x", "hidden");
+                }
+                else {
+                    $(".wrapper1, .wrapper2").css("overflow-x", "scroll");
+                    $(".table-div").width(parseInt(i) + countTotalNoOfMovableColumns + 3);
+                }
+            }
+        });
+
+        errorMessage = '@TempData["ErrorMessage"]';
+        if (errorMessage != null && errorMessage != "") {
+            alert(errorMessage);
+        }
+        $("select").not("select[multiple=multiple]").on("change", function (e) {
+            element = $(this);
+            roleId = $(this).parents("table").first().attr("id");
+            accessName = $(this).attr("id");
+            change = $(this).val();
+            element.attr("disabled", true);
+            updateAccess(roleId, accessName, change, function (data) {
+                element.removeAttr("disabled");
+            });
+        });
+        $(document).on("change", ".roledv input[type='text']", function (e) {
+            element = $(this);
+            roleId = $(this).parents("table").first().attr("id");
+            accessName = $(this).attr("id");
+            change = $(this).val();
+            if (change.trim().length == 0)
+                change = "empty";
+            element.attr("disabled", true);
+            updateAccess(roleId, accessName, change, function (data) {
+                element.removeAttr("disabled");
+            });
+        });
+        $(".movable input[type='checkbox']").on("change", function (e) {
+            element = $(this);
+            roleId = $(this).parents("table").first().attr("id");
+            accessName = $(this).attr("id");
+            change = $(this).is(":checked");
+            element.attr("disabled", true);
+            updateAccess(roleId, accessName, change, function (data) {
+                element.removeAttr("disabled");
+            });
+        });
+
+        $(".edit_role_Name").click(function () {
+            $(".errors-report").html("");
+            //$(".errors-report").closest("div.form-group").addClass("hidden");
+            var roleId = $(this).data("id");
+            $.get("/Json/GetRoleName", { "roleId": roleId }, function (data) {
+                var info = JSON.parse(data);
+                if (!info.status) {
+                    $("#edit_roleNameError .modal-title").html("Oops!! Something went wrong.");
+                    $("#edit_roleNameError").modal("show");
+                }
+                else {
+                    $("#role_name").val(info.roleName);
+                    $("#role_id").val(info.roleId);
+                    $("#edit_roleName").modal("show");
+                }
+            });
+        });
+        $(".update_role_btn").click(function () {
+            var roleName = $("#role_name").val();
+            var errorExist = '<div class="addon-alert alert alert-warning alert-dismissable fade in">' +
+               '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
+           "<strong><i class='fa fa-exclamation-triangle'></i></strong> ERROR</div>";
+
+            if (roleName != "") {
+                var roleId = $(".role_id_field").val();
+                $.get("/Json/UpdateRoleName", { "roleId": roleId, "roleName": roleName }, function (data) {
+                    var info = JSON.parse(data);
+                    if (info.status == "False") {
+                        //$(".errors-report").closest("div.form-group").removeClass("hidden");
+                        $(".errors-report").html("").html(errorExist.replace("ERROR", " Oops!! Something went wrong."));
+                    }
+                    else if (info.status == "True") {
+                        $("#edit_roleName").modal("hide");
+                        $("table[id=" + roleId + "] tr:first td").html("<strong><b>" + roleName + "</b></strong>")
+                    }
+                    else {
+                        //$(".errors-report").closest("div.form-group").removeClass("hidden");
+                        $(".errors-report").html("").html(errorExist.replace("ERROR", info.status));
+                    }
+                });
+            }
+            else {
+                $(".errors-report").html("").html(errorExist.replace("ERROR", " Please fill Role Name."));
+            }
+        });
+
+        $("#role_name,#roleName").focus(function () {
+            $(".errors-report").html("");
+            $(".add_errors-report").html("");
+        });
+
+
+        $(".add_role_btn").click(function () {
+            var roleName = $("#roleName").val();
+
+            var errorExist = '<div class="addon-alert alert alert-warning alert-dismissable fade in">' +
+               '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
+           "<strong><i class='fa fa-exclamation-triangle'></i></strong> ERROR</div>";
+
+            if (roleName != "") {
+                $.get("/Json/AddRole", { "roleName": roleName }, function (data) {
+                    var info = JSON.parse(data);
+                    if (info.status == "False") {
+                        $(".add_errors-report").html("").html(errorExist.replace("ERROR", " Oops!! Something went wrong."));
+                    }
+                    else if (info.status == "True") {
+                        window.location.href = "/Home/Roles";
+                    }
+                    else {
+                        $(".add_errors-report").html("").html(errorExist.replace("ERROR", info.status));
+                    }
+                });
+            }
+            else {
+                $(".add_errors-report").html("").html(errorExist.replace("ERROR", " Please fill Role Name."));
+            }
+        });
+
+        var updateAccess = function (roleId, accessName, newValue, callback) {
+            $.post("/Home/UpdateRoleAccess",
+                { "RoleId": roleId, "Change": newValue, "AccessName": accessName },
+                function (data) {
+                    if (data === 'True') {
+                        if (callback) {
+                            callback(data);
+                        }
+                    }
+                    else {
+                        $("#edit_roleNameError .modal-title").html("Oops!! Something went wrong.");
+                        $("#edit_roleNameError").modal("show");
+                    }
+                });
+        };
+
+        var height = [];
+        $('.rolebody:first').find("tr").each(function (index) {
+            if (index == 0)
+                height[index] = $(this).height() + 1;
+            else
+                height[index] = $(this).height();
+
+        });
+        $('.roleheader').find("tr").each(function (index) {
+            $(this).height(height[index]);
+        });
+    });
+
+</script>

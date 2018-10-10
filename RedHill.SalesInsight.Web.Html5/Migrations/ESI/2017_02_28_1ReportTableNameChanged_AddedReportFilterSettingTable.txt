@@ -1,0 +1,46 @@
+﻿-- Chetan : Done
+-- Bharat : Done
+-- Shelly :
+-- Avnish : Done
+-- Dinesh : Done
+
+---- 2017-02-28 7:53PM ---Report Table Name Changed to ReportSetting----AVNISH
+sp_rename 'Report','ReportSetting';
+
+---- 2017-02-28 7:53PM ---New Table Added ReportFilterSetting----AVNISH
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[ReportFilterSetting](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[ReportId] [bigint] NOT NULL,
+	[EntityType] [varchar](50) NOT NULL,
+	[EntityRefId] [bigint] NOT NULL,
+	[StartDate] [datetime] NULL,
+	[EndDate] [datetime] NULL,
+	[CreatedAt] [datetime] NOT NULL,
+ CONSTRAINT [PK_ReportFilters] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[ReportFilterSetting]  WITH CHECK ADD  CONSTRAINT [FK_ReportFilters_Report] FOREIGN KEY([ReportId])
+REFERENCES [dbo].[ReportSetting] ([Id])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[ReportFilterSetting] CHECK CONSTRAINT [FK_ReportFilters_Report]
+GO

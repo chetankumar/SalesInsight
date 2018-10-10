@@ -1,0 +1,73 @@
+﻿--- 2017-05-06 -- New Table QuotationAggregateAddon --- Avnish
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[QuotationAggregateAddon](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[AddonId] [bigint] NOT NULL,
+	[QuotationId] [bigint] NOT NULL,
+	[Description] [nvarchar](200) NULL,
+	[Price] [decimal](18, 2) NULL,
+	[IsIncludeTable] [bit] NULL,
+ CONSTRAINT [PK_QuotationAggregateAddon] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[QuotationAggregateAddon]  WITH CHECK ADD  CONSTRAINT [FK_QuotationAggregateAddon_Addon] FOREIGN KEY([AddonId])
+REFERENCES [dbo].[Addon] ([Id])
+GO
+
+ALTER TABLE [dbo].[QuotationAggregateAddon] CHECK CONSTRAINT [FK_QuotationAggregateAddon_Addon]
+GO
+
+ALTER TABLE [dbo].[QuotationAggregateAddon]  WITH CHECK ADD  CONSTRAINT [FK_QuotationAggregateAddon_Quotation] FOREIGN KEY([QuotationId])
+REFERENCES [dbo].[Quotation] ([Id])
+GO
+
+ALTER TABLE [dbo].[QuotationAggregateAddon] CHECK CONSTRAINT [FK_QuotationAggregateAddon_Quotation]
+GO
+
+
+--- 2017-05-06 -- New Table QuotationBlockAddon --- Avnish
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[QuotationBlockAddon](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[AddonId] [bigint] NOT NULL,
+	[QuotationId] [bigint] NOT NULL,
+	[Description] [nvarchar](200) NULL,
+	[Price] [decimal](18, 2) NULL,
+	[IsIncludeTable] [bit] NULL,
+ CONSTRAINT [PK_QuotationBlockAddon] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[QuotationBlockAddon]  WITH CHECK ADD  CONSTRAINT [FK_QuotationBlockAddon_Addon] FOREIGN KEY([AddonId])
+REFERENCES [dbo].[Addon] ([Id])
+GO
+
+ALTER TABLE [dbo].[QuotationBlockAddon] CHECK CONSTRAINT [FK_QuotationBlockAddon_Addon]
+GO
+
+ALTER TABLE [dbo].[QuotationBlockAddon]  WITH CHECK ADD  CONSTRAINT [FK_QuotationBlockAddon_Quotation] FOREIGN KEY([QuotationId])
+REFERENCES [dbo].[Quotation] ([Id])
+GO
+
+ALTER TABLE [dbo].[QuotationBlockAddon] CHECK CONSTRAINT [FK_QuotationBlockAddon_Quotation]
+GO

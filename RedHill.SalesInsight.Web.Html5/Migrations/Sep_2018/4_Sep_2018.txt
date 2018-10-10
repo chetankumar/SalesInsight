@@ -1,0 +1,7 @@
+﻿------------ New Column added to the District and Quotation Table ---- Avnish
+
+Alter table District
+ADD [CustomerNumberOnPDF] [bit] NULL
+
+Alter table Quotation
+ADD [CustomerNumberOnPDF] [bit] NULL

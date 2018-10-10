@@ -1,0 +1,58 @@
+﻿
+ALTER TABLE TicketDetails ADD IsMongoUpdated BIT NOT NULL DEFAULT 0 
+
+
+ALTER TABLE DriverLoginTimes ADD IsMongoUpdated BIT NOT NULL DEFAULT 0 
+
+
+
+/* To prevent any potential data loss issues, you should review this script in detail before running it outside the context of the database designer.*/
+BEGIN TRANSACTION
+SET QUOTED_IDENTIFIER ON
+SET ARITHABORT ON
+SET NUMERIC_ROUNDABORT OFF
+SET CONCAT_NULL_YIELDS_NULL ON
+SET ANSI_NULLS ON
+SET ANSI_PADDING ON
+SET ANSI_WARNINGS ON
+COMMIT
+BEGIN TRANSACTION
+GO
+ALTER TABLE dbo.DriverLoginTimes ADD
+	HasInvalidData bit NOT NULL CONSTRAINT DF_DriverLoginTimes_HasInvalidData DEFAULT 0,
+	IsScrubbed bit NOT NULL CONSTRAINT DF_DriverLoginTimes_IsScrubbed DEFAULT 0,
+	IsProcessed bit NOT NULL CONSTRAINT DF_DriverLoginTimes_IsProcessed DEFAULT 0,
+	StartupTime float(53) NULL,
+	ShutdownTime float(53) NULL
+GO
+ALTER TABLE dbo.DriverLoginTimes SET (LOCK_ESCALATION = TABLE)
+GO
+COMMIT
+
+
+
+/* To prevent any potential data loss issues, you should review this script in detail before running it outside the context of the database designer.*/
+BEGIN TRANSACTION
+SET QUOTED_IDENTIFIER ON
+SET ARITHABORT ON
+SET NUMERIC_ROUNDABORT OFF
+SET CONCAT_NULL_YIELDS_NULL ON
+SET ANSI_NULLS ON
+SET ANSI_PADDING ON
+SET ANSI_WARNINGS ON
+COMMIT
+BEGIN TRANSACTION
+GO
+ALTER TABLE dbo.TicketDetails ADD
+	IsScrubbed bit NOT NULL CONSTRAINT DF_TicketDetails_IsScrubbed DEFAULT 0,
+	IsProcessed bit NOT NULL CONSTRAINT DF_TicketDetails_IsProcessed DEFAULT 0,
+	HasInvalidData bit NOT NULL CONSTRAINT DF_TicketDetails_HasInvalidData DEFAULT 0,
+	DriverLoginTimeId bigint NULL,
+	StartupTime float(53) NULL,
+	ShutdownTime float(53) NULL,
+	InYardTime float(53) NULL,
+	EstimatedClockHours float(53) NULL
+GO
+ALTER TABLE dbo.TicketDetails SET (LOCK_ESCALATION = TABLE)
+GO
+COMMIT

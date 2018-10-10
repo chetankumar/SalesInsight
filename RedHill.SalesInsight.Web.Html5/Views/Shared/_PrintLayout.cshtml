@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    
+    <link type="text/css" href="~/Content/system.css" rel="stylesheet" media="screen,print" />
+    <script type="text/javascript" src="~/Scripts/jquery-1.9.1.min.js"></script>
+    @if (@ViewBag.UsingChartjs!=null)
+    {
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <script type="text/javascript">
+            google.load("visualization", "1", {packages:["corechart"]});
+        </script>
+    }
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            try {
+                $(".data_table").dataTable();
+                $(".dataTables_wrapper").find("select").addClass("form-control");
+                $(".dataTables_wrapper").find("input").addClass("form-control");
+                $(".dataTables_wrapper").find("input").attr("placeholder", "Search");
+            }
+            catch (e) {
+                console.log("No datatable on page");
+            }
+        });
+    </script>
+    @RenderSection("Scripts", false)
+</head>
+<body>
+    <div class="container">
+        @RenderBody()
+    </div>
+</body>
+</html>

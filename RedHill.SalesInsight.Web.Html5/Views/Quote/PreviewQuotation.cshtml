@@ -1,0 +1,766 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.QuotationPreview
+@using RedHill.SalesInsight.Web.Html5.Helpers;
+@{
+    ViewBag.Title = "Quotation Preview";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-head">
+    <h2>
+        <span>Quotation Preview</span>
+    </h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Quote/Index">Quotations</a></li>
+        <li><a href="/Home/EditProject/@Model.Profile.ProjectId">@Model.Profile.ProjectName</a></li>
+        <li><a href="/Quote/AddEditQuote/@Model.Profile.QuoteId">Quote# @Model.QuoteId</a></li>
+        <li>Quotation Preview</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    @using (Html.BeginForm("PreviewQuotation", "Quote", FormMethod.Post, new { @class = "form-horizontal settings_form", enctype = "multipart/form-data" }))
+    {
+        <div class="modal" id="setting_form_modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Quotation Settings</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <table id="draggable" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Quote Field</th>
+                                    <th>Include?</th>
+                                    <th>Position (drag-drop rows)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @Html.HiddenFor(x => x.Id)
+                                @Html.HiddenFor(x => x.SelectedAction)
+                                @Html.HiddenFor(x => x.QuoteFormSettingId)
+                                @Html.HiddenFor(x => x.IncludeQuoteSupplement)
+                                @for (int i = 0; i < 15; i++)
+                                {
+                                    if (i == Model.PriceSequence)
+                                    {
+                                        <tr data-id="Price" id="Price_row">
+                                            <td>Price</td>
+                                            <td>@Html.CheckBoxFor(x => x.PriceInclude)</td>
+                                            <td><span>@(Model.PriceSequence + 1)</span> @Html.HiddenFor(x => x.PriceSequence, new { @class = "position_box" })</td>
+                                        </tr>
+                                    }
+                                    if (i == Model.QuantitySequence)
+                                    {
+                                        <tr data-id="Quantity" id="Quantity_row">
+                                            <td>Quantity</td>
+                                            <td>@Html.CheckBoxFor(x => x.QuantityInclude)</td>
+                                            <td><span>@(Model.QuantitySequence + 1)</span> @Html.HiddenFor(x => x.QuantitySequence, new { @class = "position_box" })</td>
+                                        </tr>
+                                    }
+                                    if (i == Model.MixIdSequence)
+                                    {
+                                        <tr data-id="MixId" id="MixId_row">
+                                            <td>Mix Id</td>
+                                            <td>@Html.CheckBoxFor(x => x.MixIdInclude)</td>
+                                            <td><span>@(Model.MixIdSequence + 1)</span> @Html.HiddenFor(x => x.MixIdSequence, new { @class = "position_box" })</td>
+                                        </tr>
+                                    }
+                                    if (i == Model.DescriptionSequence)
+                                    {
+                                        <tr data-id="Description" id="Description_row">
+                                            <td>Description</td>
+                                            <td>@Html.CheckBoxFor(x => x.DescriptionInclude)</td>
+                                            <td><span>@(Model.DescriptionSequence + 1)</span> @Html.HiddenFor(x => x.DescriptionSequence, new { @class = "position_box" })</td>
+                                        </tr>
+                                    }
+                                    if (i == Model.PsiSequence)
+                                    {
+                                        <tr data-id="Psi" id="Psi_row">
+                                            <td>Psi</td>
+                                            <td>@Html.CheckBoxFor(x => x.PsiInclude)</td>
+                                            <td><span>@(Model.PsiSequence + 1)</span> @Html.HiddenFor(x => x.PsiSequence, new { @class = "position_box" })</td>
+                                        </tr>
+                                    }
+                                    if (i == Model.PublicCommentsSequence)
+                                    {
+                                        <tr data-id="PublicComments" id="PublicComments_row">
+                                            <td>Public Comments</td>
+                                            <td>@Html.CheckBoxFor(x => x.PublicCommentsInclude)</td>
+                                            <td><span>@Model.PublicCommentsSequence</span> @Html.HiddenFor(x => x.PublicCommentsSequence, new { @class = "position_box" })</td>
+                                        </tr>
+                                    }
+                                    if (i == Model.SlumpSequence)
+                                    {
+                                        <tr data-id="Slump" id="Slump_row">
+                                            <td>Slump</td>
+                                            <td>@Html.CheckBoxFor(x => x.SlumpInclude)</td>
+                                            <td><span>@(Model.SlumpSequence + 1)</span> @Html.HiddenFor(x => x.SlumpSequence, new { @class = "position_box" })</td>
+                                        </tr>
+                                    }
+                                    if (i == Model.AirSequence)
+                                    {
+                                        <tr data-id="Air" id="Air_row">
+                                            <td>Air</td>
+                                            <td>@Html.CheckBoxFor(x => x.AirInclude)</td>
+                                            <td><span>@(Model.AirSequence + 1)</span> @Html.HiddenFor(x => x.AirSequence, new { @class = "position_box" })</td>
+                                        </tr>
+                                    }
+                                    //---- New Column
+                                    if (Model.AshSequence == i)
+                                    {
+                                        <tr data-id="Air" id="Air_row">
+                                            <td>Ash %</td>
+                                            <td>@Html.CheckBoxFor(x => x.AshInclude)</td>
+                                            <td><span>@(Model.AshSequence + 1)</span> @Html.HiddenFor(x => x.AshSequence, new { @class = "position_box" })</td>
+                                        </tr>
+                                    }
+
+                                    if (Model.FineAggSequence == i)
+                                    {
+                                        <tr data-id="Air" id="Air_row">
+                                            <td>Fine Agg %</td>
+                                            <td>@Html.CheckBoxFor(x => x.FineAggInclude)</td>
+                                            <td><span>@(Model.FineAggSequence + 1)</span> @Html.HiddenFor(x => x.FineAggSequence, new { @class = "position_box" })</td>
+                                        </tr>
+                                    }
+                                    if (Model.SacksSequence == i)
+                                    {
+                                        <tr data-id="Air" id="Air_row">
+                                            <td>Sacks</td>
+                                            <td>@Html.CheckBoxFor(x => x.SacksInclude)</td>
+                                            <td><span>@(Model.SacksSequence + 1)</span> @Html.HiddenFor(x => x.SacksSequence, new { @class = "position_box" })</td>
+                                        </tr>
+                                    }
+                                    if (Model.MD1Sequence == i)
+                                    {
+                                        <tr data-id="Air" id="Air_row">
+                                            <td>@Model.MD1String</td>
+                                            <td>@Html.CheckBoxFor(x => x.MD1Include)</td>
+                                            <td><span>@(Model.MD1Sequence + 1)</span> @Html.HiddenFor(x => x.MD1Sequence, new { @class = "position_box" })</td>
+                                        </tr>
+                                    }
+                                    if (Model.MD2Sequence == i)
+                                    {
+                                        <tr data-id="Air" id="Air_row">
+                                            <td>@Model.MD2String</td>
+                                            <td>@Html.CheckBoxFor(x => x.MD2Include)</td>
+                                            <td><span>@(Model.MD2Sequence + 1)</span> @Html.HiddenFor(x => x.MD2Sequence, new { @class = "position_box" })</td>
+                                        </tr>
+                                    }
+                                    if (Model.MD3Sequence == i)
+                                    {
+                                        <tr data-id="Air" id="Air_row">
+                                            <td>@Model.MD3String</td>
+                                            <td>@Html.CheckBoxFor(x => x.MD3Include)</td>
+                                            <td><span>@(Model.MD3Sequence + 1)</span> @Html.HiddenFor(x => x.MD3Sequence, new { @class = "position_box" })</td>
+                                        </tr>
+                                    }
+                                    if (Model.MD4Sequence == i)
+                                    {
+                                        <tr data-id="Air" id="Air_row">
+                                            <td>@Model.MD4String</td>
+                                            <td>@Html.CheckBoxFor(x => x.MD4Include)</td>
+                                            <td><span>@(Model.MD4Sequence + 1)</span> @Html.HiddenFor(x => x.MD4Sequence, new { @class = "position_box" })</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary change_config_btn">Save changes</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+        </div>
+        <div class="modal fade" id="email_quotation_modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Email Quote To Customer</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Send To</label>
+                                <div class="col-md-10">
+                                    @Html.HiddenFor(x => x.QuoteId)
+                                    @Html.TextBoxFor(x => x.Profile.EmailRecipients, new { @class = "selectize-create" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">CC To</label>
+                                <div class="col-md-10">
+                                    @Html.ListBoxFor(x => x.Profile.CCRecipients, Model.Profile.AllNotificationEmailRecipients, new { @class = "selectize", @placeholder = "" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Subject:</label>
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(x => x.Profile.EmailSubject, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Message</label>
+                                <div class="col-md-10">
+                                    @Html.TextAreaFor(x => x.Profile.EmailText, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <div class="col-md-1">@Html.CheckBoxFor(x => x.Profile.AddAttachments)</div>
+                                    <label class="col-md-11">Add Attachments</label>
+                                </div>
+                            </div>
+                            <div class="form-group file_attach" style="display:none">
+                                <div class="col-md-offset-2 col-md-10">
+                                    @Html.TextBoxFor(x => x.Files, new { type = "file" })
+                                    <button class="addFile btn btn-primary">Add File</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary send_to_customers_btn" data-selector="#Profile_EmailRecipients" data-entities="recipients">Send</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+    }
+    <div class="block-flat">
+        <div class="container">
+            @if (Model.Id > 0)
+            {
+                <div class="well">
+                    <div class="col-md-5">
+                        @Html.Partial("_BasicQuotationProfile", Model.Profile)
+                    </div>
+                    <div class="col-md-7">
+                        <div class="row pull-right">
+
+                            @if (Model.Profile.Status != "APPROVED")
+                            {
+                                if (ViewBag.ForApproval != null)
+                                {
+                                    <button class="btn btn-default" data-toggle="modal" data-target="#approve_quote_modal" data-page="preview">
+                                        <i class="glyphicon glyphicon-check"></i>
+                                        Approve Quote
+                                    </button>
+                                }
+                                else
+                                {
+                                    <a class="btn btn-default" data-toggle="modal" data-target="#request_approval_modal" data-page="preview">
+                                        <span class="glyphicon glyphicon-check"></span> Request Approval
+                                    </a>
+                                }
+                            }
+                            @if (Model.Profile.Status == "APPROVED")
+                            {
+                                <span class="btn btn-success">
+                                    <i class="fa fa-fw fa-check"></i>
+                                    Approved
+                                </span>
+                            }
+                            <button class="btn btn-default" data-toggle="modal" data-target="#send_comments_modal" data-page="preview">
+                                <i class="glyphicon glyphicon-comment"></i>
+                                Comment
+                            </button>
+                            <button class="btn btn-default" data-toggle="modal" data-target="#setting_form_modal">
+                                <span class="glyphicon glyphicon-cog"></span> Quotation Form Settings
+                            </button>
+                            @if (ViewBag.AccessRule.CanPrintQuotes == true || Model.Profile.Status == "APPROVED")
+                            {
+                                <button class="btn btn-default  pdf_btn">
+                                    <span class="glyphicon glyphicon-file"></span> Save as PDF
+                                </button>
+                            }
+                            @if (Model.Profile.Status == "APPROVED")
+                            {
+                                <button class="btn btn-default" data-toggle="modal" data-target="#email_quotation_modal">
+                                    <span class="glyphicon glyphicon-envelope"></span> Email Quote
+                                </button>
+                            }
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.SupplementFileName))
+                    {
+                        <div class="col-md-7">
+                            <div class="row pull-right">
+                                <input type="checkbox" id="IncludeSupplement" />
+                                <label for="IncludeSupplement" class="myCheck">
+                                    <i class="fa fa-square-o"></i><span class="checkboxText">&nbsp;Include Quote Supplement</span>
+                                </label>
+                            </div>
+                            @*<div class="row pull-right">
+                                    <input name="IncludeSupplement" id="IncludeSupplement" type="checkbox" /><span>&nbsp;Include Quote Supplement</span>
+                                </div>*@
+                        </div>
+                    }
+                    <div style="clear:both"></div>
+                </div>
+            }
+            <div class="row">
+                <div class="col-md-3">
+                    <img src="/home/logo" />
+                </div>
+                <div class="col-md-6 text-center" style="padding-top:30px;">
+                    <h2>Project Quotation</h2>
+                </div>
+                <div class="col-md-3 text-right">
+                    <dl>
+                        <dd>Customer Service : @Model.DispatchPhone</dd>
+                        @if (!String.IsNullOrWhiteSpace(Model.DispatchFax))
+                        {
+                            <dd>Fax : @Model.DispatchFax</dd>
+                        }
+                        <dd>@Model.DispatchAddress</dd>
+                        <dd>@Model.DispatchCityState</dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="row">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td class="text-right">Customer</td>
+                            <td>@Model.Customer</td>
+                            <td class="text-right">Project</td>
+                            <td>@Model.Project</td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">Contact</td>
+                            <td>@Model.Contact</td>
+                            <td class="text-right">Address</td>
+                            <td>@Model.Address </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">Phone</td>
+                            <td>@Model.Phone</td>
+                            <td class="text-right">City, State, Zip</td>
+                            <td>@Model.CityStateZip</td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">Fax</td>
+                            <td>@Model.Fax</td>
+                            <td class="text-right">Quote ID</td>
+                            <td>@Model.QuoteId</td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">Email</td>
+                            <td>@Model.Email</td>
+                            <td class="text-right">Total Qty</td>
+                            <td>@Model.TotalYards</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                @Html.Raw(Model.DisclaimerText)
+            </div>
+            @if (Model.Profile.ConcreteEnabled)
+            {
+                <div class="row">
+                    <h4>Concrete Products</h4>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                @for (int i = 0; i < 15; i++)
+                                {
+                                    if (Model.IncludedColumns.Contains(i))
+                                    {
+                                        <th>@Model.Headers[i]</th>
+                                    }
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (String[] row in Model.TableData)
+                            {
+                                <tr>
+                                    @for (int i = 0; i < 15; i++)
+                                    {
+                                        if (Model.IncludedColumns.Contains(i))
+                                        {
+                                            <td>@row[i]</td>
+                                        }
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            @if (Model.Profile.AggregateEnabled)
+            {
+                <div class="row">
+                    <h4>Aggregate Products</h4>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Qty</th>
+                                <th>Product</th>
+                                <th>Freight</th>
+                                <th>Unit Price</th>
+                                <th>Total</th>
+                                <th>Comments</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.AggregateProducts != null)
+                            {
+                                foreach (var aggProd in Model.AggregateProducts)
+                                {
+                                    <tr>
+                                        <td>@aggProd.QuotedDescription</td>
+                                        <td>@aggProd.Volume</td>
+                                        <td>$@aggProd.Price.ToString("N2")</td>
+                                        <td>$@aggProd.Freight.ToString("N2")</td>
+                                        <td>$@aggProd.TotalPrice.ToString("N2")</td>
+                                        <td>$@aggProd.TotalRevenue.ToString("N2")</td>
+                                        <td>@aggProd.PublicNotes</td>
+                                    </tr>
+                                }
+
+                                foreach (var aggAddon in Model.AggregateAddons.Where(x => x.IsIncludeTable.GetValueOrDefault(false)))
+                                {
+                                    <tr>
+                                        <td>@aggAddon.Description</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>$@aggAddon.Price.GetValueOrDefault().ToString("N2")</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+
+            @if (Model.Profile.BlockEnabled)
+            {
+                <div class="row">
+                    <h4>Block Products</h4>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Qty</th>
+                                <th>Product</th>
+                                <th>Freight</th>
+                                <th>Unit Price</th>
+                                <th>Total</th>
+                                <th>Comments</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.BlockProducts != null)
+                            {
+                                foreach (var blockProd in Model.BlockProducts)
+                                {
+                                    <tr>
+                                        <td>@blockProd.QuotedDescription</td>
+                                        <td>@blockProd.Volume</td>
+                                        <td>$@blockProd.Price.ToString("N2")</td>
+                                        <td>$@blockProd.Freight.ToString("N2")</td>
+                                        <td>$@blockProd.TotalPrice.ToString("N2")</td>
+                                        <td>$@blockProd.TotalRevenue.ToString("N2")</td>
+                                        <td>@blockProd.PublicNotes</td>
+                                    </tr>
+                                }
+                                foreach (var blockAddon in Model.BlockAddons.Where(x => x.IsIncludeTable.GetValueOrDefault(false)))
+                                {
+                                    <tr>
+                                        <td>@blockAddon.Description</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>$@blockAddon.Price.GetValueOrDefault().ToString("N2")</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            <div class="row">
+                @*<strong>@Html.Raw(Html.Encode(Model.PublicComments).Replace(Environment.NewLine, "<br />"))</strong>*@
+                @Html.Raw(Model.PublicComments)
+            </div>
+            <div class="row">
+                <fieldset>
+                    <legend>Add-On Products</legend>
+                    @foreach (var quon in Model.AllAddonlist.Where(x => x.Per == "Product" && x.IsIncludeTable.GetValueOrDefault() == false).OrderBy(x => x.Sort == null).ThenBy(x => x.Sort))
+                    {
+                        <div class="col-md-4">
+                            @(quon.Description + " : $" + quon.Price + "/" + quon.QuoteUomName)
+                        </div>
+                    }
+                </fieldset>
+            </div>
+            <div class="row">
+                <fieldset>
+                    <legend>Price Increases & Quote Expiration</legend>
+                    <div class="row">
+                        <div class="col-md-6 text-left">
+                            <h5>
+                                @Html.Raw(Model.PricingAvailabilityDisclaimer)
+                            </h5>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            @if (@Model.PriceIncrease1 != null && @Model.PriceIncreaseDate1 != null)
+                            {
+                                <p>Price increase #1: Add $@Model.PriceIncrease1.ToString("N2")/CYD on @(Model.PriceIncreaseDate1 != null ? @Model.PriceIncreaseDate1.Value.ToString("M/d/yyyy") : "")</p>
+                            }
+                            @if (@Model.PriceIncrease2 != null && @Model.PriceIncreaseDate2 != null)
+                            {
+                                <p>Price increase #2: Add $@Model.PriceIncrease2.ToString("N2")/CYD on @(Model.PriceIncreaseDate2 != null ? @Model.PriceIncreaseDate2.Value.ToString("M/d/yyyy") : "")</p>
+                            }
+                            @if (@Model.PriceIncrease3 != null && @Model.PriceIncreaseDate3 != null)
+                            {
+                                <p>Price increase #3: Add $@Model.PriceIncrease3.ToString("N2")/CYD on @(Model.PriceIncreaseDate3 != null ? @Model.PriceIncreaseDate3.Value.ToString("M/d/yyyy") : "")</p>
+                            }
+                            @if (@Model.LettingDate != null)
+                            {
+                                <p class="bold">Project Letting Date @Model.LettingDate.Value.ToString("M/d/yyyy")</p>
+                            }
+                            @if (@Model.QuoteExpiry != null)
+                            {
+                                <span style="display: inline-flex;font-weight: bold;">@Html.Raw(Model.ExpirationDateLabel)&nbsp;@Model.QuoteExpiry.Value.ToString("M/d/yyyy")</span>
+                            }
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="row">
+                <fieldset>
+                    <legend>Charges and Fees</legend>
+                    @*.Where(x => x.Per != "Product" && x.IsIncludeTable.GetValueOrDefault() == false).OrderBy(x => x.Sort == null).ThenBy(x => x.Sort)*@
+                    @foreach (var addon in Model.AllAddonlist.Where(x => x.Per != "Product" && x.IsIncludeTable.GetValueOrDefault() == false).OrderBy(x => x.Sort == null).ThenBy(x => x.Sort).ThenBy(x => x.Description))
+                    {
+                        <div class="col-md-4">
+                            @addon.Description : $@addon.Price/@addon.QuoteUomName
+                        </div>
+                    }
+                </fieldset>
+            </div>
+            <hr>
+            <div class="row">
+                @Html.Raw(Model.Disclosure)
+            </div>
+            <div class="row">
+                @Html.Raw(Model.TermsAndConditions)
+            </div>
+            <div class="row well">
+                @Html.Raw(Model.AcceptanceText)
+            </div>
+            <div class="row">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="text-center">Prepared and Submitted By</th>
+                            <th class="text-center">Acceptance (void if not accepted before @(Model.AcceptanceDate == null ? "" : @Model.AcceptanceDate.Value.ToString("M/d/yyyy")))</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="form form-horizontal">
+                                <div class="row" style="margin-top:5px;"><label class="col-md-4 control-label">Name</label> <div class="col-md-8"><p class="form-control-static">@Model.SalesStaff</p></div></div>
+                                <div class="row" style="margin-top:5px;"><label class="col-md-4 control-label">Date</label> <div class="col-md-8"><p class="form-control-static">@(Model.QuoteDate != null ? Model.QuoteDate.Value.ToString("M/d/yyyy") : "")</p></div></div>
+                                <div class="row" style="margin-top:5px;"><label class="col-md-4 control-label">Phone</label> <div class="col-md-8"><p class="form-control-static">@Model.UserPhone</p></div></div>
+                                <div class="row" style="margin-top:5px;"><label class="col-md-4 control-label">Fax</label> <div class="col-md-8"><p class="form-control-static">@Model.UserFax</p></div></div>
+                                <div class="row" style="margin-top:5px;"><label class="col-md-4 control-label">Email</label> <div class="col-md-8"><p class="form-control-static">@Model.UserEmail</p></div></div>
+                            </td>
+                            <td>
+                                <div class="row">
+                                    <div class="col-md-2 text-right">
+                                        Signature
+                                    </div>
+                                    <div class="col-md-4">
+                                        <hr />
+                                    </div>
+                                    <div class="col-md-2 text-right">
+                                        Date
+                                    </div>
+                                    <div class="col-md-4">
+                                        <hr />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2 text-right">
+                                        Print Name
+                                    </div>
+                                    <div class="col-md-4">
+                                        <hr />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2 text-right">
+                                        Title
+                                    </div>
+                                    <div class="col-md-4">
+                                        <hr />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2 text-right">
+                                        Company
+                                    </div>
+                                    <div class="col-md-4">
+                                        <hr />
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .addFile {
+        margin-top: 10px;
+    }
+
+    .message-box {
+        position: relative;
+    }
+
+        .message-box .closeUpload {
+            background-color: #eed;
+            border-radius: 50%;
+            box-shadow: 1px 1px 1px #ddc inset;
+            color: #cc3;
+            cursor: pointer;
+            display: inline-block;
+            font-size: 12px;
+            height: 16px;
+            line-height: 16px;
+            text-align: center;
+            text-shadow: 1px 1px 0 #fff;
+            top: 4px;
+            position: absolute;
+            right: 4px;
+            width: 16px;
+        }
+</style>
+@section Scripts {
+    <script src="~/Scripts/jquery-sortable.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var isFileExist = '@(!string.IsNullOrEmpty(Model.SupplementFileName))';
+            var isIncludeSupplement = '@(Model.IncludeQuoteSupplement)';
+
+            if (isFileExist === 'True' && isIncludeSupplement === 'True') {
+                $("#IncludeSupplement").attr("checked", true);
+            } else {
+                $("#IncludeQuoteSupplement").val("false");
+            }
+            chekbox();
+
+            $("#IncludeSupplement").click(function () {
+                chekbox()
+            });
+
+            function chekbox() {
+                var check = $("#IncludeSupplement").prop("checked");
+                if (check) {
+                    $("#IncludeQuoteSupplement").val(true);
+                    if ($('.myCheck i').hasClass('fa-square-o')) {
+                        $('.myCheck i').removeClass('fa-square-o').addClass('fa-check-square');
+                    }
+                } else {
+                    $("#IncludeQuoteSupplement").val(false);
+                    if ($('.myCheck i').hasClass('fa-check-square')) {
+                        $('.myCheck i').removeClass('fa-check-square').addClass('fa-square-o');
+                    }
+                }
+            }
+
+            var quotationAccess = '@(ViewBag.AccessRule.HasQuotationAccess == SIRolePermissionLevelConstants.FULL_ACCESS || ViewBag.AccessRule.HasQuotationAccess == SIRolePermissionLevelConstants.EDIT_ONLY)';
+            if (quotationAccess == 'False')
+            { disableEveryThing(); }
+
+            $(".file_attach").on("click", ".message-box .closeUpload", function () {
+                $(this).parent().remove();
+            });
+
+            $("#Profile_AddAttachments").click(function () {
+                $(".file_attach").toggle();
+            });
+
+            $(".addFile").click(function () {
+                $('<div class="message-box"><span class="closeUpload" title="Close">×</span><input type="file" class="control-label" id="Files" name="Files"></div> ').insertBefore(".addFile")
+                return false;
+            });
+
+            $(".pdf_btn").click(function () {
+                $("#SelectedAction").val("Print");
+                $(".settings_form").attr("target", "_blank");
+                $(".settings_form").submit();
+            });
+
+            $(".send_to_customers_btn").click(function (event) {
+                $("#SelectedAction").val("Email");
+                $(".settings_form").attr("target", "_self");
+                var hasRecipients = true;
+                selector = $(this).data("selector");
+                entity = $(this).data("entities");
+                $(selector).each(function (index, e) {
+                    value = $(e).val();
+                    if (value == undefined || value == "") {
+                        alert("Please input " + entity + " before submitting");
+                        event.stopPropagation();
+                        event.preventDefault();
+                        hasRecipients =  false;
+                    }
+                });
+
+                if (hasRecipients) {
+                $(".settings_form").submit();
+                }
+            });
+
+            $(".change_config_btn").click(function () {
+                $("#SelectedAction").val("QuoteSetting");
+                $(".settings_form").attr("target", "_self");
+                $(".settings_form").submit();
+            });
+
+            $("#draggable").sortable({
+                containerSelector: 'table',
+                itemPath: '> tbody',
+                itemSelector: 'tr',
+                placeholder: '<tr class="placeholder"/>',
+                onDrop: function ($item, container, _super) {
+                    console.log($item);
+                    table = $($item).parents("table");
+                    var rows = table.find("tbody > tr");
+                    for (var i = 0; i < rows.length; i++) {
+                        tmp_row = rows[i];
+                        $(tmp_row).find("span").html(i + 1);
+                        $(tmp_row).find(".position_box").val(i);
+                    }
+                    _super($item, container);
+                }
+            });
+        });
+    </script>
+}
+

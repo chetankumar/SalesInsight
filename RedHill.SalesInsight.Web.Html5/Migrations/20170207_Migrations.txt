@@ -1,0 +1,14 @@
+﻿------------------------2017-02-07 - Add Column RequiredProjectLocation to RoleAccess - Shail-----------------
+ALTER TABLE RoleAccess
+ADD RequireProjectLocation BIT NULL;
+
+-----------------------------------2017-02-12 1:40 AM - Add column in  District table --- Avnish
+Alter TABLE [dbo].[District] 
+Add [FileName] [varchar](200) NULL,
+	[FileKey] [nvarchar](max) NULL,
+	[IncludeByDefault] [bit] NULL;
+GO
+-----------------------------------2017-02-15 12:16 AM - Add column in  Project table --- Avnish
+Alter TABLE [dbo].[Project] 
+Add [Contribution] [money] NULL;
+GO

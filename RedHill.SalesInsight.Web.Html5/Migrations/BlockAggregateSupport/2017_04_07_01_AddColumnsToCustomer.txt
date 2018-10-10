@@ -1,0 +1,4 @@
+﻿ALTER TABLE Customer
+ADD PurchaseConcrete BIT NULL,
+	PurchaseAggregate BIT NULL,
+	PurchaseBlock BIT NULL;

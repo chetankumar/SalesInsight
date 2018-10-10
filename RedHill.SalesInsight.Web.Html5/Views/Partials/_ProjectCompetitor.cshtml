@@ -1,0 +1,22 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ProjectCompetitorView
+
+<div>
+    @using (Html.BeginForm("AddProjectCompetitor", "Home", FormMethod.Post))
+    {
+        @Html.ValidationSummary(false)
+        <div class="form-inline">
+            @Html.HiddenFor(m => m.ProjectId)
+            @Html.HiddenFor(m => m.ProjectCompetitorId)
+            @Html.DropDownListFor(m => m.CompetitorId, Model.AvailableCompetitors, new { @class = "form-control" })
+            @Html.TextBoxFor(m => m.Price, new { @class = "form-control", @placeholder = "Price" })
+            <button type="submit" class="btn btn-primary">
+                @(Model.ProjectCompetitorId > 0 ? "Update" : "Add")
+            </button>
+        </div>
+    }
+</div>
+<br />
+
+
+
+

@@ -1,0 +1,825 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.CompanyView
+
+@{
+    ViewBag.Title = Model.PageName;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.UsingDataTable = true;
+    ViewBag.UsingAngular = true;
+    ViewBag.UsingICheck = true;
+    ViewBag.UsingBootstrapSwitch = true;
+    bool aujsAPIEnabled = (ViewBag.AUJSAPIEnabled != null && ViewBag.AUJSAPIEnabled == true);
+}
+<div class="page-head">
+    <h2>Manage Sales Infrastructure</h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Home/Settings">Settings</a></li>
+        <li><a href="/Home/Companies">Manage Sales Infrastructure</a></li>
+        <li class="active">@Model.PageName</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    @using (Html.BeginForm("Companies", "Home", FormMethod.Post, new { @id = "CompanyForm", @class = "form-horizontal" }))
+    {
+        @Html.HiddenFor(m => m.CompanyId);
+        @Html.Partial("_CompanyTabs", Model.SelectedTab)
+        @Html.HiddenFor(m => m.SelectedTab);
+
+        <!-- Tab panes -->
+        <div class="tab-content" data-ng-app="SIWeb">
+            <div class="tab-pane @(Model.SelectedTab == "customers" ? "active" : "")" id="customers" data-ng-controller="SIWeb.Customers">
+                <div class="row" style="margin-top: 10px">
+                    @if (TempData["Message"] != null)
+                    {
+                        <text>
+                            <div class="col-sm-12">
+                                <div class="alert @(Convert.ToBoolean(TempData["Success"]) ? "alert-success" : "alert-danger")">
+                                    <button type="button" data-dismiss="alert" class="close"><span aria-hidden="true">&times;</span></button>
+                                    @TempData["Message"]
+                                </div>
+                            </div>
+                        </text>
+                    }
+                    <div>
+                        <div class="col-sm-2">
+                            <div class="checkbox">
+                                <label for="ShowInactiveCustomers" class="">
+                                    @Html.CheckBoxFor(m => m.ShowInactiveCustomers, new { @class = "show_inactive_customers_btn" })
+                                    Show Inactives
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            @if (ViewBag.AccessRule.MergeCustomers == true)
+                            {
+                                <span>Merge Duplicates</span>
+                                <input type="checkbox" name="MergeDuplicates" class="switch" id="merge_duplicates" data-on-color="danger" />
+                                <button id="merge_duplicates_btn" type="button" class="btn btn-sm btn-danger hidden">
+                                    <i class="fa fa-code-fork fa-rotate-180"></i>
+                                    Merge Selected Customers
+                                </button>
+                                <button id="find_duplicates_btn" type="button" class="btn btn-sm btn-primary hidden">
+                                    <i class="fa fa-search"></i>
+                                    Find Merge Candidates
+                                </button>
+                            }
+                        </div>
+                        <div class="col-sm-4 text-right">
+                            @if (ViewBag.AccessRule.HasCustomersAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                            {
+                                if (!aujsAPIEnabled)
+                                {
+                                    <text>
+                                        <a href="/Home/AddCustomer/@Model.CompanyId" class="btn btn-primary">
+                                            <i class="fa fa-plus-circle"></i>
+                                            <span>Customer</span>
+                                        </a>
+                                    </text>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="col-sm-12" style="margin-top: 10px">
+                        <div id="customer_tbl_container" class="table-responsive">
+                            <div class="dataTables_wrapper form-inline">
+                                <table id="customer_table" class="table table-bordered table-striped table-groupable">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Name</th>
+                                            <th>Number</th>
+                                            <th>Address 1</th>
+                                            <th>Address 2</th>
+                                            <th>Address 3</th>
+                                            <th>City</th>
+                                            <th>State</th>
+                                            <th>Zip</th>
+                                            <th>Active</th>
+                                            <th></th>
+                                            <th style="display: none;"></th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane @(Model.SelectedTab == "competitors" ? "active" : "")" id="competitors">
+                <div class="row" style="margin-top: 10px">
+                    <div>
+                        <div class="col-sm-4">
+                            <div class="checkbox">
+                                <label>
+                                    @Html.CheckBoxFor(m => m.ShowInactiveCompetitors, new { @class = "show_btn" })
+                                    Show Inactives
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-sm-8 text-right">
+                            @if (ViewBag.AccessRule.HasCompetitorsAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                            {
+                                <a href="/Home/AddCompetitor/@Model.CompanyId" class="btn btn-primary">
+                                    <i class="fa fa-plus-circle"></i>
+                                    <span>Competitor</span>
+                                </a>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-lg-12" style="margin-top: 10px">
+                        @Html.Partial("~/Views/Partials/_CompetitorList.cshtml", Model)
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane @(Model.SelectedTab == "salesstaff" ? "active" : "")" id="salesstaff">
+                <div class="row" style="margin-top: 10px">
+                    <div>
+                        <div class="col-sm-4">
+                            <div class="checkbox">
+                                <label>
+                                    @Html.CheckBoxFor(m => m.ShowInactiveSalesStaff, new { @class = "show_btn" })
+                                    Show Inactives
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-sm-8 text-right">
+                            @if (ViewBag.AccessRule.HasSalesStaffAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                            {
+                                if (!aujsAPIEnabled)
+                                {
+                                    <text>
+                                        <a href="/Home/AddSalesStaff/@Model.CompanyId" class="btn btn-primary new-salesstaff">
+                                        <i class="fa fa-plus-circle"></i>
+                                        <span>Sales Staff</span>
+                                        </a>
+                                    </text>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="col-lg-12" style="margin-top: 10px">
+                        @Html.Partial("~/Views/Partials/_SalesStaffTable.cshtml", Model)
+                    </div>
+                </div>
+                <div class="modal fade" id="max_salesStaff_exceed">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title">All available sales staff seats currently occupied. Additional sales staff seats may be added by contacting your subscription sales associate.</h4>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane @(Model.SelectedTab == "contractors" ? "active" : "")" id="contractors">
+                <div class="row" style="margin-top: 10px">
+                    <div>
+                        <div class="col-sm-4">
+                            <div class="checkbox">
+                                <label>
+                                    @Html.CheckBoxFor(m => m.ShowInactiveContractors, new { @class = "show_btn" })
+                                    Show Inactives
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-sm-8 text-right">
+                            @if (ViewBag.AccessRule.HasGCAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                            {
+                                <a href="/Home/AddContractor/@Model.CompanyId" class="btn btn-primary">
+                                    <i class="fa fa-plus-circle"></i>
+                                    <span>GC</span>
+                                </a>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-lg-12" style="margin-top: 10px">
+                        <table id="contractor_table" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Active</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane @(Model.SelectedTab == "marketsegments" ? "active" : "")" id="marketsegments">
+                <div class="row" style="margin-top: 10px">
+                    <div class="col-sm-4">
+                        <div class="checkbox">
+                            <label>
+                                @Html.CheckBoxFor(m => m.ShowInactiveMarketSegments, new { @class = "show_btn" })
+                                Show Inactives
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-sm-8 text-right">
+                        @if (ViewBag.AccessRule.HasMarketSegmentsAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                        {
+                            if (!aujsAPIEnabled)
+                            {
+                                <text>
+                                    <a href="/Home/AddMarketSegment/@Model.CompanyId" class="btn btn-primary">
+                                        <i class="fa fa-plus-circle"></i>
+                                        <span>Market Segment</span>
+                                    </a>
+                                </text>
+                            }
+                        }
+                    </div>
+                    <div class="col-lg-12" style="margin-top: 10px">
+                        @Html.Partial("~/Views/Partials/_MarketSegmentTable.cshtml", Model)
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane @(Model.SelectedTab == "statuses" ? "active" : "")" id="statuses">
+                <div class="row" style="margin-top: 10px">
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="checkbox">
+                                    <label>
+                                        @Html.CheckBoxFor(m => m.ShowInactiveStatuses, new { @class = "show_btn" })
+                                        Show Inactives
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-sm-8 text-right">
+                                @if (ViewBag.AccessRule.HasStatusesReasonsLostAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                                {
+                                    if (!aujsAPIEnabled)
+                                    {
+                                        <text>
+                                            <a href="/Home/AddProjectStatus/@Model.CompanyId" class="btn btn-primary">
+                                                <i class="fa fa-plus"></i>
+                                                Project Status
+                                            </a>
+                                        </text>
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <div style="margin-top: 10px">
+                            @Html.Partial("~/Views/Partials/_ProjectStatusTable.cshtml", Model)
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-lg-4">
+                            </div>
+                            <div class="col-sm-8 text-right">
+                                @if (ViewBag.AccessRule.HasStatusesReasonsLostAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                                {
+                                    <a href="/Home/AddReasonsForLoss/@Model.CompanyId" class="btn btn-primary">
+                                        <i class="fa fa-plus"></i>
+                                        Reasons Lost
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                        <div style="margin-top: 10px">
+                            @Html.Partial("~/Views/Partials/_ReasonsLossTable.cshtml", Model)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane @(Model.SelectedTab == "structure" ? "active" : "")" id="structure">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                @Html.CheckBoxFor(m => m.ShowInactiveStructures, new { @class = "show_btn" })
+                                Show Inactives
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <p class="spacer2"></p>
+                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingOne">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#regionAccord" aria-expanded="true" aria-controls="collapseOne">
+                                    Regions
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="regionAccord" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                            <div class="panel-body">
+                                <div class="col-lg-12">
+                                    <div class="pull-right">
+                                        @if (ViewBag.AccessRule.HasStructureAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                                        {
+                                            <a href="/Home/AddRegion/@Model.CompanyId" class="btn btn-primary">
+                                                <i class="fa fa-plus"></i>
+                                                Region
+                                            </a>
+                                        }
+                                    </div>
+                                    <div style="clear: both"></div>
+                                </div>
+                                <div class="col-lg-12" style="margin-top: 10px; height: 400px; overflow-y: auto;">
+                                    @Html.Partial("~/Views/Partials/_RegionTable.cshtml", Model)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingTwo">
+                            <h4 class="panel-title">
+                                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#DistrictAccord" aria-expanded="false" aria-controls="collapseTwo">
+                                    Districts
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="DistrictAccord" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                            <div class="panel-body">
+                                <div class="col-lg-12">
+                                    <div class="pull-right">
+                                        @if (ViewBag.AccessRule.HasStructureAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                                        {
+                                            <a href="/Home/AddDistrict/@Model.CompanyId" class="btn btn-primary  pull-right">
+                                                <i class="fa fa-plus"></i>
+                                                District
+                                            </a>
+                                        }
+                                    </div>
+                                    <div style="clear: both"></div>
+                                </div>
+                                <div class="col-lg-12" style="margin-top: 10px; height: 400px; overflow-y: auto;">
+                                    @Html.Partial("~/Views/Partials/_DistrictTable.cshtml", Model)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingThree">
+                            <h4 class="panel-title">
+                                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#PlantAccord" aria-expanded="false" aria-controls="collapseThree">
+                                    Plants
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="PlantAccord" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree">
+                            <div class="panel-body">
+                                <div class="col-lg-12">
+                                    @if (ViewBag.AccessRule.HasStructureAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                                    {
+                                        if (!aujsAPIEnabled)
+                                        {
+                                            <text>
+                                                <div class="pull-right">
+                                                    <a href="/Home/AddPlant/@Model.CompanyId" class="btn btn-primary  pull-right">
+                                                        <i class="fa fa-plus"></i>
+                                                        Plant
+                                                    </a>
+                                                </div>
+                                            </text>
+                                        }
+                                    }
+                                    <div style="clear: both"></div>
+                                </div>
+                                <div class="col-lg-12" style="margin-top: 10px;">
+                                    @Html.Partial("~/Views/Partials/_PlantTable.cshtml", Model)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<div id="MergeCustomers" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <form action="/Home/MergeDuplicates" enctype="multipart/form-data" method="POST">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Select Customer to Keep</h4>
+                </div>
+                <div class="modal-body">
+                    <div class='modal-loader'>
+                        <div class='modal-loader-inner'><i class='fa fa-spinner fa-spin'></i>Loading...</div>
+                    </div>
+                    <div class="response-placeholder">
+                    </div>
+                    <div class="agreement-check">
+                        <label>
+                            <input type="checkbox" class="icheck blue" id="agreement_check" />
+                            I understand merging is PERMANENT and NON-REVERSIBLE.  I also understand all projects and quotations currently associated with customers listed above will be re-assigned to the customer above that I've chosen to keep.
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="submit" id="merge_customer_btn" class="btn btn-sm btn-danger" disabled="disabled">Merge Customers</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="FindMergeCandidates" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <form action="/Home/MergeDuplicates" enctype="multipart/form-data" method="POST">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Find Merge Candidates</h4>
+                </div>
+                <div class="modal-body">
+                    <div class='modal-loader'>
+                        <div class='modal-loader-inner'><i class='fa fa-spinner fa-spin'></i>Loading...</div>
+                    </div>
+                    <div class="response-placeholder">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+@section Scripts{
+
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            $(".new-salesstaff").click(function () {
+                var IsMaxSalesStaffExceed = '@ViewBag.IsMaxSalesStaffExceed';
+                if (IsMaxSalesStaffExceed == 'True') {
+                    $("#max_salesStaff_exceed").modal("show");
+                    return false;
+                }
+            });
+
+            var GCAccess = '@(ViewBag.AccessRule.HasGCAccess == SIRolePermissionLevelConstants.FULL_ACCESS)';
+            var customerAccess = '@(ViewBag.AccessRule.HasCustomersAccess == SIRolePermissionLevelConstants.FULL_ACCESS)';
+            $(".show_btn").change(function (e) {
+                id = $(this).attr("id");
+                if (id == "ShowInactiveCustomers") {
+                    $("#SelectedTab").val("customers");
+                }
+                else if (id == "ShowInactiveCompetitors") {
+                    $("#SelectedTab").val("competitors");
+                }
+                else if (id == "ShowInactiveSalesStaff") {
+                    $("#SelectedTab").val("salesstaff");
+                }
+                else if (id == "ShowInactiveContractors") {
+                    $("#SelectedTab").val("contractors");
+                }
+                else if (id == "ShowInactiveStatuses") {
+                    $("#SelectedTab").val("statuses");
+                }
+                else if (id == "ShowInactiveMarketSegments") {
+                    $("#SelectedTab").val("marketsegments");
+                }
+                else if (id == "ShowInactiveStructures") {
+                    $("#SelectedTab").val("structure");
+                }
+                else {
+
+                }
+
+                $("#CompanyForm").submit();
+            });
+            var mergeDuplicates = false, findMergeCandidates = false;
+            var selectedCustomers = [];
+
+            var sDom = null;
+            sDom = '<"top">frt<"bottom"i><"clear"><"paging"lp><"clear">';
+            var index = 0;
+            var settings = {
+                getUrl: function () {
+                    return "/Json/GetCustomers/@Model.CompanyId/?showInactives=" + $(".show_inactive_customers_btn").is(":checked");
+                },
+                getMergeUrl: function () {
+                    return "/Home/FindDuplicateCustomers?showInactives=" + $(".show_inactive_customers_btn").is(":checked");
+                }
+            }
+            dt = $("#customer_table").DataTable({
+                "sDom": sDom,
+                "processing": true,
+                "language": {
+                    "info": "_START_ to _END_ of _TOTAL_ records",
+                    "lengthMenu": "_MENU_ Records per page",
+                    "search": ""
+                },
+                "ajax": {
+                    "url": settings.getUrl(),
+                    "dataSrc": ""
+                },
+                "columns": [
+                    { "data": "CustomerId" },
+                    { "data": "Name" },
+                    { "data": "Number" },
+                    { "data": "Address1" },
+                    { "data": "Address2" },
+                    { "data": "Address3" },
+                    { "data": "City" },
+                    { "data": "State" },
+                    { "data": "Zip" },
+                    { "data": "Active" },
+                    { "data": "CustomerId" },
+                    { "data": "Group" }
+                ],
+                "language": {
+                    "info": "_START_ to _END_ of _TOTAL_ records",
+                    "lengthMenu": "_MENU_ records per page",
+                    "search": ""
+                },
+                "columnDefs": [
+                    {
+                        targets: 0,
+                        orderable: false,
+                        searchable: false,
+                        sortable: false,
+                        visible: false,
+                        width: '100px',
+                        render: function (data, type, full, meta) {
+                            return '<label for="item_' + data + '"><input type="checkbox" id="item_' + data + '" data-id="' + data + '" class="icheck red select_customer" /> Merge</label>';
+                        }
+                    },
+                    {
+                        "targets": 10,
+                        "data": "CustomerId",
+                        "render": function (data, type, full, meta) {
+                            return '<a href="/Home/EditCustomer/' + data + '" class="btn btn-primary btn-xs" title="Edit Customer"><i class="glyphicon glyphicon-edit"></i></a>';
+                        }
+                    },
+                    {
+                        "targets": 9,
+                        "data": "Active",
+                        "render": function (data, type, full, meta) {
+                            if (data == true) {
+                                return '<span class="glyphicon glyphicon-ok"><span style="display:none">1</span></span></span>';
+                            } else {
+                                return '<span class="glyphicon glyphicon-remove"></span>';
+                            }
+                        }
+                    },
+                    {
+                        "targets": 11,
+                        "data": "Group",
+                        "visible": false
+                    }
+                ],
+                "order": [[1, 'asc']],
+                "drawCallback": function (settings) {
+                    var api = this.api();
+
+                    var rows = api.rows({ page: 'current' }).nodes();
+                    var last = null;
+                    if (findMergeCandidates) {
+                        api.column(11, { page: 'current' }).data().each(function (group, i) {
+                            if (last !== group) {
+                                $(rows).eq(i).before(
+                                    '<tr class="group"><td colspan="11"><strong class="group-item">' + group + '</strong></td></tr>'
+                                );
+                                last = group;
+                            }
+                        });
+                    } else {
+
+                    }
+                    bindiCheck();
+                }
+            });
+
+            function showMergeCandidates() {
+                dt.processing = true;
+                $.ajax({
+                    url: settings.getMergeUrl(),
+                    success: function (data) {
+                        dt.clear().draw(true);
+                        resetSelection();
+                        dt.order()[0] = [11, 'asc'];
+                        toggleSorting(false);
+                        var item = [];
+                        $(data).each(function (i, e) {
+                            item = [];
+                            item.push(e);
+                            dt.rows.add(item);
+                        });
+                        dt.draw(false);
+                    }
+                });
+            }
+
+            function toggleSorting(enable) {
+                var set = dt.settings()[0];
+                if (set) {
+                    set.oFeatures.bSort = enable;
+                    if (!enable) {
+                        $("#customer_table thead th").addClass("no-sort");
+                    } else {
+                        $("#customer_table thead th").removeClass("no-sort");
+                    }
+                }
+                dt.draw(true);
+            }
+
+            $(document).on("click", "#find_duplicates_btn", function (e) {
+                findMergeCandidates = true;
+                showMergeCandidates();
+            });
+
+            $(document).on("change", ".show_inactive_customers_btn", function () {
+                var custUrl = settings.getUrl();
+                if (findMergeCandidates) {
+                    custUrl = settings.getMergeUrl();
+                }
+                resetSelection();
+                dt.processing = true;
+                dt.clear().draw(true);
+                dt.ajax.url(custUrl);
+                dt.ajax.reload();
+            });
+
+            $("#contractor_table").DataTable({
+                "sDom": sDom,
+                "language": {
+                    "info": "_START_ to _END_ of _TOTAL_ records",
+                    "lengthMenu": "_MENU_ Records per page",
+                    "search": ""
+                },
+                "ajax": { "url": "/Json/GetContractors/@Model.CompanyId?showInactives=@Model.ShowInactiveContractors", "dataSrc": "" },
+                "columns": [
+                    { "data": "Name" },
+                    { "data": "Active" },
+                    { "data": "ContractorId" },
+                ],
+                "language": {
+                    "info": "_START_ to _END_ of _TOTAL_ records",
+                    "lengthMenu": "_MENU_ records per page",
+                    "search": ""
+                },
+                "columnDefs": [{
+                    "targets": 2,
+                    "data": "CustomerId",
+                    "render": function (data, type, full, meta) {
+                        return GCAccess == 'True' ? '<a href="/Home/EditContractor/' + data + '" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i></a>' : "";
+                    }
+                },
+                {
+                    "targets": 1,
+                    "data": "Active",
+                    "render": function (data, type, full, meta) {
+                        if (data == true) {
+                            return '<span class="glyphicon glyphicon-ok"><span style="display:none">1</span></span></span>';
+                        } else {
+                            return '<span class="glyphicon glyphicon-remove"></span>';
+                        }
+                    }
+                }]
+            });
+
+            $("#CompanyId").change(function (e) {
+                $("#CompanyForm").submit();
+            });
+
+            $(document).on("switchChange.bootstrapSwitch", "#merge_duplicates", function () {
+                mergeDuplicates = $(this).is(":checked");
+                dt.columns(0).visible(mergeDuplicates);
+                setTimeout(function () {
+                    $(".select_customer").each(function (i, e) {
+                        $(this).iCheck("uncheck");
+                    });
+                }, 50);
+                if (mergeDuplicates) {
+                    bindiCheck();
+                    $("#find_duplicates_btn").removeClass("hidden");
+                } else {
+                    toggleSorting(true);
+                    findMergeCandidates = false;
+                    if (dt) {
+                        dt.ajax.url(settings.getUrl());
+                        dt.ajax.reload();
+                        dt.draw();
+                    }
+                    $("#find_duplicates_btn").addClass("hidden");
+                    $("#merge_duplicates_btn").addClass("hidden");
+                    selectedCustomers = [];
+                }
+            });
+
+            function bindiCheck() {
+                $(".icheck.red").iCheck({
+                    checkboxClass: 'icheckbox_square-red',
+                    radioClass: 'iradio_square-red'
+                });
+            }
+
+            $(document).on('ifToggled', '.select_customer', function (event) {
+                var item = $(event.target);
+
+                if ($(event.target).is(":checked")) {
+                    selectedCustomers.push(item.attr("data-id"));
+                } else {
+                    var index = selectedCustomers.indexOf(item.attr("data-id"));
+                    if (index > -1) {
+                        selectedCustomers.splice(index, 1);
+                    }
+                }
+                if (selectedCustomers.length > 4) {
+                    setTimeout(function () {
+                        showError("Merging more than 4 customers at a time is not allowed");
+                        item.iCheck("uncheck");
+                    }, 50);
+                    event.stopPropagation();
+                    return false;
+                }
+                if (selectedCustomers.length > 1) {
+                    $("#merge_duplicates_btn").removeClass("hidden");
+                } else {
+                    $("#merge_duplicates_btn").addClass("hidden");
+                }
+            });
+            function showError(msg) {
+                var error = $("<div/>");
+                error.addClass("alert alert-warning");
+                error.html("<button type='button' data-dismiss='alert' class='close'><span aria-hidden='true'>&times;</span></button><span>" + msg + "</span>");
+                var topDiv = $(".dataTables_wrapper").find(".top");
+                topDiv.html(error);
+            }
+            function resetSelection() {
+                selectedCustomers = [];
+                $("#merge_duplicates_btn").addClass("hidden");
+            }
+
+            $('#MergeCustomers').on('shown.bs.modal', function () {
+                var bdy = $(this).find(".modal-body");
+                var resPh = $(bdy).find(".response-placeholder");
+                var mLoader = bdy.find(".modal-loader");
+                mLoader.show();
+                var payloadData = [];
+                if (selectedCustomers && selectedCustomers.length) {
+                    payloadData = selectedCustomers;
+                }
+                $.ajax({
+                    url: '/Home/CustomersToKeep',
+                    method: 'POST',
+                    dataType: 'json',
+                    data: { payload: JSON.stringify(payloadData) },
+                    success: function (res) {
+                        if (res.success == false) {
+                            resPh.html("<div class='alert alert-warning'>" + res.message + "</div>");
+                        } else if (res.length) {
+                            var html = "<div class='customers-to-keep'>";
+                            html += "<table class='table table-responsive table-condensed table-bordered'><thead><tr><th>Customer</th><th>Address</th><th>City</th><th>State</th><th>Zip</th><th>Active</th></tr></thead><tbody>";
+                            for (var i = 0; i < res.length; i++) {
+                                html += fillTemplate(res[i]);
+                            }
+                            html += "</tbody></div>";
+                            resPh.html(html);
+                            bindiCheck();
+                        }
+                    },
+                    complete: function (res) {
+                        mLoader.hide();
+                    }
+                });
+            });
+
+            function fillTemplate(c) {
+                return "<tr><td><input type='hidden' name='SelectedCustomers' value='" + c.CustomerId + "' /><label class='customer-item'><input type='radio' name='KeepCustomer' class='icheck red' value='" + c.CustomerId + "' data-id='" + c.CustomerId + "' /> " + c.Name + "" + (c.Number != null ? " - " + c.Number : "") + "</label></td><td>" + (c.Address1 != null ? c.Address1 : "") + "</td><td>" + (c.City != null ? c.City : "") + "</td><td>" + (c.State != null ? c.State : "") + "</td><td>" + (c.Zip != null ? c.Zip : "") + "</td><td>" + (c.Active ? "<i class='fa fa-check'></i>" : "<i class='fa fa-times'></i>") + "</td></tr>";
+            }
+
+            $(document).on("click", "#merge_duplicates_btn", function (e) {
+                $("#agreement_check").removeAttr("checked");
+                $("#agreement_check").iCheck("check").iCheck("uncheck");
+                $("#MergeCustomers").modal({
+                    backdrop: 'static',
+                    show: true
+                });
+                e.preventDefault();
+            });
+            $(document).on("ifToggled", "#MergeCustomers .icheckbox_square-blue, #MergeCustomers .iradio_square-red", function (e) {
+                enableMerge(this);
+                e.preventDefault();
+            });
+            function enableMerge(item) {
+                var mergeCustomer = $("#merge_customer_btn");
+                if ($("[name='KeepCustomer']:checked").length > 0 && $("#agreement_check").is(":checked")) {
+                    mergeCustomer.removeAttr("disabled");
+                } else {
+                    mergeCustomer.attr("disabled", "disabled");
+                }
+            }
+        });
+    </script>
+
+    <script>
+        var app = angular.module("SIWeb", []);
+        app.controller("SIWeb.Customers", function ($scope) {
+
+        });
+    </script>
+}

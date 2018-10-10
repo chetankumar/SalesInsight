@@ -1,0 +1,35 @@
+﻿---Shelly -  Done
+---Chetan -  
+---Bharat -  Done
+---Avnish - Done
+---Dinesh - Done
+-- Server : Done
+
+/****** Object:  Table [dbo].[DrillinReportConfig]    Script Date: 05/03/2017 02:12:55 AM  Dinesh******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[DrillinReportConfig](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[ReportId] [bigint] NOT NULL,
+	[DimensionName] [nvarchar](250) NOT NULL,
+	[DimensionDisplayTitle] [nvarchar](500) NOT NULL,
+ CONSTRAINT [PK_DrillinReportConfig] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[DrillinReportConfig]  WITH CHECK ADD  CONSTRAINT [FK_DrillinReportConfig_ReportSetting] FOREIGN KEY([ReportId])
+REFERENCES [dbo].[ReportSetting] ([Id])
+GO
+
+ALTER TABLE [dbo].[DrillinReportConfig] CHECK CONSTRAINT [FK_DrillinReportConfig_ReportSetting]
+GO
+
+

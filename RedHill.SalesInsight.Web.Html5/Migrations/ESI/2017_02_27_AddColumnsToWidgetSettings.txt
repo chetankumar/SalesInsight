@@ -1,0 +1,12 @@
+﻿-- Chetan : Done
+-- Bharat : Done
+-- Shelly :
+-- Avnish : Done
+-- Dinesh : Done
+---------2017-02-27  02:41 PM ---New Column added to the widgetSettings table for Report-----Avnish
+ALTER TABLE [dbo].[WidgetSettings]
+ADD [GoalAnalysisReportId] [bigint] NULL,
+	[TrendAnalysisReportId] [bigint] NULL,
+	[BenchmarkReportId] [bigint] NULL,
+	[DrillInReportId] [bigint] NULL		
+GO

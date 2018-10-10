@@ -1,0 +1,72 @@
+﻿-----------------------------------2017-02-16--03:36 PM----New Widget Setting Table-----------Avnish
+GO
+
+/****** Object:  Table [dbo].[WidgetSettings]    Script Date: 2/21/2017 11:34:12 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[WidgetSettings](
+	[WidgetId] [bigint] IDENTITY(1,1) NOT NULL,
+	[DashboardId] [bigint] NOT NULL,
+	[Title] [nvarchar](500) NULL,
+	[MetricType] [nvarchar](50) NULL,
+	[DecimalPlaces] [int] NULL,
+	[BackgroundColor] [nvarchar](8) NULL,
+	[PrimaryMetric] [nvarchar](200) NULL,
+	[PrimaryMetricPeriod] [nvarchar](200) NULL,
+	[ComparisonMetric] [nvarchar](200) NULL,
+	[ComparisonMetricPeriod] [nvarchar](200) NULL,
+	[ShowActionIcon] [bit] NULL,
+	[SuccessLimitPercent] [decimal](2, 0) NULL,
+	[AlertLimitPercent] [decimal](2, 0) NULL,
+	[HasBarGraph] [bit] NULL,
+	[BarGraphDaysPerBar] [int] NULL,
+	[HasFrequencyDistribution] [bit] NULL,
+	[HasLineGraph] [bit] NULL,
+	[LineGraphRangeInDays] [int] NULL,
+	[HasPOPSummary] [bit] NULL,
+	[HasStaticMessage] [bit] NULL,
+	[StaticMessage] [nvarchar](200) NULL,
+ CONSTRAINT [PK_WidgetSettings] PRIMARY KEY CLUSTERED 
+(
+	[WidgetId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[WidgetSettings]  WITH CHECK ADD  CONSTRAINT [FK_WidgetSettings_DashboardSettings] FOREIGN KEY([DashboardId])
+REFERENCES [dbo].[DashboardSettings] ([Id])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[WidgetSettings] CHECK CONSTRAINT [FK_WidgetSettings_DashboardSettings]
+GO
+
+-----------------------------------2017-02-21--11:36 PM ---- New Dashboard Setting Table ----------- Avnish
+GO
+
+/****** Object:  Table [dbo].[DashboardSettings]    Script Date: 2/21/2017 11:36:22 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[DashboardSettings](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](20) NOT NULL,
+	[Favorite] [bit] NOT NULL,
+	[Default] [bit] NOT NULL,
+	[MaxColumn] [int] NOT NULL,
+	[UserId] [uniqueidentifier] NOT NULL,
+ CONSTRAINT [PK_DashboardSettings] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO

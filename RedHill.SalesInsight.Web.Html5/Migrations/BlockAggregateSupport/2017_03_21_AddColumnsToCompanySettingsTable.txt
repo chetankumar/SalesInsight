@@ -1,0 +1,3 @@
+﻿ALTER TABLE Company
+ADD EnableBlock BIT NULL,
+	EnableAggregate BIT NULL;

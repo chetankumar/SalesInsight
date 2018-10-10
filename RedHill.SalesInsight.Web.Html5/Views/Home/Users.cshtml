@@ -1,0 +1,191 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Users";
+    ViewBag.UsingDataTable = true;
+    ViewBag.UsingColorBox = true;
+}
+<div class="page-head">
+    <h2>Manage Users</h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Home/Settings">Settings</a></li>
+        <li class="active">Users</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="block-flat">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="checkbox">
+                            <label>
+                                <input id="show_inactives" type="checkbox" @(ViewBag.Inactives ? "checked='checked'" : "") />
+                                Show Inactives
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 text-right">
+                        @if (ViewBag.AccessRule.HasUsersAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                        {
+                            <a class="btn btn-primary pull-right" id="create_new_btn" href="/Home/NewUser">
+                                <i class="fa fa-plus-circle"></i>
+                                <span>User</span>
+                            </a>
+                        }
+                    </div>
+                </div>
+                <table id="user_table" class="table data_table table-bordered table-striped">
+                    <thead class="">
+                        <tr>
+                            <th>Username</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Company</th>
+                            <th>Active</th>
+
+                            <th></th>
+                            @if (ViewBag.AccessRule.HasUsersAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                            {
+                                <th></th>
+                            }
+
+                        </tr>
+                    </thead>
+                    <tbody class="">
+                        @foreach (RedHill.SalesInsight.DAL.DataTypes.SIUser user in @ViewBag.Users)
+                        {
+                            string rowClass = user.Active ? "" : "warning";
+                            <tr class="@rowClass" data-id="@user.UserId">
+                                <td>
+                                    @user.Username
+                                </td>
+                                <td>
+                                    @user.Name
+                                </td>
+                                <td>
+                                    @user.Email
+                                </td>
+                                <td>
+                                    @user.Role
+                                </td>
+                                <td>
+                                    @user.Company.Name
+                                </td>
+                                <td>
+                                    <span class='glyphicon @Html.Raw(@user.Active ? "glyphicon-ok" : "glyphicon-remove")'>
+                                        @if (@user.Active)
+                                        {<span style="display: none">1</span>}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="/Home/EditUser/@user.UserId" class="btn btn-primary btn-xs">
+                                        <i class="glyphicon glyphicon-edit"></i>
+                                    </a>
+                                </td>
+                                @if (ViewBag.AccessRule.HasUsersAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                                {
+                                    <td>
+                                        <a href="javascript:void(0);" data-advanced-confirm="Confirm?" data-toggle="tooltip" title="Reset Password for this user." data-method="POST" data-target="@Url.Action("SendPasswordResetMail", "Home", new { userid = @user.UserId })" class="btn btn-info btn-xs">
+                                            <i class="fa fa-fw fa-envelope"></i>
+                                        </a>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="max_user_exceed">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">All available user seats currently occupied. Additional user seats may be added by contacting your subscription sales associate.</h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            $("#show_inactives").change(function (e) {
+                if ($(this).is(":checked")) {
+                    document.location = "/Home/Users?mode=all";
+                } else {
+                    document.location = "/Home/Users";
+                }
+            });
+            $("#create_new_btn").click(function () {
+                var IsMaxUsersExceed = '@ViewBag.IsMaxUsersExceed';
+                if (IsMaxUsersExceed == 'True') {
+                    $("#max_user_exceed").modal("show");
+                    return false;
+                }
+            });
+        });
+
+        $(document).on("click", "[data-advanced-confirm]:not(.state-confirm)", function (e) {
+            e.preventDefault();
+            var item = $(this);
+            var originalHtml = item.attr("data-original-html") ? item.attr("data-original-html") : item.html();
+            item.attr("data-original-html", originalHtml);
+            if (item.hasClass("state-confirm")) {
+                item.removeClass("state-confirm");
+                item.attr("title", "");
+            } else {
+                item.prepend(item.attr("data-advanced-confirm")).addClass("state-confirm");
+                item.attr("title", "Click again to confirm");
+            }
+        }).on("click", function (e) {
+            if (e.target && !$(e.target).attr("data-advanced-confirm") && !$(e.target).parents().attr("data-advanced-confirm")) {
+                var items = $("[data-advanced-confirm].state-confirm");
+                $.each(items, function (i, e) {
+                    $(e).removeClass("state-confirm");
+                    $(e).html($(e).attr("data-original-html"));
+                });
+            }
+        }).on("click", "[data-advanced-confirm].state-confirm", function () {
+            var item = $(this);
+            var itemRow = item.parents(".item-row");
+            $.ajax({
+                url: item.attr("data-target"),
+                method: $(this).attr("data-method") || "GET",
+                beforeSend: function () {
+                    item.html("Sending Mail...").attr("disabled", "disabled");
+                    item.attr("disabled", "disabled");
+                },
+                success: function (data) {
+                    item.removeAttr("disabled");
+                    if (data.Success) {
+                        item.removeClass("btn-info").addClass("btn-success");
+                        item.html("<i class='fa fa-check'></i> Sent");
+                        item.attr("data-original-title", data.Message);
+                    } else {
+                        item.removeClass("btn-info").addClass("btn-danger");
+                        item.html("<i class='fa fa-times'></i> Failed");
+                        item.attr("data-original-title", data.Message);
+                    }
+                    setTimeout(function () {
+                        item.removeClass("btn-success btn-danger").addClass("btn-info");
+                        item.html(item.attr("data-original-html"));
+                        item.attr("data-original-title", "Reset Password for this user");
+                    }, 5000);
+                },
+                error: function () {
+                    //item.attr("disabled", "disabled");
+                    item.html(item.attr("data-original-html"));
+                    item.removeClass("state-confirm");
+                    alert("Could not send reset password link to the user");
+                }
+            });
+        });
+    </script>
+}

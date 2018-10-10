@@ -1,0 +1,177 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ReportView
+@{
+    ViewBag.Title = "Sales Forecast Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.UsingDatePicker = true;
+}
+<div class="page-head">
+    <h2>Sales Forecast Report</h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Reports/Index">Reports</a></li>
+        <li class="active">Sales Forecast</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                        <i class="glyphicon glyphicon-signal"></i>
+                        Sales Forecast Report
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseOne" class="panel-collapse">
+                <div class="panel-body salesFilter">
+                    @Html.Partial("~/Views/Partials/_SalesForecastReport.cshtml", Model.SalesForecastFilter)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.datepicker').datepicker({
+                format: "M, yyyy",
+                viewMode: "months",
+                minViewMode: "months"
+            }).on("changeDate", function (e) {
+                $("#filter-form").submit();
+                $(this).datepicker('hide');
+            });
+
+            $(".disable").find("input[type='text']").each(function (index, item) {
+                $(this).prop("disabled", true);
+            });
+            controlList = ["BidDate", "StartDate", "WLDate"];
+            $(controlList).each(function (index, item) {
+                $(".wonlossFilter  #FilterBy" + item).change(function () {
+                    active = $(this).is(":checked");
+                    display = active ? "block" : "none";
+                    $(this).parents(".row").first().find("#" + item + "Begin").prop("disabled", !active);
+                    $(this).parents(".row").first().find("#" + item + "End").prop("disabled", !active);
+                
+                });
+            });
+
+            $(".wonlossFilter input[name='Regions']").change(function () {
+                ScrubDistricts();
+                ScrubPlants();
+                ScrubSalesStaffs();
+            });
+
+            $(".wonlossFilter input[name='Districts']").change(function () {
+                ScrubPlants();
+                ScrubSalesStaffs();
+            });
+
+            function ScrubDistricts() {
+                regions = getCheckedValues(".wonlossFilter input[name='Regions']");
+                queryString = "";
+                $(regions).each(function(i,x){
+                    queryString+="&ParentIds=" + x;
+                });
+                if (queryString != "") {
+                    $.get("/Json/GetStructureList?StructureType=DISTRICT" + queryString, function (data) {
+                        if (data != "NOK") {
+                            districts = eval(data);
+                            $(".wonlossFilter input[name='Districts']").each(function (i, x) {
+                                id = parseInt($(x).val());
+                                if (districts.indexOf(id) == -1) {
+                                    $(x).prop("checked", false);
+                                    $(x).prop("disabled", true);
+                                    $(x).parent().parent().css("display", "none");
+                                } else {
+                                    $(x).prop("disabled", false);
+                                    $(x).parent().parent().css("display", "block");
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    $(".wonlossFilter input[name='Districts']").each(function (i, x) {
+                        $(x).prop("checked", false);
+                        $(x).prop("disabled", true);
+                        $(x).parent().parent().css("display", "none");
+                    });
+                }
+            }
+
+            function ScrubPlants() {
+                regions = getCheckedValues(".wonlossFilter input[name='Districts']");
+                queryString = "";
+                $(regions).each(function (i, x) {
+                    queryString += "&ParentIds=" + x;
+                });
+                if (queryString != "") {
+                    $.get("/Json/GetStructureList?StructureType=PLANT" + queryString, function (data) {
+                        if (data != "NOK") {
+                            districts = eval(data);
+                            $(".wonlossFilter input[name='Plants']").each(function (i, x) {
+                                id = parseInt($(x).val());
+                                if (districts.indexOf(id) == -1) {
+                                    $(x).prop("checked", false);
+                                    $(x).prop("disabled", true);
+                                    $(x).parent().parent().css("display", "none");
+                                } else {
+                                    $(x).prop("disabled", false);
+                                    $(x).parent().parent().css("display", "block");
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    $(".wonlossFilter input[name='Plants']").each(function (i, x) {
+                        $(x).prop("checked", false);
+                        $(x).prop("disabled", true);
+                        $(x).parent().parent().css("display", "none");
+                    });
+                }
+            }
+
+            function ScrubSalesStaffs() {
+                regions = getCheckedValues(".wonlossFilter input[name='Districts']");
+                queryString = "";
+                $(regions).each(function (i, x) {
+                    queryString += "&ParentIds=" + x;
+                });
+                if (queryString != "") {
+                    $.get("/Json/GetStructureList?StructureType=SALES_STAFF" + queryString, function (data) {
+                        if (data != "NOK") {
+                            districts = eval(data);
+                            $(".wonlossFilter input[name='Staffs']").each(function (i, x) {
+                                id = parseInt($(x).val());
+                                if (districts.indexOf(id) == -1) {
+                                    $(x).prop("checked", false);
+                                    $(x).prop("disabled", true);
+                                    $(x).parent().parent().css("display", "none");
+                                } else {
+                                    $(x).prop("disabled", false);
+                                    $(x).parent().parent().css("display", "block");
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    $(".wonlossFilter input[name='Staffs']").each(function (i, x) {
+                        $(x).prop("checked", false);
+                        $(x).prop("disabled", true);
+                        $(x).parent().parent().css("display", "none");
+                    });
+                }
+            }
+
+            function getCheckedValues(selector) {
+                values = [];
+                $(selector+":checked").each(function (index, item) {
+                    values.push($(item).val());
+                });
+                return values;
+            }
+
+        });
+    </script>
+}

@@ -1,0 +1,198 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ReportView
+@{
+    ViewBag.Title = "Won/Lost Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.UsingDatePicker = true;
+}
+<div class="page-head">
+    <h2>Won/Lost Report</h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Reports/Index">Reports</a></li>
+        <li class="active">Won/Lost</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                        <i class="glyphicon glyphicon-record"></i>
+                        Won / Lost Report 
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseTwo" class="panel-collapse collapse in">
+                <div class="panel-body wonlossFilter">
+                    @Html.Partial("~/Views/Partials/_WonLossReport.cshtml", Model.WonLostReportFilter)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.datepicker').datepicker({ format: "m/d/yyyy" }).on("changeDate", function (ev) {
+                $("div.datepicker").hide();
+            });
+
+            $(".disable").find("input[type='text']").each(function (index, item) {
+                $(this).prop("disabled", true);
+            });
+            controlList = ["BidDate", "StartDate", "WLDate"];
+            $(controlList).each(function (index, item) {
+                $(".wonlossFilter  #FilterBy" + item).change(function () {
+                    active = $(this).is(":checked");
+                    display = active ? "block" : "none";
+                    $(this).parents(".row").first().find("#" + item + "Begin").prop("disabled", !active);
+                    $(this).parents(".row").first().find("#" + item + "End").prop("disabled", !active);
+                
+                });
+            });
+
+            $(".wonlossFilter input[name='Regions']").change(function () {
+                ScrubDistricts();
+            });
+
+            $(".wonlossFilter input[name='Districts']").change(function () {
+                ScrubPlants();
+                ScrubSalesStaffs();
+            });
+
+            function ScrubDistricts() {
+                regions = getCheckedValues(".wonlossFilter input[name='Regions']");
+                queryString = "";
+                $(regions).each(function(i,x){
+                    queryString+="&ParentIds=" + x;
+                });
+                if (queryString != "") {
+                    $.get("/Json/GetStructureList?StructureType=DISTRICT" + queryString, function (data) {
+                        if (data != "NOK") {
+                            districts = eval(data);
+                            $(".wonlossFilter input[name='Districts']").each(function (i, x) {
+                                id = parseInt($(x).val());
+                                if (districts.indexOf(id) == -1) {
+                                    $(x).prop("checked", false);
+                                    $(x).prop("disabled", true);
+                                    $(x).parent().parent().css("display", "none");
+                                } else {
+                                    $(x).prop("disabled", false);
+                                    $(x).parent().parent().css("display", "block");
+                                }
+                            });
+
+                            if(districts && districts.length>0){
+                                $("[data-selector='region']").hide();
+                            }
+                        }
+                        ScrubPlants();
+                        ScrubSalesStaffs();
+                    });
+                } else {
+                    $(".wonlossFilter input[name='Districts']").each(function (i, x) {
+                        $(x).prop("checked", false);
+                        $(x).prop("disabled", true);
+                        $(x).parent().parent().css("display", "none");
+                    });
+                    ScrubPlants();
+                    ScrubSalesStaffs();
+
+                    $("[data-selector='region']").show();
+                }
+            }
+
+            function ScrubPlants() {
+                regions = getCheckedValues(".wonlossFilter input[name='Districts']");
+                queryString = "";
+                $(regions).each(function (i, x) {
+                    queryString += "&ParentIds=" + x;
+                });
+                if (queryString != "") {
+                    $.get("/Json/GetStructureList?StructureType=PLANT" + queryString, function (data) {
+                        if (data != "NOK") {
+                            districts = eval(data);
+                            $(".wonlossFilter input[name='Plants']").each(function (i, x) {
+                                id = parseInt($(x).val());
+                                if (districts.indexOf(id) == -1) {
+                                    $(x).prop("checked", false);
+                                    $(x).prop("disabled", true);
+                                    $(x).parent().parent().css("display", "none");
+                                } else {
+                                    $(x).prop("disabled", false);
+                                    $(x).parent().parent().css("display", "block");
+                                }
+                            });
+
+                            if(districts && districts.length>0)
+                                toggleDistrictPrompt(false);
+                        }
+                    });
+                } else {
+                    $(".wonlossFilter input[name='Plants']").each(function (i, x) {
+                        $(x).prop("checked", false);
+                        $(x).prop("disabled", true);
+                        $(x).parent().parent().css("display", "none");
+                    });
+
+                    toggleDistrictPrompt(true);
+                }
+            }
+
+            function ScrubSalesStaffs() {
+                regions = getCheckedValues(".wonlossFilter input[name='Districts']");
+                queryString = "";
+                $(regions).each(function (i, x) {
+                    queryString += "&ParentIds=" + x;
+                });
+                if (queryString != "") {
+                    $.get("/Json/GetStructureList?StructureType=SALES_STAFF" + queryString, function (data) {
+                        if (data != "NOK") {
+                            districts = eval(data);
+                            $(".wonlossFilter input[name='Staffs']").each(function (i, x) {
+                                id = parseInt($(x).val());
+                                if (districts.indexOf(id) == -1) {
+                                    $(x).prop("checked", false);
+                                    $(x).prop("disabled", true);
+                                    $(x).parent().parent().css("display", "none");
+                                } else {
+                                    $(x).prop("disabled", false);
+                                    $(x).parent().parent().css("display", "block");
+                                }
+                            });
+
+                            if(districts && districts.length>0)
+                                toggleDistrictPrompt(false);
+                        }
+                    });
+                } else {
+                    $(".wonlossFilter input[name='Staffs']").each(function (i, x) {
+                        $(x).prop("checked", false);
+                        $(x).prop("disabled", true);
+                        $(x).parent().parent().css("display", "none");
+                    });
+                    toggleDistrictPrompt(true);
+                }
+            }
+
+            function getCheckedValues(selector) {
+                values = [];
+                $(selector+":checked").each(function (index, item) {
+                    values.push($(item).val());
+                });
+                return values;
+            }
+
+            function toggleDistrictPrompt(show){
+                var $item=$("[data-selector='district']");
+                if(show){
+                    $item.show();
+                }else{
+                    $item.hide();
+                }
+            }
+        });
+    </script>
+}

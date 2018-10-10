@@ -1,0 +1,4 @@
+﻿----Add Columns To Project----
+ALTER TABLE Project
+ADD [AggProductPrice] [money] NULL,
+	[BlockProductPrice] [money] NULL

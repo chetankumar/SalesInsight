@@ -1,0 +1,102 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Home";
+}
+<div class="page-head">
+    <h2>Home</h2>
+</div>
+<div class="cl-mcont">
+    <div>
+        @if (ViewBag.AccessRule.HasReportsAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+        {
+            <a href="@Url.Action("Index", "Reports")">
+                <div class="butpro butstyle flat">
+                    <div class="sub">
+                        <h2>Reports</h2>
+                        <div>
+                            Summaries & Analysis
+                        </div>
+                    </div>
+                    <div class="stat">
+                        <i class="fa fa-2x fa-bar-chart text-primary"></i>
+                    </div>
+                </div>
+            </a>
+        }
+        @if (ViewBag.AccessRule.HasPipelineAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+        {
+            <a href="@Url.Action("Pipeline", "Home")">
+                <div class="butpro butstyle flat">
+                    <div class="sub">
+                        <h2>Pipeline</h2>
+                        <div>
+                            Add/Edit Projects
+                        </div>
+                    </div>
+                    <div class="stat">
+                        <i class="fa fa-2x fa-filter text-success"></i>
+                    </div>
+                </div>
+            </a>
+        }
+        @if (ViewBag.AccessRule.HasQuotationAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+        {
+            <a href="@Url.Action("Index", "Quote")">
+                <div class="butpro butstyle flat">
+                    <div class="sub">
+                        <h2>Quotations</h2>
+                        <div>Prepare/Edit Bids</div>
+                    </div>
+                    <div class="stat">
+                        <i class="fa fa-2x fa-file-text-o"></i>
+                    </div>
+                </div>
+            </a>
+        }
+        @if (ViewBag.AccessRule.HasForecastAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+        {
+            <a href="@Url.Action("Forecast", "Home")">
+                <div class="butpro butstyle flat">
+                    <div class="sub">
+                        <h2>Forecast</h2>
+                        <div>Estimate Future Volume</div>
+                    </div>
+                    <div class="stat">
+                        <i class="fa fa-2x fa-binoculars text-primary"></i>
+                    </div>
+                </div>
+            </a>
+        }
+        @if (ViewBag.AccessRule.HasUsersAccess != SIRolePermissionLevelConstants.NO_ACCESS
+                                    || ViewBag.AccessRule.HasRolesAccess != SIRolePermissionLevelConstants.NO_ACCESS
+                                    || ViewBag.AccessRule.HasTargetsAccess != SIRolePermissionLevelConstants.NO_ACCESS
+                                    || ViewBag.AccessRule.HasReportSettingsAccess != SIRolePermissionLevelConstants.NO_ACCESS
+                                    || ViewBag.AccessRule.HasCustomersAccess != SIRolePermissionLevelConstants.NO_ACCESS
+                                    || ViewBag.AccessRule.HasCompetitorsAccess != SIRolePermissionLevelConstants.NO_ACCESS
+                                    || ViewBag.AccessRule.HasSalesStaffAccess != SIRolePermissionLevelConstants.NO_ACCESS
+                                    || ViewBag.AccessRule.HasGCAccess != SIRolePermissionLevelConstants.NO_ACCESS
+                                    || ViewBag.AccessRule.HasMarketSegmentsAccess != SIRolePermissionLevelConstants.NO_ACCESS
+                                    || ViewBag.AccessRule.HasStatusesReasonsLostAccess != SIRolePermissionLevelConstants.NO_ACCESS
+                                    || ViewBag.AccessRule.HasStructureAccess != SIRolePermissionLevelConstants.NO_ACCESS
+                                    || ViewBag.AccessRule.HasRawMaterialsAccess != SIRolePermissionLevelConstants.NO_ACCESS
+                                    || ViewBag.AccessRule.HasAddonsAccess != SIRolePermissionLevelConstants.NO_ACCESS
+                                    || ViewBag.AccessRule.HasMixDesignsAccess != SIRolePermissionLevelConstants.NO_ACCESS
+                                    || ViewBag.AccessRule.HasSackPricingAccess != SIRolePermissionLevelConstants.NO_ACCESS
+                                    || ViewBag.AccessRule.HasMiscellaneousAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+        {
+            <a href="@Url.Action("Settings", "Home")">
+                <div class="butpro butstyle flat">
+                    <div class="sub">
+                        <h2>Settings</h2>
+                        <div>
+                            Manage Lists & Defaults
+                        </div>
+                    </div>
+                    <div class="stat">
+                        <i class="fa fa-2x fa-gear"></i>
+                    </div>
+                </div>
+            </a>
+        }
+    </div>
+</div>

@@ -1,0 +1,26 @@
+﻿---Shelly - Done
+---Chetan -  
+---Bharat - Done
+---Avnish - Done
+---Dinesh - Done
+---Server - 
+
+/****** Object:  Table [dbo].[TrendAnalysisReportConfig]    Script Date: 05/03/2017 07:26:50 Dinesh ******/ 
+
+ALTER TABLE [dbo].[TrendAnalysisReportConfig] 
+          ADD IsScallingAutoFit BIT NULL;
+GO
+
+ALTER TABLE [dbo].[TrendAnalysisReportConfig]  WITH CHECK ADD  CONSTRAINT [FK_TrendAnalysisReportConfig_MetricDefinition] FOREIGN KEY([MetricDefinitionId])
+REFERENCES [dbo].[MetricDefinition] ([Id])
+GO
+
+ALTER TABLE [dbo].[TrendAnalysisReportConfig] CHECK CONSTRAINT [FK_TrendAnalysisReportConfig_MetricDefinition]
+GO
+
+ALTER TABLE [dbo].[TrendAnalysisReportConfig]  WITH CHECK ADD  CONSTRAINT [FK_TrendAnalysisReportConfig_TargetMetricDefinition] FOREIGN KEY([TargetMetricDefinitionId])
+REFERENCES [dbo].[MetricDefinition] ([Id])
+GO
+
+ALTER TABLE [dbo].[TrendAnalysisReportConfig] CHECK CONSTRAINT [FK_TrendAnalysisReportConfig_TargetMetricDefinition]
+GO

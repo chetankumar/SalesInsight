@@ -1,0 +1,212 @@
+﻿@*@model RedHill.SalesInsight.Web.Html5.Models.ESI.DrillInTicketStatsView*@
+
+@{ ViewBag.Title = "Drill-In Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.IsESIModule = true;
+    ViewBag.UsingDataTable = true;
+
+}
+<div class="page-head">
+    <h2>
+        <i class="fa fa-search"></i>
+        Drill-In Details
+    </h2>
+</div>
+<div class="esi-dashboard">
+
+    <div class="cl-mcont">
+        <div class="block-flat">
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="table table-bordered table-striped esi-table row-datacell" id="drill_in_datatable" style="width:100%;">
+
+                        @*@if (Model.Response != null)
+                            {
+
+                                Model.TicketStats = Model.Response.FirstOrDefault();*@
+                        <thead>
+                            <tr>
+                                <th>Customer City</th>
+                                <th>Customer Name</th>
+                                <th>Date</th>
+                                <th>District Name</th>
+                                <th>Estimated ClockHours</th>
+                                <th>Load Minutes</th>
+                                <th>Material Cost</th>
+                                <th>Region</th>
+                                <th>Revenue</th>
+                                <th>Start Up Minutes</th>
+                                <th>Shutdown Minutes</th>
+                                <th>Temper</th>
+                                <th>Ticket Id</th>
+                                <th>Ticket Number</th>
+                                <th>Ticketing Minutes</th>
+                                <th>Total Minutes</th>
+                                <th>Truck Number</th>
+                                <th>Volume</th>
+                                <th>Wait Minutes</th>
+                                <th>Wash Minutes</th>
+                                @*@{
+
+                                        if (Model.TicketStats != null)
+                                        {
+                                            var props = Model.TicketStats.GetType().GetProperties();
+                                            for (int i = 0; i < props.Count(); i++)
+                                            {
+                                                <th>
+                                                    @RedHill.SalesInsight.DAL.Utilities.ReflectionUtils.GetAttrValue(props[i], "DisplayName")
+                                                </th>
+
+                                            }
+                                        }
+                                    }*@
+                            </tr>
+                        </thead>
+                        @*foreach (var rowsResponse in Model.Response.Take(200))
+                                    {
+                                        <tr>
+                                            @foreach (var item in rowsResponse.GetType().GetProperties())
+                                            {
+                                                var itemPropertyType = item.PropertyType.Name;
+
+
+                                                if (itemPropertyType == "DateTime")
+                                                {
+                                                    var val = Convert.ToDateTime(item.GetValue(Model.TicketStats, null) ?? new DateTime());
+                                                    <td>@val.ToString("dd/mm/yyyy")</td>
+                                                }
+                                                else if (itemPropertyType.Equals("Double"))
+                                                {
+                                                    var val = Convert.ToDouble(item.GetValue(Model.TicketStats, null) ?? 0);
+                                                    <td>@val.ToString("N2" ?? "N0")</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.GetValue(Model.TicketStats, null)</td>
+                                                }
+                                            }
+
+                                        </tr>
+                                    }
+                            }*@
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        setTimeout(function () {
+            bindDataTable();
+            $('select[name="drill_in_datatable_length"]').addClass("form-control");//add class to dropdown temporary fix
+            $('input[type="search"]').addClass("form-control input-sm");//add class to search temporary fix
+        }, 300);
+    })
+
+    var getSearchView = function () {
+        var dimensionName = getURLParameter('dimensionName');
+        var metricName = getURLParameter('metricName');
+        searchClause = $("input[type='search']").val();
+        return {
+            dimensionName: dimensionName,
+            metricName: metricName,
+            search: searchClause
+        }
+    };
+
+    var orderClause = [], searchClause = "";
+
+    var columns = [
+        { "data": "CustomerCity" },
+        { "data": "CustomerName" },
+        { "data": "Date" },
+        { "data": "DistrictName" },
+        { "data": "EstimatedClockHours" },
+        { "data": "LoadMinutes" },
+        { "data": "MaterialCost" },
+        { "data": "RegionName" },
+        { "data": "Revenue" },
+        { "data": "ShutdownMinutes" },
+        { "data": "StartupMinutes" },
+        { "data": "Temper" },
+        { "data": "TicketId" },
+        { "data": "TicketNumber" },
+        { "data": "TicketingMinutes" },
+        { "data": "TotalMinutes" },
+        { "data": "TruckNumber" },
+        { "data": "Volume" },
+        { "data": "WaitMinutes" },
+        { "data": "WashMinutes" }
+    ]
+
+    var ajaxData = function (d) {
+        var table = $("#drill_in_datatable").DataTable();
+        var order = table.order();
+        if (order && order.length) {
+            var columns = table.columns();
+            orderClause = []
+            $.each(order, function (i, e) {
+                var columnIndex = e[0];
+                var direction = e[1];
+                var column = columns[columnIndex];
+                var columnName = columns.context[0].aoColumns[columnIndex].data;
+                var isDescending = (direction !== 'asc');
+                orderClause.push({ SortBy: columnName, IsDescending: isDescending, Order: i });
+            });
+        }
+        //Make changes to d (input parameters) if required
+        $.extend(true, d, { order: orderClause });
+        $.extend(true, d, getSearchView());
+    }
+
+    //gets dimension name and metric name from url on page load
+    function getURLParameter(sParam) {
+        var sPageURL = window.location.search.substring(1);
+        var sURLVariables = sPageURL.split('&');
+        for (var i = 0; i < sURLVariables.length; i++) {
+            var sParameterName = sURLVariables[i].split('=');
+            if (sParameterName[0] == sParam) {
+                return decodeURIComponent(sParameterName[1]);
+            }
+        }
+    }
+
+    function bindDataTable() {
+        dt = $("#drill_in_datatable").DataTable({
+            "processing": true,
+            "serverSide": true,
+            "stateSave": true,
+            "orderMulti": false,           
+            "dom": '<"top">frt<"bottom"i><"clear"><"paging"lp><"clear">',
+            "language": {
+                "info": "_START_ to _END_ of _TOTAL_ records",
+                "lengthMenu": "_MENU_ Records per page",
+                "search": "",
+                "searchPlaceholder": "Search ",
+                "processing": "<img height='124px' src='../Scripts/js/jquery.upload/img/preloader.gif' />"
+            },
+            ajax: {
+                url: '/ESI/DrillInDetails',
+                type: 'POST',
+                data: ajaxData,
+            },
+            "initComplete": function () {
+                var $searchInput = $('div.dataTables_filter input');
+
+                $searchInput.unbind();
+                $searchInput.bind('keyup', function (e) {
+                    if (this.value.length >= 3 || e.keyCode == 13 /*|| e.keyCode == 8*/) {
+                        dt.search(this.value).draw();
+                    }
+                });
+            },
+            "columns": columns,
+            "order": [[0, "asc"]]
+        });
+    }
+
+</script>

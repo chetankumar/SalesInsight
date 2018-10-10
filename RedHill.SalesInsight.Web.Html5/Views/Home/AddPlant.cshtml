@@ -1,0 +1,431 @@
+﻿@using RedHill.SalesInsight.Web.Html5.Helpers;
+@using RedHill.SalesInsight.DAL.DataTypes;
+@model RedHill.SalesInsight.Web.Html5.Models.PlantView
+
+@{
+    ViewBag.Title = (Model.PlantId == 0 ? "Add Plant" : "Edit Plant");
+    ViewBag.UsingMaps = true;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var company = ConfigurationHelper.Company;
+    var apiEnabled = ConfigurationHelper.APIEnabled;
+}
+
+<div class="page-head">
+    <h2>
+        @if (Model.PlantId > 0)
+        {
+            <span>Edit Plant</span>
+        }
+        else
+        {
+            <span>Add Plant</span>
+        }
+    </h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Home/Settings">Settings</a></li>
+        <li><a href="/Home/Companies">Manage Company Settings</a></li>
+        <li><a href="/Home/Companies/structure">Structure</a></li>
+        <li class="active">@(Model.PlantId == 0 ? "New" : Model.Name)</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="block-flat">
+        @using (Html.BeginForm("UpdatePlant", "Home", FormMethod.Post, new { @class = "form-horizontal" }))
+        {
+            @Html.ValidationSummary(true)
+
+            <fieldset>
+                <legend>
+                    @if (Model.PlantId > 0)
+                {
+                        <span>Update @Model.Name</span>
+                    }
+                    else
+                    {
+                        <span>Create Plant for @Model.CompanyName</span>
+                    }
+                </legend>
+                @Html.HiddenFor(model => model.PlantId, new { @class = "form-control" })
+                @Html.HiddenFor(model => model.CompanyId, new { @class = "form-control" })
+                @Html.HiddenFor(model => model.DispatchId)
+                <div class="form-group">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.Name)
+                    </div>
+                    <div class="col-md-10">
+                        @if (Model.PlantId == 0)
+                        {
+                            @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @readonly = "readonly" })
+                        }
+                        @Html.ValidationMessageFor(model => model.Name, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.DispatchId)
+                    </div>
+                    <div class="col-md-10">
+                        @if (Model.DispatchId == null)
+                        {
+                            @Html.TextBoxFor(model => model.DispatchId, new { @class = "form-control" })
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(model => model.DispatchId, new { @class = "form-control", @readonly = "readonly" })
+                        }
+                        @Html.ValidationMessageFor(model => model.DispatchId, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+                @if (apiEnabled)
+                {
+                    <input type="hidden" name="ProductTypeId" value="@Model.ProductTypeId" />
+                }
+                
+                <div class="form-group">
+                        <div class="control-label col-md-2">
+                            @Html.LabelFor(model => model.ProductTypeId)
+                        </div>
+                        <div class="col-md-10">
+                            <div class="radio-inline">
+                                <label>
+                                    <input type="radio" value="@ProductType.Concrete" @(Model.ProductTypeId == ProductType.Concrete ? "checked" : "" ) name="ProductTypeId" @(apiEnabled ? "disabled" : "" ) data-category="concrete" /> Concrete
+                                </label>
+                            </div>
+                            @if (ConfigurationHelper.AggregateEnabled)
+                            {
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" value="@ProductType.Aggregate" @(Model.ProductTypeId == ProductType.Aggregate ? "checked" : "" ) name="ProductTypeId" @(apiEnabled ? "disabled" : "" ) data-category="aggregate" />
+                                        Aggregate
+                                    </label>
+                                </div>
+                            }
+                            @if (ConfigurationHelper.BlockEnabled)
+                            {
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" value="@ProductType.Block" @(Model.ProductTypeId == ProductType.Block ? "checked" : "" ) name="ProductTypeId" @(apiEnabled ? "disabled" : "" ) data-category="block" />
+                                        Block
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                
+                <!-- Address Form  -->
+                <div class="form-group">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.Address)
+                    </div>
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(model => model.Address, new { @class = "form-control" })
+                    </div>
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.Phone)
+                    </div>
+                    <div class="col-md-2">
+                        @Html.TextBoxFor(model => model.Phone, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.CityStateZip)
+                    </div>
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(model => model.CityStateZip, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.DistrictId)
+                    </div>
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.DistrictId, Model.AvailableDistricts, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.DistrictId, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="control-label col-md-2">
+                        <label>Map Location</label>
+                    </div>
+                    <div class="col-md-10 clearfix">
+                        <div class="col-xs-3 padding-0">
+                            @Html.TextBoxFor(x => x.Latitude, new { @class = "form-control", @readonly = "readyonly" })
+                        </div>
+                        <div class="col-xs-3 ">
+                            @Html.TextBoxFor(x => x.Longitude, new { @class = "form-control", @readonly = "readyonly" })
+                        </div>
+                        <div class="col-xs-6">
+                            <button type="button" class="btn btn-primary map_marker_btn" data-address="@Model.Name" data-latitude="@Model.Latitude" data-longitude="@Model.Longitude" data-default-latitude="@Model.DistrictLatitude" data-default-longitude="@Model.DistrictLongitude" data-trigger="modal" data-target="map_modal">
+                                <i class="fa fa-map-marker fa-fw"></i>
+                                Set Location
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.Trucks)
+                    </div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.Trucks, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Trucks, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.Ticket)
+                    </div>
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.Ticket, new { @class = "form-control" })
+                            <span class="input-group-addon">minutes</span>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Ticket, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.Load)
+                    </div>
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.Load, new { @class = "form-control" })
+                            <span class="input-group-addon">minutes</span>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Load, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+                <div class="form-group" data-categories="concrete">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.Temper)
+                    </div>
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.Temper, new { @class = "form-control" })
+                            <span class="input-group-addon">minutes</span>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Temper, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+                <div class="form-group" data-categories="block, aggregate" style="display:none;">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.PostLoad)
+                    </div>
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.PostLoad, new { @class = "form-control" })
+                            <span class="input-group-addon">minutes</span>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.PostLoad, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+                <div class="form-group" data-categories="block, aggregate" style="display:none;">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.ToJob)
+                    </div>
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.ToJob, new { @class = "form-control" })
+                            <span class="input-group-addon">minutes</span>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.ToJob, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.Wait)
+                    </div>
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.Wait, new { @class = "form-control" })
+                            <span class="input-group-addon">minutes</span>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Wait, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+                <div class="form-group" data-categories="block, aggregate" style="display:none;">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.Unload)
+                    </div>
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.Unload, new { @class = "form-control" })
+                            <span class="input-group-addon">minutes</span>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Unload, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+                <div class="form-group" data-categories="block, aggregate" style="display:none;">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.ToPlant)
+                    </div>
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.ToPlant, new { @class = "form-control" })
+                            <span class="input-group-addon">minutes</span>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.ToPlant, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+                <div class="form-group" data-categories="block, aggregate" style="display:none;">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.AvgLoadSize)
+                    </div>
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.AvgLoadSize, new { @class = "form-control" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.AvgLoadSize, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.Utilization)
+                    </div>
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.UtilizationPercentage, "{0:N0}", new { @class = "form-control" })
+                            <span class="input-group-addon">%</span>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Utilization, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.VariableCost)
+                    </div>
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            <span class="input-group-addon">$/Min</span>
+                            @Html.TextBoxFor(model => model.VariableCost, new { @class = "form-control" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.VariableCost, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.PlantCost)
+                    </div>
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            <span class="input-group-addon">$/@company.DeliveryQtyUomSingular</span>
+                            @Html.TextBoxFor(model => model.PlantCost, new { @class = "form-control" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.PlantCost, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.DeliveryCost)
+                    </div>
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            <span class="input-group-addon">$/@company.DeliveryQtyUomSingular</span>
+                            @Html.TextBoxFor(model => model.DeliveryCost, new { @class = "form-control" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.DeliveryCost, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.SGA)
+                    </div>
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            <span class="input-group-addon">$/@company.DeliveryQtyUomSingular</span>
+                            @Html.TextBoxFor(model => model.SGA, new { @class = "form-control" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.SGA, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+                @if (ViewBag.AccessRule.Enable5skPricing)
+                {
+                    <div class="form-group">
+                        <div class="control-label col-md-2">
+                            @Html.LabelFor(model => model.FSKPriceId)
+                        </div>
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(model => model.FSKPriceId, Model.Available5skPrices, string.Empty, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.FSKPriceId, string.Empty, new { @class = "help-inline" })
+                        </div>
+                    </div>
+                }
+                <div class="form-group">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.Active)
+                    </div>
+                    <div class="col-md-10">
+                        @if (apiEnabled)
+                        {
+                            @Html.HiddenFor(model => model.Active)
+                            @Html.CheckBoxFor(model => model.Active, new { @disabled = "disabled" })
+                        }
+                        else
+                        {
+                            @Html.CheckBoxFor(model => model.Active)
+                            @Html.ValidationMessageFor(model => model.Active, string.Empty, new { @class = "help-inline" })
+                        }
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10 col-md-offset-2">
+                        <input type="submit" value="@(Model.PlantId > 0 ? "Update" : "Create")" class="btn btn-primary" />
+                    </div>
+                </div>
+            </fieldset>
+        }
+    </div>
+</div>
+@Html.Partial("_MapMarker", true)
+
+@section Scripts {
+    @Scripts.Render("~/js/project_loc")
+    <script>
+        $(document).ready(function () {
+            var structureAccess = '@(ViewBag.AccessRule.HasStructureAccess == SIRolePermissionLevelConstants.FULL_ACCESS)';
+            if (structureAccess == 'False') { disableEveryThing(); }
+
+            $("body").on("MarkerMoved", function (e, data) {
+                $("#Latitude").val(e.latitude);
+                $("#Longitude").val(e.longitude);
+            });
+            $("body").on("MapMoved", function (e, data) {
+            });
+            var catElem = $($("[data-category]:checked")[0]);
+            var cat = $(catElem).length ? $(catElem).val().toLowerCase() : "";
+            var items = $("[data-categories*='" + cat + "']");
+            $("[data-categories]").hide();
+            $.each(items, function (i, e) {
+                $(e).show();
+            });
+
+            $(document).on("change", "[data-category]", function (e) {
+                var category = $(this).attr("data-category");
+                var items = $("[data-categories*='" + category + "']");
+                $("[data-categories]").hide();
+                $.each(items, function (i, e) {
+                    $(e).show();
+                });
+            });
+        });
+
+        $.validator.setDefaults({
+            highlight: function (element) {
+                $(element).closest(".control-group").addClass("error");
+            },
+            unhighlight: function (element) {
+                $(element).closest(".control-group").removeClass("error");
+            }
+        });
+    </script>
+}
+
+
+

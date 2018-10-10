@@ -1,0 +1,193 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.SalesStaffView
+@{
+    ViewBag.Title = (Model.SalesStaffId == 0 ? "New" : Model.Name);
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    bool aujsAPIEnabled = (ViewBag.AUJSAPIEnabled != null && ViewBag.AUJSAPIEnabled == true);
+}
+<div class="page-head">
+    <h2>
+        @if (Model.SalesStaffId > 0)
+        {
+            <span>Edit Sales Staff</span>
+        }
+        else
+        {
+            <span>Add Sales Staff</span>
+        }
+    </h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Home/Settings">Settings</a></li>
+        <li><a href="/Home/Companies">Manage Company Settings</a></li>
+        <li><a href="/Home/Companies/salesstaff">Sales Staff</a></li>
+        <li class="active">@(Model.SalesStaffId == 0 ? "New" : Model.Name)</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="block-flat">
+        @using (Html.BeginForm("UpdateSalesStaff", "Home", FormMethod.Post, new { @class = "form-horizontal" }))
+        {
+            @Html.ValidationSummary(true)
+
+            <div>
+                @Html.HiddenFor(model => model.SalesStaffId, new { @class = "form-control" })
+                @Html.HiddenFor(model => model.CompanyId, new { @class = "form-control" })
+                @Html.HiddenFor(model => model.DispatchId)
+                <div class="form-group">
+
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.Name)
+                    </div>
+                    <div class="col-md-10">
+                        @if (!aujsAPIEnabled)
+                        {
+                            @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Name, string.Empty, new { @class = "help-inline" })
+                        }
+                        else
+                        {
+                            <div class="form-control-static">
+                                @Html.HiddenFor(model => model.Name)
+                                @Model.Name
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.Phone)
+                    </div>
+                    <div class="col-md-10">
+                        @if (!aujsAPIEnabled)
+                        {
+                            @Html.TextBoxFor(model => model.Phone, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Phone, string.Empty, new { @class = "help-inline" })
+                        }
+                        else
+                        {
+                            <div class="form-control-static">
+                                @Html.HiddenFor(model => model.Phone)
+                                @Model.Phone
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.Fax)
+                    </div>
+                    <div class="col-md-10">
+
+                        @Html.TextBoxFor(model => model.Fax, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Fax, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.Email)
+                    </div>
+                    <div class="col-md-10">
+                        @if (!aujsAPIEnabled)
+                        {
+                            @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Email, string.Empty, new { @class = "help-inline" })
+                        }
+                        else
+                        {
+                            <div class="form-control-static">
+                                @Html.HiddenFor(model => model.Email)
+                                @Model.Email
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.Active)
+                    </div>
+                    <div class="col-md-10">
+                        @if (!aujsAPIEnabled)
+                        {
+                            @Html.CheckBoxFor(model => model.Active)
+                            @Html.ValidationMessageFor(model => model.Active, string.Empty, new { @class = "help-inline" })
+                        }
+                        else
+                        {
+                            @Html.HiddenFor(model => model.Active)
+                            @Html.CheckBoxFor(model => model.Active, new { @disabled = "disabled" })
+                        }
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.Districts)
+                    </div>
+                    <div class="col-md-10">
+                        @foreach (SelectListItem item in Model.AvailableDistricts)
+                        {
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="Districts" value="@item.Value" @(item.Selected ? "checked='checked'" : "") />
+                                    @item.Text
+                                </label>
+                            </div>
+                        }
+                        @Html.ValidationMessageFor(model => model.Districts, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10 col-md-offset-2">
+                        <input type="submit" value="@(Model.SalesStaffId > 0 ? "Update" : "Create")" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<div class="modal fade" id="max_user_exceed">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">All available sales staff seats currently occupied. Additional sales staff seats may be added by contacting your subscription sales associate.</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script>
+        $(document).ready(function () {
+            $("#Active").click(function () {
+                var maxSalesStaffExempt = '@ViewBag.IsMaxSalesStaffExceed';
+                var active = '@Model.Active';
+                if (maxSalesStaffExempt == 'True' && active == 'False') {
+                    $("#max_user_exceed").modal("show");
+                    $(this).attr("checked", false);
+                }
+            });
+
+            var salesStaffAccess = '@(ViewBag.AccessRule.HasSalesStaffAccess == SIRolePermissionLevelConstants.FULL_ACCESS)';
+            if (salesStaffAccess == 'False')
+            { disableEveryThing(); }
+
+        });
+
+        $.validator.setDefaults({
+            highlight: function (element) {
+                $(element).closest(".control-group").addClass("error");
+            },
+            unhighlight: function (element) {
+                $(element).closest(".control-group").removeClass("error");
+            }
+        });
+    </script>
+}
+
+
+

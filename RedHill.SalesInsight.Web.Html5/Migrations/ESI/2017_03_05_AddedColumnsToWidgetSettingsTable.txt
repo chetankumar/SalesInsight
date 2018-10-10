@@ -1,0 +1,23 @@
+﻿--Shelly - Done
+--Avnish - Done
+--Dinesh - Done
+--Chetan -
+--Bharat - Done
+
+ALTER TABLE WidgetSettings
+ADD PrimaryMetricDefinitionId INT NULL,
+	ComparisonMetricDefinitionId INT NULL;
+
+ALTER TABLE [dbo].[WidgetSettings]  WITH CHECK ADD  CONSTRAINT [FK_WidgetSettings_MetricDefinition] FOREIGN KEY([PrimaryMetricDefinitionId])
+REFERENCES [dbo].[MetricDefinition] ([Id])
+GO
+
+ALTER TABLE [dbo].[WidgetSettings] CHECK CONSTRAINT [FK_WidgetSettings_MetricDefinition]
+GO
+
+ALTER TABLE [dbo].[WidgetSettings]  WITH CHECK ADD  CONSTRAINT [FK_WidgetSettings_MetricDefinition1] FOREIGN KEY([ComparisonMetricDefinitionId])
+REFERENCES [dbo].[MetricDefinition] ([Id])
+GO
+
+ALTER TABLE [dbo].[WidgetSettings] CHECK CONSTRAINT [FK_WidgetSettings_MetricDefinition1]
+GO

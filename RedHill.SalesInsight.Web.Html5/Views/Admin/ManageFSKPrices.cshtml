@@ -1,0 +1,156 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ManageFSKPrices
+
+
+@{
+    ViewBag.Title = "Sack Pricing";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.UsingDataTable = true;
+}
+
+<div class="page-head">
+    <h2>
+        <i class="fa fa-fw fa-user-secret"></i>
+        Manage Sack Pricing
+        @if (ViewBag.AccessRule.HasSackPricingAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+        {
+            <a class="btn btn-primary pull-right" id="create_new_btn" data-toggle="modal" data-target="#add_edit_modal">
+                <i class="fa fa-plus-circle"></i>
+                <span>Sack Price</span>
+            </a>
+        }
+    </h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Home/Settings">Settings</a></li>
+        <li><a href="/Home/Companies">Manage Sales Infrastructure</a></li>
+        <li class="active">Sack Pricing</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    @Html.Partial("_CompanyTabs", "5skPricings")
+    <div class="tab-content">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="">
+                    @using (Html.BeginForm("ManageFSKPrices", "Admin"))
+                    {
+                        <div class="pull-left">@Html.CheckBoxFor(x => x.ShowInactives) Show Inactives</div>
+                    }
+                    <table class="data_table table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>City Code</th>
+                                <th>City</th>
+                                <th>Sack Count</th>
+                                <th>Base Prices</th>
+                                <th>Add Price</th>
+                                <th>Deduct Price</th>
+                                <th>Active</th>
+                                @if (ViewBag.AccessRule.HasSackPricingAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                                {
+                                    <th>Edit</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (RedHill.SalesInsight.DAL.FSKPrice type in Model.FSKPrices)
+                            {
+                                <tr>
+                                    <td>@type.FSKCode</td>
+                                    <td>@type.City</td>
+                                    <td>@type.SackCount</td>
+                                    <td>@type.BasePrice</td>
+                                    <td>@type.AddPrice</td>
+                                    <td>@type.DeductPrice</td>
+                                    <td>
+                                        @Html.Partial("_Tick", type.Active)
+                                    </td>
+                                    @if (ViewBag.AccessRule.HasSackPricingAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                                    {
+                                        <td>
+                                            <a href="/Admin/ManageFSKPrices?id=@type.Id" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
+                                            <a href="/Admin/DeleteFSKPrice?id=@type.Id" data-confirm="Are you sure you want to delete this 5sk Price?<br /> Code : @type.FSKCode " class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i></a>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@using (Html.BeginForm("UpdateFSKPrice", "Admin", FormMethod.Post, new { data_parsley_validate = "true" }))
+{
+    <div class="modal md-modal colored-header fade" data-show="@(Model.SelectedFSKPrice.Id > 0 ? "false" : "true")" data-backdrop="static" id="add_edit_modal">
+        <div class="modal-dialog">
+            <div class="md-content modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-backdrop="static" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">@(Model.SelectedFSKPrice.Id > 0 ? "Update Sack Price" : "Add Sack Price")</h4>
+                </div>
+                <div class="modal-body form">
+                    @Html.Partial("_ErrorView")
+                    <div class="form-group">
+                        <label>City Code</label>
+                        @Html.HiddenFor(x => x.SelectedFSKPrice.Id)
+                        @if (Model.SelectedFSKPrice.Id == 0)
+                        {
+                            @Html.TextBoxFor(x => x.SelectedFSKPrice.FSKCode, new { @class = "form-control", data_parsley_trigger = "change", required = "true" })
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(x => x.SelectedFSKPrice.FSKCode, new { @class = "form-control", @readonly = "readonly" })
+                        }
+
+                    </div>
+                    <div class="form-group">
+                        <label>City</label>
+                        @Html.TextBoxFor(x => x.SelectedFSKPrice.City, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label>Sack Count</label>
+                        @Html.TextBoxFor(x => x.SelectedFSKPrice.SackCount, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label>Base Price</label>
+                        @Html.TextBoxFor(x => x.SelectedFSKPrice.BasePrice, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label>Add Price</label>
+                        @Html.TextBoxFor(x => x.SelectedFSKPrice.AddPrice, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label>Deduct Price</label>
+                        @Html.TextBoxFor(x => x.SelectedFSKPrice.DeductPrice, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.CheckBoxFor(x => x.SelectedFSKPrice.Active) Active
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-default btn-flat md-close" href="@Url.Action("ManageFSKPrices","Admin")">Cancel</a>
+                    <button type="submit" class="btn btn-primary btn-flat">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section Scripts{
+    <script type="text/javascript">
+        var showModal = @(Model.ShowModal ? "true" : "false" );
+        $(document).ready(function (e) {
+            if (showModal){
+                $('#add_edit_modal').modal({
+                    "show":true
+                })
+            }
+
+            $("#ShowInactives").click(function(e){
+                $(this).parents("form").submit();
+            });
+        });
+    </script>
+}
+

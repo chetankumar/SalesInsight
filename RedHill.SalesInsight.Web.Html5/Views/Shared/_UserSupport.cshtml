@@ -1,0 +1,110 @@
+﻿<div class="modal fade md-effect-10" id="support_request_box">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header modal-header-primary">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Request Support</h4>
+            </div>
+            <div class="modal-body">
+                <form id="support_request_form" action="/Home/SupportRequest" method="POST">
+                    <div class="panel-body form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label">Category</label>
+                            <div class="col-sm-7">
+                                <input type="hidden" name="BrowserSpecs" id="su_browser_specs" />
+                                <input type="hidden" name="ScreenResolution" id="su_screen_resolution" />
+                                @Html.DropDownList("Category", new SelectList(RedHill.SalesInsight.Web.Html5.Helpers.ConfigurationHelper.UserSupportCategories, "Id", "Name"), "---Category---", new { @class = "form-control", @required = "required", @data_error_message = "Please select the category" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label">Urgency Level</label>
+                            <div class="col-sm-7">
+                                @Html.DropDownList("UrgencyLevel", new SelectList(new List<SelectListItem>() { new SelectListItem { Text = "Today" }, new SelectListItem { Text = "In Next 48 Hours" }, new SelectListItem { Text = "This Week" }, new SelectListItem { Text = "Not Urgent" } }, "Text", "Text"), "---Urgency Level---", new { @class = "form-control", @required = "required", @data_error_message = "Please select the urgency level" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label">Email</label>
+                            <div class="col-sm-7">
+                                @Html.TextBox("Email", RedHill.SalesInsight.Web.Html5.Helpers.ConfigurationHelper.UserEmail, new { @class = "form-control", @required = "required", @data_error_message = "Email is required", @data_type = "email" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label">Phone</label>
+                            <div class="col-sm-7">
+                                @Html.TextBox("Phone", null, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label">How would you like to be contacted?</label>
+                            <div class="col-sm-7">
+                                @Html.DropDownList("ContactMedium", new SelectList(new List<SelectListItem>() { new SelectListItem { Text = "Phone or E-Mail" }, new SelectListItem { Text = "Phone" }, new SelectListItem { Text = "E-Mail" } }, "Text", "Text"), new { @class = "form-control", @required = "required" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label">Description</label>
+                            <div class="col-sm-7">
+                                @Html.TextArea("Description", null, new { @class = "form-control", @required = "required", @data_error_message = "Please add description" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-5 control-label">Attachment(s)</label>
+                            <div class="col-sm-7">
+                                <div class="">
+                                    <label for="support_attachments" class="btn btn-primary btn-xs">
+                                        <input type="file" multiple="multiple" name="SupportAttachments" id="support_attachments" class="fileupload" data-url="/Home/SupportAttachments" style="display: none;" />
+                                        Choose File(s)
+                                    </label>
+                                </div>
+                                <div>
+                                    <span class="fileupload-process"></span>
+                                    <div class="fileupload-progress">
+                                        <div id="support_attachment_progress" class="progress progress-thin fade" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                                            <div class="progress-bar progress-bar-success" style="width: 0%;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="support_attachment_files">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default reset" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" data-action="submit_support_request">Submit Request</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script id="template-upload" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-upload fade">
+        <td>
+            <span class="preview"></span>
+        </td>
+        <td>
+            <p class="name">{%=file.name%}</p>
+            <strong class="error text-danger"></strong>
+        </td>
+        <td>
+            <p class="size">Processing...</p>
+            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
+        </td>
+        <td>
+            {% if (!i && !o.options.autoUpload) { %}
+                <button class="btn btn-primary start" disabled>
+                    <i class="glyphicon glyphicon-upload"></i>
+                    <span>Start</span>
+                </button>
+            {% } %}
+            {% if (!i) { %}
+                <button class="btn btn-warning cancel">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>Cancel</span>
+                </button>
+            {% } %}
+        </td>
+    </tr>
+{% } %}
+</script>

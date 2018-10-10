@@ -1,0 +1,98 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ReportView
+@{
+    ViewBag.Title = "Reports";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.UsingDatePicker = true;
+}
+<div class="page-head">
+    <h2>Reports</h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li class="active">Reports</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div>
+        <a href="@Url.Action("SalesForecastReport", "Reports")">
+            <div class="butpro butstyle flat">
+                <div class="sub">
+                    <h2>Sales Forecast</h2>
+                    <div>
+                        <br />
+                    </div>
+                </div>
+                <div class="stat">
+                    <i class="fa fa-2x fa-signal text-primary"></i>
+                </div>
+            </div>
+        </a>
+        <a href="@Url.Action("WonLossReport", "Reports")">
+            <div class="butpro butstyle flat">
+                <div class="sub">
+                    <h2>Won/Lost</h2>
+                    <div>
+                        <br />
+                    </div>
+                </div>
+                <div class="stat">
+                    <i class="fa fa-2x fa-bullseye text-success"></i>
+                </div>
+            </div>
+        </a>
+        <a href="@Url.Action("GeoMarketAnalysis", "Reports")">
+            <div class="butpro butstyle flat">
+                <div class="sub">
+                    <h2>Geo-Market Analysis</h2>
+                    <div>
+                        <br />
+                    </div>
+                </div>
+                <div class="stat">
+                    <i class="fa fa-2x fa-globe text-success"></i>
+                </div>
+            </div>
+        </a>
+        <a href="@Url.Action("CustomerDiamondAnalysis", "Reports")">
+            <div class="butpro butstyle flat">
+                <div class="sub">
+                    <h2>Customer Diamond Analysis</h2>
+                    <div>
+                        <br />
+                    </div>
+                </div>
+                <div class="stat">
+                    <i class="fa fa-2x fa-diamond text-success"></i>
+                </div>
+            </div>
+        </a>
+        <a href="@Url.Action("SalesDashboard", "Reports")">
+            <div class="butpro butstyle flat">
+                <div class="sub">
+                    <h2>Sales Dashboard</h2>
+                    <div>
+                        <br />
+                    </div>
+                </div>
+                <div class="stat">
+                    <i class="fa fa-2x fa-tachometer text-success"></i>
+                </div>
+            </div>
+        </a>
+        @if (ViewBag.AccessRule.HasReportSettingsAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+        {
+            <a href="@Url.Action("Settings", "Reports")">
+                <div class="butpro butstyle flat">
+                    <div class="sub">
+                        <h2>Report Settings</h2>
+                        <div>
+                            <br />
+                        </div>
+                    </div>
+                    <div class="stat">
+                        <i class="fa fa-2x fa-cog text-success"></i>
+                    </div>
+                </div>
+            </a>
+        }
+    </div>
+</div>

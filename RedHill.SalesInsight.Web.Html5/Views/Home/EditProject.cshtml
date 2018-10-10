@@ -1,0 +1,1727 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ProjectView
+@using RedHill.SalesInsight.DAL;
+@using RedHill.SalesInsight.Web.Html5.Helpers;
+@using RedHill.SalesInsight.DAL.DataTypes;
+@{
+    ViewBag.Title = Model.ProjectName;
+    ViewBag.UsingDatePicker = true;
+    ViewBag.UsingMultiselect = true;
+    ViewBag.UsingBootstrapSwitch = true;
+    ViewBag.UsingMaps = true;
+    ViewBag.UsingAutoComplete = true;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    bool aujsAPIEnabled = (ViewBag.AUJSAPIEnabled != null && ViewBag.AUJSAPIEnabled == true);
+    var company = ConfigurationHelper.Company;
+    var Unit = company.DeliveryQtyUomSingular;
+    if (Model.CompanyEnableAggregate || Model.CompanyEnableBlock)
+    {
+        Unit = "Unit";
+    }
+}
+<div class="page-head">
+    <h1>Edit Project</h1>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="@Url.Action("Pipeline", "Home")">Pipeline</a></li>
+        <li class="active">@Model.ProjectName</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div>
+        @using (Html.BeginForm("UpdateProject", "Home", FormMethod.Post, new { @class = "form form-horizontal" }))
+        {
+            if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger rounded">
+                    @Html.ValidationSummary(false)
+                </div>
+            }
+            <div class="block-flat">
+                <div class="heading">
+                    <h3 class="underlined">Job Information</h3>
+                </div>
+                <div class="content">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">Project Name</label>
+                                <div class="col-sm-9">
+                                    @Html.HiddenFor(m => m.ProjectId)
+                                    @*@Html.HiddenFor(m => m.DistrictName)*@
+                                    @Html.TextBoxFor(m => m.ProjectName, new { @class = "form-control", @tabindex = "1" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">Address</label>
+                                <div class="col-sm-9">
+                                    @Html.TextBoxFor(m => m.Address, new { @class = "form-control", @tabindex = "2" })
+                                </div>
+                            </div>
+                            <div class="form-group" style="display:none;">
+                                <label class="control-label col-sm-3">Location</label>
+                                <div class="col-sm-9">
+                                    <div class="col-xs-3 padding-0">
+                                        @Html.TextBoxFor(m => m.Latitude, new { @class = "form-control", @readonly = "readonly" })
+                                    </div>
+                                    <div class="col-xs-4">
+                                        @Html.TextBoxFor(m => m.Longitude, new { @class = "form-control", @readonly = "readonly" })
+                                    </div>
+                                    <div class="col-xs-4">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" style="position: relative;">
+                                <div class="map-preview-container">
+                                    <button type="button" class="btn btn-sm @((Model.LocationSet && ViewBag.RequireProjectLocation != null) ? "btn-primary" : "btn-danger") map_marker_btn abs" title="@((Model.LocationSet && ViewBag.RequireProjectLocation == false) ? "" : "The project location is required.") Click to set the project location" data-address="@Model.Address,@Model.City" data-latitude="@Model.Latitude" data-longitude="@Model.Longitude" data-default-latitude="" data-default-longitude="" data-trigger="modal" data-target="map_modal">
+                                        <i class="fa fa-map-marker fa-fw"></i>
+                                        Set Location
+                                    </button>
+                                    <div id="map_preview" class="map-preview" style="width: 100%; height: 200px;"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">City</label>
+                                <div class="col-sm-3">
+                                    @Html.TextBoxFor(m => m.City, new { @class = "form-control", @tabindex = "3" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">State</label>
+                                <div class="col-sm-3">
+                                    @Html.TextBoxFor(m => m.State, new { @class = "form-control", @tabindex = "4" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">ZipCode</label>
+                                <div class="col-sm-3">
+                                    @Html.TextBoxFor(m => m.Zipcode, new { @class = "form-control", @tabindex = "5" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">Market Segment</label>
+                                <div class="col-sm-3">
+                                    @Html.DropDownListFor(m => m.MarketSegmentId, new SelectList(Model.MarketList, "MarketSegmentId", "Name", Model.MarketSegmentId), "", new { @class = "form-control", @tabindex = "6" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">Customer Job Ref</label>
+                                <div class="col-sm-3">
+                                    @Html.TextBoxFor(m => m.CustomerRefName, new { @class = "form-control", @tabindex = "7" })
+                                </div>
+                                <label class="control-label col-sm-3">Project Upload ID</label>
+                                <div class="col-sm-3">
+                                    @Html.TextBoxFor(m => m.ProjectRefId, new { @class = "form-control", @tabindex = "8" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">GC</label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        @Html.DropDownListFor(m => m.ContractorId, new SelectList(Model.ContractorList, "ContractorId", "Name", Model.ContractorId), "", new { @class = "form-control multiselect", @tabindex = 9 })
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-primary edit_contact_btn"><span class="glyphicon glyphicon-edit"></span></button>
+                                            <button type="button" class="btn btn-success add_contact_btn"><span class="glyphicon glyphicon-plus"></span></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-9 col-sm-offset-3">
+                                    <div class="checkbox">
+                                        <label>
+                                            @Html.CheckBoxFor(m => m.Active, new { @tabindex = "10" })
+                                            @Html.DisplayNameFor(m => m.Active)
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-9 col-sm-offset-3">
+                                    <div class="checkbox">
+                                        <label>
+                                            @Html.CheckBoxFor(m => m.ExcludeFromReports, new { @tabindex = "11" })
+                                            Exclude From Reports
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">Start Date</label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(m => m.StartDate, "{0:MM/dd/yyyy}", new { @class = "form-control datepicker", @tabindex = "12" })
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default" type="button" data-picker="#StartDate">
+                                                <i class="fa fa-calendar"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">Primary Plant</label>
+                                <div class="col-sm-9">
+                                    <p class="form-control-static">
+                                        @Model.PlantName
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">@Model.UDF1Label</label>
+                                <div class="col-sm-9">
+                                    @Html.TextBoxFor(m => m.UDF1, new { @class = "form-control", @tabindex = "13" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">@Model.UDF2Label</label>
+                                <div class="col-sm-9">
+                                    @Html.TextBoxFor(m => m.UDF2, new { @class = "form-control", @tabindex = "14" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">Distance To Job</label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(m => m.DistanceToJob, new { @class = "form-control", @tabindex = "15" })
+                                        <span class="input-group-addon">@company.DeliveryDistance</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">To Job</label>
+                                <div class="col-sm-3">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(m => m.ToJobMinutes, new { @class = "form-control", @tabindex = "16" })
+                                        <span class="input-group-addon">mins</span>
+                                    </div>
+                                </div>
+                                <label class="control-label col-sm-3">Wait on Job</label>
+                                <div class="col-sm-3">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(m => m.WaitOnJob, new { @class = "form-control", @tabindex = "17" })
+                                        <span class="input-group-addon">mins</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">Wash</label>
+                                <div class="col-sm-3">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(m => m.WashMinutes, new { @class = "form-control", @tabindex = "18" })
+                                        <span class="input-group-addon">mins</span>
+                                    </div>
+                                </div>
+                                <label class="control-label col-sm-3">Return</label>
+                                <div class="col-sm-3">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(m => m.ReturnMinutes, new { @class = "form-control", @tabindex = "19" })
+                                        <span class="input-group-addon">mins</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">Delivery Instructions</label>
+                                <div class="col-sm-9">
+                                    @Html.TextAreaFor(m => m.DeliveryInstructions, new { @class = "form-control", @tabindex = "20" })
+                                </div>
+                            </div>
+                            <div class="form-group qcReq">
+                                <label class="control-label col-sm-3">QC Requirements</label>
+                                <div class="col-md-9">
+                                    @Html.HiddenFor(x => x.DistrictQcRequirement)
+                                    @Html.DropDownList("QcReqIds", Model.QCRequirement, new { @class = "form-control multiselect", @multiple = "multiple" })
+                                </div>
+                            </div>
+                            <div class="form-group backupPlant qcReq">
+                                <label class="control-label col-sm-3">Backup Plant</label>
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(m => m.BackupPlantId, new SelectList(Model.BackupPlantList, "PlantId", "Name", Model.BackupPlantId), "", new { @class = "form-control multiselect" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="heading">
+                    <h3 class="underlined">Status and Bid Info</h3>
+                </div>
+                <div class="content">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">Status</label>
+                                <div class="col-sm-9">
+                                    @Html.DropDownListFor(m => m.ProjectStatusId, new SelectList(Model.StatusList, "ProjectStatusId", "Name", Model.ProjectStatusId), "", new { @class = "form-control status_box" })
+                                </div>
+                            </div>
+                            @if (Model.Quotations != null && Model.Quotations.Count > 0)
+                            {
+                                <div class="form-group won">
+                                    <label class="control-label col-sm-3">Quote Awarded</label>
+                                    <div class="col-sm-9">
+                                        @Html.DropDownList("Awarded", Model.QuotationList, "None", new { @class = "quote_optional_columns_select form-control multiselect", @multiple = "multiple" })
+                                    </div>
+                                </div>
+                            }
+                            <div class="form-group won_lost">
+                                <label class="control-label col-sm-3">Won/Lost Date</label>
+                                <div class="col-sm-9">
+                                    @if (Model.ProjectStatusType == RedHill.SalesInsight.DAL.DataTypes.SIStatusType.LostBid.Id)
+                                    {
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(m => m.WonLostDate, "{0:M/d/yyyy}", new { @class = "form-control datepicker" })
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default" type="button" data-picker="#WonLostDate">
+                                                    <i class="fa fa-calendar"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="input-group">
+                                            @if (Model.ProjectStatusType == RedHill.SalesInsight.DAL.DataTypes.SIStatusType.LostBid.Id ||
+Model.ProjectStatusType == RedHill.SalesInsight.DAL.DataTypes.SIStatusType.Sold.Id)
+                                            {
+                                                @Html.TextBoxFor(m => m.WonLostDate, "{0:MM/dd/yyyy}", new { @class = "form-control datepicker" })
+                                            }
+                                            else
+                                            {
+                                                @Html.TextBoxFor(m => m.WonLostDate, "{0:MM/dd/yyyy}", new { @class = "form-control datepicker", @disabled = "disabled" })
+                                            }
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default" type="button" data-picker="#WonLostDate">
+                                                    <i class="fa fa-calendar"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group loss">
+                                <label class="control-label col-sm-3">Reason</label>
+                                <div class="col-sm-9">
+                                    @Html.DropDownListFor(m => m.ReasonLossId, new SelectList(Model.ReasonsForLossList, "ReasonLostId", "Reason", Model.ReasonLossId), string.Empty, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group loss">
+                                <label class="control-label col-sm-3">Competitor</label>
+                                <div class="col-sm-9">
+                                    @Html.DropDownListFor(m => m.CompetitorId, new SelectList(Model.CompetitorList, "CompetitorId", "Name", Model.CompetitorId), string.Empty, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group loss">
+                                <label class="control-label col-sm-3">Price Lost</label>
+                                <div class="col-sm-9">
+                                    @Html.TextBoxFor(m => m.PriceLost, "{0:N2}", new { @class = "form-control comma_field" })
+                                </div>
+                            </div>
+                            <div class="form-group loss">
+                                <label class="control-label col-sm-3">Notes</label>
+                                <div class="col-sm-9">
+                                    @Html.TextBoxFor(m => m.LostNotes, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">Bid Date</label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        @Html.TextBoxFor(m => m.BidDate, "{0:M/d/yyyy}", new { @class = "form-control datepicker" })
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default" type="button" data-picker="#BidDate">
+                                                <i class="fa fa-calendar"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">Sales Staff</label>
+                                <div class="col-sm-9">
+                                    @Html.DropDownListFor(m => m.SalesStaffId, new SelectList(Model.SalesStaffs, "SalesStaffId", "Name", Model.SalesStaffId), "", new { @class = "form-control multiselect" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">Customer</label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        @*@Html.DropDownListFor(m => m.CustomerId, new SelectList(Model.CustomerList, "CustomerId", "Name", Model.CustomerId), "", new { @class = "form-control multiselect" })*@
+                                        @*<select id="CustomerId" name="CustomerId" class="form-control multiselect">
+                                                <option value=""></option>
+                                            </select>*@
+                                        <input id="BidInfoCustomer" class="form-control clearable@(ViewData["CustomerError"] != null?" Error":"")" hidden-id="CustomerId" title="Click 'x' to remove the Customer" placeholder="Begin typing to search Customer" name="BidInfoCustomer" autocomplete="off" />
+                                        <input type="hidden" id="CustomerId" name="CustomerId" value="" />
+                                        <span class="input-group-btn">
+                                            <button type="button" data-customer="BidInfo" class="btn btn-primary edit_customer_btn"><span class="glyphicon glyphicon-edit"></span></button>
+                                            <button type="button" data-customer="BidInfo" class="btn btn-success add_customer_btn"><span class="glyphicon glyphicon-plus"></span></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">Valuation</label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">$</span>
+                                        @Html.TextBoxFor(m => m.Valuation, "{0:N0}", new { @class = "form-control comma_field" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">Mix</label>
+                                <div class="col-sm-9">
+                                    @Html.TextBoxFor(m => m.Mix, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">Volume</label>
+                                <div class="col-sm-3">
+                                    <p class="form-control-static proj-volume">
+                                        @Model.Volume.GetValueOrDefault().ToString("N0") @company.DeliveryQtyUomPlural
+                                    </p>
+                                </div>
+                                <label class="control-label col-sm-3">Price</label>
+                                <div class="col-sm-3">
+                                    <div class="input-group">
+                                        @if (Model.DisablePriceSpreadProfit)
+                                        {
+                                            @Html.TextBoxFor(m => m.Price, "{0:N2}", new { @class = "form-control comma_field", @readonly = "readonly" })
+                                        }
+                                        else
+                                        {
+                                            @Html.TextBoxFor(m => m.Price, "{0:N2}", new { @class = "form-control comma_field" })
+                                        }
+                                        <span class="input-group-addon">$/@Unit</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">Spread</label>
+                                <div class="col-sm-3">
+                                    <div class="input-group">
+                                        @if (Model.DisablePriceSpreadProfit)
+                                        {
+                                            @Html.TextBoxFor(m => m.Spread, "{0:N2}", new { @class = "form-control comma_field", @readonly = "readonly" })
+                                        }
+                                        else
+                                        {
+                                            @Html.TextBoxFor(m => m.Spread, "{0:N2}", new { @class = "form-control comma_field" })
+                                        }
+                                        <span class="input-group-addon">$/@Unit</span>
+                                    </div>
+                                </div>
+                                <label class="control-label col-sm-3">Profit</label>
+                                <div class="col-sm-3">
+                                    <div class="input-group">
+                                        @if (Model.DisablePriceSpreadProfit)
+                                        {
+                                            @Html.TextBoxFor(m => m.Profit, "{0:N2}", new { @class = "form-control comma_field", @readonly = "readonly" })
+                                        }
+                                        else
+                                        {
+                                            @Html.TextBoxFor(m => m.Profit, "{0:N2}", new { @class = "form-control comma_field" })
+                                        }
+                                        <span class="input-group-addon">$/@Unit</span>
+                                    </div>
+                                </div>
+                            </div>
+                            @for (int i = 0; i < Model.ProjectPlants.Count; i++)
+                            {
+                                <div class="form-group project_plant_div">
+                                    <label class="control-label col-sm-3">Plant</label>
+                                    <div class="col-sm-4">
+                                        @Html.Hidden("ProjectPlants[" + i + "].ProjectPlantId", Model.ProjectPlants[i].ProjectPlantId, new { @class = "project_plant_id" })
+                                        @Html.DropDownList("ProjectPlants[" + i + "].PlantId",
+                                    new SelectList(Model.PlantList, "PlantId", "Name", Model.ProjectPlants[i].PlantId),
+                                    new { @class = "form-control project_plant_ddl" })
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="input-group">
+                                            @Html.TextBox("ProjectPlants[" + i + "].Volume", Model.ProjectPlants[i].Volume, "{0:N0}", new { @class = "form-control comma_field project_plant_volume" })
+                                            <span class="input-group-addon">
+                                                @{var productTypeId = Model.ProjectPlants[i].Plant.ProductTypeId; }
+                                                @if (productTypeId == (int)ProductType.Aggregate)
+                                                {
+                                                    <span>Tons</span>
+                                                }
+                                                else if (productTypeId == (int)ProductType.Block)
+                                                {
+                                                    <span>Units</span>
+                                                }
+                                                else
+                                                {
+                                                    @company.DeliveryQtyUomPlural
+                                                }
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <a class="delete_project_plant btn btn-danger btn-md">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                                    }
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">
+                                    <a class="add_project_plant_btn btn-xs btn-primary btn" title="Add Plant/Volume Inputs">
+                                        <i class="glyphicon glyphicon-plus"></i>
+                                    </a>
+                                </label>
+                                <div class="col-sm-4" style="display: none">
+                                    <input type="hidden" name="ProjectPlantId" class="project_plant_id" />
+                                    @Html.DropDownList("ProjectPlantPlantId", new SelectList(Model.PlantList, "PlantId", "Name", ""),
+                                    new { @class = "form-control project_plant_ddl" })
+                                </div>
+                                <div class="col-sm-3" style="display: none">
+                                    <div class="input-group">
+                                        <input name="ProjectPlantVolume" class="form-control project_plant_volume" />
+                                        <span class="input-group-addon"></span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-1" style="display: none">
+                                    <a class="delete_project_plant btn btn-danger btn-md">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row text-right">
+                        <input type="hidden" id="save_close_redirect" name="save_close_redirect" value="">
+                        <button type="submit" name="command" value="save_and_close" class="btn btn-primary savebtn remove_commas_btn">
+                            <i class="fa fa-cloud"></i>
+                            Save and Close
+                        </button>
+                        <button type="submit" name="command" class="btn btn-primary remove_commas_btn">
+                            <i class="fa fa-cloud"></i>
+                            Save Changes
+                        </button>
+                        @Html.HiddenFor(x => x.TotalQuotes)
+                    </div>
+                </div>
+            </div>
+                                                    }
+    </div>
+    <div id="project_tabs">
+        <!-- Forecast -->
+        @if (ViewBag.AccessRule.HasForecastAccess != SIRolePermissionLevelConstants.NO_ACCESS && Model.ProjectStatusType == RedHill.SalesInsight.DAL.DataTypes.SIStatusType.Sold.Id)
+        {
+            <div class="block-flat" data-section="forecast">
+                <div class="heading">
+                    <h3 class="underlined">
+                        Forecast
+                        <div class="pull-right">
+                            <input type="text" class="forecast_date cutoffdatepicker form-control input-sm" value="@DateTime.Today.ToString("MMM, yyyy")" />
+                        </div>
+                    </h3>
+                </div>
+                <div class="content clearfix flip-scroll">
+                    @Html.Partial("~/Views/Partials/_ProjectForecast.cshtml", Model)
+                </div>
+            </div>
+        }
+
+        <!-- Quotes -->
+        <div class="block-flat" data-section="quotes">
+            <div class="heading">
+                <h3 class="underlined">Quotes</h3>
+            </div>
+            <div class="content clearfix flip-scroll">
+                @Html.Partial("~/Views/Partials/_ProjectQuotes.cshtml", Model)
+            </div>
+        </div>
+        <!-- Project Bidder -->
+        <div>
+            <div class="form form-horizontal">
+                <div class="block-flat" data-section="bidders">
+                    <div class="heading">
+                        <h3 class="underlined">Project Bidder</h3>
+                    </div>
+                    <div class="content">
+                        <div class="row">
+                            <div class="col-md-5">
+                                @using (Html.BeginForm("AddProjectBidder", "Home", FormMethod.Post))
+                                {
+                                    if (TempData["BidderError"] != null)
+                                    {
+                                        <div class="alert alert-danger">
+                                            @TempData["BidderError"]
+                                        </div>
+                                    }
+                                    <div class="form-group">
+                                        @Html.HiddenFor(m => m.ProjectId)
+                                        @Html.HiddenFor(m => m.SelectedBidder.ProjectBidderId)
+                                        <label class="control-label col-md-4">Bidder Name</label>
+                                        <div class="col-md-8">
+                                            <div class="input-group">
+                                                @* @Html.DropDownListFor(m => m.SelectedBidder.CustomerId, new SelectList(Model.CustomerList, "CustomerId", "Name", Model.SelectedBidder.CustomerId), "", new { @class = "form-group multiselect" })*@
+
+                                                @*<select id="SelectedBidder_CustomerId" name="SelectedBidder_CustomerId" class="form-goup multiselect">
+                                                        <option value=""></option>
+                                                    </select>*@
+                                                <input id="BidderCustomer" class="form-control clearable" hidden-id="SelectedBidder_CustomerId" placeholder="Begin typing to search Bidder" title="Click 'x' to remove the Bidder" name="BidderCustomer" autocomplete="off" />
+                                                @*<input type="hidden" id="SelectedBidder_CustomerId" name="SelectedBidder_CustomerId" value="" />*@
+                                                @Html.HiddenFor(m => m.SelectedBidder.CustomerId)
+                                                <span class="input-group-btn">
+                                                    <button type="button" data-customer="Bidder" class="btn btn-primary edit_customer_btn"><span class="glyphicon glyphicon-edit"></span></button>
+                                                    <button type="button" data-customer="Bidder" class="btn btn-success add_customer_btn"><span class="glyphicon glyphicon-plus"></span></button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-4">Notes</label>
+                                        <div class="col-md-8">
+                                            @Html.TextAreaFor(m => m.SelectedBidder.Notes, 2, 20, new { @class = "form-control", @placeholder = "Notes", @style = "box-sizing: border-box;padding:0px 8px;" })
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-offset-4 col-md-8">
+                                            <button type="submit" class="btn btn-primary pull-right">
+                                                @(Model.SelectedBidder.ProjectBidderId > 0 ? "Update" : "Add")
+                                            </button>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <div class="col-md-1"></div>
+                            <div class="col-md-6">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Bidder Name</th>
+                                            <th>Quoted</th>
+                                            <th>Notes</th>
+                                            <th>Last Edit</th>
+                                            <th>Edit</th>
+                                            <th>Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (RedHill.SalesInsight.Web.Html5.Models.ProjectBidderView bid in Model.Bidders)
+                                        {
+                                            <tr>
+                                                <td>@bid.BidderName</td>
+                                                <td><span class="@(bid.Quotes ? "fa fa-check" : "")"></span></td>
+                                                <td>@bid.Notes</td>
+                                                <td><span style="font-weight: bold;">@bid.UserName</span><br />@(bid.LastEditedTime != null ? bid.LastEditedTime : bid.CreatedTime) (GMT)</td>
+                                                <td>
+                                                    <a href="/Home/EditProjectBidder/@bid.ProjectBidderId" class="edit_btn btn btn-primary btn-xs">
+                                                        <i class="glyphicon glyphicon-edit"></i>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/Home/DeleteProjectBidder/@bid.ProjectBidderId" class="btn btn-xs btn-danger"
+                                                       data-confirm="Deletion is permanent and cannot be reversed.
+                                                        <br /> Bidder name : @bid.BidderName <br /> Delete this project bidder?">
+                                                        <span class="fa fa-trash"></span>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Competitors -->
+        <div class="block-flat" data-section="competitors">
+            <div class="heading">
+                <h3 class="underlined">Project Competitors</h3>
+            </div>
+            <div class="content row">
+                <div class="col-md-6">
+                    @using (Html.BeginForm("AddProjectCompetitor", "Home", FormMethod.Post))
+                    {
+                        if (TempData["CompetitorError"] != null)
+                        {
+                            <div class="alert alert-danger">
+                                @TempData["CompetitorError"]
+                            </div>
+                        }
+                        <div class="form-inline">
+                            @Html.HiddenFor(m => m.ProjectId)
+                            @Html.HiddenFor(m => m.SelectedCompetitor.ProjectCompetitorId)
+                            @Html.DropDownListFor(m => m.SelectedCompetitor.CompetitorId, new SelectList(Model.CompetitorList, "CompetitorId", "Name", Model.SelectedCompetitor.CompetitorId), new { @class = "form-control" })
+                            @Html.TextBoxFor(m => m.SelectedCompetitor.Price, new { @class = "form-control", @placeholder = "Price" })
+                            <button type="submit" class="btn btn-primary">
+                                @(Model.SelectedCompetitor.ProjectCompetitorId > 0 ? "Update" : "Add")
+                            </button>
+                        </div>
+                    }
+                </div>
+                <div class="col-md-6">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Competitor Name</th>
+                                <th>Price</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (RedHill.SalesInsight.Web.Html5.Models.ProjectCompetitorView comp in Model.Competitors)
+                            {
+                                <tr>
+                                    <td>@comp.Name</td>
+                                    <td>@(comp.Price.HasValue ? comp.Price.Value.ToString("N2") : "")</td>
+                                    <td>
+                                        <a href="/Home/EditProjectCompetitor/@comp.ProjectCompetitorId" class="edit_btn btn btn-primary btn-xs">
+                                            <i class="glyphicon glyphicon-edit"></i>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="/Home/DeleteProjectCompetitor/@comp.ProjectCompetitorId" class="btn btn-xs btn-danger"
+                                           data-confirm="Deletion is permanent and cannot be reversed.
+                                            <br /> Competitor name : @comp.Name <br /> Price: @comp.Price.GetValueOrDefault(0).ToString("N2") <br /> Delete this Competitor?">
+                                            <span class="fa fa-trash"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- Notes -->
+        <div class="block-flat" data-section="notes">
+            <div class="heading">
+                <h3 class="underlined">Notes</h3>
+            </div>
+            <div class="content clear-fix">
+                <div class="row">
+                    @if (TempData["NoteError"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            @TempData["NoteError"]
+                        </div>
+                    }
+                    @using (Html.BeginForm("AddProjectNote", "Home", FormMethod.Post, new { @class = "form-inline", enctype = "multipart/form-data" }))
+                    {
+                        @Html.ValidationSummary(false)
+                        <div class="col-sm-12">
+                            @Html.HiddenFor(m => m.SelectedNote.ProjectNoteId)
+                            @Html.HiddenFor(m => m.ProjectId)
+                            @Html.HiddenFor(m => m.SelectedNote.FileContentype)
+                            @Html.HiddenFor(m => m.SelectedNote.FileKey)
+                            @Html.HiddenFor(m => m.SelectedNote.FileSize)
+                            @Html.HiddenFor(m => m.SelectedNote.FileName)
+                            <div class="form-inline">
+                                @Html.TextAreaFor(m => m.SelectedNote.NoteText, 2, 80, new { @class = "form-control col-md-3", @placeholder = "Add Note", @style = "box-sizing: border-box;" })
+                                <input id="NotesFile" name="NotesFile" type="file" value="" class="col-md-3">
+                                <input type="submit" class="btn btn-md btn-primary update-note" value="@(Model.SelectedNote.ProjectNoteId > 0 ? "Update" : "Add")" />
+                            </div>
+                        </div>
+                    }
+                </div>
+                <br />
+                <div class="flip-scroll">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>User</th>
+                                <th>Note</th>
+                                <th>Attachments</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (RedHill.SalesInsight.Web.Html5.Models.ProjectNoteView comp in Model.ProjectNotes)
+                            {
+                                <tr>
+                                    <td>@comp.DatePosted.ToString("M/d/yyyy")</td>
+                                    <td>@comp.Username</td>
+                                    <td>@comp.NoteText</td>
+                                    <td>
+                                        @if (comp.FileKey != null)
+                                        {
+                                            <a href="/Home/DownloadFile?key=@comp.FileKey" target="_blank" title="Click to download file" download>
+                                                @(string.IsNullOrEmpty(comp.FileName) ? "" : comp.FileName + "       {" + SIDAL.FormatBytes(Convert.ToInt64(comp.FileSize)) + "}")
+                                            </a>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a href="/Home/EditProjectNote/@comp.ProjectNoteId" class="edit_btn btn btn-xs btn-primary">
+                                            <i class="glyphicon glyphicon-edit"></i>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="/Home/DeleteProjectNote/@comp.ProjectNoteId"
+                                           class="btn btn-danger btn-xs"
+                                           data-confirm="Deletion is permanent and cannot be reversed.
+                                            <br /> Note : @comp.NoteText <br /> Delete this Note?">
+                                            <span class="fa fa-trash"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@using (Html.BeginForm("UpdateCustomer", "Json", FormMethod.Post, new { @class = "form form-horizontal" }))
+{
+    <div class="modal fade" id="NewCustomerModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Add New Customer</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label col-md-4">Customer Name</label>
+                        <div class="col-md-8">
+                            @Html.Hidden("customer_section", "", new { @class = "form-control customer_section_field" })
+                            @Html.Hidden("customer_id", "", new { @class = "form-control customer_id_field" })
+                            @Html.TextBox("customer_name", "", new { @class = "form-control customer_name_field" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-4">Customer Number</label>
+                        <div class="col-md-8">
+                            @Html.TextBox("customer_number", "", new { @class = "form-control customer_number_field" })
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary update_customer_btn" name="ActionClicked" value="NewCustomer">Save changes</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+}
+@using (Html.BeginForm("UpdateCustomerContact", "Json", FormMethod.Post, new { @class = "form form-horizontal" }))
+{
+    <div class="modal fade" id="NewCustomerContactModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Add New GC</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label col-md-4">GC Name</label>
+                        <div class="col-md-8">
+                            @Html.Hidden("contact_id", "", new { @class = "form-control contact_id_field" })
+                            @Html.TextBox("contact_name", "", new { @class = "form-control contact_name_field" })
+                        </div>
+                    </div>
+                    @*<div class="form-group">
+                        <label class="control-label col-md-4">Phone Number</label>
+                        <div class="col-md-8">
+                            @Html.TextBox("contact_phone", "", new { @class = "form-control contact_phone_field" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-4">Fax</label>
+                        <div class="col-md-8">
+                            @Html.TextBox("contact_fax", "", new { @class = "form-control contact_fax_field" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-4">Contact Email</label>
+                        <div class="col-md-8">
+                            @Html.TextBox("contact_email", "", new { @class = "form-control contact_email_field" })
+                        </div>
+                    </div>*@
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary update_contact_btn">Save changes</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+}
+@Html.Partial("_MapMarker", true)
+
+@section Scripts{
+    <link href="~/Content/flipscroller.css" rel="stylesheet" />
+    @Scripts.Render("~/js/project_loc")
+    <style type="text/css">
+        .won_lost {
+            @if (Model.ProjectStatusType != RedHill.SalesInsight.DAL.DataTypes.SIStatusType.LostBid.Id
+                && Model.ProjectStatusType != RedHill.SalesInsight.DAL.DataTypes.SIStatusType.Sold.Id)
+            {
+                <text>
+                display:none;
+                </text>
+            }
+        }
+
+        .won {
+            @if (Model.ProjectStatusType != RedHill.SalesInsight.DAL.DataTypes.SIStatusType.Sold.Id)
+            {
+                <text>
+                display:none;
+                </text>
+            }
+        }
+
+        .loss {
+            @if (Model.ProjectStatusType != RedHill.SalesInsight.DAL.DataTypes.SIStatusType.LostBid.Id)
+            {
+                <text>
+                display:none;
+                </text>
+            }
+        }
+        #CustomerId.input-validation-error+p,#Awarded.input-validation-error+p,#SalesStaffId.input-validation-error+p,#QcReqIds.input-validation-error+p,#BackupPlantId.input-validation-error+p,#BidInfoCustomer.Error
+        {
+           background-color: #f7caca !important;
+        }
+        #CustomerId.input-validation-error+p>span,#Awarded.input-validation-error+p>span,#SalesStaffId.input-validation-error+p>span,#QcReqIds.input-validation-error+p>span,#BackupPlantId.input-validation-error+p>span
+        {
+           color: #322929 !important;
+        }
+
+    </style>
+    <script type="text/javascript">
+        var redirect = '@ViewBag.Redirect';
+        var isWindowClose = '@ViewBag.Close';
+        var newlyAdded = '@ViewBag.NewlyAdded';
+        if (isWindowClose == 'True') {
+            window.open('', '_self').close();
+
+        }
+        if (redirect == 'True') {
+            window.location = '/Home/Pipeline';
+        }
+
+        function checkPlantDistrictQcReq(selectedPlantId) {
+            var hiddenDistrictQcReq = $("#DistrictQcRequirement");
+            var qcReq = $(".qcReq");
+            if ($(".project_plant_div").length == 1) {
+
+                $.get("/Json/GetAllDistrictQCRequirement", function (data) {
+                    var info = JSON.parse(data);
+                    var isQCReq = info.qcRequirement;
+                    if (isQCReq == true) {
+                        qcReq.show();
+                        hiddenDistrictQcReq.val(true);
+                        hideShowBackupPlant(true);
+                        if (selectedPlantId != 0) {
+                            $.get("/Json/GetPlantDistrictQCRequirement", { "plantId": selectedPlantId }, function (data) {
+                                var info = JSON.parse(data);
+                                var isQCReq = info.qcRequirement;
+                                if (isQCReq == false) {
+                                    hiddenDistrictQcReq.val(false);
+                                    hideShowBackupPlant(false);
+                                }
+                                else {
+                                    hiddenDistrictQcReq.val(true);
+                                    hideShowBackupPlant(true);
+                                }
+                            });
+                        }
+                    } else {
+                        qcReq.hide();
+                        hiddenDistrictQcReq.val(false);
+                        hideShowBackupPlant(true);
+                    }
+                });
+            }
+        }
+
+
+        //function hideShowBackupPlant()
+        //{
+        //    var qcReq = $("#QcReqIds");
+        //    var backupPlant = $(".backupPlant");
+        //    var selectedItems = $("#QcReqIds option:selected");
+        //    if (selectedItems.length > 0) {
+        //        selectedItems.each(function () {
+        //            var $this = $(this);
+        //            if ($this.length) {
+        //                var selId = $this.val();
+        //                console.log(selId);
+        //                if (selId == "5") {
+        //                    backupPlant.hide();
+        //                    $("#QcReqIds option:selected").removeAttr("selected");
+        //                    $('#QcReqIds').val('5');
+        //                    console.log("Hide Backup Plant");
+        //                    qcReq[0].sumo.reload();
+        //                }
+        //                else {
+        //                    var isQCReq = $("#DistrictQcRequirement").val();
+        //                    if (isQCReq != "false") {
+        //                        backupPlant.show();
+        //                    }
+        //                   console.log("Show Backup Plant");
+
+        //                }
+        //            }
+        //        });
+        //    }
+        //    else {
+        //        backupPlant.hide();
+        //        console.log("just hide the BakupPlant if nothing is selected");
+        //    }
+        //}
+
+        function hideShowBackupPlant(selectedPlantQcReq) {
+            var qcReq = $("#QcReqIds");
+            var backupPlant = $(".backupPlant");
+            var selectedItems = $("#QcReqIds option:selected");
+            if (selectedItems.length > 0) {
+                if ($("#DistrictQcRequirement").val() == "true") {
+                    selectedItems.each(function (i, val) {
+                        var $this = $(this);
+                        console.log("$this.length = " + $this.length);
+                        if ($this.length) {
+                            var selId = $this.val();
+                            console.log(selId + " value");
+
+                            if (selId == "5") {
+                                backupPlant.hide();
+                                console.log("Hide Backup Plant");
+                                $("#QcReqIds option:selected").removeAttr("selected");
+                                qcReq.val('5');
+                                qcReq[0].sumo.reload();
+                            }
+                            else {
+                                var isQCReq = $("#DistrictQcRequirement").val();
+                                if (isQCReq != "false") {
+                                    backupPlant.show();
+                                    console.log("Show Backup Plant");
+                                }
+                            }
+                        }
+                    });
+                }
+                else {
+                    $(".qcReq").hide();
+                    if ($(".project_plant_div").length == 1) {
+                        $(".qcReq").show();
+                    }
+                    console.log("Hidden " + selectedPlantQcReq);
+                }
+            }
+            else {
+                if ($("#DistrictQcRequirement").val() == "false") {
+                    $(".qcReq").hide();
+                    console.log("Hide all if DistrictQcRequirement = false");
+                    if (selectedPlantQcReq != true) {
+                        $(".qcReq").show();
+                        console.log("Show all if DistrictQcRequirement = false and SelectedPlantQcReq = true");
+                    }
+                }
+                backupPlant.hide();
+                console.log("just hide the BakupPlant if nothing is selected");
+            }
+        }
+
+        function createQuoteValidation() {
+            var project = $('#NewQuoteProject').val();// Project hidden field value
+            var newCustomer = $('#NewQuoteCustomer').val();
+            var newCustomerCheck = $(".quote_decide_check").is(':checked');
+            var createNewQuoteBtn = $("#new_quote_btn");
+
+            if ((newCustomerCheck || newCustomer != "") && (project != "")) {
+                createNewQuoteBtn.prop("disabled", false);
+            }
+            else {
+                createNewQuoteBtn.prop("disabled", true);
+            }
+        }
+
+        $(document).ready(function () {
+
+        if (newlyAdded == 'True') {
+            $(".savebtn").prop('value', 'save_and_redirect');
+            $("#save_close_redirect").val("newProject");
+        }
+
+            checkDistrictQcReq();
+
+            setTimeout(function () {
+                hideShowBackupPlant(true);
+            }, 100);
+
+
+            var districtQcRequirement = '@Model.DistrictQcRequirement';
+            console.log("districtQcRequirement "+districtQcRequirement);
+            if (districtQcRequirement == 'False') {
+                $(".qcReq").hide();
+            }
+
+            $(document).on('change','.project_plant_volume,.project_plant_ddl', function () {
+                checkDistrictQcReq();
+            }).on("click", ".delete_project_plant", function () { checkDistrictQcReq();});
+
+            function checkDistrictQcReq()
+            {
+                var oldData = 0;
+                var num = 0;
+                var plantId = 0;
+                if ($(".project_plant_div").length > 1) {
+                    $(".project_plant_div").each(function (i, val) {
+                        var newData = parseInt($(this).find(".project_plant_volume").val().replace(/,/g, ''));
+                        if (newData > oldData) {
+                            oldData = newData;
+                            num = i;
+                            plantId = $(this).find(".project_plant_ddl option:selected").val();
+                        }
+                    });
+
+                    $.get("/Json/GetPlantDistrictQCRequirement", { "plantId": plantId }, function (data) {
+                        var info = JSON.parse(data);
+                        var isQCReq = info.qcRequirement;
+                        $("#DistrictQcRequirement").val(isQCReq);
+                        if (isQCReq == false) {
+                            $(".qcReq").hide();
+                        } else {
+                            $(".qcReq").show();
+                        }
+                        hideShowBackupPlant(true);
+                    });
+                }
+                else {
+                    var selectPlantId = $('select#ProjectPlants_0__PlantId option:selected').val();
+                    checkPlantDistrictQcReq(selectPlantId);
+                }
+             }
+
+            var selectedOption = 0;
+            $("#QcReqIds").change(function () {
+                var currentSelection;
+                if (selectedOption) {
+                    var currentValues = $(this).val();
+                    if (currentValues != null) {
+                        currentSelection = currentValues.filter(function (el) {
+                            return selectedOption.indexOf(el) < 0;
+                        });
+                    }
+                }
+                selectedOption = $(this).val();
+
+                console.log("currentSelection = " + currentSelection);
+                if (currentSelection != "5" && currentSelection != undefined) {
+                    $("#QcReqIds")[0].sumo.unSelectItem('5');
+                }
+                //debugger;
+                displayBackupPlant();
+            });
+
+            function displayBackupPlant() {
+                var qcReq = $("#QcReqIds");
+                var backupPlant = $(".backupPlant");
+                var selectedItems = $("#QcReqIds option:selected");
+                selectedItems.each(function (i, val) {
+                    var $this = $(this);
+                    console.log("$this.length = " + $this.length);
+                    if ($this.length) {
+                        var selId = $this.val();
+                        console.log(selId + " value");
+
+                        if (selId == "5") {
+                            backupPlant.hide();
+                            console.log("Hide Backup Plant");
+                            $("#QcReqIds option:selected").removeAttr("selected");
+                            qcReq.val('5');
+                            qcReq[0].sumo.reload();
+                        }
+                        else {
+                            backupPlant.show();
+                            console.log("Show Backup Plant");
+                        }
+                    }
+                });
+            }
+
+            var projCurrentCustomerId = @Model.CustomerId;
+            var bidderCustomerId = $("#SelectedBidder_CustomerId").val();
+
+            if (projCurrentCustomerId != "" && projCurrentCustomerId != undefined)
+           {
+                $.get("/Json/GetCustomerDetails", { "id": projCurrentCustomerId }, function (data) {
+                    var info = JSON.parse(data);
+                    var biCustomer = $("#BidInfoCustomer");
+                    $("#CustomerId").val(projCurrentCustomerId);
+                    biCustomer.val(info.name);
+                    biCustomer.prop("readonly", true);
+                    biCustomer.addClass("x");
+                    //tooltip(true,"BidInfoCustomer");
+                });
+            }
+
+            if (bidderCustomerId != "" && bidderCustomerId != undefined && bidderCustomerId != 0)
+           {
+                $.get("/Json/GetCustomerDetails", { "id": bidderCustomerId }, function (data) {
+                    var info = JSON.parse(data);
+                    var bidderCustomer = $("#BidderCustomer");
+                    $("#SelectedBidder_CustomerId").val(bidderCustomerId);
+                    bidderCustomer.val(info.name);
+                    bidderCustomer.prop("readonly", true);
+                    bidderCustomer.addClass("x");
+                    //tooltip(true, "BidderCustomer");
+
+                });
+           }
+
+            var customerTxt = $("#Customer");
+            var projectTxt = $("#Project");
+            var customerHiddenField = customerTxt.attr("hidden-id");
+            var projectHiddenField = projectTxt.attr("hidden-id");
+            var newCustomerCheck = $(".quote_decide_check");
+
+            //############################################################### New Quote Section
+            $("#Customer,#Project,#BidInfoCustomer,#BidderCustomer").on('autocompleteselect', function (e, ui) {
+                var hiddenfieldId = $(this).attr("hidden-id");
+                $("#" + hiddenfieldId).val(ui.item.id);
+                $(this).addClass('x');
+                //tooltip(true, $(this).attr("id"))
+                createQuoteValidation();
+                $(this).attr("readonly", true);
+            }).on('change', function () {
+                createQuoteValidation();
+            }).on('blur', function () {
+                var hiddenfieldId = $(this).attr("hidden-id");
+                if ($("#" + hiddenfieldId).val() == "" && $(this).val() != "") {
+                    $(this).val('').removeClass('x');
+                    //tooltip(false, $(this).attr("id"))
+                }
+                createQuoteValidation();
+             });
+
+            newCustomerCheck.change(function () {
+                var hiddenfieldId = customerTxt.attr("hidden-id");
+                if (this.checked) {
+                    $("#" + hiddenfieldId).val('');
+                    customerTxt.removeClass('x');
+                    customerTxt.val('').attr("readonly", "readonly");
+
+                } else {
+                    customerTxt.removeAttr("readonly");
+                }
+                createQuoteValidation();
+            });
+
+            //####################################################################### Text Box Clearable Section
+            function tog(v) { return v ? 'addClass' : 'removeClass'; }
+
+            $(document).on('input', '.clearable', function () {
+                $(this)[tog(this.value)]('x');
+            }).on('mousemove', '.x', function (e) {
+                $(this)[tog(this.offsetWidth - 18 < e.clientX - this.getBoundingClientRect().left)]('onX');
+            }).on('touchstart click', '.onX', function (ev) {
+                ev.preventDefault();
+                var hiddenfieldId = $(this).attr("hidden-id");
+                $(this).removeClass('x onX').val('').change();
+                $(this).attr("readonly", false);
+                $("#" + hiddenfieldId).val('');
+                createQuoteValidation();
+            });
+        });
+
+
+        //$(document).on("change", ".project_plant_ddl" ,function () {
+        //    var drp = $(this);
+        //    var plantId = drp.val();
+        //    console.log(plantId);
+        //    $.post("/Json/GetPlantProductType", { "plantId": plantId }, function (data) {
+        //        var drpParent = drp.parents(".project_plant_div");
+        //        drpParent.find(".input-group-addon").html(data.productType);
+        //    });
+        //});
+
+        var setPlantVolumeUnit = function (plantDDL) {
+            var drp = $(plantDDL);
+            var plantId = drp.val();
+            $.post("/Json/GetPlantProductType", { "plantId": plantId }, function (data) {
+                var drpParent = drp.parents(".project_plant_div");
+                drpParent.find(".input-group-addon").html(data.productType);
+            });
+        }
+
+        $(document).on("change", ".project_plant_ddl", function () {
+            var drp = $(this);
+            setPlantVolumeUnit(drp);
+        });
+
+        function loadAllCustomerAutoComplete() {
+            $.ajax({
+                url: '/json/AutoCompleteCustomerList',
+                method: 'POST',
+                success: function (data) {
+                    var customerList = data.customers;
+                    var availTags = customerList;
+                    $("#Customer,#BidderCustomer,#BidInfoCustomer").autocomplete({
+                        source: availTags,
+                        minLength: 2,
+                        max: 10,
+                        scroll: true
+                    });
+                },
+                error: function (res) {
+                    console.log(res);
+                },
+                complete: function () {
+                    console.log();
+                }
+            });
+        }
+
+        $(function (e) {
+            loadAllCustomerAutoComplete();
+
+            $.ajax({
+                url: '/json/AutoCompleteProjectList',
+                method: 'POST',
+                success: function (data) {
+                    var projectList = data.projects;
+                    var availableTags = projectList;
+                    $("#Project").autocomplete({
+                        source: availableTags,
+                        minLength: 2,
+                        max: 10,
+                        scroll: true
+                    });
+                },
+                error: function (res) {
+                    console.log(res);
+                },
+                complete: function () {
+                    console.log();
+                }
+            });
+
+            $(".set-location").click(function () {
+                if ($("#pu_address").val() != "") {
+                    $("#Address").val($("#pu_address").val());
+                }
+                if ($("#pu_state").val() != "") {
+                    $("#State").val($("#pu_state").val());
+                }
+                if ($("#pu_city").val() != "") {
+                    $("#City").val($("#pu_city").val());
+                }
+            });
+
+            loadMapPreview();
+
+            setTimeout(function(){if ($("#Awarded").hasClass("input-validation-error")) {
+                var awardedDDL = $("#Awarded");
+                awardedDDL[0].sumo.unSelectAll();
+            }},1000);
+
+            $(".update-note").click(function(){
+                var btn = $(this);
+                setTimeout(function(){
+                    btn.attr('disabled',true);
+                    if(btn.attr("value")=="Add")
+                    {
+                        btn.attr("value","Adding...");
+                    }
+                    else
+                    {
+                        btn.attr("value","Updating...");
+                    }
+                },2000);
+            });
+
+            $('body').on('change', '#Address, #City, #State', function (e, data) {
+                update_new_address();
+            });
+
+            function update_new_address(){
+                new_address = $("#State").val() + ", " + $("#City").val()+", "+ $("#Address").val();
+                $(".map_marker_btn").data("address", new_address);
+                $(".map_marker_btn").data("latitude","").data("longitude","");
+                if (markers.length > 0) {
+                    markers[0].setMap(null);
+                }
+                refreshMapPreview(true);
+            }
+
+            $("body").on("MarkerMoved", function (e, data) {
+
+                $("#Latitude").val(e.latitude);
+                $("#Longitude").val(e.longitude);
+                if (markers.length > 0) {
+                    markers[0].setMap(null);
+                }
+                refreshMapPreview();
+            });
+            $("body").on("MapMoved", function (e, data) {
+            });
+
+            $("[data-picker]").click(function(){
+                var $item=$($(this).data("picker"));
+                if($item && $item.length>0){
+                    var visible = $('#ui-datepicker-div').is(':visible');
+                    $item.datepicker(visible ? 'hide' : 'show');
+                }
+            });
+
+
+
+            $(".edit_customer_btn").click(function () {
+                var customerSection = $(this).data("customer");
+                $("#customer_section").val(customerSection);
+                if(customerSection == 'BidInfo')
+                    selected_entity_id = $("#CustomerId").val();
+                else
+                    selected_entity_id = $("#SelectedBidder_CustomerId").val();
+                $.get("/Json/GetCustomerDetails", { "id": selected_entity_id }, function (data) {
+                    info = JSON.parse(data);
+                    if(info.dispatchId!=null && '@aujsAPIEnabled'=="True")
+                    {
+                        $("#NewCustomerModal").find(".customer_name_field").val(info.name).prop("readonly", true);
+                        $("#NewCustomerModal").find(".customer_number_field").val(info.number).prop("readonly", true);
+                    }
+                    else
+                    {
+                        $("#NewCustomerModal").find(".customer_name_field").val(info.name).prop("readonly", false);
+                        $("#NewCustomerModal").find(".customer_number_field").val(info.number).prop("readonly", false);
+                    }
+                    $("#NewCustomerModal").find(".customer_id_field").val(info.id);
+                    $("#NewCustomerModal").find(".modal-title").text("Edit Customer");
+                    $("#NewCustomerModal").modal("show");
+                });
+            });
+
+            $(".add_customer_btn").click(function () {
+                var customerSection = $(this).data("customer");
+                $("#customer_section").val(customerSection);
+                $("#NewCustomerModal").find(".customer_name_field").val("").prop("readonly", false);
+                $("#NewCustomerModal").find(".customer_number_field").val("").prop("readonly", false);
+                $("#NewCustomerModal").find(".customer_id_field").val("");
+                $("#NewCustomerModal").find(".modal-title").text("Add New Customer");
+                $("#NewCustomerModal").modal("show");
+            });
+
+            $(".update_customer_btn").click(function () {
+                name = $("#NewCustomerModal").find(".customer_name_field").val();
+                number = $("#NewCustomerModal").find(".customer_number_field").val();
+                id = $("#NewCustomerModal").find(".customer_id_field").val();
+
+                $.post("/Json/UpdateCustomer", { "id": id, "name": name, "number": number }, function (data) {
+                    var info = JSON.parse(data);
+                    if (info.status == "error") {
+                        alert(info.message);
+                    } else {
+                        loadAllCustomerAutoComplete();
+
+                        var customerSection = $("#customer_section").val();
+                        var bidInfoCustomerTxt = $("#BidInfoCustomer");
+                        var bidInfoCustomerHidden = $("#" + bidInfoCustomerTxt.attr("hidden-id"));
+                        var bidderCustomerTxt = $("#BidderCustomer");
+                        var bidderCustomerHidden = $("#" + bidderCustomerTxt.attr("hidden-id"));
+
+                        if (customerSection == "BidInfo") {
+                            bidInfoCustomerTxt.val(name);
+                            bidInfoCustomerHidden.val(info.id);
+                            bidInfoCustomerTxt.prop("readonly", true);
+                            bidInfoCustomerTxt.addClass('x');
+                        }
+                        else
+                        {
+                            bidderCustomerTxt.val(name);
+                            bidderCustomerHidden.val(info.id);
+                            bidderCustomerTxt.prop("readonly", true);
+                            bidderCustomerTxt.addClass('x');
+                        }
+
+                        if (bidInfoCustomerHidden.val() == bidderCustomerHidden.val()) {
+                            if (customerSection == "BidInfo")
+                                bidderCustomerTxt.val(name);
+                            else
+                                bidInfoCustomerTxt.val(name);
+                        }
+                            $("#NewCustomerModal").modal("hide");
+                    }
+                });
+            });
+
+            $(".edit_contact_btn").click(function () {
+                selected_entity_id = $("#ContractorId").val();
+                $.get("/Json/GetContractorDetails", { "id": selected_entity_id }, function (data) {
+                    info = JSON.parse(data);
+                    $("#NewCustomerContactModal").find(".contact_name_field").val(info.name);
+                    //$("#NewCustomerContactModal").find(".contact_phone_field").val(info.phone);
+                    //$("#NewCustomerContactModal").find(".contact_fax_field").val(info.fax);
+                    //$("#NewCustomerContactModal").find(".contact_email_field").val(info.email);
+                    $("#NewCustomerContactModal").find(".contact_id_field").val(info.id);
+                    $("#NewCustomerContactModal").find(".modal-title").text("Edit GC");
+                    $("#NewCustomerContactModal").modal("show");
+                });
+            });
+
+            $(".add_contact_btn").click(function () {
+                $("#NewCustomerContactModal").find(".contact_name_field").val("");
+                //$("#NewCustomerContactModal").find(".contact_phone_field").val("");
+                //$("#NewCustomerContactModal").find(".contact_fax_field").val("");
+                //$("#NewCustomerContactModal").find(".contact_email_field").val("");
+                $("#NewCustomerContactModal").find(".contact_id_field").val("");
+                $("#NewCustomerContactModal").find(".modal-title").text("New GC");
+                $("#NewCustomerContactModal").modal("show");
+            });
+
+            $(".update_contact_btn").click(function () {
+                name = $("#NewCustomerContactModal").find(".contact_name_field").val();
+                //phone = $("#NewCustomerContactModal").find(".contact_phone_field").val();
+                //fax = $("#NewCustomerContactModal").find(".contact_fax_field").val();
+                //email = $("#NewCustomerContactModal").find(".contact_email_field").val();
+                id = $("#NewCustomerContactModal").find(".contact_id_field").val();
+                customerId = $("#CustomerId").val();
+                params = { "id": id, "customerId": customerId, "name": name };
+                $.get("/Json/UpdateContractor", params, function (data) {
+                    info = JSON.parse(data);
+                    if (info.status == "error") {
+                        alert(info.message);
+                    } else {
+                        if (id == "" || id == undefined) {
+                            addOption("#ContractorId", info.name, info.id);
+                        } else {
+                            removeOption("#ContractorId", info.id);
+                            addOption("#ContractorId", info.name, info.id);
+                        }
+                        $("#ContractorId")[0].sumo.reload();
+                        var IdIndex = $("#ContractorId").find('option[value="' + info.id + '"]').index();
+                        $("#ContractorId")[0].sumo.selectItem(IdIndex);
+                        $("#ContractorId").trigger("change");
+                        $("#NewCustomerContactModal").modal("hide");
+                    }
+                });
+            });
+
+            $("body").on("click",".add_project_plant_btn",function(){
+                div = $(this).parents(".form-group");
+                var plantDDL = div.find(".project_plant_ddl");
+                setPlantVolumeUnit(plantDDL);
+                html = div.html();
+                //console.log(html);
+                html = "<div class='form-group'>"+html+"</div>";
+                div.parent().append(html);
+                div.find(":hidden").show();
+                div.find(".add_project_plant_btn").remove();
+                div.find(".control-label").text("Plant");
+                div.addClass("project_plant_div");
+                update_indexes();
+            });
+
+            $("body").on("click",".delete_project_plant",function(){
+                div = $(this).parents(".form-group");
+                div.remove();
+                update_indexes();
+            });
+
+            function update_indexes()
+            {
+                $(".project_plant_div").each(function(index,item){
+                    div = $(item);
+                    div.find(".project_plant_id").attr("name","ProjectPlants["+index+"].ProjectPlantId");
+                    console.log(div.find(".project_plant_id").attr("name"));
+                    div.find(".project_plant_ddl").attr("name","ProjectPlants["+index+"].PlantId");
+                    div.find(".project_plant_volume").attr("name","ProjectPlants["+index+"].Volume");
+                });
+            }
+
+            $('.cutoffdatepicker').datepicker({
+                format: "M, yyyy",
+                viewMode: "months",
+                minViewMode: "months",
+                orientation: "top"
+            }).on("changeDate", function (ev) {
+                $("div.datepicker").hide();
+            });
+
+            $('.datepicker').datepicker({ format: "mm/dd/yyyy" }).on("changeDate", function (ev) {
+                $("div.datepicker").hide();
+            });
+
+            showQuoteAwardRequest = @(Model.Quotations.Where(x => x.Active == true).Count());
+
+            $(".status_box").change(function (e) {
+                lostBids = [@(string.Join(",", Model.LostBidsStatusIds))];
+                wonStatuses = [@(string.Join(",", Model.WonStatusIds))];
+                selected = parseInt($(this).val());
+
+                if (lostBids.indexOf(selected) >= 0) {
+                    $(".won_lost").slideDown();
+                    if ($("#WonLostDate").val()==""){
+                        $("#WonLostDate").val('@DateTime.Today.ToString("M/d/yyyy")')
+                    }
+                    $("#WonLostDate").prop("disabled",false);
+                    $(".loss").slideDown();
+                    $(".won select").val("");
+                    $(".won").slideUp();
+                    return ;
+                }
+                if (wonStatuses.indexOf(selected) >= 0) {
+                    $(".won").slideDown();
+                    $(".won_lost").slideDown();
+                    if ($("#WonLostDate").val()==""){
+                        $("#WonLostDate").val('@DateTime.Today.ToString("M/d/yyyy")')
+                }
+                $(".loss").slideUp();
+                $("#WonLostDate").prop("disabled",false);
+                var noOfQuotes = $(".won select option").length;
+                var noOfSelectedQuotes = $(".won>select").find(":selected").length;
+                if (noOfQuotes == 2 && noOfSelectedQuotes == 0) {
+                    var ddl = $("#Awarded");
+                    ddl[0].sumo.selectItem(1);
+                }
+                return ;
+            }
+
+                $(".won_lost").slideUp();
+                $("#WonLostDate").prop("disabled",true);
+                $(".won select").val("");
+                $(".loss").slideUp();
+                $(".won").slideUp();
+            });
+
+            function refreshForecasts(){
+                projectId = @(Model.ProjectId);
+                date = $(".forecast_date").val();
+                $.post("/Home/GetForecasts",{"id":projectId,"date":date},function(data){
+                    data = JSON.parse(data);
+                    $(data.Headers).each(function(i,head){
+                        $("#forecast_table").find("th.header_"+(i+1)).text(head.Label);
+                    });
+                    $("#forecast_table tbody tr").each(function(i,row){
+                        $(row).find("td[data-plant]").each(function (j,cell){
+                            $(cell).attr("class","");
+                            plant = $(cell).data("plant");
+                            $(cell).addClass("plant_"+plant+"_"+data.Headers[j].Value);
+                            $(cell).data("date",data.Headers[j].Value)
+                            $(cell).attr("data-date",data.Headers[j].Value)
+                        });
+                    });
+                    $(data.Values).each(function(i,plantValues){
+                        $("#forecast_table").find("td.plant_"+plantValues.PlantId+"_"+plantValues.Month+" input").val(plantValues.Projection);
+                    });
+                });
+            }
+
+            $(".forecast_date").change(function(){
+                refreshForecasts();
+            });
+
+            $(".forecast_input").blur(function(){
+                projectId = @Model.ProjectId ;
+                plantId = $(this).parent().data("plant");
+                month = $(this).parent().data("date");
+                projection = $(this).val();
+                projection = removeCommas(projection);
+                $.post("/Home/UpdateProjectionFromProject",{"id":projectId,"plantId":plantId,"dateString":month,"projection":projection},function(data){
+                    if (data == "PAST"){
+                        alert("This projection can't be edited as it's in the past the cuttoff date");
+                    }
+                });
+            });
+
+            refreshForecasts();
+
+            hideEverything = "@(ViewBag.AccessRule.HasPipelineAccess == SIRolePermissionLevelConstants.READ_ONLY)";
+            if (hideEverything == "True") {
+                disableEveryThing('.hideShow_Unawarded');
+                $(".edit_btn").hide();
+            }
+
+            var pipelineAccess = "@(ViewBag.AccessRule.HasPipelineAccess == SIRolePermissionLevelConstants.NO_ACCESS)";
+            if (pipelineAccess == 'True') {
+                disableEveryThing();
+            }
+
+            var forecastAccess = '@(ViewBag.AccessRule.HasForecastAccess == SIRolePermissionLevelConstants.READ_ONLY)';
+
+            if (forecastAccess == 'True') {
+                $("#forecast_table td input").attr("disabled",true);
+            }
+
+            openForecast = "@(ViewBag.AccessRule.HasForecastAccess == SIRolePermissionLevelConstants.FULL_ACCESS)";
+            if (hideEverything == "True" && openForecast == "True") {
+                $(".forecast_section select").prop("disabled",false);
+                $(".forecast_section input").prop("disabled", false);
+
+                var difference = @(ViewBag.Difference != null ? ViewBag.Difference : 0);
+                var hasAccess = @ViewBag.AccessRule.CanEditNonFutureProjections.ToString().ToLower();
+                if (!hasAccess){
+                    $(".forecast_table tbody .projection").each(function(index,element){
+                        console.log(index);
+                        console.log($(element));
+                        if (index < difference){
+                            $(element).prop("disabled",true);
+                        }
+                    });
+                }
+            }
+            $("#PlantId").prop("disabled",false);
+
+            var quotatioAccess = "@(ViewBag.AccessRule.HasQuotationAccess == SIRolePermissionLevelConstants.NO_ACCESS)";
+            if (quotatioAccess == 'False') {
+                $(".edit-enabled").removeAttr("disabled");
+            }
+
+            @if (ViewBag.ScrollTo != null)
+            {
+                <text>
+            try{
+                $("html, body").animate({ scrollTop: $('div[data-section='+'@ViewBag.ScrollTo'+']').offset().top - 100 }, 1000);
+            }
+            catch(ex)
+            {
+                console.log("exception");
+            }
+            </text>
+            }
+
+            $(".quotation_copy").click(function(){
+                id = $(this).data("id");
+                $("#CopyFromQuoteId").val(id);
+                $("#new_quote_btn").text("Copy");
+                $("#new_quote_modal .modal-title").text("Copy Quote To...");
+                $("#new_quote_modal").modal("show");
+                defaultProjectName();
+            });
+
+            $("#add_new_quote_btn").click(function () {
+                $("#new_quote_modal .modal-title").text("Create New Quote");
+                $("#new_quote_btn").text("Create new");
+                $("#CopyFromQuoteId").val(0);
+                defaultProjectName();
+            });
+            function defaultProjectName()
+            {
+                var currentProjectName = $("#ProjectName").val();
+                var currentProjectId = @Model.ProjectId;
+                console.log(currentProjectName + currentProjectId);
+
+                $("#Project").val(currentProjectName);
+                $("#NewQuoteProject").val(currentProjectId);
+
+                $("#Project").addClass("x");
+                $("#Project").prop("readonly", true);
+            }
+
+            setTimeout(function(){
+               $(".sumo_ContractorId").attr("tabindex","9");
+            },1000);
+        });
+    </script>
+}

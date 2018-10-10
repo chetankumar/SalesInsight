@@ -1,0 +1,406 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.NotificationPageView
+@{
+    ViewBag.Title = "Notifications";
+    ViewBag.NotificationsAction = true;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="page-head">
+    <h2>
+        Notifications
+    </h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li>Notifications</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    @using (Html.BeginForm("Notifications", "Quote", FormMethod.Post, new { @id = "filter-form" }))
+    {
+        <div class="block-flat">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="col-lg-2">
+                        @Html.HiddenFor(m => m.Filter.RowsPerPage)
+                        @Html.HiddenFor(m => m.Filter.CurrentStart)
+                        <div class="btn-group">
+                            <a class="btn btn-primary" href="/Quote/Notifications">All</a>
+                            <a class="btn btn-primary filter-btn">
+                                <span class="glyphicon glyphicon-filter"></span>
+                                Filter
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <form action="/Home/PipelineSearch">
+                            <div class="input-group">
+                                @Html.TextBoxFor(model => model.Filter.SearchTerm, new { @class = "form-control", @placeholder = "Search" })
+                                <div class="input-group-btn">
+                                    <button type="submit" class="btn btn-primary">
+                                        <span class="glyphicon glyphicon-search"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-lg-4 text-right">
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 filter-panel" style="display: none;">
+                    <div class="col-lg-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                Districts
+                            </div>
+                            <div class="panel-body" style="height: 200px; overflow-y: scroll;">
+                                @foreach (SelectListItem item in Model.Filter.DistrictList)
+                                {
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" value="@item.Value" name="Districts" @(item.Selected ? "checked='checked'" : "") />
+                                            @item.Text
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                Plants
+                            </div>
+                            <div class="panel-body" style="height: 200px; overflow-y: scroll;">
+                                <div data-selector="district">Select district to populate</div>
+                                @foreach (SelectListItem item in Model.Filter.PlantList)
+                                {
+                                    <div class="checkbox" style="display: none">
+                                        <label>
+                                            <input type="checkbox" disabled="disabled" value="@item.Value" name="Plants" @(item.Selected ? "checked='checked'" : "") />
+                                            @item.Text
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                Staff
+                            </div>
+                            <div class="panel-body" style="height: 200px; overflow-y: scroll;">
+                                <div data-selector="district">Select district to populate</div>
+                                @foreach (SelectListItem item in Model.Filter.StaffList)
+                                {
+                                    <div class="checkbox" style="display: none">
+                                        <label>
+                                            <input type="checkbox" disabled="disabled" value="@item.Value" @(item.Selected ? "checked='checked'" : "") name="Staffs" />
+                                            @item.Text
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: none">
+                        @foreach (string column in new string[] { "DistrictName", "ProjectName", "CustomerName", "ContractorName", "PlantName", "StatusName", "StaffNamesList", "MarketSegmentName", "BidDate", "StartDate", "WonLossDate", "Volume", "Price", "Spread", "Profit", "CompetitorNamesList" })
+                        {
+                            <label>
+                                <input type="checkbox" data-id="check_@(column)_DESC" name="SortColumns" value="@column DESC" @(Model.Filter.SortColumns.Contains(column + " DESC") ? "checked='checked'" : "") />
+                                <input type="checkbox" data-id="check_@(column)_ASC" name="SortColumns" value="@column ASC" @(Model.Filter.SortColumns.Contains(column + " ASC") ? "checked='checked'" : "") />
+                            </label>
+                        }
+                    </div>
+                    <div class="col-lg-12">
+                        <button type="submit" class="btn btn-primary apply-btn" value="Apply">Apply</button>
+                        <button type="button" class="btn btn-default close-btn" value="Close">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="block-flat">
+        <div class="panel-body">
+            <table class="table table-responsive table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Sender</th>
+                        <th>Notification Type</th>
+                        <th>Subject</th>
+                        <th>Message</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (RedHill.SalesInsight.Web.Html5.Models.NotificationModel notification in Model.Notifications)
+                    {
+                        <tr>
+                            <td>@notification.CreatedBy</td>
+                            <td>@Model.HumanName(notification.NotificationType)</td>
+                            <td>@notification.MessageSubject</td>
+                            <td>@notification.MessageText</td>
+                            <td>@(notification.CreatedOn == null ? "" : notification.CreatedOn.Value.ToString("M/d/yyyy"))</td>
+                            <td>
+                                @if (notification.IsApprovalType || notification.IsCommentType || notification.IsApprovedType)
+                                {
+                                    <a class="btn btn-primary btn-xs" href="/Quote/AddEditQuote/@notification.QuotationId">
+                                        <i class="fa fa-fw fa-check"></i> View Quotation Form
+                                    </a>
+                                }
+
+                                @if (notification.IsProjectEntryType)
+                                {
+                                    <a class="btn btn-primary btn-xs" href="/Quote/ProjectEntryForm/@notification.QuotationId">
+                                        <i class="fa fa-fw fa-check"></i> View Project Entry Form
+                                    </a>
+                                }
+                                @if (notification.IsEnableQuoteEdit)
+                                {
+                                    <a class="btn btn-primary btn-xs" href="/Quote/EnableQuoteEdit/@notification.QuotationId">
+                                        <i class="fa fa-fw fa-check"></i> Enable Quotation Editing
+                                    </a>
+                                }
+                                <a class="btn btn-danger btn-xs" data-confirm="Are you sure you want to delete this notification?" href="/Quote/DeleteNotification/@notification.Id">
+                                    <i class="fa fa-fw fa-close"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="col-sm-12">
+                    <span>@(((ViewBag.CurrentPage - 1) * Model.Filter.RowsPerPage + 1).ToString("N0")) to @(((ViewBag.CurrentPage) * Model.Filter.RowsPerPage).ToString("N0")) of @(ViewBag.RowCount.ToString("N0")) records</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12" style="margin-top: 10px;">
+                    <div class="pull-left">
+                        <div class="form-inline">
+                            <select id="rows_per_page" class="form-control">
+                                <option value="10" @(Model.Filter.RowsPerPage == 10 ? "selected=selected" : "")>10</option>
+                                <option value="25" @(Model.Filter.RowsPerPage == 25 ? "selected=selected" : "")>25</option>
+                                <option value="50" @(Model.Filter.RowsPerPage == 50 ? "selected=selected" : "")>50</option>
+                                <option value="100" @(Model.Filter.RowsPerPage == 100 ? "selected=selected" : "")>100</option>
+                            </select>
+                            <label class="control-label">Records per page</label>
+                        </div>
+                    </div>
+                    <div class="pull-right">
+                        <ul class="pagination">
+                            <li class="previous">
+                                <a href="#"><span class="glyphicon glyphicon-chevron-left"></span><span>Previous</span></a>
+                            </li>
+                            @{ViewBag.first = ViewBag.CurrentPage < 5 ? 1 : ViewBag.CurrentPage - 5;}
+                            @{ViewBag.last = ViewBag.CurrentPage + 5 >= ViewBag.NumPages ? ViewBag.NumPages : ViewBag.first + 10;}
+                            @for (int i = ViewBag.first; i <= ViewBag.last; i++)
+                            {
+                                <li class="@(ViewBag.CurrentPage == i ? "active" : "")"><a href="#" class="pageNumber">@(i)</a></li>
+                            }
+                            @if (Model.Notifications.Count > 0)
+                            {
+                                <li class="next"><a href="#"><span>Next</span> <span class="glyphicon glyphicon-chevron-right"></span></a></li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @section Scripts{
+        <script type="text/javascript">
+            $(document).ready(function () {
+                ScrubPlants();
+                ScrubSalesStaffs();
+                $(".previous a").click(function (e) {
+                    current = parseInt($("#CurrentStart").val());
+                    if (current > 0) {
+                        $("#Filter_CurrentStart").val(current - @Model.Filter.RowsPerPage);
+                        $("#filter-form").submit();
+                    }
+                    return false;
+                });
+                $(".next a").click(function (e) {
+                    current = parseInt($("#Filter_CurrentStart").val());
+                    $("#Filter_CurrentStart").val(current + @Model.Filter.RowsPerPage);
+                    $("#filter-form").submit();
+                    return false;
+                });
+                $("a.pageNumber").click(function (e) {
+                    start = (parseInt($(this).text()) - 1) ;
+                    if (start >= 0) {
+                        $("#Filter_CurrentStart").val(start);
+                        $("#filter-form").submit();
+                    }
+                    return false;
+                });
+                $(".first a").click(function (e) {
+                    $("#Filter_CurrentStart").val(0);
+                    $("#filter-form").submit();
+                    return false;
+                });
+
+                $("#rows_per_page").change(function (e) {
+                    $("#Filter_RowsPerPage").val($(this).val());
+                    $("#Filter_CurrentStart").val(0);
+                    $("#filter-form").submit();
+                });
+
+                $("#Filter_ShowInactives").change(function (e) {
+                    $("#filter-form").submit();
+                });
+
+                $(".filter-btn").click(function (e) {
+                    if($(".filter-panel").is(":visible")){
+                        $(".filter-panel").slideUp();
+                    }else{
+                        $(".filter-panel").slideDown();
+                    }
+                    return false;
+                });
+
+                $(".close-btn").click(function (e) {
+                    $(".filter-panel").slideUp();
+                });
+                $(".apply-btn").click(function (e) {
+                    $("#SearchTerm").val("");
+                    $(".filter-panel").slideUp();
+                });
+
+                $("input[name=SortColumns]").each(function (index, o) {
+                    if ($(o).is(":checked")) {
+                        column = $(o).val();
+                        tokens = column.split(" ");
+                        name = tokens[0];
+                        name = name.replace(/\./g, '_');
+                        direction = tokens[1];
+                        if (direction == "ASC") {
+                            $("#" + name).append(" &#9660;");
+                            $("#" + name).attr("direction", "ASC");
+                        }
+                        else {
+                            $("#" + name).append(" &#9650;");
+                            $("#" + name).attr("direction", "DESC");
+                        }
+                    }
+                });
+
+
+                $(".header th").click(function (e) {
+                    sort = $(this).attr("id");
+                    sort = sort.replace(/_/g, '.');
+                    direction = "ASC";
+                    if ($(this).attr("direction") != 'undefined') {
+                        direction = $(this).attr("direction") == "ASC" ? "DESC" : "ASC";
+                    } else {
+                        $(this).attr("direction", "ASC");
+                    }
+                    if (!(e.shiftKey)) {
+                        $("input[name=SortColumns]").prop("checked", false);
+                    } else {
+                        $("input[data-id='check_" + sort + "_ASC']").prop("checked", false);
+                        $("input[data-id='check_" + sort + "_DESC']").prop("checked", false);
+                    }
+                    $("input[data-id='check_" + sort + "_" + direction + "']").prop("checked", true);
+                    $("#filter-form").submit();
+                });
+
+                $(".filter-panel input[name='Districts']").change(function () {
+                    ScrubPlants();
+                    ScrubSalesStaffs();
+                });
+
+                function ScrubPlants() {
+                    regions = getCheckedValues(".filter-panel input[name='Districts']");
+                    queryString = "";
+                    $(regions).each(function (i, x) {
+                        queryString += "&ParentIds=" + x;
+                    });
+                    if (queryString != "") {
+                        $.get("/Json/GetStructureList?StructureType=PLANT" + queryString, function (data) {
+                            if (data != "NOK") {
+                                districts = eval(data);
+                                $(".filter-panel input[name='Plants']").each(function (i, x) {
+                                    id = parseInt($(x).val());
+                                    if (districts.indexOf(id) == -1) {
+                                        $(x).prop("checked", false);
+                                        $(x).prop("disabled", true);
+                                        $(x).parent().parent().css("display", "none");
+                                    } else {
+                                        $(x).prop("disabled", false);
+                                        $(x).parent().parent().css("display", "block");
+                                    }
+                                });
+
+                                if(districts && districts.length>0)
+                                    toggleDistrictPrompt(false);
+                            }
+                        });
+                    } else {
+                        $(".filter-panel input[name='Plants']").each(function (i, x) {
+                            $(x).prop("checked", false);
+                            $(x).prop("disabled", true);
+                            $(x).parent().parent().css("display", "none");
+                        });
+                        toggleDistrictPrompt(true);
+                    }
+                }
+
+                function ScrubSalesStaffs() {
+                    regions = getCheckedValues(".filter-panel input[name='Districts']");
+                    queryString = "";
+                    $(regions).each(function (i, x) {
+                        queryString += "&ParentIds=" + x;
+                    });
+                    if (queryString != "") {
+                        $.get("/Json/GetStructureList?StructureType=SALES_STAFF" + queryString, function (data) {
+                            if (data != "NOK") {
+                                districts = eval(data);
+                                $(".filter-panel input[name='Staffs']").each(function (i, x) {
+                                    id = parseInt($(x).val());
+                                    if (districts.indexOf(id) == -1) {
+                                        $(x).prop("checked", false);
+                                        $(x).prop("disabled", true);
+                                        $(x).parent().parent().css("display", "none");
+                                    } else {
+                                        $(x).prop("disabled", false);
+                                        $(x).parent().parent().css("display", "block");
+                                    }
+                                    toggleDistrictPrompt(false);
+                                });
+                            }
+                        });
+                    } else {
+                        $(".filter-panel input[name='Staffs']").each(function (i, x) {
+                            $(x).prop("checked", false);
+                            $(x).prop("disabled", true);
+                            $(x).parent().parent().css("display", "none");
+                        });
+                        toggleDistrictPrompt(true);
+                    }
+                }
+
+                function toggleDistrictPrompt(show){
+                    var $item=$("[data-selector='district']");
+                    if(show){
+                        $item.show();
+                    }else{
+                        $item.hide();
+                    }
+                }
+
+                function getCheckedValues(selector) {
+                    values = [];
+                    $(selector+":checked").each(function (index, item) {
+                        values.push($(item).val());
+                    });
+                    return values;
+                }
+            });
+        </script>
+    }
+

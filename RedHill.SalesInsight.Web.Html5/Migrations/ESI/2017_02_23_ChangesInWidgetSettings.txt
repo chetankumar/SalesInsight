@@ -1,0 +1,16 @@
+﻿-- Chetan : Done
+-- Bharat : Done
+-- Shelly : Done
+-- Avnish : Done
+-- Dinesh : Done
+----------------------------- 2017-2-23  5:00 PM --- changed column data type  in widgetSettings Table ------Avnish
+
+ALTER TABLE WidgetSettings ALTER COLUMN SuccessLimitPercent decimal(18,0)
+ALTER TABLE WidgetSettings ALTER COLUMN AlertLimitPercent decimal(18,0)
+GO
+----------------------------- 2017-2-23  5:16 PM --- New column added in [DashboardSettings]  Table --------Avnish
+
+Alter TABLE [dbo].[DashboardSettings] 
+Add [AccessType] [nvarchar](100) NULL,
+[CreatedAt] [datetime] NULL;
+GO

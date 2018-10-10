@@ -1,0 +1,1005 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <DataSources>
+    <DataSource Name="DummyDataSource">
+      <rd:DataSourceID>1ea3fdd4-fc50-4a22-a83e-6d2b74f8908a</rd:DataSourceID>
+      <ConnectionProperties>
+        <DataProvider>SQL</DataProvider>
+        <ConnectString />
+      </ConnectionProperties>
+    </DataSource>
+  </DataSources>
+  <InteractiveHeight>11in</InteractiveHeight>
+  <ReportParameters>
+    <ReportParameter Name="startDate">
+      <DataType>String</DataType>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>Report_Parameter_1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="endDate">
+      <DataType>String</DataType>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>Report_Parameter_1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="bidStartDate">
+      <DataType>String</DataType>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>Report_Parameter_2</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="bidEndDate">
+      <DataType>String</DataType>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>Report_Parameter_3</Prompt>
+    </ReportParameter>
+  </ReportParameters>
+  <rd:DrawGrid>true</rd:DrawGrid>
+  <InteractiveWidth>8.5in</InteractiveWidth>
+  <rd:SnapToGrid>true</rd:SnapToGrid>
+  <RightMargin>0.25in</RightMargin>
+  <LeftMargin>0.25in</LeftMargin>
+  <BottomMargin>0.25in</BottomMargin>
+  <rd:ReportID>33e1c341-e945-4ce7-afe6-37c88d61e54c</rd:ReportID>
+  <EmbeddedImages>
+    <EmbeddedImage Name="gcc">
+      <MIMEType>image/jpeg</MIMEType>
+      <ImageData>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</ImageData>
+    </EmbeddedImage>
+  </EmbeddedImages>
+  <PageWidth>11in</PageWidth>
+  <DataSets>
+    <DataSet Name="SIProjectSuccessSalesStaffSummary">
+      <Fields>
+        <Field Name="Name">
+          <DataField>Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="VolumeSold">
+          <DataField>VolumeSold</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="VolumeLost">
+          <DataField>VolumeLost</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DummyDataSource</DataSourceName>
+        <CommandText />
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <rd:DataSetInfo>
+        <rd:ObjectDataSourceType>RedHill.SalesInsight.DAL.SalesInsightDataContext, RedHill.SalesInsight.DAL, Version=1.0.0.2, Culture=neutral, PublicKeyToken=null</rd:ObjectDataSourceType>
+        <rd:ObjectDataSourceSelectMethod>GetProjectSuccessSalesStaffSummary</rd:ObjectDataSourceSelectMethod>
+        <rd:ObjectDataSourceSelectMethodSignature>System.Data.Linq.ISingleResult`1[RedHill.SalesInsight.DAL.DataTypes.SIProjectSuccessSalesStaffSummary] GetProjectSuccessSalesStaffSummary(System.Nullable`1[System.Guid], System.String, System.String, System.String, System.String, System.Nullable`1[System.DateTime], System.Nullable`1[System.DateTime], System.String, System.String)</rd:ObjectDataSourceSelectMethodSignature>
+      </rd:DataSetInfo>
+    </DataSet>
+    <DataSet Name="SIProjectSuccessMajorJobSummary">
+      <Fields>
+        <Field Name="CustomerName">
+          <DataField>CustomerName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ProjectName">
+          <DataField>ProjectName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Volume">
+          <DataField>Volume</DataField>
+          <rd:TypeName>System.Nullable`1[System.Int32]</rd:TypeName>
+        </Field>
+        <Field Name="CompetitorNames">
+          <DataField>CompetitorNames</DataField>
+          <rd:TypeName>System.Collections.Generic.List`1[System.String]</rd:TypeName>
+        </Field>
+        <Field Name="CompetitorNamesList">
+          <DataField>CompetitorNamesList</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="MixName">
+          <DataField>MixName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="MixPrice">
+          <DataField>MixPrice</DataField>
+          <rd:TypeName>System.Nullable`1[System.Decimal]</rd:TypeName>
+        </Field>
+        <Field Name="BidDate">
+          <DataField>BidDate</DataField>
+          <rd:TypeName>System.Nullable`1[System.DateTime]</rd:TypeName>
+        </Field>
+        <Field Name="StartDate">
+          <DataField>StartDate</DataField>
+          <rd:TypeName>System.Nullable`1[System.DateTime]</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DummyDataSource</DataSourceName>
+        <CommandText />
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <rd:DataSetInfo>
+        <rd:ObjectDataSourceType>RedHill.SalesInsight.DAL.DataTypes.SIProjectSuccessMajorJobSummary, RedHill.SalesInsight.DAL, Version=1.0.0.2, Culture=neutral, PublicKeyToken=null</rd:ObjectDataSourceType>
+        <rd:ObjectDataSourceSelectMethod>Get</rd:ObjectDataSourceSelectMethod>
+        <rd:ObjectDataSourceSelectMethodSignature>System.Collections.Generic.List`1[RedHill.SalesInsight.DAL.DataTypes.SIProjectSuccessMajorJobSummary] Get(System.Guid, Int32[], Int32[], Int32[], Int32[], System.Nullable`1[System.DateTime], System.Nullable`1[System.DateTime])</rd:ObjectDataSourceSelectMethodSignature>
+      </rd:DataSetInfo>
+    </DataSet>
+    <DataSet Name="SIProjectSuccessMarketShareSummary">
+      <Fields>
+        <Field Name="Name">
+          <DataField>Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Volume">
+          <DataField>Volume</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DummyDataSource</DataSourceName>
+        <CommandText />
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <rd:DataSetInfo>
+        <rd:ObjectDataSourceType>RedHill.SalesInsight.Web.Services.SalesInsight, RedHill.SalesInsight.Web, Version=1.0.0.2, Culture=neutral, PublicKeyToken=null</rd:ObjectDataSourceType>
+        <rd:ObjectDataSourceSelectMethod>GetProjectSuccessMarketShareSummary</rd:ObjectDataSourceSelectMethod>
+        <rd:ObjectDataSourceSelectMethodSignature>System.Collections.Generic.List`1[RedHill.SalesInsight.DAL.DataTypes.SIProjectSuccessMarketShareSummary] GetProjectSuccessMarketShareSummary(System.Guid, Int32[], Int32[], Int32[], Int32[], System.Nullable`1[System.DateTime], System.Nullable`1[System.DateTime])</rd:ObjectDataSourceSelectMethodSignature>
+      </rd:DataSetInfo>
+    </DataSet>
+  </DataSets>
+  <Code />
+  <Width>10in</Width>
+  <Body>
+    <ReportItems>
+      <Textbox Name="textbox2">
+        <Top>0.375in</Top>
+        <Width>3.875in</Width>
+        <Style>
+          <Color>MediumBlue</Color>
+          <FontSize>8pt</FontSize>
+          <FontWeight>700</FontWeight>
+          <TextAlign>Right</TextAlign>
+          <PaddingLeft>1pt</PaddingLeft>
+          <PaddingRight>1pt</PaddingRight>
+          <PaddingTop>1pt</PaddingTop>
+          <PaddingBottom>1pt</PaddingBottom>
+        </Style>
+        <ZIndex>6</ZIndex>
+        <Left>6in</Left>
+        <Height>0.18in</Height>
+        <Value>="Bid Date Range: " + Parameters!bidStartDate.Value + " to " + Parameters!bidEndDate.Value</Value>
+      </Textbox>
+      <Rectangle Name="rectangle1">
+        <ZIndex>5</ZIndex>
+        <ReportItems>
+          <Table Name="table1">
+            <ZIndex>1</ZIndex>
+            <DataSetName>SIProjectSuccessMajorJobSummary</DataSetName>
+            <Top>0.25in</Top>
+            <Width>9.625in</Width>
+            <Details>
+              <TableRows>
+                <TableRow>
+                  <TableCells>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="CustomerName">
+                          <rd:DefaultName>CustomerName</rd:DefaultName>
+                          <Style>
+                            <TextAlign>Left</TextAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <Value>=Fields!CustomerName.Value</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="ProjectName">
+                          <rd:DefaultName>ProjectName</rd:DefaultName>
+                          <Style>
+                            <TextAlign>Left</TextAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <Value>=Fields!ProjectName.Value</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="Volume">
+                          <rd:DefaultName>Volume</rd:DefaultName>
+                          <Style>
+                            <Format>n0</Format>
+                            <TextAlign>Left</TextAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <Value>=Fields!Volume.Value</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="textbox4">
+                          <Style>
+                            <TextAlign>Left</TextAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <Value>=Fields!CompetitorNamesList.Value</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="MixName">
+                          <rd:DefaultName>MixName</rd:DefaultName>
+                          <Style>
+                            <TextAlign>Left</TextAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <Value>=Fields!MixName.Value</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="MixPrice">
+                          <rd:DefaultName>MixPrice</rd:DefaultName>
+                          <Style>
+                            <Format>c2</Format>
+                            <TextAlign>Right</TextAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <Value>=Fields!MixPrice.Value</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="BidDate">
+                          <rd:DefaultName>BidDate</rd:DefaultName>
+                          <Style>
+                            <Format>d</Format>
+                            <TextAlign>Right</TextAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <Value>=Fields!BidDate.Value</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="StartDate">
+                          <rd:DefaultName>StartDate</rd:DefaultName>
+                          <Style>
+                            <Format>d</Format>
+                            <TextAlign>Right</TextAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <Value>=Fields!StartDate.Value</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                  </TableCells>
+                  <Height>0.25in</Height>
+                </TableRow>
+              </TableRows>
+            </Details>
+            <Header>
+              <TableRows>
+                <TableRow>
+                  <TableCells>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="textbox14">
+                          <rd:DefaultName>textbox14</rd:DefaultName>
+                          <Style>
+                            <Color>White</Color>
+                            <BackgroundColor>Black</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <CanGrow>true</CanGrow>
+                          <Value>Customer</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="textbox5">
+                          <rd:DefaultName>textbox5</rd:DefaultName>
+                          <Style>
+                            <Color>White</Color>
+                            <BackgroundColor>Black</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <CanGrow>true</CanGrow>
+                          <Value>Project</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="textbox6">
+                          <rd:DefaultName>textbox6</rd:DefaultName>
+                          <Style>
+                            <Color>White</Color>
+                            <BackgroundColor>Black</BackgroundColor>
+                            <TextAlign>Left</TextAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <CanGrow>true</CanGrow>
+                          <Value>Volume</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="textbox7">
+                          <rd:DefaultName>textbox7</rd:DefaultName>
+                          <Style>
+                            <Color>White</Color>
+                            <BackgroundColor>Black</BackgroundColor>
+                            <TextAlign>Left</TextAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <CanGrow>true</CanGrow>
+                          <Value>Comp</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="textbox1">
+                          <rd:DefaultName>textbox1</rd:DefaultName>
+                          <Style>
+                            <Color>White</Color>
+                            <BackgroundColor>Black</BackgroundColor>
+                            <TextAlign>Left</TextAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <CanGrow>true</CanGrow>
+                          <Value>Mix</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="textbox8">
+                          <rd:DefaultName>textbox8</rd:DefaultName>
+                          <Style>
+                            <Color>White</Color>
+                            <BackgroundColor>Black</BackgroundColor>
+                            <Format>c</Format>
+                            <TextAlign>Right</TextAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <CanGrow>true</CanGrow>
+                          <Value>Price   </Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="textbox17">
+                          <rd:DefaultName>textbox17</rd:DefaultName>
+                          <Style>
+                            <Color>White</Color>
+                            <BackgroundColor>Black</BackgroundColor>
+                            <TextAlign>Right</TextAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <CanGrow>true</CanGrow>
+                          <Value>Bid   </Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="textbox20">
+                          <rd:DefaultName>textbox20</rd:DefaultName>
+                          <Style>
+                            <Color>White</Color>
+                            <BackgroundColor>Black</BackgroundColor>
+                            <TextAlign>Right</TextAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <CanGrow>true</CanGrow>
+                          <Value>Start   </Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                  </TableCells>
+                  <Height>0.25in</Height>
+                </TableRow>
+              </TableRows>
+            </Header>
+            <TableColumns>
+              <TableColumn>
+                <Width>1.5in</Width>
+              </TableColumn>
+              <TableColumn>
+                <Width>2.75in</Width>
+              </TableColumn>
+              <TableColumn>
+                <Width>1in</Width>
+              </TableColumn>
+              <TableColumn>
+                <Width>1in</Width>
+              </TableColumn>
+              <TableColumn>
+                <Width>1.125in</Width>
+              </TableColumn>
+              <TableColumn>
+                <Width>0.75in</Width>
+              </TableColumn>
+              <TableColumn>
+                <Width>0.75in</Width>
+              </TableColumn>
+              <TableColumn>
+                <Width>0.75in</Width>
+              </TableColumn>
+            </TableColumns>
+            <Height>0.5in</Height>
+            <Left>0.125in</Left>
+          </Table>
+          <Rectangle Name="rectangle2">
+            <ReportItems>
+              <Textbox Name="textbox13">
+                <Width>3in</Width>
+                <Style>
+                  <FontWeight>700</FontWeight>
+                  <TextAlign>Left</TextAlign>
+                  <PaddingRight>1pt</PaddingRight>
+                  <PaddingTop>1pt</PaddingTop>
+                  <PaddingBottom>1pt</PaddingBottom>
+                </Style>
+                <Left>0.125in</Left>
+                <Value>Major Job Summary</Value>
+              </Textbox>
+            </ReportItems>
+            <Height>0.17in</Height>
+          </Rectangle>
+        </ReportItems>
+        <Top>4.125in</Top>
+        <Width>9.875in</Width>
+        <Style>
+          <BorderStyle>
+            <Default>Solid</Default>
+          </BorderStyle>
+        </Style>
+        <Label>SegmentationAnalysis</Label>
+        <Height>3.25in</Height>
+      </Rectangle>
+      <Rectangle Name="rectangle7">
+        <Left>5.25in</Left>
+        <ZIndex>4</ZIndex>
+        <ReportItems>
+          <Table Name="table2">
+            <ZIndex>1</ZIndex>
+            <DataSetName>SIProjectSuccessSalesStaffSummary</DataSetName>
+            <Top>0.25in</Top>
+            <Width>4.375in</Width>
+            <Details>
+              <TableRows>
+                <TableRow>
+                  <TableCells>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="Name">
+                          <rd:DefaultName>Name</rd:DefaultName>
+                          <Style>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <Value>=Fields!Name.Value</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="VolumeSold">
+                          <rd:DefaultName>VolumeSold</rd:DefaultName>
+                          <Style>
+                            <Format>n0</Format>
+                            <TextAlign>Right</TextAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <Value>=Fields!VolumeSold.Value</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="VolumeLost">
+                          <rd:DefaultName>VolumeLost</rd:DefaultName>
+                          <Style>
+                            <Format>n0</Format>
+                            <TextAlign>Right</TextAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <Value>=Fields!VolumeLost.Value</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="textbox31">
+                          <rd:DefaultName>textbox31</rd:DefaultName>
+                          <Style>
+                            <Format>p</Format>
+                            <TextAlign>Right</TextAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <Value>=IIF((Fields!VolumeSold.Value + Fields!VolumeLost.Value) = 0,0,Fields!VolumeSold.Value/(Fields!VolumeSold.Value + Fields!VolumeLost.Value))</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                  </TableCells>
+                  <Height>0.25in</Height>
+                </TableRow>
+              </TableRows>
+            </Details>
+            <Header>
+              <TableRows>
+                <TableRow>
+                  <TableCells>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="textbox26">
+                          <rd:DefaultName>textbox26</rd:DefaultName>
+                          <Style>
+                            <Color>White</Color>
+                            <BackgroundColor>Black</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <CanGrow>true</CanGrow>
+                          <Value>Name</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="textbox27">
+                          <rd:DefaultName>textbox27</rd:DefaultName>
+                          <Style>
+                            <Color>White</Color>
+                            <BackgroundColor>Black</BackgroundColor>
+                            <TextAlign>Right</TextAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <CanGrow>true</CanGrow>
+                          <Value>Won   </Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="textbox28">
+                          <rd:DefaultName>textbox28</rd:DefaultName>
+                          <Style>
+                            <Color>White</Color>
+                            <BackgroundColor>Black</BackgroundColor>
+                            <TextAlign>Right</TextAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <CanGrow>true</CanGrow>
+                          <Value>Lost   </Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="textbox29">
+                          <rd:DefaultName>textbox29</rd:DefaultName>
+                          <Style>
+                            <Color>White</Color>
+                            <BackgroundColor>Black</BackgroundColor>
+                            <TextAlign>Right</TextAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <CanGrow>true</CanGrow>
+                          <Value>Won  %   </Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                  </TableCells>
+                  <Height>0.25in</Height>
+                </TableRow>
+              </TableRows>
+            </Header>
+            <TableColumns>
+              <TableColumn>
+                <Width>1.75in</Width>
+              </TableColumn>
+              <TableColumn>
+                <Width>0.875in</Width>
+              </TableColumn>
+              <TableColumn>
+                <Width>0.875in</Width>
+              </TableColumn>
+              <TableColumn>
+                <Width>0.875in</Width>
+              </TableColumn>
+            </TableColumns>
+            <Height>0.75in</Height>
+            <Footer>
+              <TableRows>
+                <TableRow>
+                  <TableCells>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="textbox33">
+                          <rd:DefaultName>textbox33</rd:DefaultName>
+                          <Style>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <Value>Total</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="textbox34">
+                          <rd:DefaultName>textbox34</rd:DefaultName>
+                          <Style>
+                            <Format>n0</Format>
+                            <TextAlign>Right</TextAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <Value>=Sum(Fields!VolumeSold.Value)</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="textbox35">
+                          <rd:DefaultName>textbox35</rd:DefaultName>
+                          <Style>
+                            <Format>n0</Format>
+                            <TextAlign>Right</TextAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <Value>=SUM(Fields!VolumeLost.Value)</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="textbox32">
+                          <rd:DefaultName>textbox32</rd:DefaultName>
+                          <Style>
+                            <Format>p</Format>
+                            <TextAlign>Right</TextAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <Value>=SUM(Fields!VolumeSold.Value) / (SUM(Fields!VolumeSold.Value) + SUM(Fields!VolumeLost.Value))</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                  </TableCells>
+                  <Height>0.25in</Height>
+                </TableRow>
+              </TableRows>
+            </Footer>
+            <Left>0.125in</Left>
+          </Table>
+          <Rectangle Name="rectangle8">
+            <ReportItems>
+              <Textbox Name="textbox24">
+                <Width>3in</Width>
+                <Style>
+                  <FontWeight>700</FontWeight>
+                  <TextAlign>Left</TextAlign>
+                  <PaddingRight>1pt</PaddingRight>
+                  <PaddingTop>1pt</PaddingTop>
+                  <PaddingBottom>1pt</PaddingBottom>
+                </Style>
+                <Left>0.125in</Left>
+                <Value>Sales Professional Summary</Value>
+              </Textbox>
+            </ReportItems>
+            <Height>0.17in</Height>
+          </Rectangle>
+        </ReportItems>
+        <Top>0.875in</Top>
+        <Width>4.625in</Width>
+        <Style>
+          <BorderStyle>
+            <Default>Solid</Default>
+          </BorderStyle>
+        </Style>
+        <Label>SegmentationAnalysis</Label>
+        <Height>3.125in</Height>
+      </Rectangle>
+      <Image Name="image1">
+        <Sizing>AutoSize</Sizing>
+        <Width>1.59375in</Width>
+        <MIMEType>image/jpeg</MIMEType>
+        <Source>Embedded</Source>
+        <Style />
+        <ZIndex>3</ZIndex>
+        <Height>0.625in</Height>
+        <Value>gcc</Value>
+      </Image>
+      <Textbox Name="reportDateTextbox">
+        <Top>0.625in</Top>
+        <Width>3.875in</Width>
+        <Style>
+          <Color>MediumBlue</Color>
+          <FontSize>8pt</FontSize>
+          <FontWeight>700</FontWeight>
+          <TextAlign>Right</TextAlign>
+          <PaddingLeft>1pt</PaddingLeft>
+          <PaddingRight>1pt</PaddingRight>
+          <PaddingTop>1pt</PaddingTop>
+          <PaddingBottom>1pt</PaddingBottom>
+        </Style>
+        <ZIndex>2</ZIndex>
+        <Left>6in</Left>
+        <Height>0.18in</Height>
+        <Value>="Date Range: " + Parameters!startDate.Value + " to " + Parameters!endDate.Value</Value>
+      </Textbox>
+      <Textbox Name="reportEntityTextbox">
+        <Top>0.125in</Top>
+        <Width>3.875in</Width>
+        <Style>
+          <FontSize>8pt</FontSize>
+          <FontWeight>700</FontWeight>
+          <TextAlign>Right</TextAlign>
+        </Style>
+        <ZIndex>1</ZIndex>
+        <CanGrow>true</CanGrow>
+        <Left>6in</Left>
+        <Height>0.18in</Height>
+        <Value>Won/Lost Report</Value>
+      </Textbox>
+      <Rectangle Name="MarketShareSummary">
+        <ReportItems>
+          <Chart Name="chart1">
+            <Legend>
+              <Visible>true</Visible>
+              <Style>
+                <FontSize>8pt</FontSize>
+              </Style>
+              <Position>BottomCenter</Position>
+              <Layout>Row</Layout>
+            </Legend>
+            <CategoryAxis>
+              <Axis>
+                <Title />
+                <MajorGridLines>
+                  <Style>
+                    <BorderStyle>
+                      <Default>Solid</Default>
+                    </BorderStyle>
+                  </Style>
+                </MajorGridLines>
+                <MinorGridLines>
+                  <Style>
+                    <BorderStyle>
+                      <Default>Solid</Default>
+                    </BorderStyle>
+                  </Style>
+                </MinorGridLines>
+                <Min>0</Min>
+                <Visible>true</Visible>
+              </Axis>
+            </CategoryAxis>
+            <ZIndex>1</ZIndex>
+            <DataSetName>SIProjectSuccessMarketShareSummary</DataSetName>
+            <PlotArea>
+              <Style>
+                <BackgroundColor>White</BackgroundColor>
+                <BorderColor>
+                  <Default>White</Default>
+                </BorderColor>
+                <BorderStyle>
+                  <Default>Solid</Default>
+                </BorderStyle>
+              </Style>
+            </PlotArea>
+            <ThreeDProperties>
+              <Rotation>30</Rotation>
+              <Inclination>30</Inclination>
+              <Shading>Simple</Shading>
+              <WallThickness>50</WallThickness>
+            </ThreeDProperties>
+            <PointWidth>0</PointWidth>
+            <Top>0.25in</Top>
+            <Subtype>Plain</Subtype>
+            <ValueAxis>
+              <Axis>
+                <Title>
+                  <Position>Far</Position>
+                </Title>
+                <MajorGridLines>
+                  <Style>
+                    <BorderStyle>
+                      <Default>Solid</Default>
+                    </BorderStyle>
+                  </Style>
+                </MajorGridLines>
+                <MinorGridLines>
+                  <Style>
+                    <BorderStyle>
+                      <Default>Solid</Default>
+                    </BorderStyle>
+                  </Style>
+                </MinorGridLines>
+                <MajorTickMarks>Cross</MajorTickMarks>
+                <Min>0</Min>
+                <Margin>true</Margin>
+                <Visible>true</Visible>
+                <Scalar>true</Scalar>
+              </Axis>
+            </ValueAxis>
+            <Type>Pie</Type>
+            <Width>4.875in</Width>
+            <CategoryGroupings>
+              <CategoryGrouping>
+                <DynamicCategories>
+                  <Grouping Name="chart1_CategoryGroup1">
+                    <GroupExpressions>
+                      <GroupExpression>=Fields!Name.Value</GroupExpression>
+                    </GroupExpressions>
+                  </Grouping>
+                  <Label />
+                </DynamicCategories>
+              </CategoryGrouping>
+            </CategoryGroupings>
+            <Palette>Excel</Palette>
+            <ChartData>
+              <ChartSeries>
+                <DataPoints>
+                  <DataPoint>
+                    <DataValues>
+                      <DataValue>
+                        <Value>=Fields!Volume.Value</Value>
+                      </DataValue>
+                    </DataValues>
+                    <DataLabel>
+                      <Style />
+                      <Value>#PERCENT{0}%</Value>
+                      <Position>TopLeft</Position>
+                      <Visible>true</Visible>
+                    </DataLabel>
+                    <Style />
+                    <Marker>
+                      <Type>Auto</Type>
+                      <Size>6pt</Size>
+                    </Marker>
+                  </DataPoint>
+                </DataPoints>
+              </ChartSeries>
+            </ChartData>
+            <Style>
+              <BackgroundColor>White</BackgroundColor>
+            </Style>
+            <Title>
+              <Style />
+            </Title>
+            <Height>2.75in</Height>
+            <Left>0.125in</Left>
+          </Chart>
+          <Rectangle Name="rectangle3">
+            <ReportItems>
+              <Textbox Name="textbox21">
+                <Width>3.875in</Width>
+                <Style>
+                  <FontWeight>700</FontWeight>
+                  <TextAlign>Left</TextAlign>
+                  <PaddingRight>1pt</PaddingRight>
+                  <PaddingTop>1pt</PaddingTop>
+                  <PaddingBottom>1pt</PaddingBottom>
+                </Style>
+                <Left>0.125in</Left>
+                <Value>Market Share Summary</Value>
+              </Textbox>
+            </ReportItems>
+            <Height>0.17in</Height>
+          </Rectangle>
+        </ReportItems>
+        <Top>0.875in</Top>
+        <Width>5.125in</Width>
+        <Style>
+          <BorderStyle>
+            <Default>Solid</Default>
+          </BorderStyle>
+        </Style>
+        <Label>ForecastVersusPlan</Label>
+        <Height>3.125in</Height>
+      </Rectangle>
+    </ReportItems>
+    <Height>7.5in</Height>
+  </Body>
+  <Language>en-US</Language>
+  <TopMargin>0.25in</TopMargin>
+  <PageHeight>8.5in</PageHeight>
+</Report>

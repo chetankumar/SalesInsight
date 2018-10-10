@@ -1,0 +1,1165 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @if (@ViewBag.NoBootstrap == null)
+    {
+        <link type="text/css" href="~/Scripts/js/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" media="screen,print" />
+    }
+    @*<link type="text/css" href="~/Content/font-awesome.min.css" rel="stylesheet" />*@
+    <link type="text/css" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" rel="stylesheet" />
+    @*<link type="text/css" href="~/Content/fontawesome-5.0.13.css" rel="stylesheet" />*@
+    @*<link type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />*@
+    <link href="~/Content/cloudflare-fontawesome-4.7.0.min.css" rel="stylesheet" /><link type="text/css" href="~/Content/System.css" rel="stylesheet" />
+    <link type="text/css" href="~/Content/pygments.css" rel="stylesheet" />
+    <link type="text/css" href="~/Scripts/js/jquery.nanoscroller/nanoscroller.css" rel="stylesheet" />
+    <link type="text/css" href="~/Scripts/js/jquery.gritter/css/jquery.gritter.css" rel="stylesheet" />
+    @*<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.js"></script>*@
+    <script src="~/Scripts/jquery-1.12.4.js"></script>
+    @if (ViewBag.UsingAngular == true)
+    {
+        <script type="text/javascript" src="~/Scripts/angularjs/angular-1.5.9.min.js"></script>
+        <script src="/CustomDirective/directive.module.js"></script>
+        <script src="/CustomDirective/delete-directive.js"></script>
+    }
+    @if (ViewBag.UsingAutoComplete != null)
+    {
+        <script src="~/Scripts/jquery-1.10.2.ui.js"></script>
+    }
+    else
+    {
+        <script type="text/javascript" src="~/Scripts/js/jquery.ui/jquery-ui.js"></script>
+    }
+    <script type="text/javascript" src="~/Scripts/js/modernizr.js"></script>
+    <script type="text/javascript" src="~/Scripts/js/masonry.js"></script>
+    <script type="text/javascript" src="~/Scripts/js/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/underscore.min.js"></script>
+    @*<link type="text/css" href="//code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet" media="screen,print" />*@
+    <link href="~/Content/jquery.1.10.4.ui.css" rel="stylesheet" />
+    @RenderSection("styles", required: false)
+    @if (@ViewBag.UsingSlider != null)
+    {
+        <link type="text/css" href="~/Scripts/js/bootstrap.slider/css/slider.css" rel="stylesheet" />
+        <script type="text/javascript" src="~/Scripts/js/bootstrap.slider/js/bootstrap-slider.js"></script>
+    }
+    @if (@ViewBag.UsingDatePicker != null)
+    {
+        <link type="text/css" href="~/Content/datepicker.css" rel="stylesheet" media="screen,print" />
+        <script type="text/javascript" src="~/Scripts/bootstrap-datepicker.js"></script>
+    }
+    @if (@ViewBag.UsingMultiselect != null)
+    {
+        <link type="text/css" href="~/Scripts/js/bootstrap.multiselect/css/bootstrap-multiselect.css" rel="stylesheet" media="screen,print" />
+        <script type="text/javascript" src="~/Scripts/js/bootstrap.multiselect/js/bootstrap-multiselect.js"></script>
+
+    }
+    <link type="text/css" href="~/Content/sumoselect.css" rel="stylesheet" media="screen,print" />
+    <script type="text/javascript" src="~/Scripts/jquery.sumoselect.min.js"></script>
+
+    @if (@ViewBag.UsingChartjs != null)
+    {
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <script type="text/javascript">
+            google.load("visualization", "1", { packages: ["corechart"] });
+        </script>
+    }
+    @if (@ViewBag.UsingDataTable != null)
+    {
+        <link type="text/css" href="~/Content/datatables.css" rel="stylesheet" media="screen" />
+        <link type="text/css" href="~/Scripts/js/jquery.datatables/bootstrap-adapter/css/datatables.css" rel="stylesheet" media="screen" />
+        @*<script type="text/javascript" src="//cdn.datatables.net/1.10.0/js/jquery.dataTables.js"></script>*@
+        <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+        @*<script type="text/javascript" src="~/Scripts/datatables.js"></script>*@
+    }
+    @if (@ViewBag.UsingFixedHeaderTable != null)
+    {
+        <!--<script type="text/javascript" src="~/Scripts/jquery.fixedheadertable.min.js"></script>-->
+    }
+    @if (@ViewBag.UsingColorBox != null)
+    {
+    }
+    @if (@ViewBag.UsingICheck != null)
+    {
+        <link href="~/Scripts/js/jquery.icheck/skins/all.css" rel="stylesheet" />
+        <script src="~/Scripts/js/jquery.icheck/icheck.min.js"></script>
+    }
+    @*@if (@ViewBag.UsingBootstrapSwitch != null)
+        {
+    *@
+    <link href="~/Scripts/js/bootstrap.switch/bootstrap-switch.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-switch.customized.css" rel="stylesheet" />
+    <script src="~/Scripts/js/bootstrap.switch/bootstrap-switch.min.js"></script>
+    @*}*@
+    @if (ViewBag.UsingBootstrapToggle != null)
+    {
+        <link href="~/Scripts/js/bootstrap.toggle/bootstrap-toggle.min.css" rel="stylesheet" />
+        <script src="~/Scripts/js/bootstrap.toggle/bootstrap-toggle.min.js"></script>
+    }
+ 
+    @if (ViewBag.UsingSparkline != null)
+    {
+        <script src="~/Scripts/js/jquery.sparkline/jquery.sparkline.min.js"></script>
+    }
+    @if (ViewBag.UsingAutoComplete != null)
+    {
+        <link href="~/Content/jquery.1.10.2.ui.css" rel="stylesheet" />
+        @*<script src="~/Scripts/jquery-1.10.2.ui.js"></script>*@
+        <link href="~/Content/auto-complete.css" rel="stylesheet" />
+	
+	  }
+    @Styles.Render("~/theme")
+    <script src="~/Scripts/pace.min.js"></script>
+    <script src="~/Scripts/js/jquery.flip/jquery.flip.min.js"></script>
+
+    @RenderSection("Scripts", false)
+</head>
+<body>
+    <!-- Fixed navbar -->
+    <div id="head-nav" class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="fa fa-gear"></span>
+                </button>
+                <a class="navbar-brand" href="#"><span>Sales Insight</span></a>
+            </div>
+            <div class="navbar-collapse collapse">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <ul class="nav navbar-nav navbar-right user-nav">
+                        <li class="dropdown profile_menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <span>@User.Identity.Name</span> <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a data-toggle="modal" data-target="#support_request_box">Request Support</a></li>
+                                <li class="divider"></li>
+                                @if (RedHill.SalesInsight.Web.Html5.Helpers.ConfigurationHelper.ChatEnabled)
+                                {
+                                    <li class="static-menu item">
+                                        <a class="">
+                                            <span class="static-menu lbl">Notifications</span>
+                                            <input id="notification_switch" type="checkbox" class="switch" data-size="small" @(RedHill.SalesInsight.Web.Html5.Helpers.ConfigurationHelper.NotificationsEnabled ? "checked" : "") />
+                                        </a>
+                                    </li>
+                                    <li class="divider"></li>
+                                }
+                                <li><a data-toggle="modal" data-target="#password_reset_modal"><span>Reset Password</span></a></li>
+                                <li><a href="/Home/Logout"><span>Logout</span></a></li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <ul class="nav navbar-nav navbar-right not-nav">
+                        @if (RedHill.SalesInsight.Web.Html5.Helpers.ConfigurationHelper.ChatEnabled)
+                        {
+                            <li class="button dropdown">
+                                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-comments"></i>
+                                    <span class="bubble chat_notif_count"></span>
+                                </a>
+                                <ul class="dropdown-menu messages">
+                                    <li class="chat-notification-actions">
+                                        <a href="javascript:;" class="chat-action-clear-all">Remove All</a>
+                                        <a href="javascript:;" class="chat-action-allRead">Mark All as Read</a>
+                                    </li>
+                                    <li>
+                                        <div class="nano nscroller chat-notif-container">
+                                            <div class="content">
+                                                <ul class="chat-notifications"></ul>
+                                            </div>
+                                        </div>
+                                        <ul class="foot">
+                                            <li><a href="javascript:;" data-toggle="chat">Start New Chat</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        <li class="button dropdown">
+                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-envelope"></i>
+                                @if (ViewBag.UnreadCount > 0)
+                                {
+                                    <span class="bubble">@ViewBag.UnreadCount</span>
+                                }
+                            </a>
+                            <ul class="dropdown-menu messages">
+                                <li>
+                                    <div class="nano nscroller">
+                                        <div class="content">
+                                            <ul>
+                                                @if (ViewBag.UnreadNotifications != null)
+                                                {
+                                                    foreach (RedHill.SalesInsight.DAL.Notification n in ViewBag.UnreadNotifications)
+                                                    {
+                                                        var notificationModel = new RedHill.SalesInsight.Web.Html5.Models.NotificationModel(n);
+                                                        if (notificationModel.IsApprovalType)
+                                                        {
+                                                            <li>
+                                                                <a href="/Quote/AddEditQuote/@n.QuotationId">
+                                                                    <span class="fa fa-3x fa-eye pull-left"></span>
+                                                                    <span class="date pull-right">@(n.CreatedOn.HasValue ? n.CreatedOn.Value.ToString("dd MMM, yyyy") : "")</span>
+                                                                    <span class="name">@n.CreatedByUser</span>
+                                                                    @n.MessageSubject
+                                                                    <br />
+                                                                    @n.MessageText
+                                                                </a>
+                                                            </li>
+                                                        }
+                                                        if (notificationModel.IsCommentType)
+                                                        {
+                                                            <li>
+                                                                <a href="/Quote/AddEditQuote/@n.QuotationId">
+                                                                    <span class="fa fa-3x fa-comment pull-left"></span>
+                                                                    <span class="date pull-right">@(n.CreatedOn.HasValue ? n.CreatedOn.Value.ToString("dd MMM, yyyy") : "")</span>
+                                                                    <span class="name">@n.CreatedByUser</span>
+                                                                    @n.MessageSubject
+                                                                    <br />
+                                                                    @n.MessageText
+                                                                </a>
+                                                            </li>
+                                                        }
+                                                        if (notificationModel.IsApprovedType)
+                                                        {
+                                                            <li>
+                                                                <a href="/Quote/AddEditQuote/@n.QuotationId">
+                                                                    <span class="fa fa-3x fa-check pull-left"></span>
+                                                                    <span class="date pull-right">@(n.CreatedOn.HasValue ? n.CreatedOn.Value.ToString("dd MMM, yyyy") : "")</span>
+                                                                    <span class="name">@n.CreatedByUser</span>
+                                                                    @n.MessageSubject
+                                                                    <br />
+                                                                    @n.MessageText
+                                                                </a>
+                                                            </li>
+                                                        }
+                                                        if (notificationModel.IsProjectEntryType)
+                                                        {
+                                                            <li>
+                                                                <a href="/Quote/ProjectEntryForm/@n.QuotationId">
+                                                                    <span class="fa fa-3x fa-check-circle"></span>
+                                                                    <span class="date pull-right">@(n.CreatedOn.HasValue ? n.CreatedOn.Value.ToString("dd MMM, yyyy") : "")</span>
+                                                                    <span class="name">@n.CreatedByUser</span>
+                                                                    @n.MessageSubject
+                                                                    <br />
+                                                                    @n.MessageText
+                                                                </a>
+                                                            </li>
+                                                        }
+                                                        if (notificationModel.IsEnableQuoteEdit)
+                                                        {
+                                                            <li>
+                                                                <a href="/Quote/Notifications">
+                                                                    <span class="fa fa-3x fa-check-circle"></span>
+                                                                    <span class="date pull-right">@(n.CreatedOn.HasValue ? n.CreatedOn.Value.ToString("dd MMM, yyyy") : "")</span>
+                                                                    <span class="name">@n.CreatedByUser</span>
+                                                                    @n.MessageSubject
+                                                                    <br />
+                                                                    @n.MessageText
+                                                                </a>
+                                                            </li>
+                                                        }
+                                                    }
+                                                }
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <ul class="foot">
+                                        <li><a href="/Quote/Notifications">View all notifications </a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+    <div style="clear: both"></div>
+    <div id="cl-wrapper" class="fixed-menu sb-collapsed">
+        @if (User.Identity.IsAuthenticated)
+        {
+            <div class="cl-sidebar" data-position="right" data-step="1" data-intro="
+                <strong>Fixed Sidebar</strong> <br /> It adjust to your needs.">
+                <div class="cl-toggle"><i class="fa fa-bars"></i></div>
+                <div class="cl-navblock">
+                    <div class="menu-space">
+                        <div class="content">
+                            <ul class="cl-vnavigation">
+                                <li class="@ViewBag.HomeActive" title="Home">
+                                    <a href="@Url.Action("Index", "Home")">
+                                        <i class="fa fa-home"></i><span>Home</span>
+                                    </a>
+                                </li>
+                                @if (ViewBag.AccessRule != null && ViewBag.AccessRule.HasReportsAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                                {
+                                    <li class="@ViewBag.ReportsActive" title="Reports">
+                                        <a href="@Url.Action("Index", "Reports")">
+                                            <i class="fa fa-bar-chart"></i><span>Reports</span>
+                                        </a>
+                                        <ul class="sub-menu">
+                                            <li><a href="@Url.Action("SalesForecastReport", "Reports")">Sales Forecast Report</a></li>
+                                            <li><a href="@Url.Action("WonLossReport", "Reports")">Won/Lost Report</a></li>
+                                            <li><a href="@Url.Action("GeoMarketAnalysis", "Reports")">Geo-Market Analysis</a></li>
+                                            <li><a href="@Url.Action("CustomerDiamondAnalysis", "Reports")">Customer Diamond Analysis</a></li>
+                                            <li><a href="@Url.Action("SalesDashboard", "Reports")">Sales Dashboard</a></li>
+                                            @if (ViewBag.AccessRule != null && ViewBag.AccessRule.HasReportSettingsAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+                                            {
+                                                <li><a href="@Url.Action("Settings", "Reports")">Settings</a></li>
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                                @if (ViewBag.AccessRule != null && ViewBag.AccessRule.HasPipelineAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+                                {
+                                    <li class="@ViewBag.PipelineActive" title="Pipeline">
+                                        <a href="/Home/Pipeline"><i class="fa fa-filter"></i><span>Pipeline</span></a>
+                                    </li>
+                                }
+                                @if (ViewBag.AccessRule != null && ViewBag.AccessRule.HasQuotationAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+                                {
+                                    <li class="@ViewBag.QuotationsActive" title="Quotations">
+                                        <a href="/Quote/Index"><i class="fa fa-file-text-o"></i><span>Quotations</span></a>
+                                    </li>
+                                }
+                                @if (ViewBag.AccessRule != null && ViewBag.AccessRule.HasForecastAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+                                {
+                                    <li class="@ViewBag.ForecastActive" title="Forecast">
+                                        <a href="/Home/Forecast"><i class="fa fa-binoculars"></i><span>Forecast</span></a>
+                                    </li>
+                                }
+                                @if (ViewBag.ShowESIModules != null && ViewBag.ShowESIModules)
+                                {
+                                    <li class="@ViewBag.Notification" title="Daily Plant Details">
+                                        <a href="/Home/DailyPlantDetails"><i class="fab fa-wpforms"></i><span>Daily Plant Details</span></a>
+                                    </li>
+                                }
+                           
+                                <li class="@ViewBag.NotificationsActive" title="Notifications">
+                                    <a href="/Quote/Notifications"><i class="fa fa-envelope"></i><span>Notifications</span></a>
+                                </li>
+                                
+                                @if (ViewBag.AccessRule != null && (ViewBag.AccessRule.HasUsersAccess != SIRolePermissionLevelConstants.NO_ACCESS
+                                    || ViewBag.AccessRule.HasRolesAccess != SIRolePermissionLevelConstants.NO_ACCESS
+                                    || ViewBag.AccessRule.HasTargetsAccess != SIRolePermissionLevelConstants.NO_ACCESS
+                                    || ViewBag.AccessRule.HasReportSettingsAccess != SIRolePermissionLevelConstants.NO_ACCESS
+                                    || ViewBag.AccessRule.HasCustomersAccess != SIRolePermissionLevelConstants.NO_ACCESS
+                                    || ViewBag.AccessRule.HasCompetitorsAccess != SIRolePermissionLevelConstants.NO_ACCESS
+                                    || ViewBag.AccessRule.HasSalesStaffAccess != SIRolePermissionLevelConstants.NO_ACCESS
+                                    || ViewBag.AccessRule.HasGCAccess != SIRolePermissionLevelConstants.NO_ACCESS
+                                    || ViewBag.AccessRule.HasMarketSegmentsAccess != SIRolePermissionLevelConstants.NO_ACCESS
+                                    || ViewBag.AccessRule.HasStatusesReasonsLostAccess != SIRolePermissionLevelConstants.NO_ACCESS
+                                    || ViewBag.AccessRule.HasStructureAccess != SIRolePermissionLevelConstants.NO_ACCESS
+                                    || ViewBag.AccessRule.HasRawMaterialsAccess != SIRolePermissionLevelConstants.NO_ACCESS
+                                    || ViewBag.AccessRule.HasAddonsAccess != SIRolePermissionLevelConstants.NO_ACCESS
+                                    || ViewBag.AccessRule.HasMixDesignsAccess != SIRolePermissionLevelConstants.NO_ACCESS
+                                    || ViewBag.AccessRule.HasSackPricingAccess != SIRolePermissionLevelConstants.NO_ACCESS
+                                    || ViewBag.AccessRule.HasMiscellaneousAccess != SIRolePermissionLevelConstants.NO_ACCESS))
+                                {
+                                    <li class="@ViewBag.HomeActive" title="Settings">
+                                        <a href="@Url.Action("Settings", "Home")">
+                                            <i class="fa fa-gear"></i><span>Settings</span>
+                                        </a>
+                                    </li>
+                                }
+                                <li title="Request Support">
+                                    <a href="javascript:;" data-toggle="modal" data-target="#support_request_box">
+                                        <i class="fa fa-question-circle"></i><span>Help</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="text-right collapse-button" style="padding: 7px 9px;">
+                        <button id="sidebar-collapse" class="btn btn-default" style=""><i style="color: #fff;" class="fa fa-angle-right"></i></button>
+                    </div>
+                    <div style="clear: both"></div>
+                </div>
+            </div>
+        }
+        <div class="container-fluid" id="pcont">
+            @if (TempData["GlobalMessage"] != null)
+            {
+                <text>
+                    <div id="gritter-notice-wrapper" class="top-right">
+                        <div id="gritter-item-26" class="gritter-item-wrapper @(Convert.ToBoolean(TempData["GlobalError"]) == true ? "danger" : "info")" role="alert">
+                            <div class="gritter-top"></div>
+                            <div class="gritter-item">
+                                <a class="gritter-close" href="#" tabindex="1" style="display: none;">Close Notification</a>
+                                <div class="gritter-without-image">
+                                    <span class="gritter-title">Support Request</span>
+                                    @TempData["GlobalMessage"]
+                                </div>
+                                <div style="clear: both"></div>
+                            </div>
+                            <div class="gritter-bottom"></div>
+                        </div>
+                    </div>
+                </text>
+            }
+            @RenderBody()
+        </div>
+    </div>
+
+    <div class="modal fade md-effect-10" id="password_reset_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header modal-header-primary">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Reset Password </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body">
+                        @Html.Partial("_ViewBagError")
+                        <div class="alert alert-info">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <text>
+                                    <input type="hidden" name="u" id="UserId" value="@((Guid)Membership.GetUser(User.Identity.Name).ProviderUserKey)" />
+                                </text>
+                            }
+                            <p>The Password :</p>
+                            @Html.Raw(string.Join("", RedHill.SalesInsight.DAL.SIDAL.FindSuperUserSettings().PasswordRules.Select(x => string.Format("<li>{0}</li>", x))))
+                        </div>
+                        <div class="form-group">
+                            <input id="oldPassword" type="password" required="required" class="form-control col-md-4" placeholder="Old Password" />
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group">
+                            <input type="password" id="newPassword" required="required" class="form-control col-md-4" placeholder="New Password" />
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group">
+                            <input type="password" id="confirmPassword" required="required" class="form-control col-md-4" placeholder="Confirm Password" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default reset" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary reset_Password">Reset Password</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Html.Partial("_UserSupport")
+
+    @*<script type="text/javascript" src="~/Scripts/extends.js"></script>
+        <script type="text/javascript" src="~/Scripts/master_select.js"></script>
+        <script type="text/javascript" src="~/Scripts/js/behaviour/general.js"></script>*@
+
+    <script type="text/javascript" src="~/Scripts/js/jquery.nanoscroller/jquery.nanoscroller.js"></script>
+    <script type="text/javascript" src="~/Scripts/js/jquery.nestable/jquery.nestable.js"></script>
+    <script type="text/javascript" src="~/Scripts/js/bootstrap.switch/bootstrap-switch.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/js/bootstrap.datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/js/skycons/skycons.js"></script>
+    <script type="text/javascript" src="~/Scripts/js/bootstrap.slider/js/bootstrap-slider.js"></script>
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/Scripts/js/ckeditor/ckeditor.js"></script>
+    @if (ViewBag.UsingMaps == true)
+    {
+        <script src="https://maps.googleapis.com/maps/api/js?sensor=false&key=AIzaSyCkiK44bDX8AgTYo9T5ddV0zDZX5viGIiI&signed_in=false&callback=initMap"></script>
+    }
+
+
+    @Scripts.Render("~/js", "~/js/vendors", "~/js/si_chat")
+
+    <script src="~/Scripts/jquery.signalR-1.1.4.min.js"></script>
+    <!--Reference the autogenerated SignalR hub script. -->
+    <script src="~/signalr/hubs"></script>
+
+    <script type="text/javascript">
+        //diable every thing on to the page
+        function disableEveryThing(except) {
+            if (typeof except === "undefined" || except === null) {
+                except = "";
+            }
+            $(":input,a,select,textarea,button").not(except).prop("disabled", true).attr("disabled", true);
+        }
+        //Enable entring only float characters
+        $(document).on("keypress", ".enable-float", function (event) {
+            if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+                event.preventDefault();
+            }
+        });
+
+        $(document).ready(function () {
+
+            $(document).on('focus', '.datepicker', function () {
+                $(this).attr('autocomplete', 'off');
+            });
+
+            var usingSlider = '@(ViewBag.UsingSlider)';
+            console.log(usingSlider);
+            if (usingSlider != "" && usingSlider != null && usingSlider != 'undefined') {
+                $('.bslider').slider();
+            }
+                var elements = CKEDITOR.document.find('.ckeditor'),
+                    i = 0,
+                    element;
+
+                while ((element = elements.getItem(i++))) {
+                    CKEDITOR.inline(element);
+                }
+
+                App.init({
+                    nanoScroller: false
+                });
+
+                //App.dashBoard();
+
+                //introJs().setOption('showBullets', false).start();
+                $('body').on('click', '*[data-confirm]', function (e) {
+                    e.preventDefault();
+                    var href = $(this).attr('href');
+                    if (!$('#dataConfirmModal').length) {
+                        $('body').append('<div id="dataConfirmModal" class="modal" role="dialog" aria-labelledby="dataConfirmLabel" aria-hidden="true"><div class="modal-dialog sm"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h4 id="dataConfirmLabel">Confirm</h4></div><div class="modal-body"><div id="dataConfirmModalMessage" class="text-danger"></div></div><div class="modal-footer"><a class="btn btn-danger" id="dataConfirmOK" href="#">Yes</a><button class="btn btn-default" data-dismiss="modal" aria-hidden="true">No</button></div></div></div></div>');
+                    }
+                    $('#dataConfirmModalMessage').html($(this).data('confirm'));
+                    if ($(this).data('title'))
+                        $('#dataConfirmModal').find('#dataConfirmLabel').html($(this).data('title'));
+                    $('#dataConfirmOK').attr('href', href);
+                    $('#dataConfirmModal').modal({ show: true });
+                    return false;
+                });
+            });
+    </script>
+    <script type="text/javascript">
+        $(window).load(function (e) {
+
+        });
+        $(document).ready(function (e) {
+            try {
+                var sDom = null;
+                sDom = '<"top">frt<"bottom"i><"clear"><"paging"lp><"clear">';
+                $(".data_table").dataTable({
+                    "sDom": sDom,
+                    "language": {
+                        "info": "_START_ to _END_ of _TOTAL_ records",
+                        "lengthMenu": "_MENU_ Records per page",
+                        "search": ""
+                    }
+                });
+                $(".dataTables_wrapper").find("select").addClass("form-control");
+                $(".dataTables_wrapper").find("input").addClass("form-control");
+                $(".dataTables_wrapper").find("input").attr("placeholder", "Search");
+            }
+            catch (e) {
+                //console.log("No datatable on page");
+            }
+
+            $('body').tooltip({
+                selector: '[data-toggle="tooltip"]'
+            });
+
+            $(".no_search").each(function (index, element) {
+                e = $(element);
+                e.parents(".dataTables_wrapper").find(".dataTables_filter").find("input").hide();
+            });
+
+            @if (ViewBag.UsingMultiselect != null)
+            {
+                <text>
+            $(".multiselect").SumoSelect({
+                search: true,
+                captionFormatAllSelected: "{0} Selected",
+                captionFormat: "{0} Selected",
+                forceCustomRendering: true,
+                //selectAll: true
+            });
+
+            $(document).on('keyup', '.SumoSelect .search-txt', function (e) {
+                //if (e.which === 8) return;
+                var sumo = $(this).parents(".SumoSelect");
+                var suggestions = sumo.find("ul.options");
+                var count = suggestions.find("li.opt:not(.hidden)").length;
+                if (count == 1) {
+                    $(suggestions.find("li.opt:not(.hidden):not(.selected)")[0]).addClass("sel");
+                }
+            });
+            //$(".multiselect").multiselect({
+            //    enableFiltering: true,
+            //    includeSelectAllOption: true,
+            //    numberDisplayed: 1,
+            //    maxHeight: 200
+            //});
+            </text>
+            }
+
+            @if (ViewBag.UsingICheck != null)
+            {
+                 <text>
+            $('.icheck.blue').iCheck({
+                checkboxClass: 'icheckbox_square-blue',
+                radioClass: 'iradio_square-blue'
+            });
+            $('.icheck.red').iCheck({
+                checkboxClass: 'icheckbox_square-red',
+                radioClass: 'icheckbox_square-red'
+            });
+            </text>
+            }
+
+            $(document).on("click", ".dropdown-menu .static-menu.item", function (e) {
+                e.stopPropagation();
+            });
+        });
+    </script>
+
+    @if (User.Identity.IsAuthenticated && RedHill.SalesInsight.Web.Html5.Helpers.ConfigurationHelper.ChatEnabled)
+    {
+        <script type="text/javascript">
+            var chatHub = {};
+            $(function () {
+                var chat = null; ThreadedChat = {
+                    Modules: {
+                        Participants: 'participants',
+                        Notifications: 'notifications'
+                    },
+                    deleteNotifications: function (notifications, preCall, successCallback, errorCallback) {
+                        if (notifications && notifications.length) {
+                            $.ajax({
+                                url: '/json/deletenotifications',
+                                method: 'POST',
+                                data: JSON.stringify({ payload: { notifications: notifications } }),
+                                dataType: 'json',
+                                contentType: 'application/json; charset=utf-8',
+                                beforeSend: function () {
+                                    preCall && preCall();
+                                },
+                                success: function (res) {
+                                    successCallback && successCallback(res);
+                                },
+                                error: function (res) {
+                                    errorCallback && errorCallback(res);
+                                }
+                            });
+                        }
+                    },
+                    markReadNotifications: function (notifications, successCallback) {
+                        if (notifications && notifications.length) {
+                            $.ajax({
+                                url: '/json/markallnotificationstatusread',
+                                method: 'POST',
+                                data: JSON.stringify({ payload: { notifications: notifications } }),
+                                dataType: 'json',
+                                contentType: 'application/json; charset=utf-8',
+                                success: function (res) {
+                                    successCallback && successCallback(res);
+                                }
+                            });
+                        }
+                    },
+                    fetchNewMessages: function () {
+                        var lastId = chat.getLastMessageId();
+                        var conversationId = chat.getConversationId();
+                        $.ajax({
+                            url: "/json/chats",
+                            method: "POST",
+                            data: { conversationId: conversationId, last: lastId },
+                            success: function (data) {
+                                if (chat) {
+                                    chat.showNewMessages(data);
+                                }
+                            }
+                        });
+                    }
+                };
+
+                $.ajax({
+                    url: '/Json/InitiateChat',
+                    method: 'POST',
+                    data: { loadProjects: true },
+                    success: function (res) {
+                        chat = new TChat({
+                            content: res,
+                            closeButton: true,
+                            overlay: false,
+                            userName: "@User.Identity.Name"
+                        });
+                        $(".multi-selector").SumoSelect({
+                            search: true,
+                            captionFormatAllSelected: "{0} Selected",
+                            captionFormat: "{0} Selected",
+                            forceCustomRendering: true
+                        });
+                        var chatProject = $("#Chat_ProjectId"), chatQuote = $("#Chat_QuoteId");
+                        chatProject.on("change", function (e) {
+                            var projectId = $(this).val(), isHuman = e.isTriggered || e.originalEvent !== undefined;
+                            chatQuote.val('');
+                            if (!projectId) {
+                                return;
+                            }
+                            setTimeout(function () {
+                                $.ajax({
+                                    url: '/json/quotesforproject',
+                                    method: 'POST',
+                                    data: { projectId: projectId },
+                                    success: function (data) {
+                                        var options = [];
+                                        var f = chatProject.parents(".form-horizontal");
+                                        options.push($("<option/>").val("").text("---Select Quote---"));
+                                        if (data.length) {
+                                            $(data).each(function (i, e) {
+                                                options.push($("<option/>").val(this.id).text(this.name));
+                                            });
+                                            chatQuote.html(options);
+                                            //$(f.find(".quote_group")[0]).show();
+                                        } else {
+                                            chatQuote.html(options);
+                                            //$(f.find(".quote_group")[0]).hide();
+                                        }
+                                        chatQuote[0].sumo.reload();
+
+                                        @if (ViewBag.ChatQuoteId != null)
+                                        {
+                                                    <text>
+                                        chatQuote[0].sumo.selectItem('@ViewBag.ChatQuoteId');
+                                        </text>
+                                        }
+                                    }
+                                });
+                                @if (ViewBag.ChatQuoteId == null)
+                                {
+                                            <text>
+                                loadConversations(projectId);
+                                </text>
+                                }
+                            }, 500);
+                        });
+                        chatQuote.on("change", function (e) {
+                            var quoteId = $(this).val(), projectId = chatProject.val();
+                            loadConversations(projectId, quoteId);
+                        });
+
+                        @if (ViewBag.ChatProjectId != null)
+                        {
+                                    <text>
+                        chatProject[0].sumo.selectItem('@ViewBag.ChatProjectId');
+                        </text>
+                        }
+
+                    }
+                });
+
+                $(document).on("click", ".chat-notification-actions .chat-action-allRead", function (e) {
+                    var allUnreadNotf = [];
+                    $(".msg-unread").each(function (i, val) {
+                        allUnreadNotf.push($(this).data("id"));
+                    });
+                    ThreadedChat.markReadNotifications(allUnreadNotf,
+                    function (data) {
+                        if (data.success) {
+                            $(".chat-notif-editing").removeClass("msg-unread").addClass("msg-read");
+                        }
+                    });
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                });
+
+                $(document).on("click", "[data-toggle='modules']", function (e) {
+                    var module = $(this).attr("data-target");
+                    $("[data-module]").removeClass("open");
+                    $("[data-module='" + module + "']").addClass("open");
+                    var scContent = $(".sichat-box .sichat-content");
+                    scContent.addClass("open-pane");
+                    loadModule(module);
+                });
+
+                $(".chat-notification-actions .chat-action-clear-all").on("click", function (e) {
+                    if (confirm('Are you sure?')) {
+                        $("ul.chat-notifications").empty();
+                    }
+                    e.stopPropagation();
+                });
+
+                $(document).on("click", ".sichat-subscriber.new[data-uid] a.text-danger", function (e) {
+                    var _ = $(this);
+                    var s = $(_.parents(".sichat-subscriber.new")[0]);
+                    s.remove();
+                    $("#search_participants")[0].sumo.unSelectItem(s.attr("data-uid"));
+                });
+
+                $(document).on("click", "ul.chat-notifications .clear-notification.btn-clear", function (e) {
+                    var li = $(this).parents("ul.chat-notifications li");
+                    var notifications = [];
+                    if (li.attr("data-id")) {
+                        notifications.push(li.attr("data-id"));
+                    }
+                    ThreadedChat.deleteNotifications(notifications,
+                        function () {
+                            li.attr("disabled", "disabled").addClass("disabled");
+                        },
+                        function (data) {
+                            if (data.success) {
+                                li.fadeOut(function () {
+                                    $(this).remove();
+                                    $(".chat-notif-container").nanoScroller();
+                                });
+                            }
+                        }, function (res) {
+                            li.removeAttr("disabled").removeClass("disabled");
+                        });
+                    e.stopPropagation();
+                    return false;
+                });
+
+                $(document).on("click", "[data-toggle='module']", function (e) {
+                    var target = $(this).attr("data-target");
+                    var item = $("[data-module='" + target + "']");
+                    var scContent = $(".sichat-box .sichat-content");
+                    if (item) {
+                        if (item.hasClass("open")) {
+                            item.removeClass("open");
+                            scContent.removeClass("open-pane");
+                        } else {
+                            item.addClass("open");
+                            scContent.addClass("open-pane");
+                        }
+                    }
+                });
+
+
+                $("[data-toggle='chat']").on("click", function (e) {
+                    if (chat) {
+                        //Show Chat
+                        chat.show();
+                    } else {
+                        $.ajax({
+                            url: '/Json/InitiateChat',
+                            method: 'POST',
+                            data: { loadProjects: true },
+                            success: function (res) {
+                                chat = new TChat({
+                                    content: res,
+                                    closeButton: true,
+                                    overlay: false,
+                                    userName: "@User.Identity.Name"
+                                });
+                                $(".multi-selector").SumoSelect({
+                                    search: true,
+                                    captionFormatAllSelected: "{0} Selected",
+                                    captionFormat: "{0} Selected",
+                                    forceCustomRendering: true
+                                });
+                                var chatProject = $("#Chat_ProjectId"), chatQuote = $("#Chat_QuoteId");
+                                chatProject.on("change", function (e) {
+                                    var projectId = $(this).val(), isHuman = e.isTriggered || e.originalEvent !== undefined;
+                                    chatQuote.val('');
+                                    if (!projectId) {
+                                        return;
+                                    }
+                                    setTimeout(function () {
+                                        $.ajax({
+                                            url: '/json/quotesforproject',
+                                            method: 'POST',
+                                            data: { projectId: projectId },
+                                            success: function (data) {
+                                                var options = [];
+                                                var f = chatProject.parents(".form-horizontal");
+                                                options.push($("<option/>").val("").text("---Select Quote---"));
+                                                if (data.length) {
+                                                    $(data).each(function (i, e) {
+                                                        options.push($("<option/>").val(this.id).text(this.name));
+                                                    });
+                                                    chatQuote.html(options);
+                                                    //$(f.find(".quote_group")[0]).show();
+                                                } else {
+                                                    chatQuote.html(options);
+                                                    //$(f.find(".quote_group")[0]).hide();
+                                                }
+                                                chatQuote[0].sumo.reload();
+
+                                                @if (ViewBag.ChatQuoteId != null)
+                                                {
+                                                    <text>
+                                                chatQuote[0].sumo.selectItem('@ViewBag.ChatQuoteId');
+                                                </text>
+                                                }
+                                            }
+                                        });
+                                        @if (ViewBag.ChatQuoteId == null)
+                                        {
+                                            <text>
+                                        loadConversations(projectId);
+                                        </text>
+                                        }
+                                    }, 500);
+                                });
+                                chatQuote.on("change", function (e) {
+                                    var quoteId = $(this).val(), projectId = chatProject.val();
+                                    loadConversations(projectId, quoteId);
+                                });
+
+                                @if (ViewBag.ChatProjectId != null)
+                                {
+                                    <text>
+                                chatProject[0].sumo.selectItem('@ViewBag.ChatProjectId');
+                                </text>
+                                }
+
+                            }
+                        });
+                    }
+                    e.preventDefault();
+                });
+
+                function loadModule(module) {
+                    if (chat) {
+                        chat.showLoading();
+                        if (module == "participants") {
+                            $.ajax({
+                                url: '/json/subscribers',
+                                method: 'POST',
+                                data: { conversationId: chat.getConversationId() },
+                                success: function (res) {
+                                    if (res) {
+                                        var o = $(".sichat-subscribers");
+                                        o.html("");
+                                        var dSub = [];
+                                        $.each(res.e, function (i, e) {
+                                            var divSub = $("<div class='sichat-subscriber' />");
+                                            divSub.attr("data-id", e.Id);
+                                            divSub.attr("data-uid", e.UserId);
+                                            if (e.CanBeRemoved) {
+                                                divSub.append($("<a href='javascript:;' />").addClass("pull-right text-danger remove_subscriber").html("<i class='fa fa-times'></i>"));
+                                            }
+                                            divSub.append($("<span/>").html(e.Name));
+                                            dSub.push(divSub);
+                                        });
+                                        o.html(dSub);
+
+                                        $(".sichat-subscribers-nano").nanoScroller();
+
+                                        var uOptions = [];
+                                        $.each(res.n, function (i, e) {
+                                            uOptions.push("<option value='" + e.UserId + "' data-text='" + e.Name + "'>" + e.Name + "</option>");
+                                        });
+
+                                        var sp = $("#search_participants");
+                                        sp.html(uOptions);
+                                        if (sp[0].sumo) {
+                                            sp[0].sumo.unload();
+                                        }
+                                        sp.SumoSelect({ search: true })
+                                        sp.on("change", function (e) {
+                                            var _ = $(this), cs = $(".sichat-subscribers");
+                                            $.each(cs.find("div.sichat-subscriber.new"), function (i, el) {
+                                                $(el).remove();
+                                            });
+                                            $.each($(this).find("option:selected"), function (i, el) {
+                                                if (!cs.find("div[data-uid='" + el.value + "']").length) {
+                                                    var div = $("<div class='sichat-subscriber new' />");
+                                                    div.append($("<a href='javascript:;' class='pull-right text-danger' />").html("<i class='fa fa-times'></i>"));
+                                                    div.append($("<span/>").text($(el).attr("data-text")));
+                                                    div.attr("data-uid", el.value);
+                                                    o.append(div);
+                                                }
+                                            });
+                                            $(".sichat-subscribers-nano").nanoScroller();
+                                        });
+                                    }
+                                },
+                                complete: function (res) {
+                                    chat.hideLoading();
+                                }
+                            });
+                        } else if (module == "notifications") {
+                            chat.hideLoading();
+                        }
+                    }
+                }
+
+                function loadChat() {
+                    var chatProject = $("#Chat_ProjectId"), chatQuote = $("#Chat_QuoteId");
+
+                    var projectId = chatProject.val();
+                    var quoteId = chatQuote.val();
+
+                    loadConversations(projectId, quoteId);
+                }
+
+                $(document).on("click", ".sichat-box .sichat_update_subscribers", function (e) {
+                    var payload = {
+                        New: [],
+                        Remove: []
+                    };
+                    $.each($(".sichat-subscribers .sichat-subscriber"), function (i, el) {
+                        var s = $(el);
+                        if (s.hasClass("new")) {
+                            payload.New.push($(el).attr("data-uid"));
+                        } else if (s.hasClass("remove")) {
+                            payload.Remove.push($(el).attr("data-id"));
+                        }
+                    });
+                    if (payload.New.length || payload.Remove.length) {
+                        $.ajax({
+                            url: '/json/updatesubscribers',
+                            data: JSON.stringify({ conversationId: chat.getConversationId(), payload: payload }),
+                            method: 'POST',
+                            contentType: 'application/json; charset=utf-8',
+                            dataType: 'json',
+                            beforeSend: function () { if (chat) { chat.showLoading(); } },
+                            success: function (data) {
+                                loadModule(ThreadedChat.Modules.Participants);
+                            },
+                            complete: function () { if (chat) { chat.hideLoading(); } }
+                        });
+                    }
+                });
+
+                $(document).on("click", ".sichat-box .sichat-subscriber .remove_subscriber", function (e) {
+                    var _ = $(this);
+                    var s = _.parents(".sichat-subscriber");
+                    var ra = s.find(".remove_subscriber").find("i.fa");
+                    if (s.hasClass("remove")) {
+                        ra.removeClass("fa-undo").addClass("fa-times");
+                        s.removeClass("remove");
+                    } else {
+                        s.addClass("remove");
+                        ra.removeClass("fa-times").addClass("fa-undo");
+                    }
+                    e.preventDefault();
+                    return false;
+                });
+
+                $(document).on("click", ".chat-notifications li.notif-item a", function (e) {
+                    var chatProject = $("#Chat_ProjectId"), chatQuote = $("#Chat_QuoteId"),
+                        projectId = $(this).attr("data-projet"), quoteId = $(this).attr("data-quote");
+                    if (chatProject) {
+                        chatProject.val(projectId);
+                        chatProject.triggerHandler("change");
+                    }
+                    if (chatQuote) {
+                        chatQuote.val(quoteId);
+                        chatQuote.triggerHandler("change");
+                    }
+
+                    loadChat();
+                });
+
+                $(document).on("switchChange.bootstrapSwitch", "#notification_switch", function (e) {
+                    var _ = $(this);
+                    _.attr("disabled", "disabled");
+                    var enabled = _.is(":checked");
+                    $.ajax({
+                        url: '/json/togglenotifications',
+                        method: 'POST',
+                        data: { enabled: enabled },
+                        success: function (res) {
+                            if (res.Success) {
+                                ThreadedChat.fetchNewMessages();
+                            }
+                        },
+                        error: function (res) {
+
+                        },
+                        complete: function (res) {
+                            //_.removeAttr("disabled");
+                        }
+                    });
+                });
+
+                function loadConversations(projectId, quoteId) {
+                    if (!projectId) {
+                        return;
+                    }
+                    $.ajax({
+                        url: '/json/newconversation',
+                        method: 'POST',
+                        data: { projectId: projectId, quoteId: quoteId },
+                        success: function (res) {
+                            $("#Chat_ConvId").val(res.conversation);
+                            $.ajax({
+                                url: '/json/chats',
+                                method: 'POST',
+                                data: { conversationId: res.conversation },
+                                success: function (data) {
+                                    if (chat) {
+                                        chat.showMessages(data);
+                                    }
+                                    ThreadedChat.fetchNewMessages();
+                                }
+                            });
+                        }
+                    });
+                }
+
+                var notifPollTime = 4000;
+
+                setTimeout(function () {
+                    pollNotif();
+                }, notifPollTime);
+
+                function pollNotif() {
+                    $.ajax({
+                        url: '/json/notifications',
+                        method: 'POST',
+                        success: function (data) {
+                            var cn = $(".chat-notifications");
+                            if (data) {
+                                $(".chat_notif_count").text(data.u);
+                                var nlis = [];
+                                $.each(data.c, function (i, e) {
+                                    if (!cn.find("li[data-id='" + e.Id + "']").length) {
+                                        var li = $("<li/>");
+                                        li.attr("data-id", e.Id);
+                                        li.addClass("notif-item");
+                                        li.addClass("chat-notif-editing " + (e.IsSeen ? "msg-read" : "msg-unread"))
+                                        var a = $("<a href='javascript:;' data-toggle='chat' />");
+                                        a.attr("data-project", e.ProjectId);
+                                        (e.QuoteId != null && e.QuoteId) && a.attr("data-quote", e.QuoteId);
+                                        var icon = $("<i class='fa fa-1x fa-comment pull-left'/>");
+                                        a.append(icon);
+
+                                        var date = $("<span class='pull-right date' />");
+                                        date.html(moment(e.Date, "YYYYMMDDHHmm").format("MM/DD/YYYY hh:mm a"));
+                                        a.append(date);
+
+                                        var user = $("<span class='name' />");
+                                        user.text(e.UserName);
+                                        a.append(user);
+
+                                        var message = $("<span class='message' />");
+                                        message.text(e.Message);
+                                        a.append(message);
+
+                                        li.html(a);
+                                        var btnRemove = $("<button class='clear-notification btn-clear' />");
+                                        btnRemove.html("<i class='fa fa-times'></i>");
+                                        li.append(btnRemove);
+
+                                        cn.prepend(li);
+                                    }
+                                });
+                            }
+                            setTimeout(function () {
+                                pollNotif();
+                            }, notifPollTime);
+                        }
+                    });
+                }
+
+                // Reference the auto-generated proxy for the hub.
+                chatHub = $.connection.chatHub;
+                chatHub.client.broadcastMessage = function (name, message) {
+                    ThreadedChat.fetchNewMessages();
+                };
+                // Start the connection.
+                $.connection.hub.start().done(function () {
+
+                });
+                // This optional function html-encodes messages for display in the page.
+                function htmlEncode(value) {
+                    var encodedValue = $('<div />').text(value).html();
+                    return encodedValue;
+                }
+            });
+        </script>
+    }
+
+</body>
+</html>

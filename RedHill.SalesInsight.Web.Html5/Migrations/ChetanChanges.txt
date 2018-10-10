@@ -1,0 +1,407 @@
+﻿Alter Table RawMaterialType
+	   Add IncludeInAshCalculation bit  NULL ;
+
+Alter Table RawMaterialType
+	   Add IncludeInSandCalculation bit  NULL ;
+
+Alter Table RawMaterialType
+	   Add IncludeInRockCalculation bit  NULL ;
+
+Alter Table MixFormulation
+	   Add AshPercentage decimal(18,2)  NULL ;
+
+Alter Table MixFormulation
+	   Add FineAggPercentage decimal(18,2)  NULL ;
+
+Alter Table MixFormulation
+	   Add Sacks decimal(18,2)  NULL ;
+
+Alter Table CustomerAging
+	   alter column Over4Month decimal(18,2)  Not NULL ;
+
+Alter table Quotation 
+add PricingMonth datetime null; 
+
+update Quotation set PricingMonth = CreatedOn ;
+
+--------Mix Formulation Cost Projection
+
+CREATE TABLE [dbo].[MixFormulationCostProjection](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[MixFormulationId] [bigint] NOT NULL,
+	[Cost] [decimal](18, 2) NOT NULL,
+	[AsOfDate] [date] NOT NULL,
+ CONSTRAINT [PK_MixFormulationCostProjection] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[MixFormulationCostProjection]  WITH CHECK ADD  CONSTRAINT [FK_MixFormulationCostProjection_MixFormulation] FOREIGN KEY([MixFormulationId])
+REFERENCES [dbo].[MixFormulation] ([Id])
+GO
+
+ALTER TABLE [dbo].[MixFormulationCostProjection] CHECK CONSTRAINT [FK_MixFormulationCostProjection_MixFormulation]
+GO
+
+
+
+---------- Split Function -------------
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE FUNCTION [dbo].[Split] (
+      @InputString                  VARCHAR(8000),
+      @Delimiter                    VARCHAR(50)
+)
+
+RETURNS @Items TABLE (
+      Item                          VARCHAR(8000)
+)
+
+AS
+BEGIN
+      IF @Delimiter = ' '
+      BEGIN
+            SET @Delimiter = ','
+            SET @InputString = REPLACE(@InputString, ' ', @Delimiter)
+      END
+
+      IF (@Delimiter IS NULL OR @Delimiter = '')
+            SET @Delimiter = ','
+
+--INSERT INTO @Items VALUES (@Delimiter) -- Diagnostic
+--INSERT INTO @Items VALUES (@InputString) -- Diagnostic
+
+      DECLARE @Item                 VARCHAR(8000)
+      DECLARE @ItemList       VARCHAR(8000)
+      DECLARE @DelimIndex     INT
+
+      SET @ItemList = @InputString
+      SET @DelimIndex = CHARINDEX(@Delimiter, @ItemList, 0)
+      WHILE (@DelimIndex != 0)
+      BEGIN
+            SET @Item = SUBSTRING(@ItemList, 0, @DelimIndex)
+            INSERT INTO @Items VALUES (@Item)
+
+            -- Set @ItemList = @ItemList minus one less item
+            SET @ItemList = SUBSTRING(@ItemList, @DelimIndex+1, LEN(@ItemList)-@DelimIndex)
+            SET @DelimIndex = CHARINDEX(@Delimiter, @ItemList, 0)
+      END -- End WHILE
+
+      IF @Item IS NOT NULL -- At least one delimiter was encountered in @InputString
+      BEGIN
+            SET @Item = @ItemList
+            INSERT INTO @Items VALUES (@Item)
+      END
+
+      -- No delimiters were encountered in @InputString, so just return @InputString
+      ELSE INSERT INTO @Items VALUES (@InputString)
+
+      RETURN
+
+END -- End Function
+
+GO
+
+
+--------------- Search Mix Formulations -------------
+
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,Chetan>
+-- Create date: <Create Date,21-10-2016>
+-- Description:	<Description, This procedure generate the list of mix formulations given the filters>
+-- =============================================
+CREATE PROCEDURE [dbo].[SearchMixFormulations]
+	-- Add the parameters for the stored procedure here
+	@PlantId int,
+	@AirFilters varchar(250),
+	@SlumpFilters varchar(250),
+	@PSIFilters varchar(250),
+	@MD1Filters varchar(250),
+	@MD2Filters varchar(250),
+	@MD3Filters varchar(250),
+	@MD4Filters varchar(250),
+	@AshFilters varchar(250),
+	@FineAggFilters varchar(250),
+	@SackFilters varchar(250),
+	@RawMaterialsIncludedFilters varchar(250),
+	@RawMaterialsExcludedFilters varchar(250),
+	@AsOfDate date
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+	---- VARIABLE DECLARATIONS #######
+
+		-------- Air Filter--------
+		DECLARE @AirList TABLE(Air varchar(250));
+		IF LTRIM(RTRIM(@AirFilters)) <>'' BEGIN INSERT INTO @AirList SELECT Item  FROM dbo.Split(@AirFilters,',');END
+
+		-------- Slump Filter--------
+		DECLARE @SlumpList TABLE(Slump varchar(250));
+		IF LTRIM(RTRIM(@SlumpFilters)) <>'' BEGIN INSERT INTO @SlumpList SELECT Item  FROM dbo.Split(@SlumpFilters,',');END
+
+		-------- PSI Filter--------
+		DECLARE @PSIList TABLE(PSI int);
+		IF LTRIM(RTRIM(@PSIFilters)) <>'' BEGIN INSERT INTO @PSIList SELECT Item  FROM dbo.Split(@PSIFilters,',');END
+
+		-------- MD1 Filter--------
+		DECLARE @MD1List TABLE(MD1 varchar(250));
+		IF LTRIM(RTRIM(@MD1Filters)) <>'' BEGIN INSERT INTO @MD1List SELECT Item  FROM dbo.Split(@MD1Filters,',');END
+
+		-------- MD2 Filter--------
+		DECLARE @MD2List TABLE(MD2 varchar(250));
+		IF LTRIM(RTRIM(@MD2Filters)) <>'' BEGIN INSERT INTO @MD2List SELECT Item  FROM dbo.Split(@MD2Filters,',');END
+
+		-------- MD3 Filter--------
+		DECLARE @MD3List TABLE(MD3 varchar(250));
+		IF LTRIM(RTRIM(@MD3Filters)) <>'' BEGIN INSERT INTO @MD3List SELECT Item  FROM dbo.Split(@MD3Filters,',');END
+
+		-------- MD4 Filter--------
+		DECLARE @MD4List TABLE(MD4 varchar(250));
+		IF LTRIM(RTRIM(@MD4Filters)) <>'' BEGIN INSERT INTO @MD4List SELECT Item  FROM dbo.Split(@MD4Filters,',');END
+
+		-------- Ash Filter--------
+		DECLARE @AshList TABLE(Ash varchar(250));
+		IF LTRIM(RTRIM(@AshFilters)) <>'' BEGIN INSERT INTO @AshList SELECT Item  FROM dbo.Split(@AshFilters,',');END
+
+		-------- FineAgg Filter--------
+		DECLARE @FineAggList TABLE(FineAgg varchar(250));
+		IF LTRIM(RTRIM(@FineAggFilters)) <>'' BEGIN INSERT INTO @FineAggList SELECT Item  FROM dbo.Split(@FineAggFilters,',');END
+
+		-------- Sack Filter--------
+		DECLARE @SackList TABLE(Sack varchar(250));
+		IF LTRIM(RTRIM(@SackFilters)) <>'' BEGIN INSERT INTO @SackList SELECT Item  FROM dbo.Split(@SackFilters,',');END
+
+		-------- Raw Materials Included Filter--------
+		DECLARE @RawMaterialsIncludedList TABLE(RawMaterialsIncluded varchar(250));
+		IF LTRIM(RTRIM(@RawMaterialsIncludedFilters)) <>'' BEGIN INSERT INTO @RawMaterialsIncludedList SELECT Item  FROM dbo.Split(@RawMaterialsIncludedFilters,',');END
+
+		-------- Raw Materials Excluded Filter--------
+		DECLARE @RawMaterialsExcludedList TABLE(RawMaterialsExcluded varchar(250));
+		IF LTRIM(RTRIM(@RawMaterialsExcludedFilters)) <>'' BEGIN INSERT INTO @RawMaterialsExcludedList SELECT Item  FROM dbo.Split(@RawMaterialsExcludedFilters,',');END
+	
+
+	------- QUERY SECTION ###########
+
+  select 
+	mf.Id as FormulationId, 
+	mix.Id as MixId,
+	mf.PlantId as PlantId,
+	mf.Number,
+	mf.AshPercentage,
+	mf.FineAggPercentage,
+	mf.Sacks,
+	mix.Air,
+	mix.PSI,
+	mix.Slump,
+	mix.MD1,
+	mix.MD2,
+	mix.MD3,
+	mix.MD4,
+	mix.Description,
+	mix.SalesDesc,
+	mix.Number as MixNumber
+	
+  from MixFormulation mf 
+	join StandardMix mix on mf.StandardMixId = mix.Id and mf.PlantId = @PlantId
+
+  where ((select count(1) from @AshList)		= 0  or mf.AshPercentage		in (select * from @AshList))
+	and ((select count(1) from @FineAggList)	= 0  or mf.FineAggPercentage	in (select * from @FineAggList))
+	and ((select count(1) from @SackList)		= 0  or mf.Sacks				in (select * from @SackList))
+	and ((select count(1) from @PSIList)		= 0  or mix.PSI					in (select * from @PSIList))
+	and ((select count(1) from @AirList)		= 0  or mix.Air					in (select * from @AirList))
+	and ((select count(1) from @SlumpList)		= 0  or mix.Slump				in (select * from @SlumpList))
+	and ((select count(1) from @MD1List)		= 0  or mix.MD1					in (select * from @MD1List))
+	and ((select count(1) from @MD2List)		= 0  or mix.MD2					in (select * from @MD2List))
+	and ((select count(1) from @MD3List)		= 0  or mix.MD3					in (select * from @MD3List))
+	and ((select count(1) from @MD4List)		= 0  or mix.MD4					in (select * from @MD4List))
+	and mix.Active = 1
+	and 
+	(
+		(
+			select count(1) from MixFormulationCostProjection cf 
+			where cf.MixFormulationId = mf.Id 
+			and cf.AsOfDate = @AsOfDate
+			and cf.Cost > 0
+		) > 0
+	)
+
+	and 
+	(
+		(select count(1) from @RawMaterialsIncludedList) = 0
+			or 
+		(select count(1) 
+		from StandardMixConstituents sm 
+		where sm.MixFormulationId = mf.Id 
+		and sm.RawMaterialId in (select * from @RawMaterialsIncludedList)) > 0
+	)
+
+	and 
+	(
+		(select count(1) from @RawMaterialsExcludedList) = 0
+			or
+		(select count(1) 
+		from StandardMixConstituents sm 
+		where sm.MixFormulationId = mf.Id 
+		and sm.RawMaterialId in (select * from @RawMaterialsExcludedList)) = 0
+	)
+
+END
+
+ALTER PROCEDURE [dbo].[SearchMixFormulations]
+	-- Add the parameters for the stored procedure here
+	@PlantId int,
+	@AirFilters varchar(250),
+	@SlumpFilters varchar(250),
+	@PSIFilters varchar(250),
+	@MD1Filters varchar(250),
+	@MD2Filters varchar(250),
+	@MD3Filters varchar(250),
+	@MD4Filters varchar(250),
+	@AshFilters varchar(250),
+	@FineAggFilters varchar(250),
+	@SackFilters varchar(250),
+	@RawMaterialsIncludedFilters varchar(250),
+	@RawMaterialsExcludedFilters varchar(250),
+	@AsOfDate date
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+	---- VARIABLE DECLARATIONS #######
+
+		-------- Air Filter--------
+		DECLARE @AirList TABLE(Air varchar(250));
+		IF LTRIM(RTRIM(@AirFilters)) <>'' BEGIN INSERT INTO @AirList SELECT Item  FROM dbo.Split(@AirFilters,',');END
+
+		-------- Slump Filter--------
+		DECLARE @SlumpList TABLE(Slump varchar(250));
+		IF LTRIM(RTRIM(@SlumpFilters)) <>'' BEGIN INSERT INTO @SlumpList SELECT Item  FROM dbo.Split(@SlumpFilters,',');END
+
+		-------- PSI Filter--------
+		DECLARE @PSIList TABLE(PSI int);
+		IF LTRIM(RTRIM(@PSIFilters)) <>'' BEGIN INSERT INTO @PSIList SELECT Item  FROM dbo.Split(@PSIFilters,',');END
+
+		-------- MD1 Filter--------
+		DECLARE @MD1List TABLE(MD1 varchar(250));
+		IF LTRIM(RTRIM(@MD1Filters)) <>'' BEGIN INSERT INTO @MD1List SELECT Item  FROM dbo.Split(@MD1Filters,',');END
+
+		-------- MD2 Filter--------
+		DECLARE @MD2List TABLE(MD2 varchar(250));
+		IF LTRIM(RTRIM(@MD2Filters)) <>'' BEGIN INSERT INTO @MD2List SELECT Item  FROM dbo.Split(@MD2Filters,',');END
+
+		-------- MD3 Filter--------
+		DECLARE @MD3List TABLE(MD3 varchar(250));
+		IF LTRIM(RTRIM(@MD3Filters)) <>'' BEGIN INSERT INTO @MD3List SELECT Item  FROM dbo.Split(@MD3Filters,',');END
+
+		-------- MD4 Filter--------
+		DECLARE @MD4List TABLE(MD4 varchar(250));
+		IF LTRIM(RTRIM(@MD4Filters)) <>'' BEGIN INSERT INTO @MD4List SELECT Item  FROM dbo.Split(@MD4Filters,',');END
+
+		-------- Ash Filter--------
+		DECLARE @AshList TABLE(Ash varchar(250));
+		IF LTRIM(RTRIM(@AshFilters)) <>'' BEGIN INSERT INTO @AshList SELECT Item  FROM dbo.Split(@AshFilters,',');END
+
+		-------- FineAgg Filter--------
+		DECLARE @FineAggList TABLE(FineAgg varchar(250));
+		IF LTRIM(RTRIM(@FineAggFilters)) <>'' BEGIN INSERT INTO @FineAggList SELECT Item  FROM dbo.Split(@FineAggFilters,',');END
+
+		-------- Sack Filter--------
+		DECLARE @SackList TABLE(Sack varchar(250));
+		IF LTRIM(RTRIM(@SackFilters)) <>'' BEGIN INSERT INTO @SackList SELECT Item  FROM dbo.Split(@SackFilters,',');END
+
+		-------- Raw Materials Included Filter--------
+		DECLARE @RawMaterialsIncludedList TABLE(RawMaterialsIncluded varchar(250));
+		IF LTRIM(RTRIM(@RawMaterialsIncludedFilters)) <>'' BEGIN INSERT INTO @RawMaterialsIncludedList SELECT Item  FROM dbo.Split(@RawMaterialsIncludedFilters,',');END
+
+		-------- Raw Materials Excluded Filter--------
+		DECLARE @RawMaterialsExcludedList TABLE(RawMaterialsExcluded varchar(250));
+		IF LTRIM(RTRIM(@RawMaterialsExcludedFilters)) <>'' BEGIN INSERT INTO @RawMaterialsExcludedList SELECT Item  FROM dbo.Split(@RawMaterialsExcludedFilters,',');END
+	
+
+	------- QUERY SECTION ###########
+
+  select 
+	mf.Id as FormulationId, 
+	mix.Id as MixId,
+	mf.PlantId as PlantId,
+	mf.Number,
+	mf.AshPercentage,
+	mf.FineAggPercentage,
+	mf.Sacks,
+	mix.Air,
+	mix.PSI,
+	mix.Slump,
+	mix.MD1,
+	mix.MD2,
+	mix.MD3,
+	mix.MD4,
+	mix.Description,
+	mix.SalesDesc,
+	(select cf.Cost from MixFormulationCostProjection cf 
+	where cf.MixFormulationId = mf.Id 
+	and cf.AsOfDate = @AsOfDate) as Cost,
+	mix.Number as MixNumber
+	
+  from MixFormulation mf 
+	join StandardMix mix on mf.StandardMixId = mix.Id and mf.PlantId = @PlantId
+
+  where ((select count(1) from @AshList)		= 0  or mf.AshPercentage		in (select * from @AshList))
+	and ((select count(1) from @FineAggList)	= 0  or mf.FineAggPercentage	in (select * from @FineAggList))
+	and ((select count(1) from @SackList)		= 0  or mf.Sacks				in (select * from @SackList))
+	and ((select count(1) from @PSIList)		= 0  or mix.PSI					in (select * from @PSIList))
+	and ((select count(1) from @AirList)		= 0  or mix.Air					in (select * from @AirList))
+	and ((select count(1) from @SlumpList)		= 0  or mix.Slump				in (select * from @SlumpList))
+	and ((select count(1) from @MD1List)		= 0  or mix.MD1					in (select * from @MD1List))
+	and ((select count(1) from @MD2List)		= 0  or mix.MD2					in (select * from @MD2List))
+	and ((select count(1) from @MD3List)		= 0  or mix.MD3					in (select * from @MD3List))
+	and ((select count(1) from @MD4List)		= 0  or mix.MD4					in (select * from @MD4List))
+	and mix.Active = 1
+	and 
+	(
+		(
+			select count(1) from MixFormulationCostProjection cf 
+			where cf.MixFormulationId = mf.Id 
+			and cf.AsOfDate = @AsOfDate
+			and cf.Cost > 0
+		) > 0
+	)
+
+	and 
+	(
+		(select count(1) from @RawMaterialsIncludedList) = 0
+			or 
+		(select count(1) 
+		from StandardMixConstituents sm 
+		where sm.MixFormulationId = mf.Id 
+		and sm.RawMaterialId in (select * from @RawMaterialsIncludedList)) > 0
+	)
+
+	and 
+	(
+		(select count(1) from @RawMaterialsExcludedList) = 0
+			or
+		(select count(1) 
+		from StandardMixConstituents sm 
+		where sm.MixFormulationId = mf.Id 
+		and sm.RawMaterialId in (select * from @RawMaterialsExcludedList)) = 0
+	)
+
+END

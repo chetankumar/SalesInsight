@@ -1,0 +1,175 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.MixFormulationView
+
+@{
+    ViewBag.Title = "Formulations";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.UsingDatePicker = true;
+    bool aujsAPIEnabled = (ViewBag.AUJSAPIEnabled != null && ViewBag.AUJSAPIEnabled == true);
+}
+<div class="page-head">
+    <h2>Edit Formulation</h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Home/Settings">Settings</a></li>
+        <li><a href="/Home/Companies">Manage Company Settings</a></li>
+        <li><a href="/Admin/ManageMixDesigns">Mix Designs</a></li>
+        <li><a href="/Admin/AddEditStandardMix/@Model.StandardMixId">@Model.MixName</a></li>
+        <li class="active">@Model.PlantName</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="spacer2">
+        <div class="col-sm-12">
+            <div class="block-flat clearfix">
+                <div class="panel-body">
+                    @using (@Html.BeginForm("UpdateMixFormulation", "Admin", FormMethod.Post, new { @id = "" }))
+                    {
+                        <fieldset>
+                            <legend>Formulation Details</legend>
+                            @if (ViewBag.Error != null)
+                            {
+                                <div class="alert alert-danger">
+                                    @ViewBag.Error
+                                </div>
+                            }
+                            <div class="col-md-4 form-group">
+                                @Html.HiddenFor(x => x.Formulation.Id)
+                                @Html.HiddenFor(x => x.PlantId)
+                                @Html.HiddenFor(x => x.StandardMixId)
+                                @Html.HiddenFor(x => x.Formulation.Sacks)
+                                @Html.HiddenFor(x => x.Formulation.AshPercentage)
+                                @Html.HiddenFor(x => x.Formulation.FineAggPercentage)
+                                @Html.TextBoxFor(x => x.Formulation.Number, (aujsAPIEnabled ?
+                               (object)new { @class = "form-control", @placeholder = "Number", @disabled = "disabled" } :
+                            (object)new { @class = "form-control", @placeholder = "Number" }))
+                            </div>
+                            <div class="col-md-4 form-group">
+                                @Html.TextBoxFor(x => x.Formulation.Description, (aujsAPIEnabled ? (object)new { @class = "form-control", @placeholder = "Description", @disabled = "disabled" } :
+                         (object)new { @class = "form-control", @placeholder = "Description" }))
+                            </div>
+                            <div class="col-md-2 form-group">
+                                <button class="btn btn-primary" @(aujsAPIEnabled ? "disabled" : "") type="submit">Save</button>
+                            </div>
+                        </fieldset>
+                    }
+                </div>
+                <p class="spacer2"></p>
+                <p class="spacer2"></p>
+                @if (Model.Formulation.Id > 0)
+                {
+                    <div class="panel-body">
+                        <fieldset>
+                            <legend>Constituents</legend>
+                            @Html.Partial("_ErrorView")
+                            @using (@Html.BeginForm("UpdateMixConstituent", "Admin", FormMethod.Post, new { @class = "form-inline well clearfix", @id = "FilterForm" }))
+                            {
+                                @Html.HiddenFor(x => x.PlantId)
+                                @Html.HiddenFor(x => x.StandardMixId)
+                                @Html.HiddenFor(x => x.MixConstituentId)
+                                @Html.HiddenFor(x => x.SelectedConstituent.Id)
+                                <div class="col-md-6">
+                                    @Html.DropDownListFor(x => x.SelectedConstituent.RawMaterialId, Model.SelectedConstituent.ChooseRawMaterial,
+                                   (aujsAPIEnabled ? (object)new
+                                    {
+                                        @class = "form-control master_select",
+                                        @data_dependent = "#SelectedConstituent_UomId",
+                                        @data_url = "/Json/GetUnitOfMeasurements/",
+                                        @data_selected = Model.SelectedConstituent.UomId,
+                                        @disabled = "disabled"
+                                    } : (object)new
+                                    {
+                                        @class = "form-control master_select",
+                                        @data_dependent = "#SelectedConstituent_UomId",
+                                        @data_url = "/Json/GetUnitOfMeasurements/",
+                                        @data_selected = Model.SelectedConstituent.UomId
+                                    }))
+                                </div>
+                                <div class="col-md-1">
+                                    @Html.TextBoxFor(x => x.SelectedConstituent.Quantity, (aujsAPIEnabled ? (object)new { @class = "form-control", @placeholder = "Quantity", @disabled = "disabled" } : (object)new { @class = "form-control", @placeholder = "Quantity" }))
+                                </div>
+                                <div class="col-md-2">
+                                    @Html.DropDownListFor(x => x.SelectedConstituent.UomId, Model.SelectedConstituent.ChooseUOM, (aujsAPIEnabled ? (object)new { @class = "form-control", @disabled = "disabled" } : (object)new { @class = "form-control" }))
+                                </div>
+                                <div class="col-md-2">
+                                    <p class="form-control-static">
+                                        @Html.CheckBoxFor(x => x.SelectedConstituent.PerCementWeight, (aujsAPIEnabled ? (object)new { @disabled = "disabled" } : "")) Per Cement Weight
+                                    </p>
+                                </div>
+                                <div class="col-md-1">
+                                    @if (aujsAPIEnabled)
+                                    {
+                                        <button class="btn btn-primary" disabled type="submit">Save</button> }
+                                    else
+                                    {
+                                        <button class="btn btn-primary" type="submit">Save</button>}
+                                </div>
+                            }
+                        </fieldset>
+                    </div>
+
+
+                            if (Model.MixConstituents != null)
+                            {
+                    <div class="panel-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Material Type</th>
+                                    <th>Material Code</th>
+                                    <th>Material Description</th>
+                                    <th>Quantity</th>
+                                    <th>UOM</th>
+                                    <th>Cost</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (RedHill.SalesInsight.DAL.StandardMixConstituent mix in Model.MixConstituents)
+                                {
+                                    <tr>
+                                        <td>@mix.RawMaterial.RawMaterialType.Name</td>
+                                        <td>@mix.RawMaterial.MaterialCode</td>
+                                        <td>@mix.RawMaterial.Description</td>
+                                        <td>@mix.Quantity</td>
+                                        <td>
+                                            @mix.Uom.Name @if (mix.PerCementWeight.GetValueOrDefault(false))
+                                                          {<span>/ Cw</span>}
+                                        </td>
+                                        <td>@Model.CalculateTotalIngredientCost(mix.Id).ToString("N2")</td>
+                                        <td>
+                                            <a href="/Admin/EditMixConstituent/@mix.Id?mix=@Model.StandardMixId&plant=@Model.PlantId" class="btn btn-primary btn-xs" @(aujsAPIEnabled ? "disabled" : "")>
+                                                <i class="glyphicon glyphicon-edit"></i>
+                                            </a>
+                                            <a href="/Admin/DeleteMixConstituent/@mix.Id?mix=@Model.StandardMixId&plant=@Model.PlantId"
+                                                   data-confirm="Are you sure you want to delete this mix constituent?" class="btn btn-danger btn-xs" @(aujsAPIEnabled ? "disabled" : "")>
+                                                <i class="fa fa-fw fa-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                            }
+                    <div class="panel-body small strong pull-left">
+                        Last Updated on: @(Model.UpdatedOn != null ? Model.UpdatedOn.GetValueOrDefault().ToString("M/d/yyyy hh:mm") : "") by @Model.UpdatedBy
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            var mixDesignsAccess = '@(ViewBag.AccessRule.HasMixDesignsAccess == SIRolePermissionLevelConstants.FULL_ACCESS)';
+            if (mixDesignsAccess == 'False')
+            { disableEveryThing(); }
+        });
+    </script>
+}
+
+
+
+

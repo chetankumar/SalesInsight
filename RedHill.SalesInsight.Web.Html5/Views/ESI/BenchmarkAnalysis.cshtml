@@ -1,0 +1,217 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ESI.BenchmarkAnalysisReportView
+@{
+    ViewBag.Title = "Benchmark Analysis";
+    Layout = "~/Views/Shared/_ESILayout.cshtml";
+    ViewBag.IsESIModule = true;
+    ViewBag.UsingDatePicker = true;
+    ViewBag.UsingMultiselect = true;
+}
+<div class="page-head">
+    <h2>
+        <i class="fa fa-balance-scale"></i>  Benchmark Analysis
+        <a class="btn btn-primary pull-right" data-toggle="modal" data-target="#Add_Report">
+            <i class="fa fa-plus-circle"></i>
+            Report
+        </a>
+    </h2>
+</div>
+
+<div class="esi-dashboard">
+    @Html.Partial("_AddReport")
+    @if (Model.ReportId != 0)
+    {
+        <div class="cl-mcont">
+            <div class="block-flat">
+                @Html.Partial("_ReportFilters")
+                @Html.Partial("_BenchMarkReportConfig")
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table esi-table row-datacell">
+                            <tbody>
+                                <tr>
+                                    <th>Metric</th>
+                                    @{
+                                        var columnNames = Model.Response.FirstOrDefault();
+                                        if (columnNames != null)
+                                        {
+                                            foreach (var name in columnNames.Values)
+                                            {
+                                                <th>@name.Key</th>
+                                            }
+                                        }
+                                    }
+                                </tr>
+                                @if (Model.Response != null)
+                                {
+                                    foreach (var rowsResponse in Model.Response)
+                                    {
+                                        <tr class="@(rowsResponse.HasHorizontalSeparator  && !rowsResponse.ShowActionIcons?"row-divider":"")">
+                                            <td>
+                                                @rowsResponse.MetricName
+                                            </td>
+                                            @foreach (var itemData in rowsResponse.Values)
+                                            {
+                                                var val = ((double?)itemData.Value).GetValueOrDefault();
+
+                                                if (double.IsNaN(val))
+                                                {
+                                                    <td>0</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@val.ToString(rowsResponse.DisplayFormat)</td>
+                                                }
+                                            }
+                                        </tr>
+
+                                        if (rowsResponse.ShowActionIcons)
+                                        {
+                                            <tr class="row-divider">
+                                                <td>Action Indicator</td>
+                                                @foreach (var itemData in rowsResponse.Values)
+                                                {
+                                                    if (rowsResponse.ComparisonValue > 0)
+                                                    {
+                                                        var val = ((double?)itemData.Value).GetValueOrDefault();
+
+                                                        var comparisonValue = ((double?)rowsResponse.ComparisonValue).GetValueOrDefault();
+                                                        if (val != 0 && (double?)rowsResponse.WarningLimit > (val / comparisonValue) * 100)
+                                                        {
+                                                            <td><i class="fa fa-times text-danger"></i></td>
+                                                        }
+                                                        else if (val != 0 && (double?)rowsResponse.OkLimit <= (val / comparisonValue) * 100)
+                                                        {
+                                                            <td><i class="fa fa-check text-success"></i></td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td><i class="fa fa-exclamation-triangle text-warning"></i></td>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <td><i class="fa fa-exclamation-triangle text-warning"></i></td>
+                                                    }
+                                                }
+                                            </tr>
+                                        }
+                                    }
+                                }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+                                        }
+</div>
+<script>
+    $(document).ready(function () {
+        $("#StartDate,#EndDate").on("change", function () {
+            $("#RunReport_btn").show(600);
+        });
+
+        $("#RunReport_btn").click(function () {
+            $(this).find("a").prepend("<i>").attr("disabled", true);
+            $(this).find("a i").addClass("fa fa-spin fa-spinner");
+            $("#FilterForm").submit();
+        });
+
+        $("input[name=ReportName]").blur(function () {
+            updateReportName();
+                 changeReportDDLName();
+        });
+
+        function updateReportName()
+        {
+            var reportName = $("input[name=ReportName]").val();
+            var reportType = $("input[name=Type]").val();
+                        var params = {
+                reportId: eval(@Model.ReportId),
+                reportType: reportType,
+                reportName : reportName
+            }
+            $.ajax({
+                url: '/ESI/UpdateReportName',
+                data: params,
+                method: 'POST',
+                success: function (data) {
+                    //console.log(data);
+                },
+                error: function (res) {
+                }
+            });
+        }
+
+        function changeReportDDLName() {
+           var name = $("input[name=ReportName]").val();
+           var reportId = eval(@Model.ReportId);
+           $(".rptList option[value=" + reportId + "]").html(name);
+           $(".rptList")[0].sumo.reload();
+        }
+
+        $(".fa-heart").click(function () {
+            //$(".fa-heart").toggleClass("fav").toggleClass("non-fav");
+            if ($(this).hasClass("non-fav")) {
+                $(this).removeClass("non-fav").addClass("fav").attr("title", "Click to remove it from favourite");
+            }
+            else {
+                $(this).removeClass("fav").addClass("non-fav").attr("title", "Click to make this as favourite");
+            }
+            updateReportDetails();
+        });
+        $("input[name=IsDefault]").click(function () {
+            updateReportDetails();
+        });
+        $(".rptList").on("change", (function () {
+            var reportId = $(this).val();
+            if (reportId != "") {
+                window.location = "/ESI/BenchmarkAnalysis/" + reportId;
+            }
+        }))
+        $('.datepicker').datepicker({ format: "mm/dd/yyyy" });
+        $("multiselect").SumoSelect();
+
+
+        function updateReportDetails() {
+
+            var isDefault = $("input[name=IsDefault]").is(':checked');
+            var reportType = $("input[name=Type]").val();
+            //var reportName = $("input[name=ReportName]").val();
+
+            var isFavorite = $(".fa-heart").hasClass("fav") ? true : false;
+            var params = {
+                isDefault: isDefault,
+                isFavorite: isFavorite,
+                reportType: reportType,
+                reportId: eval(@Model.ReportId)
+            }
+
+            $.ajax({
+                url: '/ESI/UpdateReportSetting',
+                data: params,
+                method: 'POST',
+                success: function (data) {
+                    //console.log(data);
+                },
+                error: function (res) {
+                }
+            });
+        }
+
+        $(".mode").click(function () {
+            $(this).find('i').toggleClass("slow-spin").toggleClass("");
+            $(".setting-mode").toggle(600);
+        });
+
+        $(".filter-count").html($(".reprt-filters .multiselect :selected").length);
+
+        $(".clear-all-filter").click(function () {
+            $(".reprt-filters .multiselect").each(function (i, val) {
+                $(".reprt-filters .multiselect option:selected").each(function (j, val) {
+                    $(".reprt-filters .multiselect")[i].sumo.unSelectItem($(this).val());
+                });
+            })
+        });
+    });
+</script>
+

@@ -1,0 +1,69 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.LoginView
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Sales Insight - Login";
+}
+@section styles{
+    @Styles.Render("~/login")
+}
+<div id="" class="login-container">
+    <div class="middle-login">
+        <div class="block-flat">
+            <div class="header">
+                <h3 class="text-center">Sales Insight</h3>
+            </div>
+            <div>
+                @using (Html.BeginForm("Authenticate", "Login", FormMethod.Post, new { @role = "form", @class = "form-horizontal", @style = "margin-bottom: 0px!important;" }))
+                {
+                    <div class="content">
+                        <h4 class="title">Login Access</h4>
+                        @if (@ViewBag.AuthenticationMessage != null)
+                        {
+                            <div class="alert alert-danger">
+                                <i class="fa fa-times-circle sign"></i><strong>Error!</strong> @ViewBag.AuthenticationMessage
+                            </div>
+                        }
+                        @if (@ViewBag.Message != null)
+                        {
+                            <div class="alert alert-danger">
+                                @ViewBag.Message
+                            </div>
+                        }
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                    @Html.TextBoxFor(x => x.Username, new { @class = "form-control", @placeholder = "Username" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                    @Html.PasswordFor(x => x.Password, new { @class = "form-control", @placeholder = "Password" })
+                                </div>
+                            </div>
+                        </div>
+                        @Html.HiddenFor(x => x.RedirectUrl, new { @value = ViewBag.RedirectUrl })
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="forgot-link">
+                                    <a href="/Login/ForgotPassword">forgot password?</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="foot">
+                        <a href="javascript:;" data-toggle="modal" data-target="#support_request_box">
+                            <i class="fa fa-question-circle login-help" ></i>
+                        </a>
+                        <input type="submit" class="btn btn-primary" data-dismiss="modal" value="Login" />
+                    </div>
+
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,56 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.CompanyView
+
+<table class="data_table table table-bordered table-striped header-fixed">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>District</th>
+            <th class="right">Trucks</th>
+            <th class="right">Ticket</th>
+            <th class="right">Load</th>
+            <th class="right">Temper</th>
+            <th class="right">Wait</th>
+            <th class="right">Utilization</th>
+            <th class="right">Variable Cost</th>
+            <th class="right">Plant Cost</th>
+            <th class="right">Delivery Cost</th>
+            <th class="right">SG&A</th>
+            <th class="right">Active</th>
+            <th class="right"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (RedHill.SalesInsight.Web.Html5.Models.PlantView c in Model.Plants)
+        {
+            <tr>
+                <td>@c.Name</td>
+                <td>@c.DistrictName</td>
+                <td class="right">@c.Trucks</td>
+                <td class="right">@c.Ticket</td>
+                <td class="right">@c.Load</td>
+                <td class="right">@c.Temper</td>
+                <td class="right">@c.Wait</td>
+                <td class="right">@c.UtilizationPercentage @(c.UtilizationPercentage != null ? "%" : "")</td>
+                <td class="right">@(c.VariableCost != null ? (new HtmlString("$")) : new HtmlString(""))@c.VariableCost</td>
+                <td class="right">@(c.PlantCost != null ? (new HtmlString("$")) : new HtmlString(""))@c.PlantCost</td>
+                <td class="right">@(c.DeliveryCost != null ? (new HtmlString("$")) : new HtmlString(""))@c.DeliveryCost</td>
+                <td class="right">@(c.SGA != null ? (new HtmlString("$")) : new HtmlString(""))@c.SGA</td>
+                <td>
+                    @{
+            if (@c.Active)
+            {
+                <span class="glyphicon glyphicon-ok"><span style="display:none">1</span></span>
+            }
+            else
+            {
+                <span class="glyphicon glyphicon-remove"></span>
+            }
+                    }
+                </td>
+                <td>
+                    <a href="/Home/EditPlant/@c.PlantId" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

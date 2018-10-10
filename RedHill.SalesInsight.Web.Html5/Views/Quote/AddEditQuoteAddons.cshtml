@@ -1,0 +1,130 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.QuotationAddonsView
+
+
+@{
+    ViewBag.Title = "Add Edit Quote Addons";
+    ViewBag.UsingDatePicker = true;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-head">
+    <h2>
+        @if (Model.QuotationId > 0)
+        {
+            <span>Update Quotation @Model.QuotationId</span>
+        }
+        else
+        {
+            <span>Add new Quotation</span>
+        }
+    </h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Home/Pipeline">Projects</a></li>
+        <li>Quotations</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="block-flat">
+        <div class="well">
+            <div class="col-md-5">
+                @Html.Partial("_BasicQuotationProfile", Model.Profile)
+            </div>
+            <div class="col-md-7">
+                @Html.Partial("_QuoteActions", Model.Profile)
+            </div>
+            <div style="clear:both"></div>
+        </div>
+        <div id="summary_section"> 
+            @Html.Partial("_QuotationStatistics", Model.Profile)
+        </div>
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="heading1">
+                  <h4 class="panel-title">
+                      <a href="/Quote/AddEditQuote/@Model.QuotationId">Customer Information</a>
+                  </h4>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="heading2">
+                  <h4 class="panel-title">
+                      <a href="/Quote/AddEditQuoteProject/@Model.QuotationId">Job Information</a>
+                  </h4>
+                </div>
+            </div> 
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="heading3">
+                    <h4 class="panel-title">
+                        <a href="/Quote/AddEditQuoteDetails/@Model.QuotationId">Quote Information</a>
+                    </h4>
+                </div>
+            </div>
+            <div class="panel panel-primary">
+                <div class="panel-heading" role="tab" id="heading4">
+                    <h4 class="panel-title">
+                        <a href="/Quote/AddEditQuoteAddons/@Model.QuotationId">Add-Ons</a>
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <h4>Select addon items to include on Project Quotation Sheet (reference only)</h4>
+                    @using(Html.BeginForm("UpdateQuoteAddons","Quote",FormMethod.Post)){
+                        @Html.HiddenFor(x => x.QuotationId)
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Select</th>
+                                <th>Description</th>
+                                <th>Type</th>
+                                <th>Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (RedHill.SalesInsight.DAL.Addon a in Model.AllAddons)
+                            {
+                                <tr>
+                                    <td><input name="SelectedAddons" type="checkbox" value="@a.Id" @(Model.SelectedAddons.Contains(a.Id) ? "checked=checked" : "") /></td>
+                                    <td>@a.Description</td>
+                                    <td>@a.AddonType</td>
+                                    <td>@Model.FindCurrentCost(a.Id)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="heading5">
+                    <h4 class="panel-title">
+                        <a href="/Quote/AddEditQuoteMixes/@Model.QuotationId">Mixes</a>
+                    </h4>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="heading6">
+                    <h4 class="panel-title">
+                        <a href="/Quote/ShowAuditLogs/@Model.QuotationId">Audit Logs</a>
+                    </h4>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            $('.datepicker').datepicker({
+                format: 'd M, yyyy' // Default is 'mm/yyyy' and separator char is not mandatory
+            }).on('changeDate', function(ev) {
+                $(this).datepicker('hide');
+            });
+        });
+    </script>
+}
+
+

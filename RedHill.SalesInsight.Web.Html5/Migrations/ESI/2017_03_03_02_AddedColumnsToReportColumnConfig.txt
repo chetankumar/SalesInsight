@@ -1,0 +1,10 @@
+﻿---Shelly - Done
+---Bharat - Done
+---Chetan - 
+---Avnish - Done
+---Dinesh - Done
+
+----------Added Columns to ReportColumnConfig
+ALTER TABLE ReportColumnConfig
+ADD EntityName NVARCHAR(100) NULL,
+	EntityRefId BIGINT NULL;

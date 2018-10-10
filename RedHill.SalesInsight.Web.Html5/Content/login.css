@@ -1,0 +1,114 @@
+﻿/*Resolutions: 1920, 1680, 1600, 1440, 1366, 1360, 1280, 1080, 1024, 768, 750, 720, 640, 480, 360, 320, 240  */
+
+
+.login-container {
+    background: url(../Content/images/walls/bg_1024.jpg) no-repeat center rgba(0,0,0,0.5);
+    background-size: cover;
+    height: 100%;
+}
+
+#pcont {
+    height: 100%;
+}
+
+@media screen and (min-width: 240px) {
+    .login-container {
+        background-image: url(../Content/images/walls/bg_240.jpg);
+    }
+}
+
+@media screen and (min-width: 320px) {
+    .login-container {
+        background-image: url(../Content/images/walls/bg_320.jpg);
+    }
+}
+
+@media screen and (min-width: 360px) {
+    .login-container {
+        background-image: url(../Content/images/walls/bg_360.jpg);
+    }
+}
+
+@media screen and (min-width: 480px) {
+    .login-container {
+        background-image: url(../Content/images/walls/bg_480.jpg);
+    }
+}
+
+@media screen and (min-width: 640px) {
+    .login-container {
+        background-image: url(../Content/images/walls/bg_640.jpg);
+    }
+}
+
+@media screen and (min-width: 720px) {
+    .login-container {
+        background-image: url(../Content/images/walls/bg_720.jpg);
+    }
+}
+
+@media screen and (min-width: 750px) {
+    .login-container {
+        background-image: url(../Content/images/walls/bg_750.jpg);
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .login-container {
+        background-image: url(../Content/images/walls/bg_768.jpg);
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .login-container {
+        background-image: url(../Content/images/walls/bg_1024.jpg);
+    }
+}
+
+@media screen and (min-width: 1080px) {
+    .login-container {
+        background-image: url(../Content/images/walls/bg_1080.jpg);
+    }
+}
+
+@media screen and (min-width: 1280px) {
+    .login-container {
+        background-image: url(../Content/images/walls/bg_1280.jpg);
+    }
+}
+
+@media screen and (min-width: 1360px) {
+    .login-container {
+        background-image: url(../Content/images/walls/bg_1360.jpg);
+    }
+}
+
+@media screen and (min-width: 1366px) {
+    .login-container {
+        background-image: url(../Content/images/walls/bg_1366.jpg);
+    }
+}
+
+@media screen and (min-width: 1440px) {
+    .login-container {
+        background-image: url(../Content/images/walls/bg_1440.jpg);
+    }
+}
+
+@media screen and (min-width: 1600px) {
+    .login-container {
+        background-image: url(../Content/images/walls/bg_1600.jpg);
+    }
+}
+
+@media screen and (min-width: 1680px) {
+    .login-container {
+        background-image: url(../Content/images/walls/bg_1680.jpg);
+    }
+}
+
+@media screen and (min-width: 1920px) {
+    .login-container {
+        background-image: url(../Content/images/walls/bg_1920.jpg);
+    }
+}

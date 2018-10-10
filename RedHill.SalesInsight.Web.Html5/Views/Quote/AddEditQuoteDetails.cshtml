@@ -1,0 +1,205 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.QuotationDetailsView
+
+
+@{
+    ViewBag.Title = "Add Edit Quote Details";
+    ViewBag.UsingDatePicker = true;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-head">
+    <h2>
+        @if (Model.QuotationId > 0)
+        {
+            <span>Update Quotation @Model.QuotationId</span>
+        }
+        else
+        {
+            <span>Add new Quotation</span>
+        }
+    </h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Home/Pipeline">Projects</a></li>
+        <li>Quotations</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="block-flat">
+        <div class="well">
+            <div class="col-md-5">
+                @Html.Partial("_BasicQuotationProfile", Model.Profile)
+            </div>
+            <div class="col-md-7">
+                @Html.Partial("_QuoteActions", Model.Profile)
+            </div>
+            <div style="clear:both"></div>
+        </div>
+        <div id="summary_section"> 
+            @Html.Partial("_QuotationStatistics", Model.Profile)
+        </div>
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="heading1">
+                  <h4 class="panel-title">
+                      <a href="/Quote/AddEditQuote/@Model.QuotationId">Customer Information</a>
+                  </h4>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="heading2">
+                  <h4 class="panel-title">
+                      <a href="/Quote/AddEditQuoteProject/@Model.QuotationId">Job Information</a>
+                  </h4>
+                </div>
+            </div> 
+            <div class="panel panel-primary">
+                <div class="panel-heading" role="tab" id="heading3">
+                    <h4 class="panel-title">
+                        Quote Information
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    @using(Html.BeginForm("UpdateQuoteDetails","Quote",FormMethod.Post)){
+                        @Html.HiddenFor(x=>x.QuotationId)
+                    <div class="row">
+                        <div class="col-md-6 form-horizontal">
+                            <div class="form-group">
+                                <label class="control-label col-md-5">Pricing Plant</label>
+                                <div class="col-md-7">
+                                    @Html.DropDownListFor(x=>x.PlantId,Model.ChoosePlants,new {@class="form-control"}) 
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-5">Quote Date</label>
+                                <div class="col-md-7">
+                                    @Html.TextBoxFor(x=>x.QuoteDateString,new {@class="form-control datepicker"}) 
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-5">Acceptance Expiration Date</label>
+                                <div class="col-md-7">
+                                    @Html.TextBoxFor(x=>x.AcceptanceExpirationString,new {@class="form-control datepicker"}) 
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-5">Quote Expiration Date</label>
+                                <div class="col-md-7">
+                                    @Html.TextBoxFor(x=>x.QuoteExpirationString,new {@class="form-control datepicker"}) 
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 form-horizontal">
+                            <div class="form-group">
+                                <label class="control-label col-md-1">Add</label>
+                                <div class="col-md-5">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">$</span>
+                                        @Html.TextBoxFor(x=>x.PriceIncrease1,"{0:N0}",new {@class="form-control  comma_field"}) 
+                                        <span class="input-group-addon">Per CYD</span>
+                                    </div>
+                                </div>
+                                <label class="control-label col-md-2">Effective</label>
+                                <div class="col-md-4">
+                                    @Html.TextBoxFor(x=>x.PriceChangeDate1String,new {@class="form-control datepicker"}) 
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-1">Add</label>
+                                <div class="col-md-5">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">$</span>
+                                        @Html.TextBoxFor(x=>x.PriceIncrease2,"{0:N0}",new {@class="form-control comma_field"}) 
+                                        <span class="input-group-addon">Per CYD</span>
+                                    </div>
+                                </div>
+                                <label class="control-label col-md-2">Effective</label>
+                                <div class="col-md-4">
+                                    @Html.TextBoxFor(x=>x.PriceChangeDate2String,new {@class="form-control datepicker"}) 
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-1">Add</label>
+                                <div class="col-md-5">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">$</span>
+                                        @Html.TextBoxFor(x=>x.PriceIncrease3,"{0:N0}",new {@class="form-control comma_field"}) 
+                                        <span class="input-group-addon">Per CYD</span>
+                                    </div>
+                                </div>
+                                <label class="control-label col-md-2">Effective</label>
+                                <div class="col-md-4">
+                                    @Html.TextBoxFor(x=>x.PriceChangeDate3String,new {@class="form-control datepicker"}) 
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-1">Active</label>
+                                <div class="col-md-7">
+                                    <p class="form-control-static">
+                                        @Html.CheckBoxFor(x=>x.Active)
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Private Notes</label>
+                            <div class="col-md-10">
+                                @Html.TextAreaFor(x => x.PrivateNotes, new {@class="form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Public Notes</label>
+                            <div class="col-md-10">
+                                @Html.TextAreaFor(x => x.PublicNotes, new {@class="form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label"></label>
+                            <div class="col-md-10">
+                                <button type="submit" class="btn btn-primary remove_commas_btn">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                    }
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="heading4">
+                    <h4 class="panel-title">
+                        <a href="/Quote/AddEditQuoteAddons/@Model.QuotationId">Add-Ons</a>
+                    </h4>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="heading5">
+                    <h4 class="panel-title">
+                        <a href="/Quote/AddEditQuoteMixes/@Model.QuotationId">Mixes</a>
+                    </h4>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="heading6">
+                    <h4 class="panel-title">
+                        <a href="/Quote/ShowAuditLogs/@Model.QuotationId">Audit Logs</a>
+                    </h4>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            $('.datepicker').datepicker({
+                format: 'd M, yyyy' // Default is 'mm/yyyy' and separator char is not mandatory
+            }).on('changeDate', function(ev) {
+                $(this).datepicker('hide');
+            });
+        });
+    </script>
+}
+
+

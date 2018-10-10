@@ -1,0 +1,693 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL.DataTypes" xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL.DataTypes" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:4216/Services/SalesInsight.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" />
+  <xs:import schemaLocation="http://localhost:4216/Services/SalesInsight.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:import schemaLocation="http://localhost:4216/Services/SalesInsight.svc?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:complexType name="SIUser">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Active" type="xs:boolean" />
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="Company" nillable="true" type="q1:Company" />
+      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="Districts" nillable="true" type="q2:ArrayOfDistrict" />
+      <xs:element minOccurs="0" name="Email" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Password" nillable="true" type="xs:string" />
+      <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="Plants" nillable="true" type="q3:ArrayOfPlant" />
+      <xs:element minOccurs="0" name="Role" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="UserId" type="ser:guid" />
+      <xs:element minOccurs="0" name="Username" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIUser" nillable="true" type="tns:SIUser" />
+  <xs:complexType name="ArrayOfSIUser">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SIUser" nillable="true" type="tns:SIUser" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSIUser" nillable="true" type="tns:ArrayOfSIUser" />
+  <xs:complexType name="ArrayOfSIOperation">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SIOperation" nillable="true" type="tns:SIOperation" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSIOperation" nillable="true" type="tns:ArrayOfSIOperation" />
+  <xs:complexType name="SIOperation">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Item" nillable="true" type="xs:anyType" />
+      <xs:element minOccurs="0" name="Type" type="tns:SIOperationType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIOperation" nillable="true" type="tns:SIOperation" />
+  <xs:simpleType name="SIOperationType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Add" />
+      <xs:enumeration value="Update" />
+      <xs:enumeration value="Delete" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="SIOperationType" nillable="true" type="tns:SIOperationType" />
+  <xs:complexType name="SIForecastProjects">
+    <xs:sequence>
+      <xs:element xmlns:q4="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="ProjectionMonths" nillable="true" type="q4:ArrayOfdateTime" />
+      <xs:element minOccurs="0" name="Projects" nillable="true" type="tns:ArrayOfSIForecastProject" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIForecastProjects" nillable="true" type="tns:SIForecastProjects" />
+  <xs:complexType name="ArrayOfSIForecastProject">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SIForecastProject" nillable="true" type="tns:SIForecastProject" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSIForecastProject" nillable="true" type="tns:ArrayOfSIForecastProject" />
+  <xs:complexType name="SIForecastProject">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CustomerName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CustomerNumber" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Initial" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="MarketSegmentName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PlantName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Price" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="ProjectId" type="xs:int" />
+      <xs:element minOccurs="0" name="ProjectName" nillable="true" type="xs:string" />
+      <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="Projection1" nillable="true" type="q5:ProjectProjection" />
+      <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="Projection2" nillable="true" type="q6:ProjectProjection" />
+      <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="Projection3" nillable="true" type="q7:ProjectProjection" />
+      <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="Projection4" nillable="true" type="q8:ProjectProjection" />
+      <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="Projection5" nillable="true" type="q9:ProjectProjection" />
+      <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="Projection6" nillable="true" type="q10:ProjectProjection" />
+      <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="Projection7" nillable="true" type="q11:ProjectProjection" />
+      <xs:element minOccurs="0" name="RemainingProjections" type="xs:int" />
+      <xs:element xmlns:q12="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="StaffNames" nillable="true" type="q12:ArrayOfstring" />
+      <xs:element minOccurs="0" name="StaffNamesList" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="TotalActual" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="TotalProjected" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="TotalRemaining" nillable="true" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIForecastProject" nillable="true" type="tns:SIForecastProject" />
+  <xs:complexType name="ArrayOfSIPipelineProject">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SIPipelineProject" nillable="true" type="tns:SIPipelineProject" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSIPipelineProject" nillable="true" type="tns:ArrayOfSIPipelineProject" />
+  <xs:complexType name="SIPipelineProject">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="BidDate" nillable="true" type="xs:dateTime" />
+      <xs:element xmlns:q13="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="CompetitorNames" nillable="true" type="q13:ArrayOfstring" />
+      <xs:element minOccurs="0" name="CompetitorNamesList" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ContractorName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CustomerName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DistrictName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="MarketSegmentName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="MixName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="NoteCount" type="xs:int" />
+      <xs:element minOccurs="0" name="PlantName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Price" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="Profit" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="ProjectId" type="xs:int" />
+      <xs:element minOccurs="0" name="ProjectName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="QuoteContact" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="QuoteCount" type="xs:int" />
+      <xs:element minOccurs="0" name="Spread" nillable="true" type="xs:decimal" />
+      <xs:element xmlns:q14="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="StaffNames" nillable="true" type="q14:ArrayOfstring" />
+      <xs:element minOccurs="0" name="StaffNamesList" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="StartDate" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="StatusName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Volume" nillable="true" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIPipelineProject" nillable="true" type="tns:SIPipelineProject" />
+  <xs:complexType name="SIViewProjectDetails">
+    <xs:sequence>
+      <xs:element xmlns:q15="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="AvailableCompetitors" nillable="true" type="q15:ArrayOfCompetitor" />
+      <xs:element xmlns:q16="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="AvailableContractors" nillable="true" type="q16:ArrayOfContractor" />
+      <xs:element xmlns:q17="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="AvailableCustomers" nillable="true" type="q17:ArrayOfCustomer" />
+      <xs:element xmlns:q18="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="AvailableMarketSegments" nillable="true" type="q18:ArrayOfMarketSegment" />
+      <xs:element xmlns:q19="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="AvailablePlants" nillable="true" type="q19:ArrayOfPlant" />
+      <xs:element xmlns:q20="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="AvailableStaff" nillable="true" type="q20:ArrayOfSalesStaff" />
+      <xs:element xmlns:q21="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="AvailableStatuses" nillable="true" type="q21:ArrayOfProjectStatus" />
+      <xs:element xmlns:q22="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="Project" nillable="true" type="q22:Project" />
+      <xs:element minOccurs="0" name="ProjectCompetitorDetails" nillable="true" type="tns:ArrayOfSIViewProjectCompetitorDetails" />
+      <xs:element minOccurs="0" name="ProjectNoteDetails" nillable="true" type="tns:ArrayOfSIViewProjectNoteDetails" />
+      <xs:element minOccurs="0" name="ProjectProjectionDetails" nillable="true" type="tns:SIViewProjectProjectionDetails" />
+      <xs:element xmlns:q23="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="ProjectProjectionHistory" nillable="true" type="q23:ArrayOfProjectProjection" />
+      <xs:element minOccurs="0" name="ProjectSalesStaffDetails" nillable="true" type="tns:ArrayOfSIViewProjectSalesStaffDetails" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIViewProjectDetails" nillable="true" type="tns:SIViewProjectDetails" />
+  <xs:complexType name="ArrayOfSIViewProjectCompetitorDetails">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SIViewProjectCompetitorDetails" nillable="true" type="tns:SIViewProjectCompetitorDetails" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSIViewProjectCompetitorDetails" nillable="true" type="tns:ArrayOfSIViewProjectCompetitorDetails" />
+  <xs:complexType name="SIViewProjectCompetitorDetails">
+    <xs:sequence>
+      <xs:element xmlns:q24="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="Competitor" nillable="true" type="q24:Competitor" />
+      <xs:element xmlns:q25="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="ProjectCompetitor" nillable="true" type="q25:ProjectCompetitor" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIViewProjectCompetitorDetails" nillable="true" type="tns:SIViewProjectCompetitorDetails" />
+  <xs:complexType name="ArrayOfSIViewProjectNoteDetails">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SIViewProjectNoteDetails" nillable="true" type="tns:SIViewProjectNoteDetails" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSIViewProjectNoteDetails" nillable="true" type="tns:ArrayOfSIViewProjectNoteDetails" />
+  <xs:complexType name="SIViewProjectNoteDetails">
+    <xs:sequence>
+      <xs:element xmlns:q26="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="ProjectNote" nillable="true" type="q26:ProjectNote" />
+      <xs:element minOccurs="0" name="Username" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIViewProjectNoteDetails" nillable="true" type="tns:SIViewProjectNoteDetails" />
+  <xs:complexType name="SIViewProjectProjectionDetails">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CurrentProjected" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="ProjectProjections" nillable="true" type="tns:ArrayOfSIProjectProjection" />
+      <xs:element minOccurs="0" name="ProjectionMonth" nillable="true" type="tns:SIProjectProjection" />
+      <xs:element minOccurs="0" name="TotalProjected" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="TotalShipped" nillable="true" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIViewProjectProjectionDetails" nillable="true" type="tns:SIViewProjectProjectionDetails" />
+  <xs:complexType name="ArrayOfSIProjectProjection">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SIProjectProjection" nillable="true" type="tns:SIProjectProjection" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSIProjectProjection" nillable="true" type="tns:ArrayOfSIProjectProjection" />
+  <xs:complexType name="SIProjectProjection">
+    <xs:sequence>
+      <xs:element xmlns:q27="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="ProjectProjection" nillable="true" type="q27:ProjectProjection" />
+      <xs:element minOccurs="0" name="ProjectionDate" type="xs:dateTime" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIProjectProjection" nillable="true" type="tns:SIProjectProjection" />
+  <xs:complexType name="ArrayOfSIViewProjectSalesStaffDetails">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SIViewProjectSalesStaffDetails" nillable="true" type="tns:SIViewProjectSalesStaffDetails" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSIViewProjectSalesStaffDetails" nillable="true" type="tns:ArrayOfSIViewProjectSalesStaffDetails" />
+  <xs:complexType name="SIViewProjectSalesStaffDetails">
+    <xs:sequence>
+      <xs:element xmlns:q28="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="ProjectSalesStaff" nillable="true" type="q28:ProjectSalesStaff" />
+      <xs:element xmlns:q29="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="SalesStaff" nillable="true" type="q29:SalesStaff" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIViewProjectSalesStaffDetails" nillable="true" type="tns:SIViewProjectSalesStaffDetails" />
+  <xs:complexType name="SICustomer">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Contacts" nillable="true" type="tns:ArrayOfSICustomerContact" />
+      <xs:element xmlns:q30="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="Customer" nillable="true" type="q30:Customer" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SICustomer" nillable="true" type="tns:SICustomer" />
+  <xs:complexType name="ArrayOfSICustomerContact">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SICustomerContact" nillable="true" type="tns:SICustomerContact" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSICustomerContact" nillable="true" type="tns:ArrayOfSICustomerContact" />
+  <xs:complexType name="SICustomerContact">
+    <xs:sequence>
+      <xs:element xmlns:q31="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="CustomerContact" nillable="true" type="q31:CustomerContact" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SICustomerContact" nillable="true" type="tns:SICustomerContact" />
+  <xs:complexType name="SISaveCustomerStatus">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CustomerId" nillable="true" type="xs:int" />
+      <xs:element xmlns:q32="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="Result" type="q32:SaveCustomerResult" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SISaveCustomerStatus" nillable="true" type="tns:SISaveCustomerStatus" />
+  <xs:complexType name="ArrayOfSISalesStaff">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SISalesStaff" nillable="true" type="tns:SISalesStaff" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSISalesStaff" nillable="true" type="tns:ArrayOfSISalesStaff" />
+  <xs:complexType name="SISalesStaff">
+    <xs:sequence>
+      <xs:element xmlns:q33="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="Districts" nillable="true" type="q33:ArrayOfDistrict" />
+      <xs:element xmlns:q34="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="SalesStaff" nillable="true" type="q34:SalesStaff" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SISalesStaff" nillable="true" type="tns:SISalesStaff" />
+  <xs:complexType name="ArrayOfSIStatusType">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SIStatusType" nillable="true" type="tns:SIStatusType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSIStatusType" nillable="true" type="tns:ArrayOfSIStatusType" />
+  <xs:complexType name="SIStatusType">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" type="xs:short" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIStatusType" nillable="true" type="tns:SIStatusType" />
+  <xs:complexType name="ArrayOfSIProductType">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SIProductType" nillable="true" type="tns:SIProductType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSIProductType" nillable="true" type="tns:ArrayOfSIProductType" />
+  <xs:complexType name="SIProductType">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIProductType" nillable="true" type="tns:SIProductType" />
+  <xs:complexType name="SIPlantTargetOperation">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Budget" type="xs:int" />
+      <xs:element minOccurs="0" name="BudgetDate" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="ColumnType" type="tns:SIPlantTargetColumnType" />
+      <xs:element minOccurs="0" name="MarketSegmentID" type="xs:int" />
+      <xs:element minOccurs="0" name="OperationType" type="tns:SIPlantTargetOperationType" />
+      <xs:element minOccurs="0" name="Percentage" nillable="true" type="xs:short" />
+      <xs:element minOccurs="0" name="PlantBudgetID" type="xs:int" />
+      <xs:element minOccurs="0" name="PlantBudgetMarketSegmentID" type="xs:int" />
+      <xs:element minOccurs="0" name="PlantBudgetSalesStaffID" type="xs:int" />
+      <xs:element minOccurs="0" name="PlantID" type="xs:int" />
+      <xs:element minOccurs="0" name="SalesStaffID" type="xs:int" />
+      <xs:element minOccurs="0" name="Trucks" type="xs:int" />
+      <xs:element minOccurs="0" name="Value" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIPlantTargetOperation" nillable="true" type="tns:SIPlantTargetOperation" />
+  <xs:simpleType name="SIPlantTargetColumnType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Plant" />
+      <xs:enumeration value="Budget" />
+      <xs:enumeration value="Trucks" />
+      <xs:enumeration value="SalesStaff" />
+      <xs:enumeration value="MarketSegment" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="SIPlantTargetColumnType" nillable="true" type="tns:SIPlantTargetColumnType" />
+  <xs:simpleType name="SIPlantTargetOperationType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="PlantBudget" />
+      <xs:enumeration value="PlantBudgetMarketSegment" />
+      <xs:enumeration value="PlantBudgetSalesSaff" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="SIPlantTargetOperationType" nillable="true" type="tns:SIPlantTargetOperationType" />
+  <xs:complexType name="ArrayOfSIPlantTargetRow">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SIPlantTargetRow" nillable="true" type="tns:SIPlantTargetRow" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSIPlantTargetRow" nillable="true" type="tns:ArrayOfSIPlantTargetRow" />
+  <xs:complexType name="SIPlantTargetRow">
+    <xs:sequence>
+      <xs:element xmlns:q35="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Columns" nillable="true" type="q35:ArrayOfKeyValueOfstringSIPlantTargetColumntxDt3tn_S" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIPlantTargetRow" nillable="true" type="tns:SIPlantTargetRow" />
+  <xs:complexType name="SIPlantTargetColumn">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="BudgetDate" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="ColumnType" type="tns:SIPlantTargetColumnType" />
+      <xs:element minOccurs="0" name="MarketSegmentID" type="xs:int" />
+      <xs:element minOccurs="0" name="PlantBudgetID" type="xs:int" />
+      <xs:element minOccurs="0" name="PlantBudgetMarketSegmentID" type="xs:int" />
+      <xs:element minOccurs="0" name="PlantBudgetSalesStaffID" type="xs:int" />
+      <xs:element minOccurs="0" name="PlantID" type="xs:int" />
+      <xs:element minOccurs="0" name="SalesStaffID" type="xs:int" />
+      <xs:element minOccurs="0" name="Value" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIPlantTargetColumn" nillable="true" type="tns:SIPlantTargetColumn" />
+  <xs:complexType name="ArrayOfSIForecastVersusPlan">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SIForecastVersusPlan" nillable="true" type="tns:SIForecastVersusPlan" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSIForecastVersusPlan" nillable="true" type="tns:ArrayOfSIForecastVersusPlan" />
+  <xs:complexType name="SIForecastVersusPlan">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="DistrictName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ForecastQuantity" type="xs:int" />
+      <xs:element minOccurs="0" name="MonthName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="TargetQuantity" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIForecastVersusPlan" nillable="true" type="tns:SIForecastVersusPlan" />
+  <xs:complexType name="ArrayOfSIPlantProjections">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SIPlantProjections" nillable="true" type="tns:SIPlantProjections" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSIPlantProjections" nillable="true" type="tns:ArrayOfSIPlantProjections" />
+  <xs:complexType name="SIPlantProjections">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ForecastQuantity" type="xs:int" />
+      <xs:element minOccurs="0" name="MonthName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PlantName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="TargetQuantity" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIPlantProjections" nillable="true" type="tns:SIPlantProjections" />
+  <xs:complexType name="ArrayOfSISegmentationAnalysis">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SISegmentationAnalysis" nillable="true" type="tns:SISegmentationAnalysis" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSISegmentationAnalysis" nillable="true" type="tns:ArrayOfSISegmentationAnalysis" />
+  <xs:complexType name="SISegmentationAnalysis">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ForecastQuantity" type="xs:int" />
+      <xs:element minOccurs="0" name="MarketSegmentName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="MonthName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="TargetQuantity" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SISegmentationAnalysis" nillable="true" type="tns:SISegmentationAnalysis" />
+  <xs:complexType name="ArrayOfSIProjectionAccuracy">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SIProjectionAccuracy" nillable="true" type="tns:SIProjectionAccuracy" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSIProjectionAccuracy" nillable="true" type="tns:ArrayOfSIProjectionAccuracy" />
+  <xs:complexType name="SIProjectionAccuracy">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ActualQuantity" type="xs:int" />
+      <xs:element minOccurs="0" name="ForecastQuantity" type="xs:int" />
+      <xs:element minOccurs="0" name="SalesStaffName" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIProjectionAccuracy" nillable="true" type="tns:SIProjectionAccuracy" />
+  <xs:complexType name="ArrayOfSIProjectedActualAssetProductivity">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SIProjectedActualAssetProductivity" nillable="true" type="tns:SIProjectedActualAssetProductivity" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSIProjectedActualAssetProductivity" nillable="true" type="tns:ArrayOfSIProjectedActualAssetProductivity" />
+  <xs:complexType name="SIProjectedActualAssetProductivity">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:SIPlantProjections">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="TruckCount" type="xs:int" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="SIProjectedActualAssetProductivity" nillable="true" type="tns:SIProjectedActualAssetProductivity" />
+  <xs:complexType name="ArrayOfSIConcreteProduct">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SIConcreteProduct" nillable="true" type="tns:SIConcreteProduct" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSIConcreteProduct" nillable="true" type="tns:ArrayOfSIConcreteProduct" />
+  <xs:complexType name="SIConcreteProduct">
+    <xs:sequence>
+      <xs:element xmlns:q36="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="ConcreteProduct" nillable="true" type="q36:ConcreteProduct" />
+      <xs:element minOccurs="0" name="ConcreteProductPlants" nillable="true" type="tns:ArrayOfSIConcreteProductPlant" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIConcreteProduct" nillable="true" type="tns:SIConcreteProduct" />
+  <xs:complexType name="ArrayOfSIConcreteProductPlant">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SIConcreteProductPlant" nillable="true" type="tns:SIConcreteProductPlant" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSIConcreteProductPlant" nillable="true" type="tns:ArrayOfSIConcreteProductPlant" />
+  <xs:complexType name="SIConcreteProductPlant">
+    <xs:sequence>
+      <xs:element xmlns:q37="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="ConcreteProductPlant" nillable="true" type="q37:ConcreteProductPlant" />
+      <xs:element minOccurs="0" name="PlantName" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIConcreteProductPlant" nillable="true" type="tns:SIConcreteProductPlant" />
+  <xs:complexType name="SISavedProduct">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ProductId" nillable="true" type="xs:int" />
+      <xs:element xmlns:q38="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="Result" type="q38:SaveProductResult" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SISavedProduct" nillable="true" type="tns:SISavedProduct" />
+  <xs:complexType name="ArrayOfSIAdditionalProduct">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SIAdditionalProduct" nillable="true" type="tns:SIAdditionalProduct" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSIAdditionalProduct" nillable="true" type="tns:ArrayOfSIAdditionalProduct" />
+  <xs:complexType name="SIAdditionalProduct">
+    <xs:sequence>
+      <xs:element xmlns:q39="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="AdditionalProduct" nillable="true" type="q39:AdditionalProduct" />
+      <xs:element minOccurs="0" name="AdditionalProductPlants" nillable="true" type="tns:ArrayOfSIAdditionalProductPlant" />
+      <xs:element minOccurs="0" name="UnitOfMeasureCode" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="UnitOfMeasureDescription" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIAdditionalProduct" nillable="true" type="tns:SIAdditionalProduct" />
+  <xs:complexType name="ArrayOfSIAdditionalProductPlant">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SIAdditionalProductPlant" nillable="true" type="tns:SIAdditionalProductPlant" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSIAdditionalProductPlant" nillable="true" type="tns:ArrayOfSIAdditionalProductPlant" />
+  <xs:complexType name="SIAdditionalProductPlant">
+    <xs:sequence>
+      <xs:element xmlns:q40="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="AdditionalProductPlant" nillable="true" type="q40:AdditionalProductPlant" />
+      <xs:element minOccurs="0" name="PlantName" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIAdditionalProductPlant" nillable="true" type="tns:SIAdditionalProductPlant" />
+  <xs:complexType name="ArrayOfSIQuoteSummary">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SIQuoteSummary" nillable="true" type="tns:SIQuoteSummary" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSIQuoteSummary" nillable="true" type="tns:ArrayOfSIQuoteSummary" />
+  <xs:complexType name="SIQuoteSummary">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Accepted" nillable="true" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Active" type="xs:boolean" />
+      <xs:element minOccurs="0" name="AvgCYDsHr" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="AvgContMarg" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="AvgLoadSize" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="AvgPrice" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="AvgProfit" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="AvgSpread" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="AvgUnloadTime" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="CustomerContactEmail" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CustomerContactFax" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CustomerContactName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CustomerContactPhone" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CustomerName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DatePosted" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="EntryUtcDateTime" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="ExpirationDate" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="LastTransmissionDateTime" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ProjectAddress" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ProjectCity" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ProjectName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PublicNoteText" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PurchaseOrderNumber" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="QuoteSourceCode" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="QuoteSourceDescription" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="QuoteSpecificationCode" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="QuoteSpecificationDescription" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SalesStaffEmail" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SalesStaffFax" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SalesStaffName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SalesStaffPhone" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ShortLoadTypeDescription" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="StandbyTimeTypeDescription" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="TotalCYDs" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="TotalProfit" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="Valuation" nillable="true" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIQuoteSummary" nillable="true" type="tns:SIQuoteSummary" />
+  <xs:complexType name="SIQuoteSupport">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="AvailableAdditionalProducts" nillable="true" type="tns:ArrayOfSIAdditionalProductSummary" />
+      <xs:element minOccurs="0" name="AvailableConcreteProducts" nillable="true" type="tns:ArrayOfSIConcreteProductSummary" />
+      <xs:element xmlns:q41="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="AvailableQuoteSources" nillable="true" type="q41:ArrayOfQuoteSource" />
+      <xs:element xmlns:q42="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="AvailableQuoteSpecifications" nillable="true" type="q42:ArrayOfQuoteSpecification" />
+      <xs:element xmlns:q43="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="AvailableShortLoadTypes" nillable="true" type="q43:ArrayOfShortLoadType" />
+      <xs:element minOccurs="0" name="AvailableStandardAdditionalProducts" nillable="true" type="tns:ArrayOfSIAdditionalProduct" />
+      <xs:element xmlns:q44="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="AvailableStandbyTimeTypes" nillable="true" type="q44:ArrayOfStandbyTimeType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIQuoteSupport" nillable="true" type="tns:SIQuoteSupport" />
+  <xs:complexType name="ArrayOfSIAdditionalProductSummary">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SIAdditionalProductSummary" nillable="true" type="tns:SIAdditionalProductSummary" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSIAdditionalProductSummary" nillable="true" type="tns:ArrayOfSIAdditionalProductSummary" />
+  <xs:complexType name="SIAdditionalProductSummary">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Code" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CompanyId" type="xs:int" />
+      <xs:element minOccurs="0" name="CompanyName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Cost" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="FlatRate" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="PlantId" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="PlantName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Price" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="ProductPlantId" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="StandardProduct" type="xs:boolean" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIAdditionalProductSummary" nillable="true" type="tns:SIAdditionalProductSummary" />
+  <xs:complexType name="ArrayOfSIConcreteProductSummary">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SIConcreteProductSummary" nillable="true" type="tns:SIConcreteProductSummary" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSIConcreteProductSummary" nillable="true" type="tns:ArrayOfSIConcreteProductSummary" />
+  <xs:complexType name="SIConcreteProductSummary">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Code" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CompanyId" type="xs:int" />
+      <xs:element minOccurs="0" name="CompanyName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Cost" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="PlantId" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="PlantName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Price" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="ProductPlantId" nillable="true" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIConcreteProductSummary" nillable="true" type="tns:SIConcreteProductSummary" />
+  <xs:complexType name="SIQuote">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Accepted" nillable="true" type="xs:boolean" />
+      <xs:element minOccurs="0" name="AdditionalProducts" nillable="true" type="tns:ArrayOfSIQuoteAdditionalProduct" />
+      <xs:element minOccurs="0" name="ConcreteProducts" nillable="true" type="tns:ArrayOfSIQuoteConcreteProduct" />
+      <xs:element xmlns:q45="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="Customer" nillable="true" type="q45:Customer" />
+      <xs:element xmlns:q46="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="CustomerContact" nillable="true" type="q46:CustomerContact" />
+      <xs:element minOccurs="0" name="Notes" nillable="true" type="tns:ArrayOfSIQuoteNote" />
+      <xs:element xmlns:q47="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="Project" nillable="true" type="q47:Project" />
+      <xs:element xmlns:q48="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="Quote" nillable="true" type="q48:Quote" />
+      <xs:element xmlns:q49="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="SalesStaff" nillable="true" type="q49:SalesStaff" />
+      <xs:element xmlns:q50="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="ShortLoadType" nillable="true" type="q50:ShortLoadType" />
+      <xs:element xmlns:q51="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="Source" nillable="true" type="q51:QuoteSource" />
+      <xs:element xmlns:q52="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="Specification" nillable="true" type="q52:QuoteSpecification" />
+      <xs:element xmlns:q53="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="StandbyTimeType" nillable="true" type="q53:StandbyTimeType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIQuote" nillable="true" type="tns:SIQuote" />
+  <xs:complexType name="ArrayOfSIQuoteAdditionalProduct">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SIQuoteAdditionalProduct" nillable="true" type="tns:SIQuoteAdditionalProduct" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSIQuoteAdditionalProduct" nillable="true" type="tns:ArrayOfSIQuoteAdditionalProduct" />
+  <xs:complexType name="SIQuoteAdditionalProduct">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Code" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PlantName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Price" nillable="true" type="xs:decimal" />
+      <xs:element xmlns:q54="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="QuoteAdditionalProduct" nillable="true" type="q54:QuoteAdditionalProduct" />
+      <xs:element minOccurs="0" name="QuoteName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="StandardProduct" type="xs:boolean" />
+      <xs:element minOccurs="0" name="UnitOfMeasureCode" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="UnitOfMeasureDescription" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIQuoteAdditionalProduct" nillable="true" type="tns:SIQuoteAdditionalProduct" />
+  <xs:complexType name="ArrayOfSIQuoteConcreteProduct">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SIQuoteConcreteProduct" nillable="true" type="tns:SIQuoteConcreteProduct" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSIQuoteConcreteProduct" nillable="true" type="tns:ArrayOfSIQuoteConcreteProduct" />
+  <xs:complexType name="SIQuoteConcreteProduct">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="AirNote" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Code" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CodeAlias" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Color" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DescriptionAlias" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="EntrainedAir" type="xs:boolean" />
+      <xs:element minOccurs="0" name="EstimatedQuantity" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="Fiber" type="xs:boolean" />
+      <xs:element minOccurs="0" name="NoteText" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PlantName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Price" nillable="true" type="xs:decimal" />
+      <xs:element xmlns:q55="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="QuoteConcreteProduct" nillable="true" type="q55:QuoteConcreteProduct" />
+      <xs:element minOccurs="0" name="QuoteName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SlumpNote" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="WaterToCementNote" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIQuoteConcreteProduct" nillable="true" type="tns:SIQuoteConcreteProduct" />
+  <xs:complexType name="ArrayOfSIQuoteNote">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SIQuoteNote" nillable="true" type="tns:SIQuoteNote" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSIQuoteNote" nillable="true" type="tns:ArrayOfSIQuoteNote" />
+  <xs:complexType name="SIQuoteNote">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="QuoteName" nillable="true" type="xs:string" />
+      <xs:element xmlns:q56="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" minOccurs="0" name="QuoteNote" nillable="true" type="q56:QuoteNote" />
+      <xs:element minOccurs="0" name="UserName" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIQuoteNote" nillable="true" type="tns:SIQuoteNote" />
+  <xs:complexType name="ArrayOfSIProjectSuccessMajorJobSummary">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SIProjectSuccessMajorJobSummary" nillable="true" type="tns:SIProjectSuccessMajorJobSummary" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSIProjectSuccessMajorJobSummary" nillable="true" type="tns:ArrayOfSIProjectSuccessMajorJobSummary" />
+  <xs:complexType name="SIProjectSuccessMajorJobSummary">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="BidDate" nillable="true" type="xs:dateTime" />
+      <xs:element xmlns:q57="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="CompetitorNames" nillable="true" type="q57:ArrayOfstring" />
+      <xs:element minOccurs="0" name="CompetitorNamesList" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CustomerName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="MixName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="MixPrice" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="ProjectName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="StartDate" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Volume" nillable="true" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIProjectSuccessMajorJobSummary" nillable="true" type="tns:SIProjectSuccessMajorJobSummary" />
+  <xs:complexType name="ArrayOfSIProjectSuccessMarketShareSummary">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SIProjectSuccessMarketShareSummary" nillable="true" type="tns:SIProjectSuccessMarketShareSummary" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSIProjectSuccessMarketShareSummary" nillable="true" type="tns:ArrayOfSIProjectSuccessMarketShareSummary" />
+  <xs:complexType name="SIProjectSuccessMarketShareSummary">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Volume" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIProjectSuccessMarketShareSummary" nillable="true" type="tns:SIProjectSuccessMarketShareSummary" />
+  <xs:complexType name="ArrayOfSIProjectSuccessSalesStaffSummary">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SIProjectSuccessSalesStaffSummary" nillable="true" type="tns:SIProjectSuccessSalesStaffSummary" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSIProjectSuccessSalesStaffSummary" nillable="true" type="tns:ArrayOfSIProjectSuccessSalesStaffSummary" />
+  <xs:complexType name="SIProjectSuccessSalesStaffSummary">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="VolumeLost" type="xs:int" />
+      <xs:element minOccurs="0" name="VolumeSold" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SIProjectSuccessSalesStaffSummary" nillable="true" type="tns:SIProjectSuccessSalesStaffSummary" />
+</xs:schema>

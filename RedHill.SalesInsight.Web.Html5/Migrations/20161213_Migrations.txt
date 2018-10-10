@@ -1,0 +1,295 @@
+﻿ALTER TABLE RoleAccess
+ADD MergeCustomers BIT
+
+---------------------20161412-7:05PM Added table in QuotationAddon ---Avnish 
+ALTER TABLE [QuotationAddon]
+ADD [Description] [nvarchar](200) NULL,
+	[Price] [decimal](18, 2) NULL,
+	[IsIncludeTable] [bit] NULL,
+	[IsDefault] [bit] NULL
+
+---------------------20161412-12:05PM Added table UserPasswordVerification ---Sudhakar
+Create table UserPasswordVerification ( 
+    [Id] INT IDENTITY (1, 1) NOT NULL, 
+    [Name] NVARCHAR (200) NULL, 
+    [PasswordVerificationToken]  NVARCHAR (200) NULL, 
+    [PasswordVerificationTokenExpirationDate] Datetime NULL
+);
+
+Create table SuperUserSetting ( 
+    [Id] INT IDENTITY (1, 1) NOT NULL, 
+    [CutOffDate] Datetime NULL, 
+    [RequireOneCaps]   bit NOT NULL,
+    [RequireOneLower]   bit NOT NULL,
+	[RequireOneDigit]   bit NOT NULL,
+	[RequireSpecialChar]   bit NOT NULL,
+	[PasswordHistoryLimit]  int NOT NULL,
+	[MinimumLength]  int NOT NULL,
+	[MaximumPasswordAge] int NOT NULL
+); 
+	
+
+--------------------20161214 - 11:29 PM - CustomerArchive table to archive customers --Shailendra
+
+/****** Object:  Table [dbo].[CustomerArchive]    Script Date: 14/12/2016 23:29:29 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[CustomerArchive](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[CustomerId] [int] NOT NULL,
+	[CompanyId] [int] NOT NULL,
+	[Name] [varchar](255) NOT NULL,
+	[CustomerNumber] [varchar](255) NULL,
+	[Address1] [varchar](255) NULL,
+	[Address2] [varchar](255) NULL,
+	[Address3] [varchar](255) NULL,
+	[City] [varchar](255) NULL,
+	[State] [varchar](255) NULL,
+	[Zip] [varchar](255) NULL,
+	[Active] [bit] NULL,
+	[Source] [nvarchar](100) NULL,
+	[DispatchId] [nvarchar](500) NULL,
+	[Synced] [bit] NULL,
+ CONSTRAINT [PK_CustomerArchive] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+--------------2016-12-16 12:39 AM - CustomerMergeJunkWord Table-----
+
+/****** Object:  Table [dbo].[CustomerMergeJunkWord]    Script Date: 16/12/2016 00:39:11 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[CustomerMergeJunkWord](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[Word] [nvarchar](500) NULL,
+	[Active] [bit] NULL,
+ CONSTRAINT [PK_CustomerMergeJunkWords] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+
+---------------------------20161218 - 7:56 AM -   Droping off an extra column ----------- Avnish
+ALTER TABLE QuotationAddon DROP COLUMN IsDefault;
+
+---------------------------20161218 - 7:56 AM -   New column added in QuoteAuditLog --------Avnish
+ALTER TABLE [QuoteAuditLog]
+ADD [ReferenceLink] [nvarchar](max) NULL;
+
+---------------------------20161220 - 5:04 AM -   New column added in CompanyUser --------Avnish
+ALTER TABLE [CompanyUser]
+ADD [Name] [varchar](100) NULL;
+
+
+
+------- Table [dbo].[UserPasswordHistories]    Script Date: 12/23/16 3:00:34 AM --------Sudhakar
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[UserPasswordHistory](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[UserName] [nvarchar](max) NULL,
+	[Password] [nvarchar](max) NULL
+ CONSTRAINT [PK_dbo.UserPasswordHistories] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+
+----------- Added MappedField Column to CustomerMergeJunkWords-------------------
+
+ALTER TABLE CustomerMergeJunkWord
+ADD MappedField varchar(100)
+
+----------- 20161223 - 5:04 AM --- Added IsUsed Column to UserPasswordVerification-------------------Sudhakar
+ALTER TABLE [UserPasswordVerification]
+ADD [IsUsed] bit NULL;
+
+
+----------------------20161226 - Added Support Request Module----------------------
+
+/****** Object:  Table [dbo].[SupportCategory]    Script Date: 26/12/2016 14:24:35 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[SupportCategory](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](500) NULL,
+	[Active] [bit] NULL,
+	[CreatedAt] [datetime] NULL,
+ CONSTRAINT [PK_SupportCategory] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+
+/****** Object:  Table [dbo].[SupportRecipients]    Script Date: 26/12/2016 14:25:47 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[SupportRecipients](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[Email] [nvarchar](200) NOT NULL,
+	[Name] [nvarchar](100) NULL,
+	[IsDefault] [bit] NULL,
+	[CreatedAt] [datetime] NULL,
+ CONSTRAINT [PK_SupportRecipients] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+/****** Object:  Table [dbo].[SupportRequest]    Script Date: 26/12/2016 14:32:03 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[SupportRequest](
+	[Id] [uniqueidentifier] NOT NULL CONSTRAINT [DF_SupportRequest_Id]  DEFAULT (newid()),
+	[RequestId] [nvarchar](1000) NULL,
+	[UserId] [uniqueidentifier] NULL,
+	[BrowserSpecs] [nvarchar](1000) NULL,
+	[ScreenResolution] [nvarchar](100) NULL,
+	[Email] [nvarchar](1000) NULL,
+	[Phone] [nvarchar](50) NULL,
+	[UrgencyLevel] [nvarchar](50) NULL,
+	[ContactMedium] [nvarchar](50) NULL,
+	[CategoryId] [int] NULL,
+	[Description] [nvarchar](max) NULL,
+	[Resolution] [nvarchar](200) NULL,
+	[CreatedAt] [datetime] NULL,
+ CONSTRAINT [PK_SupportRequest] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[SupportRequest]  WITH CHECK ADD  CONSTRAINT [FK_SupportRequest_aspnet_Users] FOREIGN KEY([UserId])
+REFERENCES [dbo].[aspnet_Users] ([UserId])
+GO
+
+ALTER TABLE [dbo].[SupportRequest] CHECK CONSTRAINT [FK_SupportRequest_aspnet_Users]
+GO
+
+ALTER TABLE [dbo].[SupportRequest]  WITH CHECK ADD  CONSTRAINT [FK_SupportRequest_SupportCategory] FOREIGN KEY([CategoryId])
+REFERENCES [dbo].[SupportCategory] ([Id])
+GO
+
+ALTER TABLE [dbo].[SupportRequest] CHECK CONSTRAINT [FK_SupportRequest_SupportCategory]
+GO
+
+
+
+/****** Object:  Table [dbo].[SupportRequestAttachment]    Script Date: 26/12/2016 14:26:03 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[SupportRequestAttachment](
+	[Id] [uniqueidentifier] NOT NULL CONSTRAINT [DF_SupportRequestAttachment_Id]  DEFAULT (newid()),
+	[SupportRequestId] [uniqueidentifier] NULL,
+	[Title] [nvarchar](200) NULL,
+	[AttachmentLink] [nvarchar](max) NOT NULL,
+	[CreatedAt] [datetime] NULL,
+ CONSTRAINT [PK_SupportRequestAttachment] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[SupportRequestAttachment]  WITH CHECK ADD  CONSTRAINT [FK_SupportRequestAttachment_SupportRequest] FOREIGN KEY([SupportRequestId])
+REFERENCES [dbo].[SupportRequest] ([Id])
+GO
+
+ALTER TABLE [dbo].[SupportRequestAttachment] CHECK CONSTRAINT [FK_SupportRequestAttachment_SupportRequest]
+GO
+
+
+/****** Object:  Table [dbo].[SupportRequestRouting]    Script Date: 26/12/2016 14:26:18 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[SupportRequestRouting](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[SupportCategoryId] [int] NOT NULL,
+	[SupportRecipientId] [bigint] NOT NULL,
+ CONSTRAINT [PK_SupportRequestRouting] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[SupportRequestRouting]  WITH CHECK ADD  CONSTRAINT [FK_SupportRequestRouting_SupportCategory] FOREIGN KEY([SupportCategoryId])
+REFERENCES [dbo].[SupportCategory] ([Id])
+GO
+
+ALTER TABLE [dbo].[SupportRequestRouting] CHECK CONSTRAINT [FK_SupportRequestRouting_SupportCategory]
+GO
+
+ALTER TABLE [dbo].[SupportRequestRouting]  WITH CHECK ADD  CONSTRAINT [FK_SupportRequestRouting_SupportRecipients] FOREIGN KEY([SupportRecipientId])
+REFERENCES [dbo].[SupportRecipients] ([Id])
+GO
+
+ALTER TABLE [dbo].[SupportRequestRouting] CHECK CONSTRAINT [FK_SupportRequestRouting_SupportRecipients]
+GO
+
+-------------Support Request - Initial Settings--------------
+
+INSERT INTO SupportCategory(Name,Active)
+VALUES ('How-To Support',1), ('Bug Report',1),('Request New Functionality',1),('General Support',1);
+
+INSERT INTO SupportRecipients(Email,Name,IsDefault)
+VALUES ('tak@redhilladvisors.com','Tak',1);
+
+INSERT INTO SuperUserSetting(RequireOneCaps,RequireOneLower,RequireOneDigit,RequireSpecialChar,PasswordHistoryLimit,MinimumLength,MaximumPasswordAge)
+VALUES (0,0,0,0,1,6,270);

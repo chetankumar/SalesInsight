@@ -1,0 +1,54 @@
+﻿@model List<RedHill.SalesInsight.Web.Html5.Models.DuplicateView>
+@{
+    ViewBag.Title = "RemoveDuplicateProjections()";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<h2>RemoveDuplicateProjections</h2>
+@foreach (RedHill.SalesInsight.Web.Html5.Models.DuplicateView dup in Model)
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">
+                @dup.PlantName - @dup.ProjectName - @dup.ProjectionDate.ToString("MM/dd/yyyy")
+            </div>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Actual Value</th>
+                        <th>Projection Value</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (RedHill.SalesInsight.Web.Html5.Models.ActualProjections ap in dup.ProjectionValues)
+                    {
+                        <tr>
+                            <td>@ap.Actual</td>
+                            <td>@ap.Projection</td>
+                            <td><a href="#" class="save_pp" data-id="@ap.ProjectProjectionId">save</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            $(".save_pp").click(function () {
+                link = $(this);
+                $.get("/Reports/SaveProjection/" + $(this).attr("data-id"), function (data) {
+                    if (data == "OK") {
+                        link.parents(".panel").remove();
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+}

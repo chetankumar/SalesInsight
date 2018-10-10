@@ -1,0 +1,150 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.TargetModels.MonthlyProductivityTargetsView
+
+@{
+    ViewBag.Title = "Monthly Productivity Targets";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.UsingMultiselect = true;
+}
+<div class="page-head">
+    <h2>Monthly Productivity Targets</h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Home/Settings">Settings</a></li>
+        <li><a href="/Target/Index">Targets</a></li>
+        <li class="active">Productivity Targets</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="block-flat clearfix">
+        <div class="col-md-8">
+        @using (@Html.BeginForm("MonthlyProductivityTargets", "Target", FormMethod.Post, new { @id = "filter-form", @class = "" }))
+        {
+            <div class="form-group col-md-4">
+                <label class="control-label padding-left">Districts</label>
+                @Html.ListBoxFor(x=>x.SelectedDistricts,Model.AllDistricts, new { @class = "form-control multiselect" })
+            </div>
+            <div class="form-group col-md-3">
+                <label class="control-label">Year</label>
+                @Html.DropDownListFor(x=>x.Year,Model.AllYears, new { @class = "form-control auto_submit" })
+            </div>
+            <div class="form-group col-md-3">
+                <label class="control-label">Metric</label>
+                @Html.DropDownListFor(x=>x.SelectedMetric,Model.AllMetrics, new { @class = "form-control auto_submit" }) 
+            </div>
+            <div class="form-group col-md-2">
+                <label class="control-label">&nbsp;</label>
+                <button type="submit" class="btn btn-block btn-primary">Filter</button>
+            </div>
+        }
+        </div>
+        <div class="col-md-6">
+           
+        </div>
+    </div>
+    <div class="block-flat">
+        @if (Model.Message != null)
+        {
+            <div class="alert alert-info">
+                @Model.Message
+            </div>
+        }
+        <div class="table-responsive" style="position: relative; max-width: 100%;">
+            <table class="table table-bordered table-condensed table-minified table-fixed-header" style="max-width: 100%;">
+                <thead class="header">
+                    <tr>
+                        <th>Plant</th>
+                        <th>Jan</th>
+                        <th>Feb</th>
+                        <th>Mar</th>
+                        <th>Apr</th>
+                        <th>May</th>
+                        <th>Jun</th>
+                        <th>Jul</th>
+                        <th>Aug</th>
+                        <th>Sep</th>
+                        <th>Oct</th>
+                        <th>Nov</th>
+                        <th>Dec</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (RedHill.SalesInsight.Web.Html5.Models.TargetModels.MonthlyProductivityTargetModel row in Model.PlantMetrics.OrderBy(x=>x.PlantName))
+                    {
+                        <tr>
+                            <td>@row.PlantName</td>
+                            @{int i = 0;}
+                            @foreach (var cell in row.MetricValues)
+                            {
+                                <td><input type="text" class="form-control box input-sm" data-init-value="@cell" data-month="@i" data-plant="@row.PlantId" value="@cell" /></td>
+                                {i += 1;}
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var targetAccess = '@(ViewBag.AccessRule.HasTargetsAccess == SIRolePermissionLevelConstants.FULL_ACCESS)';
+            if (targetAccess == 'False') {
+                $(":input[type=text]").attr("disabled", true);
+            }
+
+            $('input.box').keyup(function (e) {
+                console.log(e.which);
+                if (e.which == 39)
+                    $(this).closest('td').next().find('input').focus();
+                else if (e.which == 37)
+                    $(this).closest('td').prev().find('input').focus();
+                else if (e.which == 40 || e.which == 13)
+                    $(this).closest('tr').nextAll("tr:visible").first().find('td:eq(' + $(this).closest('td').index() + ')').find('input').focus();
+                else if (e.which == 38)
+                    $(this).closest('tr').prevAll("tr:visible").first().find('td:eq(' + $(this).closest('td').index() + ')').find('input').focus();
+            });
+
+            $(".box").focus(function () {
+                $(this).select();
+            });
+
+            $(".box").blur(function () {
+                element = $(this);
+                currentVal = element.val();
+                init_val = element.data("init-value");
+                plantId = element.data("plant");
+                month = element.data("month");
+                metric = $("#SelectedMetric").val();
+                year = $("#Year").val();
+
+                try
+                {
+                    num_value = parseFloat(currentVal);
+                    if (num_value < 0 || isNaN(num_value)) {
+                        element.val(element.data("init-value"));
+                        return;
+                    }
+                }catch(ex)
+                {
+                    element.val(element.data("init-value"));
+                    return;
+                }
+
+                if (init_val != currentVal)
+                {
+                    postParams = { "PlantId": plantId, "Metric" : metric, "Year":year,"Month":month,  "Value": currentVal };
+                    $.post("/Target/UpdateMonthlyProductivityTarget", postParams, function (data) {
+                        element.val(currentVal);
+                        element.data("init-value",currentVal);
+                    });
+                }
+            });
+        });
+    </script>
+    <style type="text/css">
+    </style>
+}
+
+
+

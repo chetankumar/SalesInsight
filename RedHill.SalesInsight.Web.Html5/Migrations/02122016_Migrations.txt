@@ -1,0 +1,111 @@
+﻿Alter TABLE CustomerContact 
+Add Title NVARCHAR(225) NULL;
+GO
+
+------------Column Added In District Table
+Alter TABLE District 
+Add [AshInclude] [bit] NULL,
+	[AshSequence] [int] NULL,
+	[FineAggInclude] [bit] NULL,
+	[FineAggSequence] [int] NULL,
+	[SacksInclude] [bit] NULL,
+	[SacksSequence] [int] NULL,
+	[MD1Include] [bit] NULL,
+	[MD1Sequence] [int] NULL,
+	[MD2Include] [bit] NULL,
+	[MD2Sequence] [int] NULL,
+	[MD3Include] [bit] NULL,
+	[MD3Sequence] [int] NULL,
+	[MD4Include] [bit] NULL,
+	[MD4Sequence] [int] NULL;
+
+GO
+
+---------------------------------------------------------New  Quotation Form Setting
+
+/****** Object:  Table [dbo].[QuotationFormSetting]    Script Date: 12/2/2016 12:15:54 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[QuotationFormSetting](
+	[Id] [bigint] NOT NULL IDENTITY (1, 1),
+	[QuoteId] [bigint] NOT NULL,
+	[PriceInclude] [bit] NULL,
+	[PriceSequence] [int] NULL,
+	[QuantityInclude] [bit] NULL,
+	[QuantitySequence] [int] NULL,
+	[MixIdInclude] [bit] NULL,
+	[MixIdSequence] [int] NULL,
+	[DescriptionInclude] [bit] NULL,
+	[DescriptionSequence] [int] NULL,
+	[PsiInclude] [bit] NULL,
+	[PsiSequence] [int] NULL,
+	[PublicCommentsInclude] [bit] NULL,
+	[PublicCommentsSequence] [int] NULL,
+	[SlumpInclude] [bit] NULL,
+	[SlumpSequence] [int] NULL,
+	[AirInclude] [bit] NULL,
+	[AirSequence] [int] NULL,
+	[AshInclude] [bit] NULL,
+	[AshSequence] [int] NULL,
+	[FineAggInclude] [bit] NULL,
+	[FineAggSequence] [int] NULL,
+	[SacksInclude] [bit] NULL,
+	[SacksSequence] [int] NULL,
+	[MD1Include] [bit] NULL,
+	[MD1Sequence] [int] NULL,
+	[MD2Include] [bit] NULL,
+	[MD2Sequence] [int] NULL,
+	[MD3Include] [bit] NULL,
+	[MD3Sequence] [int] NULL,
+	[MD4Include] [bit] NULL,
+	[MD4Sequence] [int] NULL,
+ CONSTRAINT [PK_QuotationFormSetting] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[QuotationFormSetting]  WITH CHECK ADD  CONSTRAINT [FK_QuotationFormSetting_Quotation] FOREIGN KEY([QuoteId])
+REFERENCES [dbo].[Quotation] ([Id])
+GO
+
+ALTER TABLE [dbo].[QuotationFormSetting] CHECK CONSTRAINT [FK_QuotationFormSetting_Quotation]
+GO
+
+
+---------------------20161202 - New Columns in Company table-----------------
+
+ALTER TABLE [dbo].[Company]
+Add	[DeliveryQtyUomSingular] [nvarchar](100) NULL,
+	[DeliveryQtyUomPlural]	 [nvarchar](100) NULL,
+	[DeliveryDistance]		 [nvarchar](100) NULL
+GO
+
+--------------------20161202 - New Columns in RoleAccess table------------------
+
+ALTER TABLE [dbo].[RoleAccess]
+ADD HideSpread BIT,
+	HideContribution BIT,
+	HideProfit BIT,
+	MinSpread DECIMAL(18,2),
+	MaxSpread DECIMAL(18,2),
+	MinContribution DECIMAL(18,2),
+	MaxContribution DECIMAL(18,2),
+	MinProfit DECIMAL(18,2),
+	MaxProfit DECIMAL(18,2);
+
+---------------------20161203 - New Columns in Project Status Table--------------
+
+ALTER TABLE [dbo].[ProjectStatus]
+ADD IncludeOnForecastPage BIT,
+	TreatAsInactiveForPipelinePage BIT;
+
+-------------------------20161203 - CustomerContact New column ----AVNISH
+ALTER TABLE CustomerContact
+	ADD IsActive bit NULL;

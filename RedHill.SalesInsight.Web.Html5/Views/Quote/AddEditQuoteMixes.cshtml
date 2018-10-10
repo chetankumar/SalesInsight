@@ -1,0 +1,94 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.QuotationMixView
+
+
+@{
+    ViewBag.Title = "Add Edit Quote Project";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<div class="page-head">
+    <h2>
+        @if (Model.QuotationId > 0)
+        {
+            <span>Update Quotation @Model.QuotationId</span>
+        }
+        else
+        {
+            <span>Add new Quotation</span>
+        }
+    </h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Home/Pipeline">Projects</a></li>
+        <li>Quotations</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="block-flat">
+        <div class="well">
+            <div class="col-md-5">
+                @Html.Partial("_BasicQuotationProfile", Model.Profile)
+            </div>
+            <div class="col-md-7">
+                @Html.Partial("_QuoteActions", Model.Profile)
+            </div>
+            <div style="clear:both"></div>
+        </div>
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="heading1">
+                  <h4 class="panel-title">
+                      <a href="/Quote/AddEditQuote/@Model.QuotationId">Customer Information</a>
+                  </h4>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="heading2">
+                  <h4 class="panel-title">
+                      <a href="/Quote/AddEditQuoteProject/@Model.QuotationId">Job Information</a>
+                  </h4>
+                </div>
+            </div> 
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="heading3">
+                    <h4 class="panel-title">
+                        <a href="/Quote/AddEditQuoteDetails/@Model.QuotationId">Quote Information</a>
+                    </h4>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="heading4">
+                    <h4 class="panel-title">
+                        <a href="/Quote/AddEditQuoteAddons/@Model.QuotationId">Add-Ons</a>
+                    </h4>
+                </div>
+            </div>
+            
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="heading6">
+                    <h4 class="panel-title">
+                        <a href="/Quote/ShowAuditLogs/@Model.QuotationId">Audit Logs</a>
+                    </h4>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+@section Scripts{
+    
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            $(".primary_customer_select").change(function () {
+                customerId = $(this).val();
+                $(".customer_contact_customer_id").val(customerId);
+            });
+
+            
+        });
+    </script>
+}
+
+

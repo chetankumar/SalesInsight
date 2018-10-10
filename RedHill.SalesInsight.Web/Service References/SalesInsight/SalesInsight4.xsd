@@ -1,0 +1,1189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:4216/Services/SalesInsight.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:complexType name="Company">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CompanyId" type="xs:int" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ContactPerson" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Address1" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Address2" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Address3" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="City" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="State" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Zip" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Phone" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Fax" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Email" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Active" nillable="true" type="xs:boolean" />
+      <xs:element minOccurs="0" name="PlantTerm" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CurrentMonth" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="LocationTerm" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CurrentProjectionFrozen" nillable="true" type="xs:boolean" />
+      <xs:element minOccurs="0" name="ValuationTerm" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ForecastNewProjectStatusId" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="PipelineNewProjectStatusId" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="LicenseKey" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SalesStaffs" nillable="true" type="tns:ArrayOfSalesStaff">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="CompanyUsers" nillable="true" type="tns:ArrayOfCompanyUser">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="Competitors" nillable="true" type="tns:ArrayOfCompetitor">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="Districts" nillable="true" type="tns:ArrayOfDistrict">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="ProjectStatus" nillable="true" type="tns:ArrayOfProjectStatus">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="Regions" nillable="true" type="tns:ArrayOfRegion">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="NextKeyValues" nillable="true" type="tns:ArrayOfNextKeyValue">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="StandbyTimeTypes" nillable="true" type="tns:ArrayOfStandbyTimeType">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="ShortLoadTypes" nillable="true" type="tns:ArrayOfShortLoadType">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="QuoteSpecifications" nillable="true" type="tns:ArrayOfQuoteSpecification">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="QuoteSources" nillable="true" type="tns:ArrayOfQuoteSource">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="UnitOfMeasures" nillable="true" type="tns:ArrayOfUnitOfMeasure">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="ConcreteProducts" nillable="true" type="tns:ArrayOfConcreteProduct">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="Contractors" nillable="true" type="tns:ArrayOfContractor">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="Customers" nillable="true" type="tns:ArrayOfCustomer">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="MarketSegments" nillable="true" type="tns:ArrayOfMarketSegment">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="Plants" nillable="true" type="tns:ArrayOfPlant">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="AdditionalProducts" nillable="true" type="tns:ArrayOfAdditionalProduct">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Company" nillable="true" type="tns:Company" />
+  <xs:complexType name="ArrayOfSalesStaff">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SalesStaff" nillable="true" type="tns:SalesStaff" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSalesStaff" nillable="true" type="tns:ArrayOfSalesStaff" />
+  <xs:complexType name="SalesStaff">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="SalesStaffId" type="xs:int" />
+      <xs:element minOccurs="0" name="CompanyId" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Phone" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Fax" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Email" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Active" nillable="true" type="xs:boolean" />
+      <xs:element minOccurs="0" name="DistrictSalesStaffs" nillable="true" type="tns:ArrayOfDistrictSalesStaff">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="PlantBudgetSalesStaffs" nillable="true" type="tns:ArrayOfPlantBudgetSalesStaff">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="ProjectSalesStaffs" nillable="true" type="tns:ArrayOfProjectSalesStaff">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="Quotes" nillable="true" type="tns:ArrayOfQuote">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SalesStaff" nillable="true" type="tns:SalesStaff" />
+  <xs:complexType name="ArrayOfDistrictSalesStaff">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="DistrictSalesStaff" nillable="true" type="tns:DistrictSalesStaff" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfDistrictSalesStaff" nillable="true" type="tns:ArrayOfDistrictSalesStaff" />
+  <xs:complexType name="DistrictSalesStaff">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="DistrictSalesStaffId" type="xs:int" />
+      <xs:element minOccurs="0" name="DistrictId" type="xs:int" />
+      <xs:element minOccurs="0" name="SalesStaffId" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DistrictSalesStaff" nillable="true" type="tns:DistrictSalesStaff" />
+  <xs:complexType name="ArrayOfPlantBudgetSalesStaff">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="PlantBudgetSalesStaff" nillable="true" type="tns:PlantBudgetSalesStaff" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfPlantBudgetSalesStaff" nillable="true" type="tns:ArrayOfPlantBudgetSalesStaff" />
+  <xs:complexType name="PlantBudgetSalesStaff">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="PlantBudgetSalesStaffId" type="xs:int" />
+      <xs:element minOccurs="0" name="PlantBudgetId" type="xs:int" />
+      <xs:element minOccurs="0" name="SalesStaffId" type="xs:int" />
+      <xs:element minOccurs="0" name="Percentage" nillable="true" type="xs:short" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="PlantBudgetSalesStaff" nillable="true" type="tns:PlantBudgetSalesStaff" />
+  <xs:complexType name="ArrayOfProjectSalesStaff">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ProjectSalesStaff" nillable="true" type="tns:ProjectSalesStaff" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfProjectSalesStaff" nillable="true" type="tns:ArrayOfProjectSalesStaff" />
+  <xs:complexType name="ProjectSalesStaff">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ProjectSalesStaffId" type="xs:int" />
+      <xs:element minOccurs="0" name="ProjectId" type="xs:int" />
+      <xs:element minOccurs="0" name="SalesStaffId" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ProjectSalesStaff" nillable="true" type="tns:ProjectSalesStaff" />
+  <xs:complexType name="ArrayOfQuote">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Quote" nillable="true" type="tns:Quote" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfQuote" nillable="true" type="tns:ArrayOfQuote" />
+  <xs:complexType name="Quote">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="ProjectId" type="xs:int" />
+      <xs:element minOccurs="0" name="SalesStaffId" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="QuoteSourceId" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="QuoteSpecificationId" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="ShortLoadTypeId" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="StandbyTimeTypeId" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Valuation" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="PublicNoteText" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="EntryUtcDateTime" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="DatePosted" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="ExpirationDate" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="TransmissionCount" type="xs:int" />
+      <xs:element minOccurs="0" name="LastTransmissionUtcDateTime" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Active" type="xs:boolean" />
+      <xs:element minOccurs="0" name="CustomerContactId" type="xs:int" />
+      <xs:element minOccurs="0" name="Accepted" nillable="true" type="xs:boolean" />
+      <xs:element minOccurs="0" name="PurchaseOrderNumber" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="TotalCYDs" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="AvgPrice" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="AvgUnloadTime" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="AvgLoadSize" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="AvgSpread" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="AvgContMarg" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="AvgProfit" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="AvgCYDsHr" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="TargetSpread" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="TargetContMarg" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="TargetProfit" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="TargetCYDsHr" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="VarianceSpread" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="VarianceContMarg" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="VarianceProfit" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="VarianceCYDsHr" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="TotalProfit" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="QuoteNotes" nillable="true" type="tns:ArrayOfQuoteNote">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="QuoteConcreteProducts" nillable="true" type="tns:ArrayOfQuoteConcreteProduct">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="QuoteAdditionalProducts" nillable="true" type="tns:ArrayOfQuoteAdditionalProduct">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Quote" nillable="true" type="tns:Quote" />
+  <xs:complexType name="ArrayOfQuoteNote">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="QuoteNote" nillable="true" type="tns:QuoteNote" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfQuoteNote" nillable="true" type="tns:ArrayOfQuoteNote" />
+  <xs:complexType name="QuoteNote">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="QuoteId" type="xs:int" />
+      <xs:element minOccurs="0" name="UserId" type="ser:guid" />
+      <xs:element minOccurs="0" name="EntryUtcDateTime" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="DatePosted" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="NoteText" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="QuoteNote" nillable="true" type="tns:QuoteNote" />
+  <xs:complexType name="ArrayOfQuoteConcreteProduct">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="QuoteConcreteProduct" nillable="true" type="tns:QuoteConcreteProduct" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfQuoteConcreteProduct" nillable="true" type="tns:ArrayOfQuoteConcreteProduct" />
+  <xs:complexType name="QuoteConcreteProduct">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="QuoteId" type="xs:int" />
+      <xs:element minOccurs="0" name="ConcreteProductId" type="xs:int" />
+      <xs:element minOccurs="0" name="PlantId" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="EstimatedQuantity" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="Price" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="UnloadMinutes" nillable="true" type="xs:short" />
+      <xs:element minOccurs="0" name="AverageLoadSize" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="Color" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="EntrainedAir" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Fiber" type="xs:boolean" />
+      <xs:element minOccurs="0" name="NoteText" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CodeAlias" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DescriptionAlias" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Cost" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="Spread" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="ContMargin" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="Profit" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="WaterToCementNote" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SlumpNote" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="AirNote" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="QuoteConcreteProduct" nillable="true" type="tns:QuoteConcreteProduct" />
+  <xs:complexType name="ArrayOfQuoteAdditionalProduct">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="QuoteAdditionalProduct" nillable="true" type="tns:QuoteAdditionalProduct" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfQuoteAdditionalProduct" nillable="true" type="tns:ArrayOfQuoteAdditionalProduct" />
+  <xs:complexType name="QuoteAdditionalProduct">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="QuoteId" type="xs:int" />
+      <xs:element minOccurs="0" name="AdditionalProductId" type="xs:int" />
+      <xs:element minOccurs="0" name="PlantId" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="Price" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="Cost" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="FlatRate" type="xs:boolean" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="QuoteAdditionalProduct" nillable="true" type="tns:QuoteAdditionalProduct" />
+  <xs:complexType name="ArrayOfCompanyUser">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="CompanyUser" nillable="true" type="tns:CompanyUser" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfCompanyUser" nillable="true" type="tns:ArrayOfCompanyUser" />
+  <xs:complexType name="CompanyUser">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CompanyUserId" type="xs:int" />
+      <xs:element minOccurs="0" name="CompanyId" type="xs:int" />
+      <xs:element minOccurs="0" name="UserId" type="ser:guid" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CompanyUser" nillable="true" type="tns:CompanyUser" />
+  <xs:complexType name="ArrayOfCompetitor">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Competitor" nillable="true" type="tns:Competitor" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfCompetitor" nillable="true" type="tns:ArrayOfCompetitor" />
+  <xs:complexType name="Competitor">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CompetitorId" type="xs:int" />
+      <xs:element minOccurs="0" name="CompanyId" type="xs:int" />
+      <xs:element minOccurs="0" name="DistrictId" type="xs:int" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Active" nillable="true" type="xs:boolean" />
+      <xs:element minOccurs="0" name="ProjectCompetitors" nillable="true" type="tns:ArrayOfProjectCompetitor">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Competitor" nillable="true" type="tns:Competitor" />
+  <xs:complexType name="ArrayOfProjectCompetitor">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ProjectCompetitor" nillable="true" type="tns:ProjectCompetitor" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfProjectCompetitor" nillable="true" type="tns:ArrayOfProjectCompetitor" />
+  <xs:complexType name="ProjectCompetitor">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ProjectCompetitorId" type="xs:int" />
+      <xs:element minOccurs="0" name="ProjectId" type="xs:int" />
+      <xs:element minOccurs="0" name="CompetitorId" type="xs:int" />
+      <xs:element minOccurs="0" name="Price" nillable="true" type="xs:decimal" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ProjectCompetitor" nillable="true" type="tns:ProjectCompetitor" />
+  <xs:complexType name="ArrayOfDistrict">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="District" nillable="true" type="tns:District" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfDistrict" nillable="true" type="tns:ArrayOfDistrict" />
+  <xs:complexType name="District">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="DistrictId" type="xs:int" />
+      <xs:element minOccurs="0" name="CompanyId" type="xs:int" />
+      <xs:element minOccurs="0" name="RegionId" type="xs:int" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Active" nillable="true" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Competitors" nillable="true" type="tns:ArrayOfCompetitor">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="DistrictSalesStaffs" nillable="true" type="tns:ArrayOfDistrictSalesStaff">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="DistrictUsers" nillable="true" type="tns:ArrayOfDistrictUser">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="Plants" nillable="true" type="tns:ArrayOfPlant">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="District" nillable="true" type="tns:District" />
+  <xs:complexType name="ArrayOfDistrictUser">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="DistrictUser" nillable="true" type="tns:DistrictUser" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfDistrictUser" nillable="true" type="tns:ArrayOfDistrictUser" />
+  <xs:complexType name="DistrictUser">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="DistrictUserId" type="xs:int" />
+      <xs:element minOccurs="0" name="UserId" type="ser:guid" />
+      <xs:element minOccurs="0" name="DistrictId" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DistrictUser" nillable="true" type="tns:DistrictUser" />
+  <xs:complexType name="ArrayOfPlant">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Plant" nillable="true" type="tns:Plant" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfPlant" nillable="true" type="tns:ArrayOfPlant" />
+  <xs:complexType name="Plant">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="PlantId" type="xs:int" />
+      <xs:element minOccurs="0" name="CompanyId" type="xs:int" />
+      <xs:element minOccurs="0" name="DistrictId" type="xs:int" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Trucks" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="Active" nillable="true" type="xs:boolean" />
+      <xs:element minOccurs="0" name="ProductTypeId" type="xs:int" />
+      <xs:element minOccurs="0" name="TicketMinutes" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="LoadMinutes" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="TemperMinutes" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="WaitMinutes" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="Utilization" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="PlantFixedCost" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="DeliveryFixedCost" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="SGA" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="VariableCostPerMin" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="PlantBudgets" nillable="true" type="tns:ArrayOfPlantBudget">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="ConcreteProductPlants" nillable="true" type="tns:ArrayOfConcreteProductPlant">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="AdditionalProductPlants" nillable="true" type="tns:ArrayOfAdditionalProductPlant">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="Projects" nillable="true" type="tns:ArrayOfProject">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="QuoteConcreteProducts" nillable="true" type="tns:ArrayOfQuoteConcreteProduct">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="QuoteAdditionalProducts" nillable="true" type="tns:ArrayOfQuoteAdditionalProduct">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Plant" nillable="true" type="tns:Plant" />
+  <xs:complexType name="ArrayOfPlantBudget">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="PlantBudget" nillable="true" type="tns:PlantBudget" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfPlantBudget" nillable="true" type="tns:ArrayOfPlantBudget" />
+  <xs:complexType name="PlantBudget">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="PlantBudgetId" type="xs:int" />
+      <xs:element minOccurs="0" name="PlantId" type="xs:int" />
+      <xs:element minOccurs="0" name="BudgetDate" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Budget" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="Trucks" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="PlantBudgetMarketSegments" nillable="true" type="tns:ArrayOfPlantBudgetMarketSegment">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="PlantBudgetSalesStaffs" nillable="true" type="tns:ArrayOfPlantBudgetSalesStaff">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="PlantBudget" nillable="true" type="tns:PlantBudget" />
+  <xs:complexType name="ArrayOfPlantBudgetMarketSegment">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="PlantBudgetMarketSegment" nillable="true" type="tns:PlantBudgetMarketSegment" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfPlantBudgetMarketSegment" nillable="true" type="tns:ArrayOfPlantBudgetMarketSegment" />
+  <xs:complexType name="PlantBudgetMarketSegment">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="PlantBudgetMarketSegmentId" type="xs:int" />
+      <xs:element minOccurs="0" name="PlantBudgetId" type="xs:int" />
+      <xs:element minOccurs="0" name="MarketSegmentId" type="xs:int" />
+      <xs:element minOccurs="0" name="Percentage" nillable="true" type="xs:short" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="PlantBudgetMarketSegment" nillable="true" type="tns:PlantBudgetMarketSegment" />
+  <xs:complexType name="ArrayOfConcreteProductPlant">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ConcreteProductPlant" nillable="true" type="tns:ConcreteProductPlant" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfConcreteProductPlant" nillable="true" type="tns:ArrayOfConcreteProductPlant" />
+  <xs:complexType name="ConcreteProductPlant">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="ConcreteProductId" type="xs:int" />
+      <xs:element minOccurs="0" name="PlantId" type="xs:int" />
+      <xs:element minOccurs="0" name="Price" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="Cost" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="Active" type="xs:boolean" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ConcreteProductPlant" nillable="true" type="tns:ConcreteProductPlant" />
+  <xs:complexType name="ArrayOfAdditionalProductPlant">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="AdditionalProductPlant" nillable="true" type="tns:AdditionalProductPlant" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfAdditionalProductPlant" nillable="true" type="tns:ArrayOfAdditionalProductPlant" />
+  <xs:complexType name="AdditionalProductPlant">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="AdditionalProductId" type="xs:int" />
+      <xs:element minOccurs="0" name="PlantId" type="xs:int" />
+      <xs:element minOccurs="0" name="Price" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="Cost" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="Active" type="xs:boolean" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="AdditionalProductPlant" nillable="true" type="tns:AdditionalProductPlant" />
+  <xs:complexType name="ArrayOfProject">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Project" nillable="true" type="tns:Project" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfProject" nillable="true" type="tns:ArrayOfProject" />
+  <xs:complexType name="Project">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ProjectId" type="xs:int" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ProjectStatusId" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="ConcretePlantId" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="ContractorId" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="CustomerId" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="MarketSegmentId" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="Valuation" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="Price" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="StartDate" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Active" nillable="true" type="xs:boolean" />
+      <xs:element minOccurs="0" name="InitialProjection" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="Mix" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Spread" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="Address" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="City" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Volume" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="BidDate" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Profit" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="ToJobMinutes" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="WashMinutes" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="ReturnMinutes" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="ProjectCompetitors" nillable="true" type="tns:ArrayOfProjectCompetitor">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="ProjectNotes" nillable="true" type="tns:ArrayOfProjectNote">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="ProjectProjections" nillable="true" type="tns:ArrayOfProjectProjection">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="ProjectSalesStaffs" nillable="true" type="tns:ArrayOfProjectSalesStaff">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="Quotes" nillable="true" type="tns:ArrayOfQuote">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Project" nillable="true" type="tns:Project" />
+  <xs:complexType name="ArrayOfProjectNote">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ProjectNote" nillable="true" type="tns:ProjectNote" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfProjectNote" nillable="true" type="tns:ArrayOfProjectNote" />
+  <xs:complexType name="ProjectNote">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ProjectNoteId" type="xs:int" />
+      <xs:element minOccurs="0" name="UserId" type="ser:guid" />
+      <xs:element minOccurs="0" name="ProjectId" type="xs:int" />
+      <xs:element minOccurs="0" name="NoteText" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DatePosted" type="xs:dateTime" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ProjectNote" nillable="true" type="tns:ProjectNote" />
+  <xs:complexType name="ArrayOfProjectProjection">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ProjectProjection" nillable="true" type="tns:ProjectProjection" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfProjectProjection" nillable="true" type="tns:ArrayOfProjectProjection" />
+  <xs:complexType name="ProjectProjection">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ProjectProjectionId" type="xs:int" />
+      <xs:element minOccurs="0" name="ProjectId" type="xs:int" />
+      <xs:element minOccurs="0" name="ProjectionDate" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Projection" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="Actual" nillable="true" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ProjectProjection" nillable="true" type="tns:ProjectProjection" />
+  <xs:complexType name="ArrayOfProjectStatus">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ProjectStatus" nillable="true" type="tns:ProjectStatus" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfProjectStatus" nillable="true" type="tns:ArrayOfProjectStatus" />
+  <xs:complexType name="ProjectStatus">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ProjectStatusId" type="xs:int" />
+      <xs:element minOccurs="0" name="CompanyId" type="xs:int" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="StatusType" type="xs:short" />
+      <xs:element minOccurs="0" name="SortOrder" type="xs:int" />
+      <xs:element minOccurs="0" name="Projects" nillable="true" type="tns:ArrayOfProject">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ProjectStatus" nillable="true" type="tns:ProjectStatus" />
+  <xs:complexType name="ArrayOfRegion">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Region" nillable="true" type="tns:Region" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfRegion" nillable="true" type="tns:ArrayOfRegion" />
+  <xs:complexType name="Region">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="RegionId" type="xs:int" />
+      <xs:element minOccurs="0" name="CompanyId" type="xs:int" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Active" nillable="true" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Districts" nillable="true" type="tns:ArrayOfDistrict">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Region" nillable="true" type="tns:Region" />
+  <xs:complexType name="ArrayOfNextKeyValue">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="NextKeyValue" nillable="true" type="tns:NextKeyValue" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfNextKeyValue" nillable="true" type="tns:ArrayOfNextKeyValue" />
+  <xs:complexType name="NextKeyValue">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="CompanyId" type="xs:int" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Value" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="NextKeyValue" nillable="true" type="tns:NextKeyValue" />
+  <xs:complexType name="ArrayOfStandbyTimeType">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="StandbyTimeType" nillable="true" type="tns:StandbyTimeType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfStandbyTimeType" nillable="true" type="tns:ArrayOfStandbyTimeType" />
+  <xs:complexType name="StandbyTimeType">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="CompanyId" type="xs:int" />
+      <xs:element minOccurs="0" name="Code" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Active" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Quotes" nillable="true" type="tns:ArrayOfQuote">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="StandbyTimeType" nillable="true" type="tns:StandbyTimeType" />
+  <xs:complexType name="ArrayOfShortLoadType">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ShortLoadType" nillable="true" type="tns:ShortLoadType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfShortLoadType" nillable="true" type="tns:ArrayOfShortLoadType" />
+  <xs:complexType name="ShortLoadType">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="CompanyId" type="xs:int" />
+      <xs:element minOccurs="0" name="Code" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Active" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Quotes" nillable="true" type="tns:ArrayOfQuote">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ShortLoadType" nillable="true" type="tns:ShortLoadType" />
+  <xs:complexType name="ArrayOfQuoteSpecification">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="QuoteSpecification" nillable="true" type="tns:QuoteSpecification" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfQuoteSpecification" nillable="true" type="tns:ArrayOfQuoteSpecification" />
+  <xs:complexType name="QuoteSpecification">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="CompanyId" type="xs:int" />
+      <xs:element minOccurs="0" name="Code" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Active" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Quotes" nillable="true" type="tns:ArrayOfQuote">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="QuoteSpecification" nillable="true" type="tns:QuoteSpecification" />
+  <xs:complexType name="ArrayOfQuoteSource">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="QuoteSource" nillable="true" type="tns:QuoteSource" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfQuoteSource" nillable="true" type="tns:ArrayOfQuoteSource" />
+  <xs:complexType name="QuoteSource">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="CompanyId" type="xs:int" />
+      <xs:element minOccurs="0" name="Code" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Active" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Quotes" nillable="true" type="tns:ArrayOfQuote">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="QuoteSource" nillable="true" type="tns:QuoteSource" />
+  <xs:complexType name="ArrayOfUnitOfMeasure">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="UnitOfMeasure" nillable="true" type="tns:UnitOfMeasure" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfUnitOfMeasure" nillable="true" type="tns:ArrayOfUnitOfMeasure" />
+  <xs:complexType name="UnitOfMeasure">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="CompanyId" type="xs:int" />
+      <xs:element minOccurs="0" name="Code" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="AdditionalProducts" nillable="true" type="tns:ArrayOfAdditionalProduct">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="UnitOfMeasure" nillable="true" type="tns:UnitOfMeasure" />
+  <xs:complexType name="ArrayOfAdditionalProduct">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="AdditionalProduct" nillable="true" type="tns:AdditionalProduct" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfAdditionalProduct" nillable="true" type="tns:ArrayOfAdditionalProduct" />
+  <xs:complexType name="AdditionalProduct">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="CompanyId" type="xs:int" />
+      <xs:element minOccurs="0" name="UnitOfMeasureId" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="ProductTypeId" type="xs:int" />
+      <xs:element minOccurs="0" name="Code" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Active" type="xs:boolean" />
+      <xs:element minOccurs="0" name="StandardProduct" type="xs:boolean" />
+      <xs:element minOccurs="0" name="FlatRate" type="xs:boolean" />
+      <xs:element minOccurs="0" name="AdditionalProductPlants" nillable="true" type="tns:ArrayOfAdditionalProductPlant">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="QuoteAdditionalProducts" nillable="true" type="tns:ArrayOfQuoteAdditionalProduct">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="AdditionalProduct" nillable="true" type="tns:AdditionalProduct" />
+  <xs:complexType name="ArrayOfConcreteProduct">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ConcreteProduct" nillable="true" type="tns:ConcreteProduct" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfConcreteProduct" nillable="true" type="tns:ArrayOfConcreteProduct" />
+  <xs:complexType name="ConcreteProduct">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="CompanyId" type="xs:int" />
+      <xs:element minOccurs="0" name="Code" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Active" type="xs:boolean" />
+      <xs:element minOccurs="0" name="ConcreteProductPlants" nillable="true" type="tns:ArrayOfConcreteProductPlant">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="QuoteConcreteProducts" nillable="true" type="tns:ArrayOfQuoteConcreteProduct">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ConcreteProduct" nillable="true" type="tns:ConcreteProduct" />
+  <xs:complexType name="ArrayOfContractor">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Contractor" nillable="true" type="tns:Contractor" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfContractor" nillable="true" type="tns:ArrayOfContractor" />
+  <xs:complexType name="Contractor">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ContractorId" type="xs:int" />
+      <xs:element minOccurs="0" name="CompanyId" type="xs:int" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Active" nillable="true" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Projects" nillable="true" type="tns:ArrayOfProject">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Contractor" nillable="true" type="tns:Contractor" />
+  <xs:complexType name="ArrayOfCustomer">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Customer" nillable="true" type="tns:Customer" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfCustomer" nillable="true" type="tns:ArrayOfCustomer" />
+  <xs:complexType name="Customer">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CustomerId" type="xs:int" />
+      <xs:element minOccurs="0" name="CompanyId" type="xs:int" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="CustomerNumber" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Address1" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Address2" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Address3" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="City" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="State" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Zip" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Active" nillable="true" type="xs:boolean" />
+      <xs:element minOccurs="0" name="CustomerContacts" nillable="true" type="tns:ArrayOfCustomerContact">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="Projects" nillable="true" type="tns:ArrayOfProject">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Customer" nillable="true" type="tns:Customer" />
+  <xs:complexType name="ArrayOfCustomerContact">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="CustomerContact" nillable="true" type="tns:CustomerContact" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfCustomerContact" nillable="true" type="tns:ArrayOfCustomerContact" />
+  <xs:complexType name="CustomerContact">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="CustomerId" type="xs:int" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Phone" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Fax" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Email" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Quotes" nillable="true" type="tns:ArrayOfQuote">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CustomerContact" nillable="true" type="tns:CustomerContact" />
+  <xs:complexType name="ArrayOfMarketSegment">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="MarketSegment" nillable="true" type="tns:MarketSegment" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfMarketSegment" nillable="true" type="tns:ArrayOfMarketSegment" />
+  <xs:complexType name="MarketSegment">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="MarketSegmentId" type="xs:int" />
+      <xs:element minOccurs="0" name="CompanyId" type="xs:int" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Active" nillable="true" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Spread" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="ContMarg" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="Profit" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="CYDsHr" nillable="true" type="xs:decimal" />
+      <xs:element minOccurs="0" name="PlantBudgetMarketSegments" nillable="true" type="tns:ArrayOfPlantBudgetMarketSegment">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="Projects" nillable="true" type="tns:ArrayOfProject">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="MarketSegment" nillable="true" type="tns:MarketSegment" />
+  <xs:simpleType name="SaveCustomerResult">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Undefined">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">-1</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Success">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">0</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DuplicateCustomerContactName">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">1</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="SaveCustomerResult" nillable="true" type="tns:SaveCustomerResult" />
+  <xs:complexType name="ArrayOfCompany">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Company" nillable="true" type="tns:Company" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfCompany" nillable="true" type="tns:ArrayOfCompany" />
+  <xs:simpleType name="SaveProductResult">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Undefined">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">-1</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Success">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">0</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DuplicateCompanyIdProductCode">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">1</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DuplicateProductIdPlantId">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">2</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="SaveProductResult" nillable="true" type="tns:SaveProductResult" />
+  <xs:simpleType name="SaveQuoteResult">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Undefined">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">-1</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Success">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">0</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DuplicateAdditionalProductIdPlantId">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">3</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DuplicateConcreteProductIdPlantId">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">4</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="SaveQuoteResult" nillable="true" type="tns:SaveQuoteResult" />
+</xs:schema>

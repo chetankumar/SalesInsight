@@ -1,0 +1,277 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.RoleAccessView
+
+@{
+    ViewBag.Title = (Model.RoleId > 0 ? "Edit Role" : "New Role");
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="page-head">
+    <h2>@(Model.RoleId > 0 ? "Edit" : "Add") Role</h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Home/Settings">Settings</a></li>
+        <li><a href="@Url.Action("Roles", "Home")">Roles</a></li>
+        <li class="active">@(Model.RoleId > 0 ? Model.RoleName : "New")</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="block-flat">
+        @using (Html.BeginForm("NewRole", "Home", FormMethod.Post, new { @class = "form-horizontal", @role = "form" }))
+        {
+            @Html.ValidationSummary(true)
+            <div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">
+                        @Html.LabelFor(model => model.RoleName)
+                        @Html.HiddenFor(model => model.RoleId, new { @class = "form-control" })
+                    </div>
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(model => model.RoleName, new { @class = "form-control" })
+                        <label class="field_error">@Html.ValidationMessageFor(model => model.RoleName)</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">
+                        @Html.LabelFor(model => model.HasAddonsAccess)
+                    </div>
+                    <div class="col-sm-10">
+                        @Html.DropDownListFor(model => model.HasAddonsAccess, (SelectList)ViewBag.AccessList, new { @class = "form-control" })
+                        <label class="field_error">@Html.ValidationMessageFor(model => model.HasAddonsAccess)</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">
+                        @Html.LabelFor(model => model.HasCompetitorsAccess)
+                    </div>
+                    <div class="col-sm-10">
+                        @Html.DropDownListFor(model => model.HasCompetitorsAccess, (SelectList)ViewBag.AccessList, new { @class = "form-control" })
+                        <label class="field_error">@Html.ValidationMessageFor(model => model.HasCompetitorsAccess)</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">
+                        @Html.LabelFor(model => model.HasCustomersAccess)
+                    </div>
+                    <div class="col-sm-10">
+                        @Html.DropDownListFor(model => model.HasCustomersAccess, (SelectList)ViewBag.AccessList, new { @class = "form-control" })
+                        <label class="field_error">@Html.ValidationMessageFor(model => model.HasCustomersAccess)</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">
+                        @Html.LabelFor(model => model.HasForecastAccess)
+                    </div>
+                    <div class="col-sm-10">
+                        @Html.DropDownListFor(model => model.HasForecastAccess, (SelectList)ViewBag.AccessList, new { @class = "form-control" })
+                        <label class="field_error">@Html.ValidationMessageFor(model => model.HasForecastAccess)</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">
+                        @Html.LabelFor(model => model.HasGCAccess)
+                    </div>
+                    <div class="col-sm-10">
+                        @Html.DropDownListFor(model => model.HasGCAccess, (SelectList)ViewBag.AccessList, new { @class = "form-control" })
+                        <label class="field_error">@Html.ValidationMessageFor(model => model.HasGCAccess)</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">
+                        @Html.LabelFor(model => model.HasMarketSegmentsAccess)
+                    </div>
+                    <div class="col-sm-10">
+                        @Html.DropDownListFor(model => model.HasMarketSegmentsAccess, (SelectList)ViewBag.AccessList, new { @class = "form-control" })
+                        <label class="field_error">@Html.ValidationMessageFor(model => model.HasMarketSegmentsAccess)</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">
+                        @Html.LabelFor(model => model.HasMiscellaneousAccess)
+                    </div>
+                    <div class="col-sm-10">
+                        @Html.DropDownListFor(model => model.HasMiscellaneousAccess, (SelectList)ViewBag.AdvanceAccessList, new { @class = "form-control" })
+                        <label class="field_error">@Html.ValidationMessageFor(model => model.HasMiscellaneousAccess)</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">
+                        @Html.LabelFor(model => model.HasMixDesignsAccess)
+                    </div>
+                    <div class="col-sm-10">
+                        @Html.DropDownListFor(model => model.HasMixDesignsAccess, (SelectList)ViewBag.AccessList, new { @class = "form-control" })
+                        <label class="field_error">@Html.ValidationMessageFor(model => model.HasMixDesignsAccess)</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">
+                        @Html.LabelFor(model => model.HasPipelineAccess)
+                    </div>
+                    <div class="col-sm-10">
+                        @Html.DropDownListFor(model => model.HasPipelineAccess, (SelectList)ViewBag.AdvanceAccessList, new { @class = "form-control" })
+                        <label class="field_error">@Html.ValidationMessageFor(model => model.HasPipelineAccess)</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">
+                        @Html.LabelFor(model => model.HasQuotationAccess)
+                    </div>
+                    <div class="col-sm-10">
+                        @Html.DropDownListFor(model => model.HasQuotationAccess, (SelectList)ViewBag.AdvanceAccessList, new { @class = "form-control" })
+                        <label class="field_error">@Html.ValidationMessageFor(model => model.HasQuotationAccess)</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">
+                        @Html.LabelFor(model => model.HasRawMaterialsAccess)
+                    </div>
+                    <div class="col-sm-10">
+                        @Html.DropDownListFor(model => model.HasRawMaterialsAccess, (SelectList)ViewBag.AccessList, new { @class = "form-control" })
+                        <label class="field_error">@Html.ValidationMessageFor(model => model.HasRawMaterialsAccess)</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">
+                        @Html.LabelFor(model => model.HasReportsAccess)
+                    </div>
+                    <div class="col-sm-10">
+                        @Html.DropDownListFor(model => model.HasReportsAccess, (SelectList)ViewBag.LimitedAccessList, new { @class = "form-control" })
+                        <label class="field_error">@Html.ValidationMessageFor(model => model.HasReportsAccess)</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">
+                        @Html.LabelFor(model => model.HasReportSettingsAccess)
+                    </div>
+                    <div class="col-sm-10">
+                        @Html.DropDownListFor(model => model.HasReportSettingsAccess, (SelectList)ViewBag.AccessList, new { @class = "form-control" })
+                        <label class="field_error">@Html.ValidationMessageFor(model => model.HasReportSettingsAccess)</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">
+                        @Html.LabelFor(model => model.HasRolesAccess)
+                    </div>
+                    <div class="col-sm-10">
+                        @Html.DropDownListFor(model => model.HasRolesAccess, (SelectList)ViewBag.AdvanceAccessList, new { @class = "form-control" })
+                        <label class="field_error">@Html.ValidationMessageFor(model => model.HasRolesAccess)</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">
+                        @Html.LabelFor(model => model.HasSackPricingAccess)
+                    </div>
+                    <div class="col-sm-10">
+                        @Html.DropDownListFor(model => model.HasSackPricingAccess, (SelectList)ViewBag.AccessList, new { @class = "form-control" })
+                        <label class="field_error">@Html.ValidationMessageFor(model => model.HasSackPricingAccess)</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">
+                        @Html.LabelFor(model => model.HasSalesStaffAccess)
+                    </div>
+                    <div class="col-sm-10">
+                        @Html.DropDownListFor(model => model.HasSalesStaffAccess, (SelectList)ViewBag.AccessList, new { @class = "form-control" })
+                        <label class="field_error">@Html.ValidationMessageFor(model => model.HasSalesStaffAccess)</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">
+                        @Html.LabelFor(model => model.HasStatusesReasonsLostAccess)
+                    </div>
+                    <div class="col-sm-10">
+                        @Html.DropDownListFor(model => model.HasStatusesReasonsLostAccess, (SelectList)ViewBag.AccessList, new { @class = "form-control" })
+                        <label class="field_error">@Html.ValidationMessageFor(model => model.HasStatusesReasonsLostAccess)</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">
+                        @Html.LabelFor(model => model.HasStructureAccess)
+                    </div>
+                    <div class="col-sm-10">
+                        @Html.DropDownListFor(model => model.HasStructureAccess, (SelectList)ViewBag.AccessList, new { @class = "form-control" })
+                        <label class="field_error">@Html.ValidationMessageFor(model => model.HasStructureAccess)</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">
+                        @Html.LabelFor(model => model.HasTargetsAccess)
+                    </div>
+                    <div class="col-sm-10">
+                        @Html.DropDownListFor(model => model.HasTargetsAccess, (SelectList)ViewBag.AccessList, new { @class = "form-control" })
+                        <label class="field_error">@Html.ValidationMessageFor(model => model.HasTargetsAccess)</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">
+                        @Html.LabelFor(model => model.HasUsersAccess)
+                    </div>
+                    <div class="col-sm-10">
+                        @Html.DropDownListFor(model => model.HasUsersAccess, (SelectList)ViewBag.AccessList, new { @class = "form-control" })
+                        <label class="field_error">@Html.ValidationMessageFor(model => model.HasUsersAccess)</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-10 col-sm-offset-2">
+                        <div class="checkbox">
+                            <label>
+                                @Html.CheckBoxFor(model => model.CanEditActual)
+                                Allow Editing of Actual Volumes
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-10 col-sm-offset-2">
+                        <div class="checkbox">
+                            <label>
+                                @Html.CheckBoxFor(model => model.CanEditNonFutureProjections)
+                                Allow Editing of Non-Future Projections
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-10 col-sm-offset-2">
+                        <div class="checkbox">
+                            <label>
+                                @Html.CheckBoxFor(model => model.CanPrintQuotes)
+                                Enable Printing of Unapproved Quotes
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-10 col-sm-offset-2">
+                        <div class="checkbox">
+                            <label>
+                                @Html.CheckBoxFor(model => model.ExcludeCustomMix)
+                                Exclude Custom Mix Page
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-10 col-sm-offset-2">
+                        <div class="checkbox">
+                            <label>
+                                @Html.CheckBoxFor(model => model.Enable5skPricing)
+                                Enable Sack Pricing
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 ">
+                    </div>
+                    <div class="col-sm-10">
+                        <input type="submit" value="@(Model.RoleId > 0 ? "Update" : "Create")" class="btn btn-primary" />
+                    </div>
+                </div>
+
+            </div>
+        }
+    </div>
+</div>
+<script type="text/javascript">
+
+</script>

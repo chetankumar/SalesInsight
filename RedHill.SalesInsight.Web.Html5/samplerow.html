@@ -1,0 +1,22 @@
+﻿<tr class="mix_row" data-cyd-hour="" data-mix-cost="" data-addon-cost="" data-id="" id="" style="cursor: move;">
+    <td><a href="" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i></a></td>
+    <td><a href="" class="btn show_5sk_calculation_btn btn-xs btn-primary" style="display: none"><i class="fa fa-fw fa-list-ul"></i></a></td>
+    <td><span></span></td>
+    <td>
+        <select class="form-control input-sm mix_field multiselect" id="mix_selection" name="mix_selection">@foreach(var mix in Model.StandardMixes){<text>"<option value="@mix.Id">@mix.Number - @mix.SalesDesc</option>"</text>}</select></td>
+    <td>
+        <input class="desc_field input-sm form-control" value="" /></td>
+    <td style="display:none" class="fsk_related"><span class="content_field"></span></td>
+    <td>
+        <input class="volume_field input-sm form-control" value=""></td>
+    <td>
+        <input class="price_field input-sm form-control" value=""></td>
+    <td>
+        <input class="unload_field input-sm form-control" value=""></td>
+    <td>
+        <input class="avg_load_field input-sm form-control" value=""></td>
+    <td class="spread_box"></td>
+    <td class="contribution_box"></td>
+    <td class="profit_box"></td>
+    <td><a href="" class="btn btn-xs btn-danger delete_mix" data-confirm="Are you sure you want to delete this mix?"><i class="fa fa-trash fa-fw"></i></a></td>
+</tr>

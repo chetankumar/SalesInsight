@@ -1,0 +1,42 @@
+﻿@{
+    ViewBag.Title = "Initial Setup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string error = Convert.ToString(TempData["Fail"]);
+    string pass = Convert.ToString(TempData["Success"]);
+}
+<div class="page-head">
+    <h2>Initial Setup</h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Home/Settings">Settings</a></li>
+        <li class="active">Initial Setup</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    @Html.Partial("_CompanyTabs", "initialsetup")
+    <div class="tab-content panel-body">
+        <h2>First Time Setup</h2>
+        @if (!string.IsNullOrWhiteSpace(error))
+        {
+            <div class="row">
+                <span class="alert alert-danger">@error</span>
+            </div>
+        }
+        @if (!string.IsNullOrWhiteSpace(pass))
+        {
+            <div class="row">
+                <span class="alert alert-success">@pass</span>
+            </div>
+        }
+        
+        <p class="spacer2"></p>
+
+        <div class="row">
+            <div class="form-group">
+                <div class="col-sm-10">
+                    <a href="/Admin/FirstTimeSetup">Click here to start Initial Setup</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

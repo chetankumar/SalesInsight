@@ -1,0 +1,190 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ESI.DashboardSettingsView
+@using (Html.BeginForm("ApplyDashbaordFilter", "ESI", FormMethod.Post, new { id = "FilterForm", onsubmit = "disableButton()" }))
+{
+    <div class="modal fade" id="Filter_Dashboard">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Dashboard Filters</h4>
+                    <input type="hidden" name="Id" value="@Model.Id" />
+                    <input type="hidden" id="SubmitValue" name="SubmitValue" value="Save" />
+                </div>
+                <div class="modal-body dash-filters">
+                    <div class="form-horizontal">
+                        @*<div id="divLoading" class="center"></div>*@
+                        <div id="divLoading" class="detail_loading" style="display: none;"><img height="60px;" src="/Content/images/pre-loader.gif"></div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Region</label>
+                            <div class="col-md-6">
+                                @Html.HiddenFor(x => x.AccessType)
+                                <select name="DashboardFilter.Regions" multiple class="form-control multiselect regionFilter" id="regionFilter">
+                                    @foreach (SelectListItem item in Model.DashboardFilter.RegionList)
+                                    {
+                                        <option @(item.Selected ? "selected" : "") value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">District</label>
+                            <div class="col-md-6">
+                                <select name="DashboardFilter.Districts" multiple class="form-control multiselect districtFilter" id="districtFilter">
+                                    @foreach (SelectListItem item in Model.DashboardFilter.DistrictList)
+                                    {
+                                        <option @(item.Selected ? "selected" : "") value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Plant</label>
+                            <div class="col-md-6">
+                                <select name="DashboardFilter.Plants" multiple class="form-control multiselect" id="plantFilter">
+                                    @if (Model.DashboardFilter.PlantList != null)
+                                    {
+                                        foreach (SelectListItem item in Model.DashboardFilter.PlantList)
+                                        {
+                                            <option @(item.Selected ? "selected" : "") value="@item.Value">@item.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Market Segment</label>
+                            <div class="col-md-6">
+                                <select name="DashboardFilter.MarketSegments" multiple class="form-control multiselect" id="marketSegmentFilter">
+                                    @if (Model.DashboardFilter.MarketSegmentList != null)
+                                    {
+                                        foreach (SelectListItem item in Model.DashboardFilter.MarketSegmentList)
+                                        {
+                                            <option @(item.Selected ? "selected" : "") value="@item.Value">@item.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Customer</label>
+                            <div class="col-md-6">
+                                <select name="DashboardFilter.Customers" multiple class="form-control multiselect" id="customerFilter">
+                                    @if (Model.DashboardFilter.CustomerList != null)
+                                    {
+                                        foreach (SelectListItem item in Model.DashboardFilter.CustomerList)
+                                        {
+                                            <option @(item.Selected ? "selected" : "") value="@item.Value">@item.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Sales Staff</label>
+                            <div class="col-md-6">
+                                <select name="DashboardFilter.SalesStaffs" multiple class="form-control multiselect" id="salesStaffFilter">
+                                    @if (Model.DashboardFilter.SalesStaffList != null)
+                                    {
+                                        foreach (SelectListItem item in Model.DashboardFilter.SalesStaffList)
+                                        {
+                                            <option @(item.Selected ? "selected" : "") value="@item.Value">@item.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" title="Click to clear all Report filters" class="btn btn-primary clear-all-filter"><i class="fa fa-refresh"></i>Reset</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" name="submit" class="btn btn-primary" onclick="ApplyandSaveFilter('Apply')" value="Apply">Apply</button>
+                    <button type="submit" @(Model.AccessType == "Standard" && ViewBag.IsAdmin == false ? "disabled" : "") name="submit" class="btn btn-primary" onclick="ApplyandSaveFilter('Save')" value="Apply and Save">Apply and Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2">
+            <input type="text" id="StartDate" name="StartDate" class="form-control date_selector datepicker" value="@String.Format("{0:MM/dd/yyyy}", Model.StartDate)" placeholder="Date" />
+        </div>
+        <div class="col-md-1">
+            <a class="btn btn-primary" data-toggle="modal" data-target="#Filter_Dashboard">
+                <i class="fa fa-filter"></i>
+                Filters&nbsp;&nbsp;<span class="filter-count"></span>
+            </a>
+        </div>
+        <div class="col-md-1" id="RunDashboard_btn" style="display:none;">
+            <a class="btn btn-primary btn-success">
+                Run Report
+            </a>
+        </div>
+        <div class="col-md-8">
+            <div class="col-sm-1">
+                @*@{
+                    var accessRule = ViewBag.AccessRule;
+                    bool disableEditing = false;
+                    disableEditing = (Model.AccessType == "Standard" && accessRule.HasDashboardAccess != SIRolePermissionLevelConstants.ADMIN);
+                    if (!disableEditing)
+                    {*@
+                        <a class="mode">
+                            <i class="fa fa-gear @(ViewBag.IsNewDashboard ? "slow-spin" : "") fa-2x" aria-hidden="true"></i>
+                        </a>
+                    @*}
+                }*@
+            </div>
+            <div class="col-sm-1">
+                <a>
+                    <span class="favourite fa fa-heart @(Model.Favorite?"fav":"non-fav")" title="@(Model.Favorite?"Click to remove it from favourite dashboard":"Click to make this as favourite dashboard")" style="font-size: 27px;"></span>
+                </a>
+            </div>
+            <div class="col-sm-3">
+                <div class="dashboard-list">
+                    <select class="form-control multiselect dashboardList">
+                        @if (ViewBag.DashboardList != null)
+                        {
+                            foreach (var item in ViewBag.DashboardList)
+                            {
+                                <optgroup label="@item.Key">
+                                    @foreach (var dashboard in item.Value)
+                                    {
+                                        if (dashboard == null)
+                                        {
+                                            <option value="">No Dashboard</option>
+                                        }
+                                        else
+                                        {
+                                            <option @(Model.Id == dashboard.Id ? "selected" : "") value="@dashboard.Id">@dashboard.Name</option>
+                                        }
+                                    }
+                                </optgroup>
+                            }
+                        }
+                        else
+                        {
+                            <option value="">No Dashboard</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-7">
+                <a class="btn btn-primary goal-btn" href="/ESI/GoalAnalysis">
+                    <i class="fa fa-bullseye"></i>
+                    Goal Analysis
+                </a>
+                <a class="btn btn-primary bench-btn" href="/ESI/BenchmarkAnalysis">
+                    <i class="fa fa-balance-scale"></i>
+                    Benchmark
+                </a>
+                <a class="btn btn-primary trend-btn" href="/ESI/TrendAnalysis">
+                    <i class="fa fa-line-chart"></i>
+                    Trend
+                </a>
+                <a class="btn btn-primary drill-btn" href="/ESI/DrillIn">
+                    <i class="fa fa-search"></i>
+                    Drill-In
+                </a>
+            </div>
+        </div>
+    </div>
+}

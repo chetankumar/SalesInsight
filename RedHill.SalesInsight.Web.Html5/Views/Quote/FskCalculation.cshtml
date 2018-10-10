@@ -1,0 +1,113 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.FskCalculation
+@using RedHill.SalesInsight.Web.Html5.Helpers;
+@{
+    ViewBag.Title = "Fsk Calculation";
+    Layout = null;
+    var company = ConfigurationHelper.Company;
+}
+<div class="row">
+    <div class="col-md-4">
+        <table class="table table-bordered">
+            <thead></thead>
+            <tbody>
+                <tr>
+                    <td>City Code</td>
+                    <td>@Model.FskPrice.FSKCode</td>
+                </tr>
+                <tr>
+                    <td>City</td>
+                    <td>@Model.FskPrice.City</td>
+                </tr>
+                <tr>
+                    <td>Sack Add Price</td>
+                    <td>$ @Model.FskPrice.AddPrice.ToString("N2")</td>
+                </tr>
+                <tr>
+                    <td>Sack Deduct Price</td>
+                    <td>$ @Model.FskPrice.DeductPrice.ToString("N2")</td>
+                </tr>
+                <tr class="border-top">
+                    <td>Sack Content</td>
+                    <td>@Model.TotalSacks.ToString("N2")</td>
+                </tr>
+                <tr class="border-bottom">
+                    <td>Sack Adjustment</td>
+                    <td>@Model.SackAdjustment.ToString("N2")</td>
+                </tr>
+                @foreach(var e in Model.RawMaterialTypeVolume){
+                <tr>
+                    <td>@e.Name Content</td>
+                    <td>@e.Value Lbs</td>
+                </tr>
+                }
+                <tr class="bold">
+                    <td>Total Cementitious Content</td>
+                    <td>@Model.TotalSackWeight.ToString("N0") Lbs</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-8">
+        <table class="table table-bordered">
+            <thead></thead>
+            <tbody>
+                <tr>
+                    <td>Base Sack Price</td>
+                    <td>$@Model.BasePrice.ToString("N2")/@company.DeliveryQtyUomSingular</td>
+                </tr>
+                <tr>
+                    <td>Sack Adjust Price</td>
+                    <td>$@Model.SackAdjPrice.ToString("N2")/@company.DeliveryQtyUomSingular</td>
+                </tr>
+                <tr class="bold">
+                    <td>Sack Price</td>
+                    <td>$@((Model.TotalCementitiousCost).ToString("N2"))/@company.DeliveryQtyUomSingular</td>
+                </tr>
+            </tbody>
+        </table>
+        <br />
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Value-Add Materials</th>
+                    <th>Code</th>
+                    <th>Qty</th>
+                    <th>Unit Price</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{var totalValAddCost = Model.TotalValueAddCost;}
+                @foreach(var o in Model.Ingredients.Where(x=>x.IncludeIn5sk == true).Where(x=>x.IsCementitious == false))
+                {
+                <tr>
+                    <td>@o.RawMaterial.Description</td>
+                    <td>@o.RawMaterial.FSKCode</td>
+                    <td>
+                        @o.TotalQuantityInMix(Model.TotalCementitiousWeight).ToString("N2")
+                        @o.QuantityUOM.Name 
+                    </td>
+                    <td>
+                       $ @((o.CostInQuantityUom * Convert.ToDecimal(o.FskMarkup/100)).ToString("N2")) /@o.QuantityUOM.Name 
+                    </td>
+                    <td>$@o.TotalCost.ToString("N2")/@company.DeliveryQtyUomSingular</td>
+                </tr>
+                }
+                <tr class="bold">
+                    <td colspan="4">Total Value-Add Price</td>
+                    <td>$@totalValAddCost.ToString("N2")/@company.DeliveryQtyUomSingular</td>
+                </tr>
+                <tr class="">
+                    <td colspan="4"></td>
+                    <td></td>
+                </tr>
+                <tr class="bold">
+                    <td colspan="4">Total Sack Price (incl. Value Add)</td>
+                    <td>$@Model.FinalPrice.ToString("N2")/@company.DeliveryQtyUomSingular</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

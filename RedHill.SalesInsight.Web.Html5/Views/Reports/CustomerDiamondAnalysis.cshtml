@@ -1,0 +1,827 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.DiamondReport
+
+@{
+    ViewBag.Title = "Customer Diamond Analysis";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.UsingDatePicker = true;
+    ViewBag.UsingMultiselect = true;
+    //ViewBag.UsingChartJs = true;
+    var company = RedHill.SalesInsight.Web.Html5.Helpers.ConfigurationHelper.Company;
+}
+<div class="page-head">
+    <h2><i class="fa fa-fw fa-diamond"></i>Customer Diamond Analysis</h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Reports/Index">Reports</a></li>
+        <li class="active">Customer Diamond Analysis</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="block-flat">
+        <div class="panel-body">
+            @using (Html.BeginForm("CustomerDiamondAnalysis", "Reports", FormMethod.Post, new { @class = "form", @id = "filter_form" }))
+            {
+                <div class="form-group col-md-3">
+                    <label class="control-label">Customers</label><br />
+                    @Html.ListBoxFor(x => x.CustomerIds, Model.AllCustomers, new { @class = "form-control multiselect" })
+                </div>
+                @*<div class="form-group col-md-2">
+                    <label class="control-label">&nbsp;</label><br />
+                    <button type="button" class="btn btn-primary" onclick="clearCustomerFilter()">Clear Customers</button>
+                </div>*@
+                <div class="form-group col-md-2">
+                    <label class="control-label">Start Date</label><br />
+                    @Html.TextBoxFor(x => x.StartDate, "{0:MMM, yyyy}", new { @class = "form-control datepicker" })
+                </div>
+                    <div class="form-group col-md-2">
+                        <label class="control-label">End Date</label><br />
+                        @Html.TextBoxFor(x => x.EndDate, "{0:MMM, yyyy}", new { @class = "form-control datepicker" })
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="control-label">&nbsp;</label><br />
+                        <button type="submit" value="Run Report" class="btn btn-primary">Run Report</button>
+                    </div>
+            }
+        </div>
+    </div>
+    @if (Model.ProductivityReport != null || Model.ProfitabilityReport != null || Model.EaseOfBusinessReport != null || Model.AgingReport != null)
+    {
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="panel-title">Summary</div>
+            </div>
+            <div class="panel-body clearfix">
+                <div class="col-md-5">
+                    <div id="spider-chart" style="height: 200px"></div>
+                </div>
+                <div class="col-md-7">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Metric</th>
+                                <th style="text-align: right" class="text-right">Actual</th>
+                                <th style="text-align: right" class="text-right">Target</th>
+                                <th style="text-align: right" class="text-right">Variance</th>
+                                <th style="text-align: center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.ProfitabilityReport != null)
+                            {
+                                <tr>
+                                    <td>Profit</td>
+                                    <td>$/@company.DeliveryQtyUomSingular</td>
+                                    <td class="text-right">$@Model.ProfitabilityReport.ActualProfit.ToString("N2")</td>
+                                    <td class="text-right">$@Model.ProfitabilityReport.BudgetProfit.ToString("N2")</td>
+                                    <td class="text-right">$@Model.ProfitabilityReport.VarianceProfit.ToString("N2")</td>
+                                    <td class="text-center">
+                                        @Html.Partial("_OkCautionTarget", new ViewDataDictionary(Model.ProfitabilityReport.ProfitIndicator))
+                                    </td>
+                                </tr>
+                            }
+                            @if (Model.ProductivityReport != null)
+                            {
+                                <tr>
+                                    <td>Productivity</td>
+                                    <td>@company.DeliveryQtyUomSingular/Hr</td>
+                                    <td class="text-right">@Model.ProductivityReport.CydHrActual.ToString("N2")</td>
+                                    <td class="text-right">@Model.ProductivityReport.CydHrBudget.ToString("N2")</td>
+                                    <td class="text-right">@Model.ProductivityReport.CydHrVariance.ToString("N2")</td>
+                                    <td class="text-center">
+                                        @Html.Partial("_OkCautionTarget", new ViewDataDictionary(Model.ProductivityReport.CydHrIndicator))
+                                    </td>
+                                </tr>
+                            }
+                            @if (Model.AgingReport != null)
+                            {
+                                <tr>
+                                    <td>Payment</td>
+                                    <td>DSO</td>
+                                    <td class="text-right">@Model.AgingReport.TotalDSO.ToString("N2")</td>
+                                    <td class="text-right">@Model.AgingReport.DSOTarget.ToString("N2")</td>
+                                    <td class="text-right">@Model.AgingReport.DSOVariance.ToString("N2")</td>
+                                    <td class="text-center">
+                                        @Html.Partial("_OkCautionTarget", new ViewDataDictionary(Model.AgingReport.DSOIndicator))
+                                    </td>
+                                </tr>
+                            }
+                            @if (Model.EaseOfBusinessReport != null)
+                            {
+                                <tr>
+                                    <td>Ease of Business</td>
+                                    <td>Cancellation %</td>
+                                    <td class="text-right">@Model.EaseOfBusinessReport.VolumeLostPercentage.ToString("N2")%</td>
+                                    <td class="text-right">@Model.EaseOfBusinessReport.CancellationTarget.ToString("N2")%</td>
+                                    <td class="text-right">@Model.EaseOfBusinessReport.CancellationVariance.ToString("N2")%</td>
+                                    <td class="text-center">
+                                        @Html.Partial("_OkCautionTarget", new ViewDataDictionary(Model.EaseOfBusinessReport.CancellationIndicator))
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (Model.ProfitabilityReport != null)
+    {
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="panel-title">Profitability</div>
+            </div>
+            <div class="panel-body clearfix">
+                <div class="col-md-4">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>$/@company.DeliveryQtyUomSingular</th>
+                                <th style="text-align: right">Actual</th>
+                                <th style="text-align: right">Budget</th>
+                                <th style="text-align: right">Variance</th>
+                                <th style="text-align: center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Price</td>
+                                <td class="text-right">@Model.ProfitabilityReport.ActualPrice.ToString("N2")</td>
+                                <td class="text-right">@Model.ProfitabilityReport.BudgetPrice.ToString("N2")</td>
+                                <td class="text-right">@Model.ProfitabilityReport.VariancePrice.ToString("N2")</td>
+                                <td class="text-center">@Html.Partial("_OkCautionTarget", new ViewDataDictionary(Model.ProfitabilityReport.PriceIndicator))</td>
+                            </tr>
+                            <tr>
+                                <td>Material</td>
+                                <td class="text-right">@Model.ProfitabilityReport.ActualMaterial.ToString("N2")</td>
+                                <td class="text-right">@Model.ProfitabilityReport.BudgetMaterial.ToString("N2")</td>
+                                <td class="text-right">@Model.ProfitabilityReport.VarianceMaterial.ToString("N2")</td>
+                                <td class="text-center">@Html.Partial("_OkCautionTarget", new ViewDataDictionary(Model.ProfitabilityReport.MaterialIndicator))</td>
+                            </tr>
+                            <tr class="bold">
+                                <td>Spread</td>
+                                <td class="text-right">@Model.ProfitabilityReport.ActualSpread.ToString("N2")</td>
+                                <td class="text-right">@Model.ProfitabilityReport.BudgetSpread.ToString("N2")</td>
+                                <td class="text-right">@Model.ProfitabilityReport.VarianceSpread.ToString("N2")</td>
+                                <td class="text-center">@Html.Partial("_OkCautionTarget", new ViewDataDictionary(Model.ProfitabilityReport.SpreadIndicator))</td>
+                            </tr>
+                            <tr>
+                                <td>Variable</td>
+                                <td class="text-right">@Model.ProfitabilityReport.ActualVariable.ToString("N2")</td>
+                                <td class="text-right">@Model.ProfitabilityReport.BudgetVariable.ToString("N2")</td>
+                                <td class="text-right">@Model.ProfitabilityReport.VarianceVariable.ToString("N2")</td>
+                                <td class="text-center">@Html.Partial("_OkCautionTarget", new ViewDataDictionary(Model.ProfitabilityReport.VariableIndicator))</td>
+                            </tr>
+                            <tr>
+                                <td>Fixed</td>
+                                <td class="text-right">@Model.ProfitabilityReport.ActualFixed.ToString("N2")</td>
+                                <td class="text-right">@Model.ProfitabilityReport.BudgetFixed.ToString("N2")</td>
+                                <td class="text-right">@Model.ProfitabilityReport.VarianceFixed.ToString("N2")</td>
+                                <td class="text-center">@Html.Partial("_OkCautionTarget", new ViewDataDictionary(Model.ProfitabilityReport.FixedIndicator))</td>
+                            </tr>
+                            <tr class="bold">
+                                <td>Profit</td>
+                                <td class="text-right">@Model.ProfitabilityReport.ActualProfit.ToString("N2")</td>
+                                <td class="text-right">@Model.ProfitabilityReport.BudgetProfit.ToString("N2")</td>
+                                <td class="text-right">@Model.ProfitabilityReport.VarianceProfit.ToString("N2")</td>
+                                <td class="text-center">@Html.Partial("_OkCautionTarget", new ViewDataDictionary(Model.ProfitabilityReport.ProfitIndicator))</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-8">
+                    <div id="profitability_chart_div" style="height: 280px;" class="chart-container">
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (Model.ProductivityReport != null)
+    {
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="panel-title">Productivity</div>
+            </div>
+            <div class="panel-body clearfix">
+                <div class="col-md-4">
+                    <table class="table table-responsive table-bordered">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th style="text-align: right">Actual</th>
+                                <th style="text-align: right">Target</th>
+                                <th style="text-align: right">Variance</th>
+                                <th style="text-align: center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="bold"><b>Out Gate</b></td>
+                                <td class="text-right">@Model.ProductivityReport.OutGateActual.ToString("N1")</td>
+                                <td class="text-right">@Model.ProductivityReport.OutGateBudget.ToString("N1")</td>
+                                <td class="text-right">@Model.ProductivityReport.OutGateVariance.ToString("N1")</td>
+                                <td class="text-center">@Html.Partial("_OkCautionTarget", new ViewDataDictionary(Model.ProductivityReport.OutGateIndicator))</td>
+                            </tr>
+                            <tr>
+                                <td>To Job</td>
+                                <td class="text-right">@Model.ProductivityReport.ToJobActual.ToString("N1")</td>
+                                <td class="text-right">@Model.ProductivityReport.ToJobBudget.ToString("N1")</td>
+                                <td class="text-right">@Model.ProductivityReport.ToJobVariance.ToString("N1")</td>
+                                <td class="text-center">@Html.Partial("_OkCautionTarget", new ViewDataDictionary(Model.ProductivityReport.ToJobIndicator))</td>
+                            </tr>
+                            <tr>
+
+                                <td>Wait</td>
+                                <td class="text-right">@Model.ProductivityReport.WaitActual.ToString("N1")</td>
+                                <td class="text-right">@Model.ProductivityReport.WaitBudget.ToString("N1")</td>
+                                <td class="text-right">@Model.ProductivityReport.WaitVariance.ToString("N1")</td>
+                                <td class="text-center">@Html.Partial("_OkCautionTarget", new ViewDataDictionary(Model.ProductivityReport.WaitIndicator))</td>
+                            </tr>
+                            <tr>
+                                <td>Unload</td>
+                                <td class="text-right">@Model.ProductivityReport.UnloadActual.ToString("N1")</td>
+                                <td class="text-right">@Model.ProductivityReport.UnloadBudget.ToString("N1")</td>
+                                <td class="text-right">@Model.ProductivityReport.UnloadVariance.ToString("N1")</td>
+                                <td class="text-center">@Html.Partial("_OkCautionTarget", new ViewDataDictionary(Model.ProductivityReport.UnloadIndicator))</td>
+                            </tr>
+                            <tr>
+
+                                <td>Wash</td>
+                                <td class="text-right">@Model.ProductivityReport.WashActual.ToString("N1")</td>
+                                <td class="text-right">@Model.ProductivityReport.WashBudget.ToString("N1")</td>
+                                <td class="text-right">@Model.ProductivityReport.WashVariance.ToString("N1")</td>
+                                <td class="text-center">@Html.Partial("_OkCautionTarget", new ViewDataDictionary(Model.ProductivityReport.WashIndicator))</td>
+                            </tr>
+                            <tr>
+
+                                <td>From Job</td>
+                                <td class="text-right">@Model.ProductivityReport.FromJobActual.ToString("N1")</td>
+                                <td class="text-right">@Model.ProductivityReport.FromJobBudget.ToString("N1")</td>
+                                <td class="text-right">@Model.ProductivityReport.FromJobVariance.ToString("N1")</td>
+                                <td class="text-center">@Html.Partial("_OkCautionTarget", new ViewDataDictionary(Model.ProductivityReport.FromJobIndicator))</td>
+                            </tr>
+                            <tr>
+                                <td>Round Trip</td>
+                                <td class="text-right">@Model.ProductivityReport.RoundTripActual.ToString("N1")</td>
+                                <td class="text-right">@Model.ProductivityReport.RoundTripBudget.ToString("N1")</td>
+                                <td class="text-right">@Model.ProductivityReport.RoundTripVariance.ToString("N1")</td>
+                                <td class="text-center">@Html.Partial("_OkCautionTarget", new ViewDataDictionary(Model.ProductivityReport.RoundTripIndicator))</td>
+                            </tr>
+                            <tr>
+
+                                <td>@company.DeliveryQtyUomSingular / Hr</td>
+                                <td class="text-right">@Model.ProductivityReport.CydHrActual.ToString("N2")</td>
+                                <td class="text-right">@Model.ProductivityReport.CydHrBudget.ToString("N2")</td>
+                                <td class="text-right">@Model.ProductivityReport.CydHrVariance.ToString("N2")</td>
+                                <td class="text-center">@Html.Partial("_OkCautionTarget", new ViewDataDictionary(Model.ProductivityReport.CydHrIndicator))</td>
+                            </tr>
+                            <tr>
+                                <td>Avg Load</td>
+                                <td class="text-right">@Model.ProductivityReport.AvgLoadActual.ToString("N2")</td>
+                                <td class="text-right">@Model.ProductivityReport.AvgLoadBudget.ToString("N2")</td>
+                                <td class="text-right">@Model.ProductivityReport.AvgLoadVariance.ToString("N2")</td>
+                                <td class="text-center">@Html.Partial("_OkCautionTarget", new ViewDataDictionary(Model.ProductivityReport.AvgLoadIndicator))</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-8">
+                    <div class="clearfix alert alert-info">
+                        <span class="fa fa-fw fa-star"></span>
+                        <span class="bold">Key Metrics</span>
+                        <span class="m-l-20">@company.DeliveryQtyUomSingular/Hr:</span> @Model.ProductivityReport.CydHrActual.ToString("N2")
+                        <span class="m-l-20">Loads:</span>  @Model.ProductivityReport.Productivities.Count
+                        <span class="m-l-20">Volume:</span> @Model.ProductivityReport.Productivities.Sum(x => x.Quantity).ToString("N0") @company.DeliveryQtyUomPlural
+                    </div>
+                    <div id="productivity_chart_div" style="height: 270px;" class="chart-container">
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (Model.AgingReport != null)
+    {
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="panel-title">Payments </div>
+            </div>
+            <div class="panel-body clearfix">
+                <div class="col-md-4">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td>A/R Over 60 days</td>
+                                <td class="text-right">@Model.AgingReport.AROver60Per.ToString("N2")%</td>
+                            </tr>
+                            <tr>
+                                <td>DSO</td>
+                                <td class="text-right">@Model.AgingReport.TotalDSO.ToString("N0")</td>
+                            </tr>
+                            <tr>
+                                <td>A/R Balance</td>
+                                <td class="text-right">$@Model.AgingReport.TotalBalance.ToString("N2")</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="text-center">
+                                    @if (Model.AgingReport.AsOfDate != null)
+                                    {
+                                        <span>As of: @Model.AgingReport.AsOfDate.GetValueOrDefault().ToString("M/d/yyyy")</span>
+                                    }
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-8">
+                    <div id="payments_chart_div" style="height: 250px;" class="chart-container">
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (Model.EaseOfBusinessReport != null)
+    {
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="panel-title">Ease of Doing Business </div>
+            </div>
+            <div class="panel-body clearfix">
+                <div class="col-md-4">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td>Orders</td>
+                                <td class="text-right">@Model.EaseOfBusinessReport.TotalOrders.ToString("N0")</td>
+                            </tr>
+                            <tr>
+                                <td>Volume Ordered</td>
+                                <td class="text-right">@Model.EaseOfBusinessReport.TotalVolumeOrdered.ToString("N0") @company.DeliveryQtyUomPlural</td>
+                            </tr>
+                            <tr>
+                                <td>Volume Gained</td>
+                                <td class="text-right">@Model.EaseOfBusinessReport.TotalVolumeGained.ToString("N0") @company.DeliveryQtyUomPlural</td>
+                            </tr>
+                            <tr>
+                                <td>Volume Lost</td>
+                                <td class="text-right">@Model.EaseOfBusinessReport.TotalVolumeLost.ToString("N0") @company.DeliveryQtyUomPlural</td>
+                            </tr>
+                            <tr>
+                                <td>Lost Volume %</td>
+                                <td class="text-right">@Model.EaseOfBusinessReport.VolumeLostPercentage.ToString("N2") %</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-4">
+                    <div id="changes_percentage_chart_div" style="height: 230px;" class="chart-container">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div id="changes_volume_chart_div" style="height: 230px;" class="chart-container">
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@section Scripts{
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+    <script type="text/javascript">
+
+        var clearCustomerFilter = function () {
+            var selectedItemsIndex = []
+
+            $(".optWrapper ul>li").each(function (i, v) {
+                if ($(this).hasClass("selected")) {
+                    selectedItemsIndex.push(i);
+                }
+            });
+
+            selectedItemsIndex.forEach(function (val, i) {
+                $("#CustomerIds")[0].sumo.unSelectItem(val);
+            });
+        }
+
+        function displayClearButton()
+        {
+            var val = $("#CustomerIds").val();
+            if (val != null) {
+                $(".clear-customer").show("slow");
+            } else {
+                $(".clear-customer").hide("slow");
+            }
+        }
+
+        $(document).ready(function () {
+            $('.multiselect').on('sumo:opening', function (sumo) {
+                var optWrapper = $(".optWrapper.multiple");
+                if (!optWrapper.find(".opt-clear-all").length) {
+                    optWrapper.prepend('<div class="opt-clear-all text-right"><button type="button" class="btn btn-xs btn-primary" onclick="clearCustomerFilter()">Clear All</button></div >');
+                } else {
+
+                }
+            });
+            displayClearButton();
+            $("#CustomerIds").on("change", function () {
+                displayClearButton();
+            });
+
+            $('.datepicker').datepicker({
+                format: "M, yyyy",
+                viewMode: "months",
+                minViewMode: "months"
+            }).on("changeDate", function (e) {
+                $("#filter-form").submit();
+                $(this).datepicker('hide');
+            });
+
+            Highcharts.setOptions({
+                lang: {
+                    thousandsSep: ','
+                }
+            });
+
+            /********** DIAMOND CHART *************/
+            @if (Model.ProductivityReport != null && Model.ProfitabilityReport != null && Model.AgingReport != null && Model.EaseOfBusinessReport != null)
+            {
+            <text>
+            $('#spider-chart').highcharts({
+                chart: {
+                    polar: true,
+                    type: 'line'
+                },
+
+                title: {
+                    text: '',
+                    x: -80
+                },
+
+                pane: {
+                    size: '80%'
+                },
+
+                xAxis: {
+                    categories: ['Profit', 'Payment', 'Productivity', 'EODB'],
+                    tickmarkPlacement: 'on',
+                    lineWidth: 0
+                },
+
+                yAxis: {
+                    gridLineInterpolation: 'polygon',
+                    lineWidth: 0,
+                    min: 0,
+                    max:20
+                },
+
+                tooltip: {
+                    shared: true,
+                    pointFormat: '<span style="color:{series.color}">{series.name}: <b>{point.y:,.0f}</b><br/>'
+                },
+
+                legend: {
+                    align: 'left',
+                    verticalAlign: 'top',
+                    y: 70,
+                    layout: 'vertical'
+                },
+                credits:{
+                    enabled:false
+                },
+                series: [{
+                    name: 'Target',
+                    data: [10, 10, 10, 10],
+                    color: 'rgba(270,0,0,1)',
+                    pointPlacement: 'on'
+                }, {
+                    name: 'Actuals',
+                    data: @Model.DiamondChartData.ToString(),
+                    pointPlacement: 'on'
+                }]
+
+            });
+            </text>
+            }
+
+            /********** PRODUCTIVITY CHART *************/
+            @if (Model.ProductivityReport != null)
+            {
+            <text>
+            productivity_data = @Html.Raw(Model.ProductivityReport.ChartData);
+            target = productivity_data[1][5];
+            productivity_data[1][5] = {y: target, color:'#FF0000'};
+            productivity_data[0][5] = productivity_data[0][5]+"<br/>"+"Target";
+            console.log(productivity_data);
+            try{
+                $('#productivity_chart_div').highcharts({
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Job Site Efficiency'
+                    },
+                    subtitle: {
+                        text: ''
+                    },
+                    xAxis: {
+                        title: {text:"Minutes (Wait + Unload + Wash)"},
+                        categories: productivity_data[0],
+                        crosshair: true,
+                        useHTML:true
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Loads'
+                        }
+                    },
+                    credits:{
+                        enabled:false
+                    },
+                    legend:{
+                        enabled:false
+                    },
+                    tooltip: {
+                        headerFormat: '<b>',
+                        pointFormat: '{point.y:,.1f}',
+                        footerFormat: '</b>',
+                        shared: true,
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0
+                        }
+                    },
+                    series: [{
+                        name: "Loads",
+                        data: productivity_data[1]
+                    }]
+                });
+            }
+            catch(ex){
+                console.log(ex);
+            }
+            </text>
+            }
+
+            /********** Profitability CHART *************/
+            @if (Model.ProfitabilityReport != null)
+            {
+            <text>
+            profitability_data = @Html.Raw(Model.ProfitabilityReport.ChartData);
+            console.log(profitability_data);
+            try{
+                $('#profitability_chart_div').highcharts({
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Market Segment Spread'
+                    },
+                    subtitle: {
+                        text: ''
+                    },
+                    credits:{
+                        enabled:false
+                    },
+                    xAxis: {
+                        title: {text:""},
+                        categories: profitability_data[0],
+                        labels:{
+                            useHtml: true
+                        },
+                        crosshair: true
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: '$/@company.DeliveryQtyUomSingular'
+                        }
+                    },
+                    tooltip: {
+                        headerFormat: '<b>',
+                        pointFormat: '{point.y:,.2f}',
+                        footerFormat: '</b>',
+                        shared: true,
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0
+                        }
+                    },
+                    series: [{
+                        name: "Actual",
+                        type: 'column',
+                        data: profitability_data[1]
+                    },
+                    {
+                        name: "Target",
+                        color: 'rgba(270,0,0,1)',
+                        type: 'scatter',
+                        data: profitability_data[2]
+                    }]
+                });
+            }
+            catch(ex){
+                console.log(ex);
+            }
+            </text>
+            }
+
+            /********** AGING CHART *************/
+            @if (Model.AgingReport != null)
+            {
+            <text>
+            try{
+                $('#payments_chart_div').highcharts({
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: ''
+                    },
+                    subtitle: {
+                        text: ''
+                    },
+                    credits:{
+                        enabled:false
+                    },
+                    legend:{
+                        enabled:false
+                    },
+                    xAxis: {
+                        title: {text:""},
+                        categories: ["Current","> 1mo","> 2mo","> 3mo","> 4mo"],
+                        labels:{
+                            useHtml: true
+                        },
+                        crosshair: true
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: '$ AR Balance'
+                        }
+                    },
+                    tooltip: {
+                        headerFormat: '<b>',
+                        pointFormat: '${point.y:,.0f}',
+                        footerFormat: '</b>',
+                        shared: true,
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0
+                        }
+                    },
+                    series: [{
+                        name: "Amount Due",
+                        type: 'column',
+                        data: [ {y:@Model.AgingReport.TotalCurrent},
+                                {y:@Model.AgingReport.TotalOver1Mon},
+                                {y:@Model.AgingReport.TotalOver2Mon},
+                                {y:@Model.AgingReport.TotalOver3Mon,color:'rgba(238, 0, 0, 1)'},
+                                {y:@Model.AgingReport.TotalOver4Mon,color:'rgba(238, 0, 0, 1)'}]
+                    }]
+                });
+            }
+            catch(ex){
+                console.log(ex);
+            }
+            </text>
+            }
+
+            /********** CHANGES PERCENTAGE CHART *************/
+            @if (Model.EaseOfBusinessReport != null)
+            {
+            <text>
+            try{
+                $('#changes_percentage_chart_div').highcharts({
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: '# Changes per Order'
+                    },
+                    subtitle: {
+                        text: ''
+                    },
+                    credits:{
+                        enabled:false
+                    },
+                    legend:{
+                        enabled:false
+                    },
+                    xAxis: {
+                        title: {text:""},
+                        categories: ["Increases","Decreases"],
+                        labels:{
+                            useHtml: true
+                        },
+                        crosshair: true
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Changes per Order'
+                        }
+                    },
+                    tooltip: {
+                        headerFormat: '<b>',
+                        pointFormat: '{point.y:,.2f}',
+                        footerFormat: '</b>',
+                        shared: true,
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0
+                        }
+                    },
+                    series: [{
+                        name: "Change Per Order",
+                        type: 'column',
+                        data: [{y:@Model.EaseOfBusinessReport.OrderChangeIncreases,color:'rgba(4, 138, 25,1)'},{y:@Model.EaseOfBusinessReport.OrderChangeDecreases,color:'rgba(270,0,0,1)'}]
+                    }]
+                });
+            }
+            catch(ex){
+                console.log(ex);
+            }
+
+            /********** CHANGES VOLUME CHART *************/
+            try{
+                $('#changes_volume_chart_div').highcharts({
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Avg Volume Changes'
+                    },
+                    subtitle: {
+                        text: ''
+                    },
+                    credits:{
+                        enabled:false
+                    },
+                    legend:{
+                        enabled:false
+                    },
+                    xAxis: {
+                        title: {text:""},
+                        categories: ["Increases","Decreases"],
+                        labels:{
+                            useHtml: true
+                        },
+                        crosshair: true
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: '@company.DeliveryQtyUomPlural'
+                        }
+                    },
+                    tooltip: {
+                        headerFormat: '<b>',
+                        pointFormat: '{point.y:,.2f}',
+                        footerFormat: '</b>',
+                        shared: true,
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0
+                        }
+                    },
+                    series: [{
+                        name: "@company.DeliveryQtyUomPlural Per Change",
+                        type: 'column',
+                        data: [{y:@Model.EaseOfBusinessReport.AvgVolumeChangeIncreases,color:'rgba(4, 138, 25,1)'},{y:@Model.EaseOfBusinessReport.AvgVolumeChangeDecreases,color:'rgba(270,0,0,1)'}]
+                    }]
+                });
+            }
+            catch(ex){
+                console.log(ex);
+            }
+            </text>
+            }
+        });
+    </script>
+}
+
+
+

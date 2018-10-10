@@ -1,0 +1,703 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.PipelineFilter
+
+@{
+    ViewBag.Title = "Forecast";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.UsingFixedHeaderTable = true;
+    ViewBag.UsingDatePicker = true;
+    ViewBag.UsingMultiselect = true;
+}
+<div class="page-head">
+    <h2>Forecast</h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li class="active">Forecast</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    @{var opt = (List<string>)Session["ForecastOptionalColumns"];}
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+    @using (Html.BeginForm("Forecast", "Home", FormMethod.Post, new { @id = "filter-form" }))
+    {
+        <div class="block-flat">
+            <div class="row">
+                <div class="col-md-2" style="width:12.5%;">
+                    @Html.HiddenFor(m => m.ProductTypeId)
+                    @Html.HiddenFor(m => m.CurrentStart)
+                    @Html.HiddenFor(m => m.RowsPerPage)
+                    <div class="btn-group">
+                        <a class="btn btn-primary" href="/Home/Forecast">All</a>
+                        <a class="btn btn-primary filter-btn">
+                            <span class="glyphicon glyphicon-filter"></span>
+                            Filter
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="checkbox filter-checkbox col-md-5">
+                        <label>
+                            @Html.CheckBoxFor(m => m.ShowInactives) Show Inactives
+                        </label>
+                    </div>
+                    <div class=" col-md-7" style="margin-left:-15px;">
+                        @if (RedHill.SalesInsight.Web.Html5.Helpers.ConfigurationHelper.AggregateEnabled || RedHill.SalesInsight.Web.Html5.Helpers.ConfigurationHelper.BlockEnabled)
+                        {
+                            @Html.DropDownListFor(x => x.SelectProductTypeId, new SelectList(Model.ProductTypes, "Value", "Text"), new { @style = "margin-left: 5px;width:132px;", @class = "form-control product_toggle" })
+                        }
+                    </div>
+                </div>
+                <div class="col-md-2" style="margin-left:-27px;width:202px">
+                    <select multiple="multiple" class="forecast_optional_columns_select form-control multiselect" placeholder="Add Columns">
+                        <option @(opt.Contains("ProjectAddress") ? "selected=selected" : "") value="ProjectAddress">Address</option>
+                        <option @(opt.Contains("DistrictName") ? "selected=selected" : "") value="DistrictName">District</option>
+                        <option @(opt.Contains("Initial") ? "selected=selected" : "") value="Initial">Initial</option>
+                        <option @(opt.Contains("EditDate") ? "selected=selected" : "") value="EditDate">Last Revision</option>
+                        <option @(opt.Contains("MarketSegmentName") ? "selected=selected" : "") value="MarketSegmentName">Market Segment</option>
+                        <option @(opt.Contains("ProjectUploadId") ? "selected=selected" : "") value="ProjectUploadId">Project Upload ID</option>
+                        <option @(opt.Contains("Staff") ? "selected=selected" : "") value="Staff">SalesStaff</option>
+                        <option @(opt.Contains("StartDate") ? "selected=selected" : "") value="StartDate">StartDate</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <form action="/Home/PipelineSearch" class="form-inline">
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.SearchTerm, new { @class = "form-control", @placeholder = "Search" })
+                            <div class="input-group-btn">
+                                <button type="submit" class="btn btn-primary">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-1">
+                    @Html.TextBoxFor(m => m.ProjectionMonth, new { @class = "form-control" })
+                </div>
+                <div class="col-md-2" style="width:23%">
+                    <div class="btn-group">
+                        @if (ViewBag.AccessRule.HasPipelineAccess == SIRolePermissionLevelConstants.FULL_ACCESS || ViewBag.AccessRule.HasPipelineAccess == SIRolePermissionLevelConstants.EDIT_ONLY)
+                        {
+                            <a class="btn btn-primary" href="/Home/AddProject">
+                                <i class="glyphicon glyphicon-plus-sign"></i>Project
+                            </a>
+                        }
+                        <button type="submit" name="DoPrint" value="print" class="btn btn-primary print_btn">
+                            <span class="glyphicon glyphicon-cloud-download"></span>
+                            Export
+                        </button>
+                        <a href="#" data-target="#upload_modal" data-toggle="modal" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-cloud-upload"></span>
+                            Actuals
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="filter-panel" style="display: none;">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                Districts
+                            </div>
+                            <div class="panel-body" style="height: 200px; overflow-y: scroll;">
+                                @foreach (SelectListItem item in Model.DistrictList)
+                                {
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" value="@item.Value" name="Districts" @(item.Selected ? "checked='checked'" : "") />
+                                            @item.Text
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                Statuses
+                            </div>
+                            <div class="panel-body" style="height: 200px; overflow-y: scroll;">
+                                @foreach (SelectListItem item in Model.StatusList)
+                                {
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" value="@item.Value" name="Statuses" @(item.Selected ? "checked='checked'" : "") />
+                                            @item.Text
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                Plants
+                            </div>
+                            <div class="panel-body" style="height: 200px; overflow-y: scroll;">
+                                <div data-selector="district">Select district to populate</div>
+                                @foreach (SelectListItem item in Model.PlantList)
+                                {
+                                    <div class="checkbox" style="display: none;">
+                                        <label>
+                                            <input type="checkbox" disabled="disabled" value="@item.Value" name="Plants" @(item.Selected ? "checked='checked'" : "") />
+                                            @item.Text
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                Staff
+                            </div>
+                            <div class="panel-body" style="height: 200px; overflow-y: scroll;">
+                                <div data-selector="district">Select district to populate</div>
+                                @foreach (SelectListItem item in Model.StaffList)
+                                {
+                                    <div class="checkbox" style="display: none;">
+                                        <label>
+                                            <input type="checkbox" disabled="disabled" value="@item.Value" @(item.Selected ? "checked='checked'" : "") name="Staffs" />
+                                            @item.Text
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: none">
+                        @foreach (string column in new string[] { "CustomerNumber", "CustomerName", "ProjectName", "ProjectUploadId","ProjectAddress", "Initial", "TotalActual", "TotalProjected", "TotalRemaining", "MarketSegmentName", "Staff", "DistrictName", "EditDate", "StartDate", "PlantName", "Projection1.Actual", "Projection1.Projection", "Projection2.Projection", "Projection3.Projection", "Projection4.Projection", "Projection5.Projection", "Projection6.Projection", "Projection7.Projection", "Price" })
+                        {
+                            <label>
+                                <input type="checkbox" data-id="check_@(column)_DESC" name="SortColumns" value="@column DESC" @(Model.SortColumns.Contains(column + " DESC") ? "checked='checked'" : "") />
+                                <input type="checkbox" data-id="check_@(column)_ASC" name="SortColumns" value="@column ASC" @(Model.SortColumns.Contains(column + " ASC") ? "checked='checked'" : "") />
+                            </label>
+                        }
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <button type="submit" class="btn btn-primary apply-btn" value="Apply">Apply</button>
+                        <button type="button" class="btn btn-default close-btn" value="Close">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="col-lg-12 vertical-spacer ">
+    </div>
+    <div>
+        <div class="block-flat">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div style="width: 100%;">
+                        <!-- IMPORTANT NOTE!! : It's very important to have the fc-* classes to be the "first" class as I'm doing attr("class"), tokenizing it
+                            and finding the first token for javascript to perform the optional column group. -->
+                        <table class="table table-bordered table-striped tiny_table forecast-table">
+                            <thead>
+                                <tr>
+                                    <th class="fc-1 " id="CustomerName">Customer</th>
+                                    <th class="fc-0 " id="ProjectName">Project</th>
+                                    <th class="fc-22 @(opt.Contains("ProjectUploadId") ? "":"optional_column") right" id="ProjectUploadId">Project Upload ID</th>
+                                    <th class="fc-21 @(opt.Contains("ProjectAddress") ? "":"optional_column") right" id="ProjectAddress">Address</th>
+                                    <th class="fc-4 @(opt.Contains("Initial") ? "":"optional_column") right" id="Initial">Initial</th>
+                                    <th class="fc-19 right" id="TotalActual">Shipped</th>
+                                    <th class="fc-3 right" id="TotalRemaining">Remaining</th>
+                                    <th class="fc-20 right" id="TotalProjected">Projected</th>
+                                    <th class="fc-5 @(opt.Contains("StartDate") ? "":"optional_column")" id="StartDate">Start Date</th>
+                                    <th class="fc-11 right" id="Projection1_Actual">@(((RedHill.SalesInsight.DAL.DataTypes.SIForecastProjects)ViewBag.Forecasts).ProjectionMonths[0].ToString("MMM")) Act</th>
+                                    <th class="fc-12 right" id="Projection1_Projection">@(((RedHill.SalesInsight.DAL.DataTypes.SIForecastProjects)ViewBag.Forecasts).ProjectionMonths[0].ToString("MMM")) Proj</th>
+                                    <th class="fc-13 right" id="Projection2_Projection">@(((RedHill.SalesInsight.DAL.DataTypes.SIForecastProjects)ViewBag.Forecasts).ProjectionMonths[1].ToString("MMM"))</th>
+                                    <th class="fc-14 right" id="Projection3_Projection">@(((RedHill.SalesInsight.DAL.DataTypes.SIForecastProjects)ViewBag.Forecasts).ProjectionMonths[2].ToString("MMM"))</th>
+                                    <th class="fc-15 right" id="Projection4_Projection">@(((RedHill.SalesInsight.DAL.DataTypes.SIForecastProjects)ViewBag.Forecasts).ProjectionMonths[3].ToString("MMM"))</th>
+                                    <th class="fc-16 right" id="Projection5_Projection">@(((RedHill.SalesInsight.DAL.DataTypes.SIForecastProjects)ViewBag.Forecasts).ProjectionMonths[4].ToString("MMM"))</th>
+                                    <th class="fc-17 right" id="Projection6_Projection">@(((RedHill.SalesInsight.DAL.DataTypes.SIForecastProjects)ViewBag.Forecasts).ProjectionMonths[5].ToString("MMM"))</th>
+                                    <th class="fc-18 right" id="Projection7_Projection">@(((RedHill.SalesInsight.DAL.DataTypes.SIForecastProjects)ViewBag.Forecasts).ProjectionMonths[6].ToString("MMM"))</th>
+                                    <th class="fc-8 @(opt.Contains("DistrictName") ? "":"optional_column")" id="DistrictName">District</th>
+                                    <th class="fc-10" id="PlantName">Plant</th>
+                                    <th class="fc-7 @(opt.Contains("MarketSegmentName") ? "":"optional_column")" id="MarketSegmentName">Market Segment</th>
+                                    <th class="fc-6 @(opt.Contains("Staff") ? "":"optional_column")" id="Staff">Sales Staff</th>
+                                    <th class="fc-9 @(opt.Contains("EditDate") ? "":"optional_column")" id="EditDate">Last Revision</th>
+                                    <th class="fc-2"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (RedHill.SalesInsight.DAL.DataTypes.SIForecastProject project in ViewBag.Forecasts.Projects)
+                                {
+                                <tr data-id="@project.ProjectId" data-id-2="@project.PlantId">
+                                    <td class="fc-1 ">@project.CustomerName</td>
+                                    <td class="fc-0 ">@project.ProjectName</td>
+                                    <td class="fc-22 @(opt.Contains("ProjectUploadId") ? "":"optional_column") right">@project.ProjectUploadId</td>
+                                    <td class="fc-21 @(opt.Contains("ProjectAddress") ? "":"optional_column") right">@project.ProjectAddress</td>
+                                    <td class="fc-4 @(opt.Contains("Initial") ? "":"optional_column") right">@project.Initial.GetValueOrDefault(0).ToString("N0")</td>
+                                    <td class="fc-19 right">@project.TotalActual.GetValueOrDefault(0).ToString("N0")</td>
+                                    <td class="fc-3 right">@(project.TotalRemaining.GetValueOrDefault(0).ToString("N0"))</td>
+                                    <td class="fc-20 right">@project.TotalProjected.GetValueOrDefault(0).ToString("N0")</td>
+                                    <td class="fc-5  @(opt.Contains("StartDate") ? "":"optional_column")">@(project.StartDate != null ? project.StartDate.GetValueOrDefault().ToString("M/d/yyyy") : "")</td>
+                                    @if (ViewBag.AccessRule.HasForecastAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                                    {
+                                        <td class="fc-11 " data-id="1" data-id-2="actual">@Html.TextBox("edit_box", project.Projection1 != null ? (string.IsNullOrEmpty(project.Projection1.Actual.GetValueOrDefault(0).ToString("###,###")) ? "0" : project.Projection1.Actual.GetValueOrDefault(0).ToString("###,###")) : "0", new { @class = "edit_box" })</td>
+                                        <td class="fc-12 " data-id="1">@Html.TextBox("edit_box", project.Projection1 != null ? (string.IsNullOrEmpty(project.Projection1.Projection.GetValueOrDefault(0).ToString("###,###")) ? "0" : project.Projection1.Projection.GetValueOrDefault(0).ToString("###,###")) : "0", new { @class = "edit_box projection" })</td>
+                                        <td class="fc-13 " data-id="2">@Html.TextBox("edit_box", project.Projection2 != null ? (string.IsNullOrEmpty(project.Projection2.Projection.GetValueOrDefault(0).ToString("###,###")) ? "0" : project.Projection2.Projection.GetValueOrDefault(0).ToString("###,###")) : "0", new { @class = "edit_box projection" })</td>
+                                        <td class="fc-14" data-id="3">@Html.TextBox("edit_box", project.Projection3 != null ? (string.IsNullOrEmpty(project.Projection3.Projection.GetValueOrDefault(0).ToString("###,###")) ? "0" : project.Projection3.Projection.GetValueOrDefault(0).ToString("###,###")) : "0", new { @class = "edit_box projection" })</td>
+                                        <td class="fc-15 " data-id="4">@Html.TextBox("edit_box", project.Projection4 != null ? (string.IsNullOrEmpty(project.Projection4.Projection.GetValueOrDefault(0).ToString("###,###")) ? "0" : project.Projection4.Projection.GetValueOrDefault(0).ToString("###,###")) : "0", new { @class = "edit_box projection" })</td>
+                                        <td class="fc-16 " data-id="5">@Html.TextBox("edit_box", project.Projection5 != null ? (string.IsNullOrEmpty(project.Projection5.Projection.GetValueOrDefault(0).ToString("###,###")) ? "0" : project.Projection5.Projection.GetValueOrDefault(0).ToString("###,###")) : "0", new { @class = "edit_box projection" })</td>
+                                        <td class="fc-17 " data-id="6">@Html.TextBox("edit_box", project.Projection6 != null ? (string.IsNullOrEmpty(project.Projection6.Projection.GetValueOrDefault(0).ToString("###,###")) ? "0" : project.Projection6.Projection.GetValueOrDefault(0).ToString("###,###")) : "0", new { @class = "edit_box projection" })</td>
+                                        <td class="fc-18 " data-id="7">@Html.TextBox("edit_box", project.Projection7 != null ? (string.IsNullOrEmpty(project.Projection7.Projection.GetValueOrDefault(0).ToString("###,###")) ? "0" : project.Projection7.Projection.GetValueOrDefault(0).ToString("###,###")) : "0", new { @class = "edit_box projection" })</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="fc-11 " data-id="1" data-id-2="actual">@(project.Projection1 != null ? (string.IsNullOrEmpty(project.Projection1.Actual.GetValueOrDefault(0).ToString("###,###")) ? "0" : project.Projection1.Actual.GetValueOrDefault(0).ToString("###,###")) : "0")</td>
+                                        <td class="fc-12 " data-id="1">@(project.Projection1 != null ? (string.IsNullOrEmpty(project.Projection1.Projection.GetValueOrDefault(0).ToString("###,###")) ? "0" : project.Projection1.Projection.GetValueOrDefault(0).ToString("###,###")) : "0")</td>
+                                        <td class="fc-13 " data-id="2">@(project.Projection2 != null ? (string.IsNullOrEmpty(project.Projection2.Projection.GetValueOrDefault(0).ToString("###,###")) ? "0" : project.Projection2.Projection.GetValueOrDefault(0).ToString("###,###")) : "0")</td>
+                                        <td class="fc-14" data-id="3">@(project.Projection3 != null ? (string.IsNullOrEmpty(project.Projection3.Projection.GetValueOrDefault(0).ToString("###,###")) ? "0" : project.Projection3.Projection.GetValueOrDefault(0).ToString("###,###")) : "0")</td>
+                                        <td class="fc-15 " data-id="4">@(project.Projection4 != null ? (string.IsNullOrEmpty(project.Projection4.Projection.GetValueOrDefault(0).ToString("###,###")) ? "0" : project.Projection4.Projection.GetValueOrDefault(0).ToString("###,###")) : "0")</td>
+                                        <td class="fc-16 " data-id="5">@(project.Projection5 != null ? (string.IsNullOrEmpty(project.Projection5.Projection.GetValueOrDefault(0).ToString("###,###")) ? "0" : project.Projection5.Projection.GetValueOrDefault(0).ToString("###,###")) : "0")</td>
+                                        <td class="fc-17 " data-id="6">@(project.Projection6 != null ? (string.IsNullOrEmpty(project.Projection6.Projection.GetValueOrDefault(0).ToString("###,###")) ? "0" : project.Projection6.Projection.GetValueOrDefault(0).ToString("###,###")) : "0")</td>
+                                        <td class="fc-18 " data-id="7">@(project.Projection7 != null ? (string.IsNullOrEmpty(project.Projection7.Projection.GetValueOrDefault(0).ToString("###,###")) ? "0" : project.Projection7.Projection.GetValueOrDefault(0).ToString("###,###")) : "0")</td>
+                                    }
+                                    <td class="fc-8 @(opt.Contains("DistrictName") ? "":"optional_column")">@project.DistrictName</td>
+                                    <td class="fc-10 ">@project.PlantName</td>
+                                    <td class="fc-7 @(opt.Contains("MarketSegmentName") ? "":"optional_column")">@project.MarketSegmentName</td>
+                                    <td class="fc-6 @(opt.Contains("Staff") ? "":"optional_column")">@project.StaffNamesList</td>
+                                    <td class="fc-9 @(opt.Contains("EditDate") ? "":"optional_column")">@(project.EditDate != null ? project.EditDate.GetValueOrDefault().ToString("M/d/yyyy") : "")</td>
+                                    <td class="fc-2 ">
+                                        <div class="action-container">
+                                            <a title="View Project and Quotation Notes"
+                                               href="/Home/GetProjectQuoteNotes/@project.ProjectId"
+                                               class="btn btn-xs btn-success show_history">
+                                                <span class="glyphicon glyphicon-th-list"></span>
+                                            </a>
+                                            <a title="View Actuals History and Last Year Trend"
+                                               href="/Home/GetActualsHistory/@project.ProjectId?plant=@project.PlantId&date=@Model.ProjectionMonth"
+                                               class="btn btn-xs btn-success show_history">
+                                                <span class="glyphicon glyphicon-time"></span>
+                                            </a>
+                                            @if (ViewBag.AccessRule.HasPipelineAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+                                            {
+                                                <a target="_blank" href="/Home/EditProject/@project.ProjectId?selected=forecast&month=@Model.ProjectionMonth" class="btn btn-xs btn-primary">
+                                                    <i class="glyphicon glyphicon-edit"></i>
+                                                </a>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    @{ViewBag.LastCount = (ViewBag.RowCount < (Model.RowsPerPage * ViewBag.CurrentPage)) ? ViewBag.RowCount : (Model.RowsPerPage * ViewBag.CurrentPage);}
+                    <span>@(((ViewBag.CurrentPage - 1) * Model.RowsPerPage + 1).ToString("N0")) to @(ViewBag.LastCount.ToString("N0")) of @(ViewBag.RowCount.ToString("N0")) records</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="pull-left">
+                        <div class="form-inline">
+                            <select id="rows_per_page" class="form-control">
+                                <option value="10" @(Model.RowsPerPage == 10 ? "selected=selected" : "")>10</option>
+                                <option value="25" @(Model.RowsPerPage == 25 ? "selected=selected" : "")>25</option>
+                                <option value="50" @(Model.RowsPerPage == 50 ? "selected=selected" : "")>50</option>
+                                <option value="100" @(Model.RowsPerPage == 100 ? "selected=selected" : "")>100</option>
+                            </select>
+                            <label class="control-label">Records per page</label>
+                        </div>
+                    </div>
+                    <ul class="pagination pull-right">
+                        <li class="previous"><a href="#"><span class="glyphicon glyphicon-chevron-left"></span><span>Previous</span></a></li>
+                        @{ViewBag.first = ViewBag.CurrentPage <= 5 ? 1 : ViewBag.CurrentPage - 5;}
+                        @{ViewBag.last = ViewBag.CurrentPage + 5 >= ViewBag.NumPages ? ViewBag.NumPages : ViewBag.first + 7;}
+                        @for (int i = ViewBag.first; i <= ViewBag.last; i++)
+                        {
+                            <li class="@(ViewBag.CurrentPage == i ? "active" : "")"><a href="#" class="pageNumber">@(i)</a></li>
+                        }
+                        @if (ViewBag.CurrentPage + 1 <= ViewBag.NumPages)
+                        {
+                            <li class="next"><a href="#"><span>Next</span> <span class="glyphicon glyphicon-chevron-right"></span></a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="actuals_history" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+        </div>
+    </div>
+</div>
+@using (Html.BeginForm("UploadActuals", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="modal md-modal colored-header fade" data-backdrop="static" id="upload_modal">
+        <div class="modal-dialog">
+            <div class="md-content modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-backdrop="static" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Upload Actuals</h4>
+                </div>
+                <div class="modal-body form">
+                    <div class="alert alert-info">
+                        Please upload the Excel File in <a class="label label-primary" href="/SampleUploads/Actuals.xlsx">this format</a>. Once uploaded, the application will return the excel to you with the import success summary against each row.
+                    </div>
+                    <div class="form-group">
+                        <input type="file" name="excel" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-flat md-close" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary btn-flat">Upload</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section Scripts{
+    <link href="~/Content/forecast-responsive-table.css" rel="stylesheet" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".product_toggle").on("change", function (e) {
+                var $this = $(this);
+                var $productType = $("#ProductTypeId");
+                $("#CurrentStart").val(0);
+                $productType.val($this.val());
+                $("form#filter-form").submit();
+            });
+
+            $('#ProjectionMonth').datepicker({
+                format: "M, yyyy",
+                viewMode: "months",
+                minViewMode: "months"
+            }).on("changeDate", function (e) {
+                $("#filter-form").submit();
+                $(this).datepicker('hide');
+            });
+
+            $('input.edit_box').keyup(function(e){
+                if(e.which==39)
+                    $(this).closest('td').next().find('input').focus();
+                else if(e.which==37)
+                    $(this).closest('td').prev().find('input').focus();
+                else if(e.which==40)
+                    $(this).closest('tr').next().find('td:eq('+$(this).closest('td').index()+')').find('input').focus();
+                else if(e.which==38)
+                    $(this).closest('tr').prev().find('td:eq('+$(this).closest('td').index()+')').find('input').focus();
+            });
+
+            $(".show_history").click(function(){
+                $.get($(this).attr("href"),function(data){
+                    $("#actuals_history").find(".modal-content").html(data);
+                    $("#actuals_history").modal("show");
+                });
+                return false;
+            });
+
+            $("#rows_per_page").change(function (e) {
+                $("#RowsPerPage").val($(this).val());
+                $("#CurrentStart").val(0);
+                $("#filter-form").submit();
+            });
+
+            $("#ShowInactives").change(function (e) {
+                $("#filter-form").submit();
+            });
+
+
+            @if (ViewBag.AccessRule.HasForecastAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+            {
+                 <text>
+
+            difference = @ViewBag.Difference ;
+            pastEdit = @ViewBag.AccessRule.CanEditNonFutureProjections.ToString().ToLower();
+            actualEdit = @ViewBag.AccessRule.CanEditActuals.ToString().ToLower();
+
+            if (!actualEdit){
+                $("td[data-id-2='actual']  input").prop("disabled",true);
+            }
+
+            DisablePastInputs(difference,pastEdit);
+
+            pastAlerted = false;
+            $(".edit_box").blur(function(e){
+                element = $(this);
+                currentVal = element.val();
+                currentVal = currentVal.replace(/,/g,'');
+                projectId = element.parent().parent().attr("data-id");
+                plantId = element.parent().parent().attr("data-id-2");
+                projectionNum = element.parent().attr("data-id");
+                data_id_2 = element.parent().attr("data-id-2");
+                actual = (data_id_2 == "actual");
+                if (actual)
+                    postParams = {"ProjectionMonth":'@Model.ProjectionMonth',"ProjectId":projectId,"PlantId":plantId,"ProjectionNumber":projectionNum,"Actual":currentVal,"IsActual":true};
+                else
+                    postParams = {"ProjectionMonth":'@Model.ProjectionMonth',"ProjectId":projectId,"PlantId":plantId,"ProjectionNumber":projectionNum,"Projection":currentVal};
+                $.post("/Home/UpdateProjection",postParams,function(data){
+                    if(data!="OK"){
+                        if (data == "PAST"){
+                            if (!pastAlerted) {
+                                alert("Sorry, you don't have access to edit the past projections");
+                                pastAlerted = true;
+                            }
+                            $(element).prop("disabled", true);
+                            $(element).attr("title","You don't have access to update past projections");
+                        }
+                        if (data == "ACCESS"){
+                            alert("Sorry, you don't have access to edit the actuals");
+                            $("td[data-id-2='actual'] > input").prop("disabled",true);
+                            $(element).attr("title","You don't have access to update actuals");
+                        }
+                    }
+                });
+            });
+            </text>
+            }
+            else
+            {
+                 <text>
+            $(".edit_box").attr("disabled","disabled");
+            </text>
+            }
+
+            $(".previous a").click(function (e) {
+                current = parseInt($("#CurrentStart").val());
+                if (current > 0) {
+                    $("#CurrentStart").val(current - @Model.RowsPerPage);
+                    $("#filter-form").submit();
+                }
+                return false;
+            });
+
+            $("a.pageNumber").click(function (e) {
+                start = (parseInt($(this).text()) - 1) * @Model.RowsPerPage;
+                if (start >= 0) {
+                    $("#CurrentStart").val(start);
+                    $("#filter-form").submit();
+                }
+                return false;
+            });
+
+            $(".next a").click(function (e) {
+                current = parseInt($("#CurrentStart").val());
+                $("#CurrentStart").val(current + @Model.RowsPerPage);
+                $("#filter-form").submit();
+                return false;
+            });
+
+            $(".first a").click(function (e) {
+                $("#CurrentStart").val(0);
+                $("#filter-form").submit();
+                return false;
+            });
+
+            $(".filter-btn").click(function (e) {
+                if ($(".filter-panel").is(":visible")) {
+                    $(".filter-panel").slideUp();
+                } else {
+                    $(".filter-panel").slideDown();
+                }
+                return false;
+            });
+            $(".close-btn").click(function (e) {
+                $(".filter-panel").slideUp();
+            });
+            $(".apply-btn").click(function (e) {
+                $("#SearchTerm").val("");
+                $(".filter-panel").slideUp();
+            });
+
+            $("input[name=SortColumns]").each(function (index, o) {
+                if ($(o).is(":checked")) {
+                    column = $(o).val();
+                    tokens = column.split(" ");
+                    name = tokens[0];
+                    name = name.replace(/\./g,'_');
+                    direction = tokens[1];
+                    if (direction == "ASC"){
+                        $("#" + name).append(" &#9660;");
+                        $("#" + name).attr("direction","ASC");
+                    }
+                    else{
+                        $("#" + name).append(" &#9650;");
+                        $("#" + name).attr("direction","DESC");
+                    }
+                }
+            });
+
+            $(".forecast_optional_columns_select").change(function(e){
+                var list = []
+                $(this).find("option").each(function(index,opt){
+                    id = $(opt).val();
+                    if (id != undefined){
+                        console.log(id);
+                        th = $("#"+id);
+                        other_class = th.attr("class").split(" ")[0];
+                        console.log(other_class);
+                        if ($(opt).is(":checked")){
+                            $("td."+other_class).removeClass("optional_column");
+                            th.removeClass("optional_column");
+                            list.push(id);
+                        }else{
+                            $("td."+other_class).addClass("optional_column");
+                            th.addClass("optional_column");
+                        }
+                    }
+                });
+                console.log(list);
+                jQuery.ajaxSettings.traditional = true;
+                $.post("/Home/SaveOptionalColumns",{"mode":"forecast","options":list},function(data){
+
+                });
+            });
+
+            $(".forecast-table th").click(function (e) {
+                sort = $(this).attr("id");
+                sort = sort.replace(/_/g,'.');
+                direction = "ASC";
+                if ($(this).attr("direction")!='undefined'){
+                    direction = $(this).attr("direction") == "ASC" ? "DESC" : "ASC";
+                }else{
+                    $(this).attr("direction","ASC");
+                }
+                if (!(e.shiftKey)) {
+                    $("input[name=SortColumns]").prop("checked", false);
+                }else{
+                    $("input[data-id='check_" + sort+"_ASC']").prop("checked",false);
+                    $("input[data-id='check_" + sort+"_DESC']").prop("checked",false);
+                }
+                $("input[data-id='check_" + sort+"_"+direction+"']").prop("checked", true);
+                $("#filter-form").submit();
+            });
+
+            ScrubPlants();
+            ScrubSalesStaffs();
+
+            $(".filter-panel input[name='Districts']").change(function () {
+                ScrubPlants();
+                ScrubSalesStaffs();
+            });
+
+            function ScrubPlants() {
+                regions = getCheckedValues(".filter-panel input[name='Districts']");
+                queryString = "";
+                $(regions).each(function (i, x) {
+                    queryString += "&ParentIds=" + x;
+                });
+                if (queryString != "") {
+                    $.get("/Json/GetStructureList?StructureType=PLANT" + queryString, function (data) {
+                        if (data != "NOK") {
+                            districts = eval(data);
+                            $(".filter-panel input[name='Plants']").each(function (i, x) {
+                                id = parseInt($(x).val());
+                                if (districts.indexOf(id) == -1) {
+                                    $(x).prop("checked", false);
+                                    $(x).prop("disabled", true);
+                                    $(x).parent().parent().css("display", "none");
+                                } else {
+                                    $(x).prop("disabled", false);
+                                    $(x).parent().parent().css("display", "block");
+                                }
+                            });
+
+                            if(districts && districts.length>0)
+                                toggleDistrictPrompt(false);
+                        }
+                    });
+                } else {
+                    $(".filter-panel input[name='Plants']").each(function (i, x) {
+                        $(x).prop("checked", false);
+                        $(x).prop("disabled", true);
+                        $(x).parent().parent().css("display", "none");
+                    });
+                    toggleDistrictPrompt(true);
+                }
+            }
+
+            function DisablePastInputs(difference,pastEdit){
+                if (!pastEdit){
+                    for(i = 1;i<=difference;i=i+1)
+                    {
+                        $("td[data-id = '"+i+"']").find("input.projection").prop("disabled",true);
+                    }
+                }
+            }
+
+            function ScrubSalesStaffs() {
+                regions = getCheckedValues(".filter-panel input[name='Districts']");
+                queryString = "";
+                $(regions).each(function (i, x) {
+                    queryString += "&ParentIds=" + x;
+                });
+                if (queryString != "") {
+                    $.get("/Json/GetStructureList?StructureType=SALES_STAFF" + queryString, function (data) {
+                        if (data != "NOK") {
+                            districts = eval(data);
+                            $(".filter-panel input[name='Staffs']").each(function (i, x) {
+                                id = parseInt($(x).val());
+                                if (districts.indexOf(id) == -1) {
+                                    $(x).prop("checked", false);
+                                    $(x).prop("disabled", true);
+                                    $(x).parent().parent().css("display", "none");
+                                } else {
+                                    $(x).prop("disabled", false);
+                                    $(x).parent().parent().css("display", "block");
+                                }
+                                toggleDistrictPrompt(false);
+                            });
+                        }
+                    });
+                } else {
+                    $(".filter-panel input[name='Staffs']").each(function (i, x) {
+                        $(x).prop("checked", false);
+                        $(x).prop("disabled", true);
+                        $(x).parent().parent().css("display", "none");
+                    });
+                    toggleDistrictPrompt(true);
+                }
+            }
+
+            $(".print_btn").click(function(){
+                alert("Excel export generation may take several minutes depending on the quantity of data selected for export.  Please do not refresh this page until the export has completed");
+                return true;
+            });
+
+            function toggleDistrictPrompt(show){
+                var $item=$("[data-selector='district']");
+                if(show){
+                    $item.show();
+                }else{
+                    $item.hide();
+                }
+            }
+
+            function getCheckedValues(selector) {
+                values = [];
+                $(selector+":checked").each(function (index, item) {
+                    values.push($(item).val());
+                });
+                return values;
+            }
+        });
+    </script>
+    <style type="text/css">
+        input.edit_box {
+            text-align: right;
+        }
+
+        .filter-checkbox label {
+            padding-left: 0px !important;
+        }
+    </style>
+}

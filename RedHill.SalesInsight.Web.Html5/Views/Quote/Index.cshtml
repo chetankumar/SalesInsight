@@ -1,0 +1,818 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.QuotationPageView
+
+@{
+    ViewBag.Title = "Quotations";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.UsingMultiselect = true;
+    ViewBag.UsingAutoComplete = true;
+}
+
+<div class="page-head">
+    <h2>
+        Quotations
+    </h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li>Quotations</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    @{var opt = (List<string>)Session["QuoteOptionalColumns"];}
+    @using (Html.BeginForm("Index", "Quote", FormMethod.Post, new { @id = "filter-form" }))
+    {
+        <div class="block-flat">
+            <div class="row">
+                <div class="col-md-2 form-group">
+                    @Html.HiddenFor(m => m.Filter.RowsPerPage)
+                    @Html.HiddenFor(m => m.Filter.CurrentStart)
+                    <div class="btn-group">
+                        <a class="btn btn-primary" href="/Quote/Index">All</a>
+                        <a class="btn btn-primary filter-btn">
+                            <span class="glyphicon glyphicon-filter"></span>
+                            Filter
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-3 form-group">
+                    <div class="checkbox">
+                        <label>
+                            @Html.CheckBoxFor(m => m.Filter.ShowInactives) Show Inactive, Expired, and Lost Bid Quotes
+                            @Html.Hidden("showFilter")
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-2 form-group">
+                    <select multiple="multiple" class="quote_optional_columns_select form-control multiselect" placeholder="Add Columns">
+                        <option @(opt.Contains("MarketSegment") ? "selected=selected" : "") value="MarketSegment">Market Segment</option>
+                        <option @(opt.Contains("Plant") ? "selected=selected" : "") value="Plant">Plant</option>
+                        <option @(opt.Contains("Revenue") ? "selected=selected" : "") value="Revenue">Revenue</option>
+                        <option @(opt.Contains("SalesStaff") ? "selected=selected" : "SalesStaff") value="SalesStaff">Sales Staff</option>
+                    </select>
+                </div>
+                <div class="col-md-2 form-group">
+                    <form action="/Home/PipelineSearch">
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.Filter.SearchTerm, new { @class = "form-control", @placeholder = "Search" })
+                            <div class="input-group-btn">
+                                <button type="submit" class="btn btn-primary">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-3 text-right form-group">
+                    <div class="btn-group">
+                        @if (ViewBag.AccessRule.HasQuotationAccess == SIRolePermissionLevelConstants.FULL_ACCESS || ViewBag.AccessRule.HasQuotationAccess == SIRolePermissionLevelConstants.EDIT_ONLY)
+                        {
+                            <a href="javascript:void(0);" class="btn btn-primary create-quote"><span class="glyphicon glyphicon-plus-sign"></span> Quotation</a>
+                        }
+                        <button type="submit" name="Filter.DoPrint" value="Print" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-cloud-download"></span>
+                            Export
+                        </button>
+                        <a href="/Quote/QuickQuote" class="btn btn-primary"><i class="fa fa-fw fa-flash"></i> Price</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 filter-panel" style="display: none;">
+                    <div class="col-lg-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                Districts
+                            </div>
+                            <div class="panel-body" style="height: 200px; overflow-y: scroll;">
+                                @foreach (SelectListItem item in Model.Filter.DistrictList)
+                                {
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" value="@item.Value" name="Districts" @(item.Selected ? "checked='checked'" : "") />
+                                            @item.Text
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                Plants
+                            </div>
+                            <div class="panel-body" style="height: 200px; overflow-y: scroll;">
+                                <div data-selector="district">Select district to populate</div>
+                                @foreach (SelectListItem item in Model.Filter.PlantList)
+                                {
+                                    <div class="checkbox" style="display:none">
+                                        <label>
+                                            <input type="checkbox" disabled="disabled" value="@item.Value" name="Plants" @(item.Selected ? "checked='checked'" : "") />
+                                            @item.Text
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                Quote Staff
+                            </div>
+                            <div class="panel-body" style="height: 200px; overflow-y: scroll;">
+                                <div data-selector="district">Select district to populate</div>
+                                @foreach (SelectListItem item in Model.Filter.StaffList)
+                                {
+                                    <div class="checkbox" style="display: none">
+                                        <label>
+                                            <input type="checkbox" disabled="disabled" value="@item.Value" @(item.Selected ? "checked='checked'" : "") name="Staffs" />
+                                            @item.Text
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: none">
+                        @Html.HiddenFor(x => x.SortColumn)
+                        @Html.HiddenFor(x => x.SortDirection)
+                    </div>
+                    <div class="col-lg-12">
+                        <button type="submit" class="btn btn-primary apply-btn" value="Apply">Apply</button>
+                        <button type="button" class="btn btn-default close-btn" value="Close">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="block-flat">
+        <div class="panel-body">
+            <table class="table table-responsive table-bordered table-condensed table-striped">
+                <thead>
+                    <tr>
+                        <th class="qt-0 sortable" data-sort="Id">Quote ID</th>
+                        <th class="qt-11 sortable" data-sort="Status">Approved</th>
+                        <th class="qt-12 sortable" data-sort="Awarded">Awarded</th>
+                        <th class="qt-1 sortable" data-sort="Project">Project</th>
+                        <th class="qt-2 sortable" data-sort="Customer">Customer</th>
+                        <th class="qt-13 sortable" data-sort="QuoteDate">Quote Date</th>
+                        <th class="qt-14 sortable" data-sort="AcceptanceExpirationDate">Acceptance Expiration</th>
+                        <th class="qt-15 sortable" data-sort="QuoteExpirationDate">Quote Expiration</th>
+                        <th class="qt-6 @(opt.Contains("MarketSegment") ? "":"optional_column") sortable" data-sort="MarketSegment">Market Segment</th>
+                        <th class="qt-7 @(opt.Contains("Plant") ? "":"optional_column") sortable" data-sort="Plant">Plant</th>
+                        <th class="qt-8 @(opt.Contains("SalesStaff") ? "":"optional_column") sortable" data-sort="SalesStaff">Sales Staff</th>
+                        <th class="qt-4 sortable right" data-sort="Volume">Volume</th>
+                        <th class="qt-9 @(opt.Contains("Revenue") ? "":"optional_column") sortable right" data-sort="Revenue">Revenue</th>
+                        <th class="qt-17 sortable right" data-sort="Price">Price</th>
+                        <th class="qt-16 sortable right" data-sort="Spread">Spread</th>
+                        <th class="qt-5 sortable right" data-sort="Profit">Profit</th>
+                        <th class="qt-3 ">Edit</th>
+                        @if (ViewBag.AccessRule.HasQuotationAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                        {
+                            <th class="qt-10 ">Delete</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (RedHill.SalesInsight.Web.Html5.Models.QuotationModels.QuotationReportItem profile in Model.QuoteReport)
+                    {
+                        <tr>
+                            <td class="qt-0">@profile.QuoteId</td>
+                            <td class="qt-11"><span class="@(profile.Status == "APPROVED" ? "glyphicon glyphicon-ok": "")"></span></td>
+                            <td class="qt-12"><span class="@(profile.Awarded == true ? "glyphicon glyphicon-ok": "")"></span></td>
+                            <td class="qt-1">@profile.ProjectName</td>
+                            <td class="qt-2">@profile.CustomerName</td>
+                            <td class="qt-13">@(profile.QuoteDate != null ? profile.QuoteDate.Value.ToShortDateString() : "")</td>
+                            <td class="qt-14">@(profile.AcceptanceExpirationDate != null ? profile.AcceptanceExpirationDate.Value.ToShortDateString() : "")</td>
+                            <td class="qt-15">@(profile.QuoteExpirationDate != null ? profile.QuoteExpirationDate.Value.ToShortDateString() : "")</td>
+                            <td class="qt-6 @(opt.Contains("MarketSegment") ? "":"optional_column")">@(profile.MarketSegment)</td>
+                            <td class="qt-7 @(opt.Contains("Plant") ? "":"optional_column")">@(profile.PlantName)</td>
+                            <td class="qt-8 @(opt.Contains("SalesStaff") ? "":"optional_column")">@(profile.SalesStaffName)</td>
+                            <td class="qt-4 right">@(profile.TotalVolume.ToString("N0"))</td>
+                            <td class="qt-9 @(opt.Contains("Revenue") ? "":"optional_column") right">$@(profile.TotalRevenue.ToString("N0"))</td>
+                            <td class="qt-17 right">$@(profile.AvgSellingPrice.ToString("N2"))</td>
+                            <td class="qt-16 right">$@(profile.Spread.ToString("N2"))</td>
+                            <td class="qt-5 right">$@(profile.Profit.ToString("N2"))</td>
+                            <td class="qt-3"><a href="/Quote/AddEditQuote/@profile.QuoteId" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-edit"></span></a></td>
+                            @if (ViewBag.AccessRule.HasQuotationAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                            {
+                                <td class="qt-10"><a href="/Quote/DeleteQuote/@profile.QuoteId" data-confirm="Deletion is permanent and cannot be reversed. <br /> Project : @profile.ProjectName <br /> Customer : @profile.CustomerName <br /> Delete this Quote?" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash"></span></a></td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="col-sm-12">
+                    @{ViewBag.LastCount = (ViewBag.RowCount < Model.Filter.RowsPerPage) ? ViewBag.RowCount : (Model.Filter.RowsPerPage * ViewBag.CurrentPage);}
+                    <span>@(((ViewBag.CurrentPage - 1) * Model.Filter.RowsPerPage + 1).ToString("N0")) to @(ViewBag.LastCount.ToString("N0")) of @(ViewBag.RowCount.ToString("N0")) records</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12" style="margin-top: 10px;">
+                    <div class="pull-left">
+                        <div class="form-inline">
+                            <select id="rows_per_page" class="form-control">
+                                <option value="10" @(Model.Filter.RowsPerPage == 10 ? "selected=selected" : "")>10</option>
+                                <option value="25" @(Model.Filter.RowsPerPage == 25 ? "selected=selected" : "")>25</option>
+                                <option value="50" @(Model.Filter.RowsPerPage == 50 ? "selected=selected" : "")>50</option>
+                                <option value="100" @(Model.Filter.RowsPerPage == 100 ? "selected=selected" : "")>100</option>
+                            </select>
+                            <label class="control-label">Records per page</label>
+                        </div>
+                    </div>
+                    <div class="pull-right">
+                        <ul class="pagination">
+                            <li class="previous">
+                                <a href="#"><span class="glyphicon glyphicon-chevron-left"></span><span>Previous</span></a>
+                            </li>
+                            @{ViewBag.first = ViewBag.CurrentPage <= 5 ? 1 : ViewBag.CurrentPage - 5;}
+                            @{ViewBag.last = ViewBag.CurrentPage + 5 >= ViewBag.NumPages ? ViewBag.NumPages : ViewBag.first + 7;}
+                            @for (int i = ViewBag.first; i <= ViewBag.last; i++)
+                            {
+                                <li class="@(ViewBag.CurrentPage == i ? "active" : "")"><a href="#" class="pageNumber">@(i)</a></li>
+                            }
+                            @if (ViewBag.CurrentPage + 1 <= ViewBag.NumPages)
+                            {
+                                <li class="next"><a href="#"><span>Next</span> <span class="glyphicon glyphicon-chevron-right"></span></a></li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="new_quote_modal">
+        <div class="modal-dialog">
+            <div class="modal-content check_customer">
+                @using (Html.BeginForm("NewQuoteFromProject", "Quote", FormMethod.Post))
+                {
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Create new Quote</h4>
+                    </div>
+                    <div class="modal-body createQuote_body">
+                        <div class="panel-body form-horizontal">
+                            <div class="container-fluid">
+                                <div class="form-group row " style="margin:0">
+                                    <div class="col-sm-3">
+                                        <lable>Project</lable>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input id="Project" class="form-control clearable" hidden-id="ProjectId" placeholder="Begin typing to search Project" name="Project" autocomplete="off" />
+                                        <input type="hidden" id="ProjectId" name="ProjectId" value="" />
+                                        @Html.Hidden("Address", "default")
+                                        <div class="form-control-static" style="padding:10px 0px">
+                                            <input type="checkbox" class="quote_new_project_check" /> New Project
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row" style="margin:0;margin-top:10px;">
+                                    <div class="col-sm-3">
+                                        <lable>Customer</lable>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input id="Customer" class="form-control clearable" hidden-id="NewQuoteCustomer" placeholder="Begin typing to search Customer" name="Customer" autocomplete="off" />
+                                        <input type="hidden" id="NewQuoteCustomer" name="NewQuoteCustomer" value="" />
+                                        <div style="padding:10px 0px">
+                                            <input type="checkbox" class="quote_decide_check" /> Decide Later
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*<div class="form-group" style="margin:0">
+                                    <label class="control-label col-md-4">Project</label>
+                                    <div class="col-md-6">
+                                        <input id="Project" class="form-control clearable" hidden-id="ProjectId" placeholder="Begin typing to search Project" name="Project" autocomplete="off" />
+                                        <input type="hidden" id="ProjectId" name="ProjectId" value="" />
+                                        <div id="ProjectTag"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin:0">
+                                    <label class="col-md-4">  @Html.Hidden("Address", "default")</label>
+                                    <div class="col-md-6">
+
+                                        <div class="form-control-static">
+                                            <input type="checkbox" class="quote_new_project_check" /> New Project
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin:0">
+                                    <label class="control-label col-md-4">Customer</label>
+                                    <div class="col-md-6">
+                                        <input id="Customer" class="form-control clearable" hidden-id="NewQuoteCustomer" placeholder="Begin typing to search Customer" name="Customer" autocomplete="off" />
+                                        <input type="hidden" id="NewQuoteCustomer" name="NewQuoteCustomer" value="" />
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin:0">
+                                    <label class="col-md-4"></label>
+                                    <div class="col-md-6">
+                                        <div class="form-control-static">
+                                            <input type="checkbox" class="quote_decide_check" /> Decide Later
+                                        </div>
+                                    </div>
+                                </div>*@
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" disabled="disabled" id="new_quote_btn" class="btn btn-primary">Create new</button>
+                    </div>
+                    <input type="hidden" id="IsCreateQuote" value="false" />
+                }
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+    @section Scripts{
+        <link href="~/Content/quote-responsive-table.css" rel="stylesheet" />
+
+        <script type="text/javascript">
+            function defaultToNewProject()
+            {
+                $('.quote_new_project_check').attr('checked', true);
+            }
+
+
+            function createQuoteValidation() {
+                var project = $('#ProjectId').val();
+                var newCustomer = $('#NewQuoteCustomer').val();
+
+                var newProjectCheck = $(".quote_new_project_check").is(':checked');
+                var newCustomerCheck = $(".quote_decide_check").is(':checked');
+
+                var createNewQuoteBtn = $("#new_quote_btn");
+
+                if ((newCustomerCheck || newCustomer != "") && (newProjectCheck || project != "")) {
+                    createNewQuoteBtn.prop("disabled",false);
+                }
+                else {
+                    createNewQuoteBtn.prop("disabled", true);
+                }
+            }
+
+            $(document).ready(function () {
+
+                defaultToNewProject();
+                //####################################################################### Text Box Clearable Section
+                function tog(v) { return v ? 'addClass' : 'removeClass'; }
+
+                $(document).on('input', '.clearable', function () {
+                    $(this)[tog(this.value)]('x');
+                }).on('mousemove', '.x', function (e) {
+                    $(this)[tog(this.offsetWidth - 18 < e.clientX - this.getBoundingClientRect().left)]('onX');
+                }).on('touchstart click', '.onX', function (ev) {
+                    ev.preventDefault();
+                    var hiddenfieldId = $(this).attr("hidden-id");
+                    $(this).removeClass('x onX').val('').change();
+                    $(this).attr("readonly", false);
+                    $("#" + hiddenfieldId).val('');
+                    createQuoteValidation();
+                });
+
+                //####################################################################### Create New Quote Section
+                $('#Customer,#Project').on('change', function () {
+                    createQuoteValidation();
+                });
+
+                $("#Project").keypress(function (){
+                    $('.quote_new_project_check').attr('checked', false);
+                });
+
+                $('#Customer,#Project').on('autocompleteselect', function (e, ui) {
+                    var hiddenfieldId = $(this).attr("hidden-id");
+                    $("#" + hiddenfieldId).val(ui.item.id);
+                    createQuoteValidation();
+                    $(this).attr("readonly", true);
+                    $(this).addClass('x');
+                });
+
+                $('#Customer,#Project').on('blur', function () {
+                    
+
+                    var hiddenfieldId = $(this).attr("hidden-id");
+                    if ($("#" + hiddenfieldId).val() == "" && $(this).val() != "") {
+                        alert('Please select the Customer from the list or select "Decide Later".');
+                        $(this).val('').removeClass('x');
+                    }
+                    createQuoteValidation();
+                });
+
+                $(".quote_decide_check").change(function () {
+                    var customerTxt = $('#Customer');
+                    var hiddenfieldId = customerTxt.attr("hidden-id");
+                    if (this.checked) {
+                        $("#" + hiddenfieldId).val('');
+                        customerTxt.removeClass('x');
+                        customerTxt.val('').attr("readonly", "readonly");
+
+                    } else {
+                        customerTxt.removeAttr("readonly");
+                    }
+                    createQuoteValidation();
+                });
+
+
+                $(".quote_new_project_check").change(function () {
+                    var projectTxt = $('#Project');
+                    var hiddenfieldId = projectTxt.attr("hidden-id");
+                    if (this.checked) {
+                        $("#" + hiddenfieldId).val('');
+                        projectTxt.removeClass('x');
+                        projectTxt.val('').attr("readonly","readonly");
+
+                    } else {
+                        projectTxt.removeAttr("readonly");
+                    }
+                    createQuoteValidation();
+                });
+
+                //$('#Project').on('autocompleteselect', function (e, ui) {
+                //    $('#ProjectId').val(ui.item.id);
+                //    $('#Project').addClass('x');
+                //    createQuoteValidation();
+                //    $(this).attr("readonly", true);
+                //});
+                //$('#Project').on('change', function () {
+                //    createQuoteValidation();
+                //});
+                //$('#Project').on('blur', function () {
+                //    var hiddenfieldId = $(this).attr("hidden-id");
+                //    if ($("#" + hiddenfieldId).val() == "" && $(this).val() != "") {
+                //        alert('Please select the Project from the list or select "New Project".');
+                //        $(this).val('').removeClass('x');
+                //    }
+                //    createQuoteValidation();
+                //});
+
+                //$(".quote_new_project_check").change(function () {
+                //    var projectTxt = $('#Project');
+                //    var hiddenfieldId = projectTxt.attr("hidden-id");
+                //    console.log(hiddenfieldId);
+                //    if (this.checked) {
+                //        $("#" + hiddenfieldId).val('');
+                //        projectTxt.removeClass('x');
+                //        projectTxt.val('').attr("readonly","readonly");
+
+                //    } else {
+                //        projectTxt.removeAttr("readonly");
+                //    }
+                //    createQuoteValidation();
+                //});
+
+                //$('#Customer').on('change', function () {
+                //    createQuoteValidation();
+                //});
+
+                //$('#Customer').on('autocompleteselect', function (e, ui) {
+                //    $('#NewQuoteCustomer').val(ui.item.id);
+                //    createQuoteValidation();
+                //    $(this).attr("readonly", true);
+                //    $(this).addClass('x');
+                //});
+
+                //$('#Customer').on('blur', function () {
+                //    var hiddenfieldId = $(this).attr("hidden-id");
+                //    if ($("#" + hiddenfieldId).val() == "" && $(this).val() != "") {
+                //        alert('Please select the Customer from the list or select "Decide Later".');
+                //        $(this).val('').removeClass('x');
+                //    }
+                //    createQuoteValidation();
+                //});
+
+                //$(".quote_decide_check").change(function () {
+                //    var customerTxt = $('#Customer');
+                //    var hiddenfieldId = customerTxt.attr("hidden-id");
+                //    if (this.checked) {
+                //        $("#" + hiddenfieldId).val('');
+                //        customerTxt.removeClass('x');
+                //        customerTxt.val('').attr("readonly", "readonly");
+
+                //    } else {
+                //        customerTxt.removeAttr("readonly");
+                //    }
+                //    createQuoteValidation();
+                //});
+
+
+
+                $(".create-quote").click(function () {
+                    $("#new_quote_modal").modal("show");
+                    $.ajax({
+                        url: '/json/AutoCompleteProjectList',
+                        method: 'POST',
+                        success: function (data) {
+                            var projectList = data.projects;
+                            var availableTags = projectList;
+                            $("#Project").autocomplete({
+                                source: availableTags,
+                                minLength: 2,
+                                max: 10,
+                                scroll: true
+                            });
+                        },
+                        error: function (res) {
+                            console.log(res);
+                        },
+                        complete: function () {
+                            console.log();
+                        }
+                    });
+
+                    $.ajax({
+                        url: '/json/AutoCompleteCustomerList',
+                        method: 'POST',
+                        success: function (data) {
+                            var customerList = data.customers;
+                            var availTags = customerList;
+                            $("#Customer").autocomplete({
+                                source: availTags,
+                                minLength: 2,
+                                max: 10,
+                                scroll: true
+                            });
+                        },
+                        error: function (res) {
+                            console.log(res);
+                        },
+                        complete: function () {
+                            console.log();
+                        }
+                    });
+                });
+
+
+                $("#Filter_ShowInactives").click(function(){
+                    $("#showFilter").val("");
+                    if ($(this).is(":checked")) {
+                        $("#showFilter").val("True");
+                    }else {
+                        $("#showFilter").val("False");
+                    }
+                });
+
+                $("th[data-sort]").click(function(){
+                    column = $(this).data("sort");
+                    current_col = $("#SortColumn").val();
+                    direction = $("#SortDirection").val();
+                    if (current_col == column){
+                        if (direction == "asc"){
+                            $("#SortDirection").val("desc");
+                        }else{
+                            $("#SortDirection").val("asc");
+                        }
+                    }else{
+                        $("#SortDirection").val("asc");
+                    }
+                    $("#SortColumn").val(column);
+                    $("#filter-form").submit();
+                });
+
+                //$(".quote_customer").change(function(){
+                //    e = $(this);
+                //    value = e.val();
+                //    if (value != ""){
+                //        console.log(e.parents(".check_customer").find(".quote_decide_check"));
+                //        e.parents(".check_customer").find(".quote_decide_check").prop("checked",false);
+                //        e.parents(".check_customer").find("button[type=submit]").prop("disabled",false);
+                //    }else{
+                //        decide_later = e.parents(".check_customer").find(".quote_decide_check").prop("checked");
+                //        if (decide_later){
+                //            e.parents(".check_customer").first().find("button[type=submit]").prop("disabled",false);
+                //        }else{
+                //            e.parents(".check_customer").first().find("button[type=submit]").prop("disabled",true);
+                //        }
+                //    }
+                //});
+
+                //$(".quote_decide_check").change(function(){
+                //    e = $(this);
+                //    value = e.prop("checked");
+                //    if (value){
+                //        e.parents(".check_customer").find(".quote_customer").val("");
+                //        e.parents(".check_customer").find("button[type=submit]").prop("disabled",false);
+                //    }else{
+                //        value = $(".quote_customer").val();
+                //        if (value != ""){
+                //            e.parents(".check_customer").find("button[type=submit]").prop("disabled",false);
+                //        }else{
+                //            e.parents(".check_customer").find("button[type=submit]").prop("disabled",true);
+                //        }
+                //    }
+                //});
+
+                //$(".quote_new_project_check").change(function(){
+                //    e = $(this);
+                //    value = e.prop("checked");
+                //    if (value){
+                //        e.parents(".check_customer").find(".quote_project").val("");
+                //    }
+                //});
+
+                ScrubPlants();
+                ScrubSalesStaffs();
+                $(".previous a").click(function (e) {
+                    current = parseInt($("#Filter_CurrentStart").val());
+                    if (current > 0) {
+                        $("#Filter_CurrentStart").val(current - @Model.Filter.RowsPerPage);
+                        $("#filter-form").submit();
+                    }
+                    return false;
+                });
+                $(".next a").click(function (e) {
+                    current = parseInt($("#Filter_CurrentStart").val());
+                    $("#Filter_CurrentStart").val(current + @Model.Filter.RowsPerPage);
+                    $("#filter-form").submit();
+                    return false;
+                });
+                $("a.pageNumber").click(function (e) {
+                    start = (parseInt($(this).text()) - 1) * @Model.Filter.RowsPerPage;
+                    if (start >= 0) {
+                        $("#Filter_CurrentStart").val(start);
+                        $("#filter-form").submit();
+                    }
+                    return false;
+                });
+                $(".first a").click(function (e) {
+                    $("#Filter_CurrentStart").val(0);
+                    $("#filter-form").submit();
+                    return false;
+                });
+
+                $("#rows_per_page").change(function (e) {
+                    $("#Filter_RowsPerPage").val($(this).val());
+                    $("#Filter_CurrentStart").val(0);
+                    $("#filter-form").submit();
+                });
+
+                $("#Filter_ShowInactives").change(function (e) {
+                    $("#filter-form").submit();
+                });
+
+                $(".filter-btn").click(function (e) {
+                    if($(".filter-panel").is(":visible")){
+                        $(".filter-panel").slideUp();
+                    }else{
+                        $(".filter-panel").slideDown();
+                    }
+                    return false;
+                });
+
+                $(".close-btn").click(function (e) {
+                    $(".filter-panel").slideUp();
+                });
+                $(".apply-btn").click(function (e) {
+                    $("#SearchTerm").val("");
+                    $(".filter-panel").slideUp();
+                });
+
+                $("input[name=SortColumns]").each(function (index, o) {
+                    if ($(o).is(":checked")) {
+                        column = $(o).val();
+                        tokens = column.split(" ");
+                        name = tokens[0];
+                        name = name.replace(/\./g, '_');
+                        direction = tokens[1];
+                        if (direction == "ASC") {
+                            $("#" + name).append("&#9660;");
+                            $("#" + name).attr("direction", "ASC");
+                        }
+                        else {
+                            $("#" + name).append(" &#9650;");
+                            $("#" + name).attr("direction", "DESC");
+                        }
+                    }
+                });
+
+                $(".filter-panel input[name='Districts']").change(function () {
+                    ScrubPlants();
+                    ScrubSalesStaffs();
+                });
+
+                // Ok, find the TH. Then find the first class it has.
+                // Then find the tds for that first class and add/remove optional_column class
+                $(".quote_optional_columns_select").change(function(e){
+                    var list = []
+                    $(this).find("option").each(function(index,opt){
+                        id = $(opt).val();
+                        if (id != undefined){
+                            console.log(id);
+                            th = $("th[data-sort = "+id+"]");
+                            other_class = th.attr("class").split(" ")[0];
+                            console.log(other_class);
+                            if ($(opt).is(":checked")){
+                                $("td."+other_class).removeClass("optional_column");
+                                th.removeClass("optional_column");
+                                list.push(id);
+                            }else{
+                                $("td."+other_class).addClass("optional_column");
+                                th.addClass("optional_column");
+                            }
+                        }
+                    });
+                    console.log(list);
+                    jQuery.ajaxSettings.traditional = true;
+                    $.post("/Home/SaveOptionalColumns",{"mode":"quote","options":list},function(data){
+
+                    });
+                });
+
+                function ScrubPlants() {
+                    regions = getCheckedValues(".filter-panel input[name='Districts']");
+                    queryString = "";
+                    $(regions).each(function (i, x) {
+                        queryString += "&ParentIds=" + x;
+                    });
+                    if (queryString != "") {
+                        $.get("/Json/GetStructureList?StructureType=PLANT" + queryString, function (data) {
+                            if (data != "NOK") {
+                                districts = eval(data);
+                                $(".filter-panel input[name='Plants']").each(function (i, x) {
+                                    id = parseInt($(x).val());
+                                    if (districts.indexOf(id) == -1) {
+                                        $(x).prop("checked", false);
+                                        $(x).prop("disabled", true);
+                                        $(x).parent().parent().css("display", "none");
+                                    } else {
+                                        $(x).prop("disabled", false);
+                                        $(x).parent().parent().css("display", "block");
+                                    }
+                                });
+
+                                if(districts && districts.length>0)
+                                    toggleDistrictPrompt(false);
+                            }
+                        });
+                    } else {
+                        $(".filter-panel input[name='Plants']").each(function (i, x) {
+                            $(x).prop("checked", false);
+                            $(x).prop("disabled", true);
+                            $(x).parent().parent().css("display", "none");
+                        });
+                        toggleDistrictPrompt(true);
+                    }
+                }
+
+                function ScrubSalesStaffs() {
+                    regions = getCheckedValues(".filter-panel input[name='Districts']");
+                    queryString = "";
+                    $(regions).each(function (i, x) {
+                        queryString += "&ParentIds=" + x;
+                    });
+                    if (queryString != "") {
+                        $.get("/Json/GetStructureList?StructureType=SALES_STAFF" + queryString, function (data) {
+                            if (data != "NOK") {
+                                districts = eval(data);
+                                $(".filter-panel input[name='Staffs']").each(function (i, x) {
+                                    id = parseInt($(x).val());
+                                    if (districts.indexOf(id) == -1) {
+                                        $(x).prop("checked", false);
+                                        $(x).prop("disabled", true);
+                                        $(x).parent().parent().css("display", "none");
+                                    } else {
+                                        $(x).prop("disabled", false);
+                                        $(x).parent().parent().css("display", "block");
+                                    }
+                                    toggleDistrictPrompt(false);
+                                });
+                            }
+                        });
+                    } else {
+                        $(".filter-panel input[name='Staffs']").each(function (i, x) {
+                            $(x).prop("checked", false);
+                            $(x).prop("disabled", true);
+                            $(x).parent().parent().css("display", "none");
+                        });
+                        toggleDistrictPrompt(true);
+                    }
+                }
+
+                function toggleDistrictPrompt(show){
+                    var $item=$("[data-selector='district']");
+                    if(show){
+                        $item.show();
+                    }else{
+                        $item.hide();
+                    }
+                }
+
+                function getCheckedValues(selector) {
+                    values = [];
+                    $(selector+":checked").each(function (index, item) {
+                        values.push($(item).val());
+                    });
+                    return values;
+                }
+
+       
+            });
+
+        </script>
+    }
+
+</div>

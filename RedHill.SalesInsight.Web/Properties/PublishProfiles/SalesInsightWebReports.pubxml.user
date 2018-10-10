@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit http://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <LastUsedBuildConfiguration>Release</LastUsedBuildConfiguration>
+    <LastUsedPlatform>Any CPU</LastUsedPlatform>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="bin/de/System.Web.Silverlight.resources.dll">
+      <publishTime>10/05/2008 02:53:18</publishTime>
+    </File>
+    <File Include="bin/es/System.Web.Silverlight.resources.dll">
+      <publishTime>10/05/2008 02:53:18</publishTime>
+    </File>
+    <File Include="bin/fr/System.Web.Silverlight.resources.dll">
+      <publishTime>10/05/2008 02:53:18</publishTime>
+    </File>
+    <File Include="bin/it/System.Web.Silverlight.resources.dll">
+      <publishTime>10/05/2008 02:53:18</publishTime>
+    </File>
+    <File Include="bin/ja/System.Web.Silverlight.resources.dll">
+      <publishTime>10/05/2008 02:53:18</publishTime>
+    </File>
+    <File Include="bin/ko/System.Web.Silverlight.resources.dll">
+      <publishTime>10/05/2008 02:53:18</publishTime>
+    </File>
+    <File Include="bin/RedHill.SalesInsight.API.dll">
+      <publishTime>05/21/2014 15:17:20</publishTime>
+    </File>
+    <File Include="bin/RedHill.SalesInsight.DAL.dll">
+      <publishTime>05/21/2014 15:17:18</publishTime>
+    </File>
+    <File Include="bin/RedHill.SalesInsight.Web.dll">
+      <publishTime>05/21/2014 15:17:48</publishTime>
+    </File>
+    <File Include="bin/Reports/%28Definitions%29/Dashboard.rdlc">
+      <publishTime>03/12/2014 11:57:04</publishTime>
+    </File>
+    <File Include="bin/Reports/%28Definitions%29/Forecast.rdlc">
+      <publishTime>03/12/2014 11:57:04</publishTime>
+    </File>
+    <File Include="bin/Reports/%28Definitions%29/Pipeline.rdlc">
+      <publishTime>03/12/2014 11:57:04</publishTime>
+    </File>
+    <File Include="bin/Reports/%28Definitions%29/Quote.rdlc">
+      <publishTime>03/12/2014 11:57:04</publishTime>
+    </File>
+    <File Include="bin/Reports/%28Definitions%29/WonLost.rdlc">
+      <publishTime>03/12/2014 11:57:04</publishTime>
+    </File>
+    <File Include="bin/System.Web.Silverlight.dll">
+      <publishTime>10/05/2008 02:53:18</publishTime>
+    </File>
+    <File Include="bin/zh-Hans/System.Web.Silverlight.resources.dll">
+      <publishTime>10/05/2008 02:53:18</publishTime>
+    </File>
+    <File Include="bin/zh-Hant/System.Web.Silverlight.resources.dll">
+      <publishTime>10/05/2008 02:53:18</publishTime>
+    </File>
+    <File Include="CSS/Default.css">
+      <publishTime>03/12/2014 11:57:04</publishTime>
+    </File>
+    <File Include="Default.aspx">
+      <publishTime>03/12/2014 11:57:04</publishTime>
+    </File>
+    <File Include="Reports/%28Definitions%29/Dashboard.rdlc">
+      <publishTime>03/12/2014 11:57:04</publishTime>
+    </File>
+    <File Include="Reports/%28Definitions%29/Forecast.rdlc">
+      <publishTime>03/12/2014 11:57:04</publishTime>
+    </File>
+    <File Include="Reports/%28Definitions%29/Pipeline.rdlc">
+      <publishTime>03/12/2014 11:57:04</publishTime>
+    </File>
+    <File Include="Reports/%28Definitions%29/Quote.rdlc">
+      <publishTime>03/12/2014 11:57:04</publishTime>
+    </File>
+    <File Include="Reports/%28Definitions%29/WonLost.rdlc">
+      <publishTime>03/12/2014 11:57:04</publishTime>
+    </File>
+    <File Include="Reports/Dashboard.aspx">
+      <publishTime>05/21/2014 11:52:04</publishTime>
+    </File>
+    <File Include="Reports/Forecast.aspx">
+      <publishTime>05/21/2014 12:42:08</publishTime>
+    </File>
+    <File Include="Reports/Pipeline.aspx">
+      <publishTime>05/21/2014 12:28:42</publishTime>
+    </File>
+    <File Include="Reports/Quote.aspx">
+      <publishTime>03/12/2014 11:57:04</publishTime>
+    </File>
+    <File Include="Reports/WonLost.aspx">
+      <publishTime>03/12/2014 11:57:04</publishTime>
+    </File>
+    <File Include="Service References/SalesInsight/RedHill.SalesInsight.Web.SalesInsight.SIUser.datasource">
+      <publishTime>04/22/2014 17:43:10</publishTime>
+    </File>
+    <File Include="Services/SalesInsight.svc">
+      <publishTime>03/12/2014 11:57:04</publishTime>
+    </File>
+    <File Include="Silverlight.js">
+      <publishTime>03/12/2014 11:57:04</publishTime>
+    </File>
+    <File Include="Web.config">
+      <publishTime>05/21/2014 14:46:14</publishTime>
+    </File>
+  </ItemGroup>
+</Project>

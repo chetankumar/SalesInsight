@@ -1,0 +1,11 @@
+﻿@model string
+<ul class="nav nav-tabs">
+    <li class="@(Model == "productivity" ? "active" : "")"><a href="/Reports/CustomerProductivity" >Productivity</a></li>
+    <li class="@(Model == "profitability" ? "active" : "")"><a href="/Reports/CustomerProfitability" >Profitability</a></li>
+    <li class="@(Model == "agings" ? "active" : "")"><a href="/Reports/CustomerAgings" >AR Aging</a></li>
+    <li class="@(Model == "orderChanges" ? "active" : "")"><a href="/Reports/OrderChanges" >Order Changes</a></li>
+</ul>
+
+
+
+

@@ -1,0 +1,421 @@
+﻿@using RedHill.SalesInsight.Web.Html5.Helpers;
+@model RedHill.SalesInsight.Web.Html5.Models.SalesDashboard
+
+@{
+    ViewBag.Title = "Sales Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.UsingDatePicker = true;
+    ViewBag.UsingMultiselect = true;
+    //ViewBag.UsingChartJs = true;
+    var company = ConfigurationHelper.Company;
+}
+<div class="page-head">
+    <h2><i class="fa fa-fw fa-tachometer"></i>Sales Dashboard</h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Reports/Index">Reports</a></li>
+        <li class="active">Sales Dashboard</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="block-flat">
+        <div class="panel-body">
+            @using (Html.BeginForm("SalesDashboard", "Reports", FormMethod.Post, new { @class = "form", @id = "filter_form" }))
+            {
+                <div class="form-group col-md-3">
+                    <label class="control-label">Districts</label><br />
+                    @Html.ListBoxFor(x => x.SelectedDistricts, Model.AllDistricts, new { @class = "form-control multiselect" })
+                </div>
+                <div class="form-group col-md-2">
+                    <label class="control-label">Report Date</label><br />
+                    @Html.TextBoxFor(x => x.StartDate, "{0:MMM, yyyy}", new { @class = "form-control datepicker" })
+                </div>
+                <div class="form-group col-md-2">
+                    <label class="control-label">&nbsp;</label><br />
+                    <button type="submit" value="Run Report" class="btn btn-primary">Run Report</button>
+                </div>
+            }
+        </div>
+    </div>
+
+    @if (Model.ProductivityReport != null || Model.ProfitabilityReport != null || Model.EaseOfBusinessReport != null || Model.AgingReport != null)
+    {
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="panel-title">Summary</div>
+            </div>
+            <div class="panel-body clearfix">
+                <div class="col-md-5">
+                    <div id="spider-chart" style="height: 200px"></div>
+                </div>
+                <div class="col-md-7">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Metric</th>
+                                <th style="text-align: right">Actual</th>
+                                <th style="text-align: right">Target</th>
+                                <th style="text-align: right">Variance</th>
+                                <th style="text-align: center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.ProfitabilityReport != null)
+                            {
+                                <tr>
+                                    <td>Profit</td>
+                                    <td>$/@company.DeliveryQtyUomSingular</td>
+                                    <td class="text-right">$@Model.ProfitabilityReport.ActualProfit.ToString("N2")</td>
+                                    <td class="text-right">$@Model.ProfitabilityReport.BudgetProfit.ToString("N2")</td>
+                                    <td class="text-right">$@Model.ProfitabilityReport.VarianceProfit.ToString("N2")</td>
+                                    @if (Model.ProfitabilityReport.ProfitIndicator != null)
+                                    {
+                                        <td class="text-center">@Html.Partial("_OkCautionTarget", Model.ProfitabilityReport.ProfitIndicator)</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-center"></td>
+                                    }
+                                </tr>
+                            }
+                            @if (Model.ProductivityReport != null)
+                            {
+                                <tr>
+                                    <td>Productivity</td>
+                                    <td>@company.DeliveryQtyUomSingular/Hr</td>
+                                    <td class="text-right">@Model.ProductivityReport.CydHrActual.ToString("N2")</td>
+                                    <td class="text-right">@Model.ProductivityReport.CydHrBudget.ToString("N2")</td>
+                                    <td class="text-right">@Model.ProductivityReport.CydHrVariance.ToString("N2")</td>
+                                    @if (Model.ProfitabilityReport.ProfitIndicator != null)
+                                    {
+                                        <td class="text-center">@Html.Partial("_OkCautionTarget", Model.ProductivityReport.CydHrIndicator)</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-center"></td>
+                                    }
+                                   @* <td class="text-center">@Html.Partial("_OkCautionTarget", Model.ProductivityReport.CydHrIndicator)</td>*@
+                                </tr>
+                            }
+                            @if (Model.AgingReport != null)
+                            {
+                                <tr>
+                                    <td>Payment</td>
+                                    <td>DSO</td>
+                                    <td class="text-right">@Model.AgingReport.TotalDSO.ToString("N2")</td>
+                                    <td class="text-right">@Model.AgingReport.DSOTarget.ToString("N2")</td>
+                                    <td class="text-right">@Model.AgingReport.DSOVariance.ToString("N2")</td>
+                                    @if (Model.ProfitabilityReport.ProfitIndicator != null)
+                                    {
+                                        <td class="text-center">@Html.Partial("_OkCautionTarget", Model.AgingReport.DSOIndicator)</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-center"></td>
+                                    }
+                                    @*<td class="text-center">@Html.Partial("_OkCautionTarget", Model.AgingReport.DSOIndicator)</td>*@
+                                </tr>
+                            }
+                            @if (Model.EaseOfBusinessReport != null)
+                            {
+                                <tr>
+                                    <td>Ease of Business</td>
+                                    <td>Cancellation %</td>
+                                    <td class="text-right">@Model.EaseOfBusinessReport.VolumeLostPercentage.ToString("N2")%</td>
+                                    <td class="text-right">@Model.EaseOfBusinessReport.CancellationTarget.ToString("N2")%</td>
+                                    <td class="text-right">@Model.EaseOfBusinessReport.CancellationVariance.ToString("N2")%</td>
+                                    @if (Model.ProfitabilityReport.ProfitIndicator != null)
+                                    {
+                                        <td class="text-center">@Html.Partial("_OkCautionTarget", Model.EaseOfBusinessReport.CancellationIndicator)</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-center"></td>
+                                    }
+                                    @*<td class="text-center">@Html.Partial("_OkCautionTarget", Model.EaseOfBusinessReport.CancellationIndicator)</td>*@
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (Model.WinRate != null)
+    {
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="panel-title">Win Rate</div>
+            </div>
+            <div class="panel-body clearfix">
+                <div class="col-md-2 text-center">
+                    <div class="flat alert alert-primary">
+                        <div class="sub">
+                            <h4 class="text-primary">3mo Average</h4>
+                            <div>@Model.WinRate.Last3MonthAvg.ToString("N0")%</div>
+                        </div>
+                    </div>
+                    <div class="flat alert alert-primary">
+                        <div class="sub">
+                            <h4 class="text-primary">Target</h4>
+                            <div>@Model.WinRate.Last3MonthTarget.ToString("N0")%</div>
+                        </div>
+                    </div>
+                    <div class="flat alert alert-primary">
+                        <div class="sub">
+                            <h4 class="text-primary">Variance</h4>
+                            <div>@Html.Partial("_VarianceArrow", (Model.WinRate.Last3MonthVariance >= 0)) @Model.WinRate.Last3MonthVariance.ToString("N0")%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <div id="winrate_chart_div" style="height: 280px;" class="chart-container">
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (Model.BackLog != null)
+    {
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="panel-title">Backlog</div>
+            </div>
+            <div class="panel-body clearfix">
+                <div class="col-md-2 text-center">
+                    <div class="flat alert alert-primary">
+                        <div class="sub">
+                            <h4 class="text-primary">6mo Backlog</h4>
+                            <div>@Model.BackLog.TotalProjected.ToString("N0") @company.DeliveryQtyUomPlural</div>
+                        </div>
+                    </div>
+                    <div class="flat alert alert-primary">
+                        <div class="sub">
+                            <h4 class="text-primary">6mo Target</h4>
+                            <div>@Model.BackLog.TotalBudget.ToString("N0") @company.DeliveryQtyUomPlural</div>
+                        </div>
+                    </div>
+                    <div class="flat alert alert-primary">
+                        <div class="sub">
+                            <h4 class="text-primary">6mo Variance</h4>
+                            <div>@Html.Partial("_VarianceArrow", (Model.BackLog.TotalVariance >= 0)) @Model.BackLog.TotalVariance.ToString("N0") @company.DeliveryQtyUomPlural</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <div id="backlog_chart_div" style="height: 300px;" class="chart-container">
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@section Scripts{
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.datepicker').datepicker({
+                format: "M, yyyy",
+                viewMode: "months",
+                minViewMode: "months"
+            }).on("changeDate", function (e) {
+                $("#filter-form").submit();
+                $(this).datepicker('hide');
+            });
+
+            Highcharts.setOptions({
+                lang: {
+                    thousandsSep: ','
+                }
+            });
+
+            /********** DIAMOND CHART *************/
+            @if (Model.ProductivityReport != null && Model.ProfitabilityReport != null && Model.AgingReport != null && Model.EaseOfBusinessReport != null)
+            {
+            <text>
+            $('#spider-chart').highcharts({
+                chart: {
+                    polar: true,
+                    type: 'line'
+                },
+
+                title: {
+                    text: 'Summary',
+                    x: -80
+                },
+                legend:{
+                    enabled:true
+                },
+                pane: {
+                    size: '80%'
+                },
+                xAxis: {
+                    categories: ['Profit', 'Payment', 'Productivity', 'EODB'],
+                    tickmarkPlacement: 'on',
+                    lineWidth: 0
+                },
+                credits:{
+                    enabled:false
+                },
+                yAxis: {
+                    gridLineInterpolation: 'polygon',
+                    lineWidth: 0,
+                    min: 0,
+                    max:20
+                },
+                tooltip: {
+                    shared: true,
+                    pointFormat: '<span style="color:{series.color}">{series.name}: <b>{point.y:,.0f}</b><br/>'
+                },
+                legend: {
+                    enabled:false
+                },
+                series: [{
+                    name: 'Target',
+                    color: 'rgba(270,0,0,1)',
+                    data: [10, 10, 10, 10],
+                    pointPlacement: 'on'
+                }, {
+                    name: 'Actual',
+                    data: @Model.DiamondChartData.ToString(),
+                    pointPlacement: 'on'
+                }]
+
+            });
+            </text>
+            }
+
+            /********** WIN RATE CHART *************/
+            @if (Model.WinRate != null)
+            {
+            <text>
+            win_rate_data = @Html.Raw(Model.WinRate.ChartData);
+            console.log(win_rate_data);
+            try{
+                $('#winrate_chart_div').highcharts({
+                    chart: {
+                        type: 'line'
+                    },
+                    title: {
+                        text: ''
+                    },
+                    subtitle: {
+                        text: ''
+                    },
+                    xAxis: {
+                        title: {text:""},
+                        categories: win_rate_data[0],
+                        crosshair: true
+                    },
+                    credits:{
+                        enabled:false
+                    },
+                    yAxis: {
+                        max: 100,
+                        title: {
+                            text: ''
+                        }
+                    },
+                    legend:{
+                        enabled:false
+                    },
+                    tooltip: {
+                        shared: true,
+                        pointFormat: '<span style="color:{series.color}">{series.name}: <b>{point.y:,.0f}</b><br/>',
+                        shared: true,
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0
+                        }
+                    },
+                    series: [{
+                        name: "Actual",
+                        type: "spline",
+                        data: win_rate_data[1]
+                    },{
+                        name: "Target",
+                        type: "spline",
+                        color: 'rgba(270,0,0,1)',
+                        data: win_rate_data[2]
+                    }]
+                });
+            }
+            catch(ex){
+                console.log(ex);
+            }
+            </text>
+            }
+
+            /********** BACKLOG CHART *************/
+            @if (Model.BackLog != null)
+            {
+            <text>
+            chart_data = @Html.Raw(Model.BackLog.ChartData);
+            console.log(chart_data);
+            try{
+                $('#backlog_chart_div').highcharts({
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Six Month Projection'
+                    },
+                    subtitle: {
+                        text: ''
+                    },
+                    credits:{
+                        enabled:false
+                    },
+                    xAxis: {
+                        title: {text:""},
+                        categories: chart_data[0]
+                    },
+                    yAxis: {
+                        title: {
+                            text: ''
+                        }
+                    },
+                    tooltip: {
+                        shared: true,
+                        pointFormat: '<span style="color:{series.color}">{series.name}: <b>{point.y:,.0f}</b><br/>',
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0
+                        }
+                    },
+                    series: [{
+                        name: "Backlog",
+                        type: "column",
+                        data: chart_data[1]
+                    },{
+                        name: "Target",
+                        type: "spline",
+                        color: 'rgba(270,0,0,1)',
+                        dashStyle: 'longdash',
+                        data: chart_data[2]
+                    }]
+                });
+            }
+            catch(ex){
+                console.log(ex);
+            }
+            </text>
+            }
+        });
+    </script>
+}
+
+
+

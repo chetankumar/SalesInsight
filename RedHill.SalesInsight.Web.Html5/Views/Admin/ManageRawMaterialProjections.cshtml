@@ -1,0 +1,179 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ManageRawMaterialCostProjections
+
+@{
+    ViewBag.Title = "Manage Raw Material Cost";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.UsingDatePicker = true;
+}
+<div class="page-head">
+    <h2>Manage Raw Material Cost</h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Home/Settings">Settings</a></li>
+        <li><a href="/Home/Companies">Manage Company Settings</a></li>
+        <li><a href="/Admin/ManageRawMaterials">Raw Materials</a></li>
+        <li class="active">@Model.Material.MaterialCode (@Model.Material.Description)</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="spacer2">
+        <div class="col-sm-12">
+            <div class="block-flat clearfix">
+                @using (@Html.BeginForm("ManageRawMaterialProjections", "Admin", FormMethod.Post, new { @id = "FilterForm" }))
+                {
+                    @Html.HiddenFor(x => x.RawMaterialId)
+                    <div class="col-md-2">
+                        <div class="input-group">
+                            @Html.TextBoxFor(x => x.MonthYear, new { @class = "form-control" })
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group">
+                            <span class="input-group-addon small">$ Per</span>
+                            @Html.DropDownListFor(x => x.ExpandUOMId, Model.ChooseExpandUOM, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="modal md-modal colored-header fade" data-backdrop="static" id="change_price_modal">
+                        <div class="modal-dialog">
+                            <div class="md-content modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-backdrop="static" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Update Raw Material Cost</h4>
+                                </div>
+                                <div class="modal-body form">
+                                    <div class="form-group">
+                                        <label>Cost</label>
+                                        @Html.HiddenFor(x => x.SelectedPlantId)
+                                        @Html.HiddenFor(x => x.FutureMonth)
+                                        <div class="input-group">
+                                            <span class="input-group-addon">$</span>
+                                            @Html.TextBoxFor(x => x.SavePrice, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Unit of Measure</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Per</span>
+                                            @Html.DropDownListFor(x => x.SaveUOMId, Model.ChooseExpandUOM, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default btn-flat md-close" data-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-primary btn-flat">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="col-sm-12">
+            <div class="block-flat">
+                <table class="table table-bordered table-striped cost-projections">
+                    <thead>
+                        <tr>
+                            <th>Plant</th>
+                            <th>@Model.ProjectionDate.Value.AddMonths(0).ToString("MMM, yyyy")</th>
+                            <th>@Model.ProjectionDate.Value.AddMonths(1).ToString("MMM, yyyy")</th>
+                            <th>@Model.ProjectionDate.Value.AddMonths(2).ToString("MMM, yyyy")</th>
+                            <th>@Model.ProjectionDate.Value.AddMonths(3).ToString("MMM, yyyy")</th>
+                            <th>@Model.ProjectionDate.Value.AddMonths(4).ToString("MMM, yyyy")</th>
+                            <th>@Model.ProjectionDate.Value.AddMonths(5).ToString("MMM, yyyy")</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (RedHill.SalesInsight.Web.Html5.Models.RawMaterialPlantProjectionView proj in Model.Projections)
+                        {
+                            <tr>
+                                <td>@proj.PlantName</td>
+                                <td>
+                                    <span class="@(proj.Month1Actual ? "actual" : "")">@proj.Month1.ToString("N2")</span> @if (((Model.ProjectionDate.Value.AddMonths(0).ToString("MM/yyyy") == DateTime.Now.ToString("MM/yyyy")) || (Model.ProjectionDate.Value.AddMonths(0) > DateTime.Now)))
+                                                                                                                        {<button class="pull-right btn btn-xs btn-primary" data-future="0" 
+                                data-Plant="@proj.PlantId" data-cost="@proj.Month1" data-title="Update Cost for @proj.PlantName @Model.ProjectionDate.Value.AddMonths(0).ToString("MMM, yyyy")"  
+                                data-toggle="modal" data-target="#change_price_modal">
+                                                                <span class="glyphicon glyphicon-edit"></span>
+                                                            </button>}</td>
+                                <td><span class="@(proj.Month2Actual ? "actual" : "")">@proj.Month2.ToString("N2")</span> @if (((Model.ProjectionDate.Value.AddMonths(1).ToString("MM/yyyy") == DateTime.Now.ToString("MM/yyyy")) || (Model.ProjectionDate.Value.AddMonths(1) > DateTime.Now)))
+                                                                                                                        {<button class="pull-right btn btn-xs btn-primary" data-future="1" 
+                                data-Plant="@proj.PlantId" data-cost="@proj.Month2" data-title="Update Cost for @proj.PlantName @Model.ProjectionDate.Value.AddMonths(1).ToString("MMM, yyyy")"  
+                                data-toggle="modal" data-target="#change_price_modal">
+                                                                <span class="glyphicon glyphicon-edit"></span>
+                                                            </button>}</td>
+                                <td><span class="@(proj.Month3Actual ? "actual" : "")">@proj.Month3.ToString("N2")</span> @if (((Model.ProjectionDate.Value.AddMonths(2).ToString("MM/yyyy") == DateTime.Now.ToString("MM/yyyy")) || (Model.ProjectionDate.Value.AddMonths(2) > DateTime.Now)))
+                                                                                                                        {<button class="pull-right btn btn-xs btn-primary" data-future="2" 
+                                data-Plant="@proj.PlantId" data-cost="@proj.Month3" data-title="Update Cost for @proj.PlantName @Model.ProjectionDate.Value.AddMonths(2).ToString("MMM, yyyy")"  
+                                data-toggle="modal" data-target="#change_price_modal">
+                                                                <span class="glyphicon glyphicon-edit"></span>
+                                                            </button>}</td>
+                                <td><span class="@(proj.Month4Actual ? "actual" : "")">@proj.Month4.ToString("N2")</span> @if (((Model.ProjectionDate.Value.AddMonths(3).ToString("MM/yyyy") == DateTime.Now.ToString("MM/yyyy")) || (Model.ProjectionDate.Value.AddMonths(3) > DateTime.Now)))
+                                                                                                                        {<button class="pull-right btn btn-xs btn-primary" data-future="3" 
+                                data-Plant="@proj.PlantId" data-cost="@proj.Month4" data-title="Update Cost for @proj.PlantName @Model.ProjectionDate.Value.AddMonths(3).ToString("MMM, yyyy")"  
+                                data-toggle="modal" data-target="#change_price_modal">
+                                                                <span class="glyphicon glyphicon-edit"></span>
+                                                            </button>}</td>
+                                <td><span class="@(proj.Month5Actual ? "actual" : "")">@proj.Month5.ToString("N2")</span> @if (((Model.ProjectionDate.Value.AddMonths(4).ToString("MM/yyyy") == DateTime.Now.ToString("MM/yyyy")) || (Model.ProjectionDate.Value.AddMonths(4) > DateTime.Now)))
+                                                                                                                        {<button class="pull-right btn btn-xs btn-primary" data-future="4" 
+                                data-Plant="@proj.PlantId" data-cost="@proj.Month5" data-title="Update Cost for @proj.PlantName @Model.ProjectionDate.Value.AddMonths(4).ToString("MMM, yyyy")"  
+                                data-toggle="modal" data-target="#change_price_modal">
+                                                                <span class="glyphicon glyphicon-edit"></span>
+                                                            </button>}</td>
+                                <td><span class="@(proj.Month6Actual ? "actual" : "")">@proj.Month6.ToString("N2")</span> @if (((Model.ProjectionDate.Value.AddMonths(5).ToString("MM/yyyy") == DateTime.Now.ToString("MM/yyyy")) || (Model.ProjectionDate.Value.AddMonths(5) > DateTime.Now)))
+                                                                                                                        {<button class="pull-right btn btn-xs btn-primary" data-future="5" 
+                                data-Plant="@proj.PlantId" data-cost="@proj.Month6" data-title="Update Cost for @proj.PlantName @Model.ProjectionDate.Value.AddMonths(5).ToString("MMM, yyyy")"  
+                                data-toggle="modal" data-target="#change_price_modal">
+                                                                <span class="glyphicon glyphicon-edit"></span>
+                                                            </button>}</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+
+            var rawMaterialsAccess = '@(ViewBag.AccessRule.HasRawMaterialsAccess == SIRolePermissionLevelConstants.FULL_ACCESS)';
+            if (rawMaterialsAccess == 'False')
+            { $("button[data-target='#change_price_modal']").attr("disabled",true); }
+
+            $('#MonthYear').datepicker({
+                format: 'M, yyyy', // Default is 'mm/yyyy' and separator char is not mandatory
+                viewMode: "months",
+                minViewMode: "months"
+            });
+
+            $('#MonthYear').change(function (e) {
+                $("#FilterForm").submit();
+            });
+
+            $("#ExpandUOMId").change(function (e) {
+                $("#FilterForm").submit();
+            });
+
+            $('#change_price_modal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var district = button.data('plant'); // Extract info from data-* attributes
+                var future = button.data('future');
+                var cost = button.data('cost');
+                $("#SelectedPlantId").val(district);
+                $("#FutureMonth").val(future);
+                $("#SaveUOMId").val($("#ExpandUOMId").val());
+                $("#SavePrice").val(cost);
+            })
+        });
+    </script>
+}
+
+
+
+

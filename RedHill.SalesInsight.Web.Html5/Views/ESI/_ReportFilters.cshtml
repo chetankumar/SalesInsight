@@ -1,0 +1,384 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ESI.ReportSettingView
+@using RedHill.SalesInsight.DAL.Constants;
+@{
+    var accessRule = ViewBag.AccessRule;
+
+    string reportType = ViewBag.ReportType;
+    bool disableEditing = false;
+    switch (reportType)
+    {
+        case RedHill.SalesInsight.DAL.Constants.ESIReportType.GOAL_ANALYSIS:
+            disableEditing = (Model.AccessType == "Standard" && accessRule.HasGoalAnalysisAccess != SIRolePermissionLevelConstants.ADMIN);
+            break;
+        case RedHill.SalesInsight.DAL.Constants.ESIReportType.TREND_ANALYSIS:
+            disableEditing = (Model.AccessType == "Standard" && accessRule.HasTrendAnalysisAccess != SIRolePermissionLevelConstants.ADMIN);
+            break;
+        case RedHill.SalesInsight.DAL.Constants.ESIReportType.BENCHMARK_ANALYSIS:
+            disableEditing = (Model.AccessType == "Standard" && accessRule.HasBenchmarkAnalysisAccess != SIRolePermissionLevelConstants.ADMIN);
+            break;
+        case RedHill.SalesInsight.DAL.Constants.ESIReportType.DRILL_IN:
+            disableEditing = (Model.AccessType == "Standard" && accessRule.HasDrillInAccess != SIRolePermissionLevelConstants.ADMIN);
+            break;
+    }
+
+}
+
+@using (Html.BeginForm("ApplyReportFilter", "ESI", FormMethod.Post, new { id = "FilterForm", onsubmit = "disableFilterButton()" }))
+{
+    <div class="modal fade" id="Filter_Report">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Report Filters</h4>
+                    <input type="hidden" name="ReportId" value="@Model.ReportId" />
+                    <input type="hidden" name="Type" value="@Model.Type" />
+                </div>
+                <div class="modal-body reprt-filters">
+                    <div class="form-horizontal">
+                        <div id="divLoading" class="detail_loading" style="display: none;"><img height="60px;" src="/Content/images/pre-loader.gif"></div>
+                        <div class="form-group">
+                            @Html.HiddenFor(x => x.AccessType)
+                            <label class="control-label col-md-3">Region</label>
+                            <div class="col-md-6">
+                                <select name="reportFilterSetting.Regions" multiple class="form-control multiselect regionFilter" id="regionFilter">
+                                    @foreach (SelectListItem item in Model.ReportFilterSetting.RegionList)
+                                    {
+                                        <option @(item.Selected ? "selected" : "") value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">District</label>
+                            <div class="col-md-6">
+                                <select name="reportFilterSetting.Districts" multiple class="form-control multiselect districtFilter" id="districtFilter">
+                                    @if (Model.ReportFilterSetting.DistrictList != null)
+                                    {
+                                        foreach (SelectListItem item in Model.ReportFilterSetting.DistrictList)
+                                        {
+                                            <option @(item.Selected ? "selected" : "") value="@item.Value">@item.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Plant</label>
+                            <div class="col-md-6">
+                                <select name="reportFilterSetting.Plants" multiple class="form-control multiselect" id="plantFilter">
+                                    @if (Model.ReportFilterSetting.PlantList != null)
+                                    {
+                                        foreach (SelectListItem item in Model.ReportFilterSetting.PlantList)
+                                        {
+                                            <option @(item.Selected ? "selected" : "") value="@item.Value">@item.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Market Segment</label>
+                            <div class="col-md-6">
+                                <select name="reportFilterSetting.MarketSegments" multiple class="form-control multiselect" id="marketSegmentFilter">
+                                    @if (Model.ReportFilterSetting.MarketSegmentList != null)
+                                    {
+                                        foreach (SelectListItem item in Model.ReportFilterSetting.MarketSegmentList)
+                                        {
+                                            <option @(item.Selected ? "selected" : "") value="@item.Value">@item.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Customer</label>
+                            <div class="col-md-6">
+                                <select name="reportFilterSetting.Customers" multiple class="form-control multiselect" id="customerFilter">
+                                    @if (Model.ReportFilterSetting.CustomerList != null)
+                                    {
+                                        foreach (SelectListItem item in Model.ReportFilterSetting.CustomerList)
+                                        {
+                                            <option @(item.Selected ? "selected" : "") value="@item.Value">@item.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Sales Staff</label>
+                            <div class="col-md-6">
+                                <select name="reportFilterSetting.SalesStaffs" multiple class="form-control multiselect" id="salesStaffFilter">
+                                    @if (Model.ReportFilterSetting.SalesStaffList != null)
+                                    {
+                                        foreach (SelectListItem item in Model.ReportFilterSetting.SalesStaffList)
+                                        {
+                                            <option @(item.Selected ? "selected" : "") value="@item.Value">@item.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" title="Click to clear all Report filters" class="btn btn-primary clear-all-filter"><i class="fa fa-refresh"></i>Reset</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary appliyFilterbtn">Apply</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-inline">
+            <div class="col-sm-2">
+                <input type="hidden" name="PersistFilter" value="false" />
+                <input type="hidden" name="WidgetId" value="0" />
+                <input type="text" id="StartDate" name="StartDate" class="form-control datepicker" placeholder="From Date" value="@String.Format("{0:MM/dd/yyyy}", Model.StartDate)" />
+            </div>
+            @if (Model.Type != ESIReportType.GOAL_ANALYSIS)
+            {
+                <div class="col-sm-2">
+                    <input type="text" id="EndDate" name="EndDate" class="form-control datepicker" placeholder="To Date" value="@String.Format("{0:MM/dd/yyyy}", Model.EndDate)" />
+                </div>
+            }
+            <div class="col-md-1">
+                <a class="btn btn-primary" data-toggle="modal" data-target="#Filter_Report">
+                    <i class="fa fa-filter"></i>
+                    Filters&nbsp;&nbsp;<span class="filter-count"></span>
+                </a>
+            </div>
+            <div class="col-md-1" id="RunReport_btn" style="display:none;">
+                <a class="btn btn-primary btn-success">
+                    Run Report
+                </a>
+            </div>
+            <div class="col-md-5">
+                <div class="col-sm-2">
+                    <a class="mode">
+                        <i class="fa fa-gear @(ViewBag.IsNewReport?"slow-spin":"") fa-2x" aria-hidden="true"></i>
+                    </a>
+                </div>
+                <div class="col-sm-2">
+                    <a data-toggle="modal" data-target="#">
+                        <span class="fa fa-heart @(Model.IsFavourite ? "fav" : "non-fav")" title="@(Model.IsFavourite?"Click to remove it from favourite":"Click to make this as favourite")" style="font-size: 27px;"></span>
+                    </a>
+                </div>
+                <div class="col-sm-7">
+                    <select class="form-control multiselect rptList">
+                        @if (ViewBag.SavedReports != null)
+                        {
+                            foreach (var item in ViewBag.SavedReports)
+                            {
+                                <optgroup label="@item.Key">
+                                    @foreach (var report in item.Value)
+                                    {
+                                        if (report == null)
+                                        {
+                                            <option value="">No Report</option>
+                                        }
+                                        else
+                                        {
+                                            <option @(Model.ReportId == report.Id ? "selected" : "") value="@report.Id">@report.ReportName</option>
+                                        }
+                                    }
+                                </optgroup>
+                            }
+                        }
+                        else
+                        {
+                            <option value="">No Report</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-1">
+                    <a class="btn btn-primary" href="/ESI/Dashboard">
+                        <i class="fa fa-th" aria-hidden="true"></i> Dashboard
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+<script>
+    $(document).ready(function () {
+
+        var keepFilter = getUrlVars()["persistFilter"];
+        var widgetId = getUrlVars()["wId"];
+        var filterHiddenElement = $("input[name=PersistFilter]");
+        var widgetIdHiddenElement = $("input[name=WidgetId]");
+        var filterButtonClicked = function () {
+            filterHiddenElement.val("false");
+        };
+        if (keepFilter) {
+            filterHiddenElement.val(keepFilter);
+            widgetIdHiddenElement.val(widgetId);
+        }
+        else {
+            filterHiddenElement.val("false");
+            widgetIdHiddenElement.val("0");
+        }
+        $(".appliyFilterbtn").click(filterButtonClicked);
+    });
+
+    function getUrlVars() {
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for (var i = 0; i < hashes.length; i++) {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+    }
+    function disableFilterButton() {
+        var submitButton = $("#FilterForm :input[type=submit]");
+        submitButton.attr("disabled", true);
+        submitButton.prepend("<i>");
+        submitButton.find("i").addClass("fa fa-spinner fa-spin");
+    }
+
+    $(".regionFilter").change(function () {
+            $('#divLoading').addClass('show');
+            var regionIds = $(this).val();
+            $.ajax({
+                url: "/ESI/GetDistrictRegionWise",
+                traditional: true,
+                data: { regionId: regionIds, dashboardId:eval(@Model.ReportId) },
+                method: 'POST',
+                complete: function () {
+                    resetDashboardFilters();
+                    $('#divLoading').removeClass('show');
+                },
+                success: function (res) {
+                    enableDisableFilterDDL();
+                    var districtIds = $("#districtFilter").val();
+                    entityIds = [];
+                    entityIds.push(districtIds);
+                    $("#districtFilter").empty();
+                    var entityRefIds = entityIds[0];
+                    $.each(res, function (i, value) {
+                        if (entityRefIds != undefined) {
+                            $("#districtFilter").append($("<option " + (entityRefIds.indexOf(value.Value) > -1 ? 'selected' : '') + "></option>").val(value.Value).html(value.Text));
+                        }
+                        else {
+                            $("#districtFilter").append($("<option></option>").val(value.Value).html(value.Text));
+                        }
+                    });
+                    $("#districtFilter" + '.multiselect')[0].sumo.reload();
+
+            },
+            error: function (res) {
+            }
+        });
+
+    });
+
+    $('#districtFilter').change(function () {
+        var districtIds = $("#districtFilter").val();
+        entityIds = [];
+        entityIds.push(districtIds);
+    })
+
+    $(".districtFilter").change(function () {
+        resetDashboardFilters();
+    });
+
+    function resetDashboardFilters() {
+        $('#divLoading').addClass('show');
+        var districtIds = $("#districtFilter").val();
+        $.ajax({
+            url: "/ESI/GetFiltersDistrictWise",
+            traditional: true,
+            data: { districtId: districtIds, dashboardId: eval(@Model.ReportId) },
+            method: 'POST',
+            complete: function () {
+                $('#divLoading').removeClass('show');
+            },
+            success: function (res) {
+                enableDisableFilterDDL();
+                var list = res
+                var plantList = list.plants
+                var marketSegmentList = list.marketSegments
+                var customerList = list.customers
+                var salesStaffList = list.salesStaffs
+
+                var array = [];
+                array.push({ key: "#plantFilter", value: plantList })
+                array.push({ key: "#marketSegmentFilter", value: marketSegmentList })
+                array.push({ key: "#customerFilter", value: customerList })
+                array.push({ key: "#salesStaffFilter", value: salesStaffList })
+
+                var plantIds = $("#plantFilter").val();
+                var segmentIds = $("#marketSegmentFilter").val();
+                var customerIds = $("#customerFilter").val();
+                var staffIds = $("#salesStaffFilter").val();
+
+                refIds = [];
+                refIds.push(plantIds);
+                refIds.push(segmentIds);
+                refIds.push(customerIds);
+                refIds.push(staffIds);
+
+                $.each(array, function (i, e) {
+                    var entityRefIds = refIds[i];
+                    $(e.key).empty();
+                    $.each(e.value, function (i, value) {
+                        if (entityRefIds != undefined) {
+                            $(e.key).append($("<option " + (entityRefIds.indexOf(value.Value) > -1 ? 'selected' : '') + "></option>").val(value.Value).html(value.Text));
+                        }
+                        else {
+                            //$(e.key + '.multiselect')[0].sumo.add(value.Value,value.Text);
+                            $(e.key).append($("<option></option>").val(value.Value).html(value.Text));
+                        }
+                    });
+                    $(e.key + '.multiselect')[0].sumo.reload();
+
+                });
+            },
+            error: function (res) {
+            }
+        });
+    }
+
+
+        $('#plantFilter ,#marketSegmentFilter, #customerFilter, #salesStaffFilter').change(function () {
+            var plantIds = $("#plantFilter").val();
+            var segmentIds = $("#marketSegmentFilter").val();
+            var customerIds = $("#customerFilter").val();
+            var staffIds = $("#salesStaffFilter").val();
+            refIds = [];
+            refIds.push(plantIds);
+            refIds.push(segmentIds);
+            refIds.push(customerIds);
+            refIds.push(staffIds);
+    })
+
+    function enableDisableFilterDDL() {
+        var regionIds = $("#regionFilter").val();
+        var districtIds = $("#districtFilter").val();
+        if (regionIds != null && regionIds.length > 0 && districtIds != null && districtIds.length > 0) {
+            $("#districtFilter").prop("disabled", false);
+            $("#plantFilter").prop("disabled", false);
+            $("#regionFilter").prop("disabled", false);
+            $("#marketSegmentFilter").prop("disabled", false);
+            $("#customerFilter").prop("disabled", false);
+            $("#salesStaffFilter").prop("disabled", false);
+        }
+        else if (regionIds != null && regionIds.length > 0) {
+            $("#districtFilter").prop("disabled", false);
+            $("#plantFilter").prop("disabled", true);
+            $("#marketSegmentFilter").prop("disabled", true);
+            $("#customerFilter").prop("disabled", true);
+            $("#salesStaffFilter").prop("disabled", true);
+        }
+        else {
+            $("#districtFilter").prop("disabled", true);
+            $("#plantFilter").prop("disabled", true);
+            $("#marketSegmentFilter").prop("disabled", true);
+            $("#customerFilter").prop("disabled", true);
+            $("#salesStaffFilter").prop("disabled", true);
+        }
+    }
+</script>

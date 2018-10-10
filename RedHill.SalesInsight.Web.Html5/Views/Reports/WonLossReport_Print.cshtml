@@ -1,0 +1,196 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ReportFilter
+
+@{
+    ViewBag.Title = "WonLossReport.cshtml";
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+    ViewBag.UsingDatePicker = true;
+    ViewBag.UsingChartJs = true;
+    ViewBag.NoBootstrap = true;
+}
+
+<div class="logo-container">
+    <div class="col-md-3 pull-left">
+        <img src="/home/logo" height="50px" />
+    </div>
+    <div class="pull-right">
+        <p>
+            Won / Lost Report
+        </p>
+        @if(Model.FilterByBidDate){
+        <p>
+            Bid Date : @(Model.BidDateBegin.HasValue ? Model.BidDateBegin.Value.ToString("M/d/yyyy") : "") - @(Model.BidDateEnd.HasValue ? Model.BidDateEnd.Value.ToString("M/d/yyyy") : "")
+        </p>
+        }
+        @if(Model.FilterByStartDate){
+        <p>
+            Start Date : @(Model.StartDateBegin.HasValue ? Model.StartDateBegin.Value.ToString("M/d/yyyy") : "") - @(Model.StartDateEnd.HasValue ? Model.StartDateEnd.Value.ToString("M/d/yyyy") : "")
+        </p>
+        }
+        @if(Model.FilterByWLDate){
+        <p>
+            Won/Lost Date : @(Model.WLDateBegin.HasValue ? Model.WLDateBegin.Value.ToString("M/d/yyyy") : "") - @(Model.WLDateEnd.HasValue ? Model.WLDateEnd.Value.ToString("M/d/yyyy") : "")
+        </p>
+        }
+    </div>
+</div>
+<div style="clear:both"></div>
+<div class="container">
+    <div class="col-1 col-sm-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">Market Share Summary</div>
+            </div>
+        </div>
+        <div id="marketShareSummary"></div>
+    </div>
+    <div class="col-1 col-sm-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">Sales Professional Summary</div>
+            </div>
+        </div>
+        <table class="table table-striped table-condensed table-responsive">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th class="right">Won</th>
+                    <th class="right">Lost</th>
+                    <th class="right">Won Percentage</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(RedHill.SalesInsight.DAL.DataTypes.SIProjectSuccessSalesStaffSummary staff in ViewBag.SalesStaffs){
+                <tr class="@(staff.Name == "Total" ? "bold" : "")">
+                    <td>@staff.Name</td>
+                    <td class="right">@staff.VolumeSold.ToString("###,###")</td>
+                    <td class="right">@staff.VolumeLost.ToString("###,###")</td>
+                    <td class="right">@((staff.VolumeSold*1.0/(staff.VolumeLost+staff.VolumeSold)*100.00).ToString("N2"))%</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div style="clear:both"></div>
+<div class="container">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">Major Job Summary</div>
+            </div>
+        </div>
+        <table class="table table-striped table-responsive table-condensed">
+            <thead>
+                <tr>
+                    <th>Customer</th>
+                    <th>Project</th>
+                    <th class="right">Volume</th>
+                    <th class="right">Bid Winner</th>
+                    <th class="right">Mix</th>
+                    <th class="right">Price</th>
+                    <th class="right">Bid</th>
+                    <th class="right">W/L Date</th>
+                    <th class="right">Start</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(RedHill.SalesInsight.DAL.DataTypes.SIProjectSuccessMajorJobSummary job in ViewBag.MajorJobs){
+                <tr class="@(job.CustomerName == "Total" ? "bold" : "" )">
+                    <td>@job.CustomerName</td>
+                    <td>@job.ProjectName</td>
+                    <td class="right">@(job.Volume.HasValue ? job.Volume.Value.ToString("###,###") : "" )</td>
+                    <td class="right">@job.CompetitorNamesList</td>
+                    <td class="right">@job.MixName</td>
+                    <td class="right">@(job.MixPrice.HasValue ? "$"+job.MixPrice.Value.ToString("N2") : "")</td>
+                    <td class="right">@(job.BidDate.HasValue ? job.BidDate.Value.ToString("M/d/yyyy") : "")</td>
+                    <td class="right">@(job.WonLostDate.HasValue ? job.WonLostDate.Value.ToString("M/d/yyyy") : "")</td>
+                    <td class="right">@(job.StartDate.HasValue ? job.StartDate.Value.ToString("M/d/yyyy") : "")</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts{
+    <style type="text/css">
+        @@page {
+            margin: 0.5cm;
+            min-width:768px;
+        }
+        .noPrint {
+            display:none;
+        }
+        body {
+            margin: 0;
+            padding: 0 !important;
+            min-width: 768px;
+            font-size:10px;
+        }
+        .logo-container {
+            height:50px;
+            clear:both;
+        }
+        .panel {
+            margin-top:30px;
+        }
+        .panel-heading {
+            text-align:center;
+            margin-bottom:10px;
+            font-weight:bold;
+            font-size:12px;
+        }
+        table {
+            width:100%;
+        }
+        .pull-left {
+            float:left;
+        }
+        .pull-right {
+            float:right;
+        }
+        .panel-body {
+            border:thin solid #eee;
+        }
+        .col-1 {
+            width:340px;
+            margin-right:20px;
+            float:left;
+            border:thin solid #eee;
+        }
+        .container {
+            margin: auto;
+            width: 760px;
+        }
+        .navbar {
+            display:none;
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            
+            function drawChart() {
+                var data = google.visualization.arrayToDataTable(
+                    @(Html.Raw(ViewBag.Summaries))
+                    );
+
+                var formatter = new google.visualization.NumberFormat({ pattern: '###,###' });
+                formatter.format(data, 1);
+
+                var options = {
+                    title: '',
+                    height: 200,
+                    chartArea: { left: 20, width: 300 },
+                    legend: {position:"right",maxlines:3}
+                };
+
+                var chart = new google.visualization.PieChart(document.getElementById('marketShareSummary'));
+                chart.draw(data, options);
+            }
+            google.setOnLoadCallback(drawChart);
+
+            alert("Please wait a few seconds for the charts to load completely. If the print preview does not open automatically, please use the browser to print this report.")
+            setTimeout(function(){print()},5000);
+        });
+    </script>
+}

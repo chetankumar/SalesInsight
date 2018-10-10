@@ -1,0 +1,175 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ProjectProjectionDetailsView
+@using (Html.BeginForm("UpdateCurrentProjection", "Home", FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    <div class="row">
+        <div class="col-md-12 form-group">
+            <div class="col-md-3 control-label">
+                Current Plant
+            </div>
+            <div class="col-md-9">
+                @Html.DropDownList("PlantId", Model.AvailablePlants, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        @Model.CurrentMonth.ToString("MMM, yyyy") Forecasts
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-4 control-label">
+                            <label>Projected</label>
+                        </div>
+                        <div class="col-md-8">
+                            @Model.Projection
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4 control-label">
+                            <label>Actual</label>
+                        </div>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.Actual, new { @class = "form-control actual", @dataid = Model.CurrentMonth.ToString("MMM, yyyy"), @dataid2 = Model.ProjectId })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        Projection Forecasts Totals
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="col-md-6">Initial Projection</div>
+                            <div class="col-md-6">@Model.TotalProjection.ToString("###,###")</div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-md-6">Actual</div>
+                            <div class="col-md-6">@Model.TotalShipped.ToString("###,###")</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="col-md-6">Current Projected</div>
+                            <div class="col-md-6">@Model.CurrentProjection.ToString("###,###")</div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-md-6">Total Remaining</div>
+                            <div class="col-md-6">@((Model.TotalProjection - Model.TotalShipped).ToString("###,###"))</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div>
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a href="#forecasttab" data-toggle="tab">Forecasts</a>
+        </li>
+        <li>
+            <a href="#historytab" data-toggle="tab">History</a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="forecasttab">
+            <table class="table table-bordered forecast_table">
+                <thead>
+                    <tr>
+                        <th>Month</th>
+                        <th>Projection</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (RedHill.SalesInsight.Web.Html5.Models.ProjectProjectionUpdateView pp in Model.Projections)
+                    {
+                        <tr>
+                            <td>
+                                @pp.ProjectionMonth
+                            </td>
+                            <td>
+                                <input type="text" value="@pp.Projection" class="form-control projection" dataid="@pp.ProjectionMonth" dataid2="@pp.ProjectId" dataid3="@pp.ProjectProjectionId" />
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane" id="historytab">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Month</th>
+                        <th>Projection</th>
+                        <th>Actual</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (RedHill.SalesInsight.Web.Html5.Models.ProjectProjectionUpdateView pp in Model.History)
+                    {
+                        <tr>
+                            <td>
+                                @pp.ProjectionMonth
+                            </td>
+                            <td>
+                                @pp.Projection
+                            </td>
+                            <td>
+                                @pp.Actual
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function (e) {
+
+
+        var pastAlerted = false;
+        $(".projection").blur(function (e) {
+            projection = $(this).val();
+            currentMonth = $(this).attr("dataid");
+            projectId = $(this).attr("dataid2");
+            plantId = $("#PlantId").val();
+            element = $(this);
+            $.post("/Home/UpdateProjection", { Projection: projection, ProjectionMonth: currentMonth, PlantId: plantId, ProjectId: projectId, ProjectionNumber: 1 }, function (data) {
+                if (data != "OK") {
+                    alert(data);
+                    $(element).prop("disabled", true);
+                }
+            });
+        });
+
+        $("#PlantId").change(function () {
+            document.location = "/Home/ProjectionDetails/@Model.ProjectId?month=@Model.CurrentMonth.ToString("MMM, yyyy")&plant=" + $(this).val();
+        });
+
+        $(".actual").blur(function (e) {
+            actual = $(this).val();
+            currentMonth = $(this).attr("dataid");
+            projectId = $(this).attr("dataid2");
+            plantId = $("#PlantId").val();
+            element = $(this);
+            $.post("/Home/UpdateProjection", { Actual: actual, ProjectionMonth: currentMonth, PlantId: plantId, ProjectId: projectId, ProjectionNumber: 1, IsActual: true }, function (data) {
+                if (data != "OK") {
+                    alert(data);
+                    $(element).prop("disabled", true);
+                }
+            });
+        });
+    });
+</script>
+
+

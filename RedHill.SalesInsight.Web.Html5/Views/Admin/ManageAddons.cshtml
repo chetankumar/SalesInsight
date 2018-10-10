@@ -1,0 +1,451 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ManageAddons
+
+@{
+    ViewBag.Title = "Add-Ons";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.UsingDataTable = true;
+    ViewBag.UsingDatePicker = true;
+    bool aujsAPIEnabled = (ViewBag.AUJSAPIEnabled != null && ViewBag.AUJSAPIEnabled == true);
+}
+<div class="page-head">
+    <h2>Manage Sales Infrastructure</h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Home/Settings">Settings</a></li>
+        <li><a href="/Home/Companies">Manage Sales Infrastructure</a></li>
+        <li class="active">Manage Add-Ons</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    @Html.Partial("_CompanyTabs", "addons")
+    <div class="tab-content">
+        <div class="panel-body">
+            @using (@Html.BeginForm("ManageAddons", "Admin", FormMethod.Post, new { @id = "FilterForm" }))
+            {
+                <div class="col-md-1">
+                    <label class="checkbox">
+                        @Html.CheckBoxFor(x => x.ShowInactives) Inactives
+                    </label>
+                </div>
+                <div class="col-md-3">
+                    <div class="btn-group">
+                        @Html.HiddenFor(x => x.PriceMode)
+                        @Html.HiddenFor(x => x.SelectMode)
+                        @Html.HiddenFor(x => x.SelectedAddonId)
+                        <button type="button" data-mode="QUOTE" class="btn toggle_price_mode btn-sm btn-@(Model.PriceMode == "QUOTE" ? "primary" : "default")">Quote Prices</button>
+                        <button type="button" data-mode="MIX" class="btn toggle_price_mode btn-sm btn-@(Model.PriceMode == "MIX" ? "primary" : "default")">Mix Level Costs</button>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    @if (Model.SelectedAddonId.GetValueOrDefault(0) > 0 && Model.SelectMode == "EXPAND")
+                    {
+                        @Html.DropDownListFor(x => x.ExpandUOMId, Model.ChooseTargetUOM, new { @class = "form-control" })
+                        @Html.HiddenFor(x => x.ResetExpandUOM);
+                    }
+                </div>
+                <div class="col-md-2">
+                    <div class="input-group">
+                        @Html.TextBoxFor(x => x.SearchTerm, new { @class = "form-control" })
+                        <div class="input-group-btn">
+                            <button class="btn btn-primary">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="input-group">
+                        @Html.TextBoxFor(x => x.MonthYear, new { @class = "form-control hasDatepicker" })
+                        <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    @if (ViewBag.AccessRule.HasAddonsAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                    {
+                        <button type="button" class="btn btn-primary btn-sm reset" @(aujsAPIEnabled ? "disabled" : "") data-toggle="modal" data-target="#add_edit_modal"><span class="glyphicon glyphicon-plus"></span>Add-On</button>
+                    }
+                    @if (ViewBag.AccessRule.CanUploadAddonPricesCosts)
+                    {
+                        <button type="button" class="btn btn-primary btn-sm" @(aujsAPIEnabled ? "disabled" : "") data-toggle="modal" data-target="#upload_excel_modal"><span class="fa fa-fw fa-upload"></span>Upload</button>
+                    }
+                </div>
+                <div class="modal md-modal colored-header fade" data-backdrop="static" id="change_price_modal">
+                    <div class="modal-dialog">
+                        <div class="md-content modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-backdrop="static" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title">Update @(Model.PriceMode == "QUOTE" ? "Quote-Level Price" : "Mix-Level Cost")</h4>
+                            </div>
+                            <div class="modal-body form">
+                                <div class="form-group">
+                                    <label>@(Model.PriceMode == "QUOTE" ? "Price" : "Cost")</label>
+                                    @Html.HiddenFor(x => x.SelectedDistrict)
+                                    @Html.HiddenFor(x => x.FutureMonth)
+                                    @Html.TextBoxFor(x => x.SavePrice, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    <label>Unit of Measure</label>
+                                    @Html.DropDownListFor(x => x.SaveUOMId, Model.SaveTargetUOM, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <a href="/Admin/ManageAddons?mode=@Model.PriceMode">Cancel</a>
+                                <button type="submit" class="btn btn-primary btn-flat remove_commas" data-comma-target="#SavePrice">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="panel-group accordion" id="accordion">
+            @foreach (RedHill.SalesInsight.DAL.Addon addon in Model.Addons.OrderBy(x => x.Description))
+            {
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a href="#" data-parent="#accordion" data-mode="EXPAND" data-id="@addon.Id" aria-expanded="true" class="col-md-11 select_addon">
+                                @if (addon.Id == Model.SelectedAddonId && Model.SelectMode == "EXPAND")
+                                {
+                                    <i class="fa fa-pipe"></i>
+                                }
+                                else
+                                {
+                                    <i class="fa fa-plus"></i>
+                                }
+                                @addon.AddonType - @addon.Description (@addon.Code)
+                            </a>
+                            <div class="col-md-1">
+                                <a href="#" data-mode="EDIT" data-id="@addon.Id" class="select_addon">
+                                    <i class="glyphicon glyphicon-edit"></i>
+                                </a>
+                            </div>
+                            <div style="clear: both"></div>
+                        </h4>
+                    </div>
+                    @if (addon.Id == Model.SelectedAddonId && Model.SelectMode == "EXPAND")
+                    {
+                        <div id="collapseOne" class="panel-collapse collapse in" aria-expanded="true">
+                            <div class="panel-body">
+                                <table class="table table-bordered cost-projections">
+                                    <thead>
+                                        <tr>
+                                            <th>RMX Default</th>
+                                            @if (Model.Company.EnableAggregate.GetValueOrDefault(false))
+                                            {
+                                                <th>AGG Default</th>
+                                            }
+                                            @if (Model.Company.EnableBlock.GetValueOrDefault(false))
+                                            {
+                                                <th>BLK Default</th>
+                                            }
+                                            <th>District</th>
+                                            <th>@Model.ProjectionDate.Value.AddMonths(0).ToString("MMM, yyyy")</th>
+                                            <th>@Model.ProjectionDate.Value.AddMonths(1).ToString("MMM, yyyy")</th>
+                                            <th>@Model.ProjectionDate.Value.AddMonths(2).ToString("MMM, yyyy")</th>
+                                            <th>@Model.ProjectionDate.Value.AddMonths(3).ToString("MMM, yyyy")</th>
+                                            <th>@Model.ProjectionDate.Value.AddMonths(4).ToString("MMM, yyyy")</th>
+                                            <th>@Model.ProjectionDate.Value.AddMonths(5).ToString("MMM, yyyy")</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (RedHill.SalesInsight.Web.Html5.Models.AddonProjectionView proj in Model.DistrictProjections)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @if (ViewBag.AccessRule.HasAddonsAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                                                    {
+                                                        <input type="checkbox" class="is_default" data-type="addon" data-addon="@proj.AddOnId" data-district="@proj.DistrictId" @(proj.IsDefault ? "checked=checked" : "") />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="checkbox" class="is_default" data-type="addon" disabled="disabled" data-addon="@proj.AddOnId" data-district="@proj.DistrictId" @(proj.IsDefault ? "checked=checked" : "") />
+                                                    }
+                                                </td>
+                                                @if (Model.Company.EnableAggregate.GetValueOrDefault(false))
+                                                {
+                                                    <td>
+                                                        <input type="checkbox" class="is_default" data-type="aggregate" data-addon="@proj.AddOnId" data-district="@proj.DistrictId" @(proj.IsAggregateDefault ? "checked=checked" : "") />
+                                                    </td>
+                                                }
+                                                @if (Model.Company.EnableBlock.GetValueOrDefault(false))
+                                                {
+                                                    <td>
+                                                        <input type="checkbox" class="is_default" data-type="block" data-addon="@proj.AddOnId" data-district="@proj.DistrictId" @(proj.IsBlockDefault ? "checked=checked" : "") />
+                                                    </td>
+                                                }
+                                                <td>@proj.DistrictName</td>
+                                                <td>
+                                                    <span class="@(proj.Month1Actual ? "actual" : "")">
+                                                        @proj.Month1.ToString("N2")
+                                                    </span>
+                                                    @if (ViewBag.AccessRule.HasAddonsAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                                                    {
+                                                        <button class="pull-right btn btn-xs btn-primary" data-future="0"
+                                                                data-district="@proj.DistrictId" data-cost="@proj.Month1.ToString("N2")"
+                                                                data-title="Update Cost for @proj.DistrictName @Model.ProjectionDate.Value.AddMonths(0).ToString("MMM, yyyy")"
+                                                                data-toggle="modal" data-target="#change_price_modal">
+                                                            <span class="glyphicon glyphicon-edit"></span>
+                                                        </button>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <span class="@(proj.Month2Actual ? "actual" : "")">
+                                                        @proj.Month2.ToString("N2")
+                                                    </span>
+                                                    @if (ViewBag.AccessRule.HasAddonsAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                                                    {
+                                                        <button class="pull-right btn btn-xs btn-primary" data-future="1"
+                                                                data-district="@proj.DistrictId" data-cost="@proj.Month2.ToString("N2")"
+                                                                data-title="Update Cost for @proj.DistrictName @Model.ProjectionDate.Value.AddMonths(0).ToString("MMM, yyyy")"
+                                                                data-toggle="modal" data-target="#change_price_modal">
+                                                            <span class="glyphicon glyphicon-edit"></span>
+                                                        </button>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <span class="@(proj.Month3Actual ? "actual" : "")">
+                                                        @proj.Month3.ToString("N2")
+                                                    </span>
+                                                    @if (ViewBag.AccessRule.HasAddonsAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                                                    {
+                                                        <button class="pull-right btn btn-xs btn-primary" data-future="2"
+                                                                data-district="@proj.DistrictId" data-cost="@proj.Month3.ToString("N2")"
+                                                                data-title="Update Cost for @proj.DistrictName @Model.ProjectionDate.Value.AddMonths(0).ToString("MMM, yyyy")"
+                                                                data-toggle="modal" data-target="#change_price_modal">
+                                                            <span class="glyphicon glyphicon-edit"></span>
+                                                        </button>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <span class="@(proj.Month4Actual ? "actual" : "")">
+                                                        @proj.Month4.ToString("N2")
+                                                    </span>
+                                                    @if (ViewBag.AccessRule.HasAddonsAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                                                    {
+                                                        <button class="pull-right btn btn-xs btn-primary" data-future="3"
+                                                                data-district="@proj.DistrictId" data-cost="@proj.Month4.ToString("N2")"
+                                                                data-title="Update Cost for @proj.DistrictName @Model.ProjectionDate.Value.AddMonths(0).ToString("MMM, yyyy")"
+                                                                data-toggle="modal" data-target="#change_price_modal">
+                                                            <span class="glyphicon glyphicon-edit"></span>
+                                                        </button>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <span class="@(proj.Month5Actual ? "actual" : "")">
+                                                        @proj.Month5.ToString("N2")
+                                                    </span>
+                                                    @if (ViewBag.AccessRule.HasAddonsAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                                                    {
+                                                        <button class="pull-right btn btn-xs btn-primary" data-future="4"
+                                                                data-district="@proj.DistrictId" data-cost="@proj.Month5.ToString("N2")"
+                                                                data-title="Update Cost for @proj.DistrictName @Model.ProjectionDate.Value.AddMonths(0).ToString("MMM, yyyy")"
+                                                                data-toggle="modal" data-target="#change_price_modal">
+                                                            <span class="glyphicon glyphicon-edit"></span>
+                                                        </button>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <span class="@(proj.Month6Actual ? "actual" : "")">@proj.Month6.ToString("N2")</span>
+                                                    @if (ViewBag.AccessRule.HasAddonsAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                                                    {
+                                                        <button class="pull-right btn btn-xs btn-primary" data-future="5"
+                                                                data-district="@proj.DistrictId" data-cost="@proj.Month6.ToString("N2")"
+                                                                data-title="Update Cost for @proj.DistrictName @Model.ProjectionDate.Value.AddMonths(0).ToString("MMM, yyyy")"
+                                                                data-toggle="modal" data-target="#change_price_modal">
+                                                            <span class="glyphicon glyphicon-edit"></span>
+                                                        </button>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@using (Html.BeginForm("UploadAddonPrices", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="modal md-modal colored-header fade" data-backdrop="static" id="upload_excel_modal">
+        <div class="modal-dialog">
+            <div class="md-content modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-backdrop="static" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Upload Add-On Costs & Prices</h4>
+                </div>
+                <div class="modal-body form">
+                    <div class="alert alert-info">
+                        Please upload the Excel File in <a class="label label-primary" href="/Admin/AddonPricingExcel">this format</a> . Once uploaded, the application will return the excel to you with the import success summary against each row.
+                    </div>
+                    <div class="form-group">
+                        <input type="file" name="excel" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-flat md-close" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary btn-flat">Upload</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@using (Html.BeginForm("UpdateAddon", "Admin", FormMethod.Post, new { id = "AddUpdateForm", data_parsley_validate = "true" }))
+{
+    <div class="modal md-modal colored-header fade" data-backdrop="static" id="add_edit_modal">
+        <div class="modal-dialog">
+            <div class="md-content modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-backdrop="static" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">@(Model.SelectedAddonId > 0 ? "Update Add-On" : "New Add-On")</h4>
+                </div>
+                <div class="modal-body form addon-model">
+                    @Html.Partial("_ErrorView")
+                    <div class="form-group">
+                        <label>Add-On Code</label>
+                        @Html.HiddenFor(x => x.SelectedAddon.Id)
+                        @Html.HiddenFor(x => x.SelectedAddon.DispatchId)
+                        @*@Html.HiddenFor(x => x.SelectedAddon.QuoteUOM)*@
+
+                        @if (Model.SelectedAddon.Id == 0)
+                        {
+                            @Html.TextBoxFor(x => x.SelectedAddon.Code, new { @class = "form-control", data_parsley_trigger = "change", required = "true" })
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(x => x.SelectedAddon.Code, new { @class = "form-control", @readonly = "readonly" })
+                        }
+                    </div>
+                    <div class="form-group">
+                        <label>Add-On Description</label>
+                        @Html.TextBoxFor(x => x.SelectedAddon.Description, aujsAPIEnabled && Model.SelectedAddon.Id > 0 ? (object)new { @class = "form-control", @readonly = "readonly" } : (object)new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label>Add-On Type</label>
+                        @Html.DropDownListFor(x => x.SelectedAddon.AddonType, Model.SelectedAddon.ChooseAddonType, "", new { @class = "form-control addontypechange", data_parsley_trigger = "change", required = "true" })
+                    </div>
+                    <div class="form-group">
+                        <label>Quote Level Price UOM</label>
+                        @Html.DropDownListFor(x => x.SelectedAddon.QuoteUOM, Model.SelectedAddon.ChooseQuoteUOM, aujsAPIEnabled && Model.SelectedAddon.Id > 0 ? (object)new { @class = "form-control quoteuomddl", @disabled = "disabled" } : (object)new { @class = "form-control quoteuomddl" })
+                    </div>
+                    <div class="form-group">
+                        <label>Mix Level Cost UOM</label>
+                        @Html.DropDownListFor(x => x.SelectedAddon.MixUOM, Model.SelectedAddon.ChooseMixUOM, new { @class = "form-control mixuomddl" })
+                    </div>
+                    <div class="form-group">
+                        @if (!aujsAPIEnabled)
+                        {
+                            <label>@Html.CheckBoxFor(x => x.SelectedAddon.Active) Active</label>
+                        }
+                        else
+                        {
+                            @Html.HiddenFor(x => x.SelectedAddon.Active)
+                            <label>@Html.CheckBoxFor(x => x.SelectedAddon.Active, new { @disabled = "disabled" }) Active</label>
+                        }
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-flat md-close" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary btn-flat addon-model">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section Scripts{
+    <script type="text/javascript">
+        var showModal = @(Model.ShowEditModal ? "true" : "false");
+        $(document).ready(function (e) {
+            var addonAccess = '@(ViewBag.AccessRule.HasAddonsAccess == SIRolePermissionLevelConstants.FULL_ACCESS)';
+            if (addonAccess == 'False') {
+                $(".addon-model *").attr("disabled",true).prop("disabled",true);
+            }
+
+            $('#MonthYear').datepicker({
+                format: 'M, yyyy', // Default is 'mm/yyyy' and separator char is not mandatory
+                viewMode: "months",
+                minViewMode: "months"
+            });
+
+            $(".is_default").change(function () {
+                var type = $(this).data("type");
+                    addon = $(this).data("addon");
+                    district = $(this).data("district");
+                    checked = $(this).prop("checked");
+                    $.get("/Admin/MarkAddonDefault", { "addonId": addon, "districtId": district, "value": checked, "defaultType": type}, function (data) {
+                        console.log(data);
+                    });
+            });
+
+            $(".addontypechange").change(function(){
+                addonType = $(this).val();
+                $.get("/Admin/GetUOMs",{"addonType" :addonType,"mode":"quote"},function(data){
+                    selected = $(".quoteuomddl").val();
+                    fetch_and_change(".quoteuomddl", JSON.parse(data),selected);
+                });
+
+                $.get("/Admin/GetUOMs",{"addonType" :addonType,"mode":"mix"},function(data){
+                    selected = $(".mixuomddl").val();
+                    fetch_and_change(".mixuomddl", JSON.parse(data),selected);
+                });
+            });
+
+            $(".reset").click(function() {
+                $("#AddUpdateForm").find("input[type=text],input[type=hidden],select, textarea").prop("readonly",false);
+                $("#AddUpdateForm").find("input[type=text],input[type=hidden],select, textarea").val("");
+                $("#AddUpdateForm").find("input[type=text],input[type=hidden],select, textarea").removeClass("input-validation-error");
+                $("#AddUpdateForm").find(".alert").remove();
+            });
+
+            $('#MonthYear').change(function(e){
+                $("#FilterForm").submit();
+            });
+
+            if (showModal){
+                $('#add_edit_modal').modal({
+                    "show":true
+                })
+            }
+            $("#ShowInactives").change(function(e){
+                $("#FilterForm").submit();
+            });
+            $("#ExpandUOMId").change(function(e){
+                $("#FilterForm").submit();
+            });
+
+            $(".toggle_price_mode").click(function(e){
+                $("#PriceMode").val($(this).data("mode"));
+                $("#ResetExpandUOM").val(1);
+                $("#SelectMode").val("EXPAND");
+                $("#FilterForm").submit();
+            });
+
+            $(".select_addon").click(function(e){
+                mode = $(this).data("mode");
+                id = $(this).data("id");
+                $("#SelectMode").val(mode);
+                $("#SelectedAddonId").val(id);
+                $("#ResetExpandUOM").val(1);
+                $("#FilterForm").submit();
+            });
+
+            $('#change_price_modal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var district = button.data('district'); // Extract info from data-* attributes
+                var future = button.data('future');
+                var cost = button.data('cost');
+                $("#SelectedDistrict").val(district);
+                $("#FutureMonth").val(future);
+                $("#SaveUOMId").val($("#ExpandUOMId").val());
+                $("#SavePrice").val(cost);
+            })
+        });
+    </script>
+}

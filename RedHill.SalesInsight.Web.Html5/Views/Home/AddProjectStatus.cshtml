@@ -1,0 +1,124 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.StatusView
+
+
+@{
+    ViewBag.Title = (Model.ProjectStatusId == 0 ? "New" : Model.Name);
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="page-head">
+    <h2>
+        @if (Model.ProjectStatusId > 0)
+        {
+            <span>Edit Project Status</span>
+        }
+        else
+        {
+            <span>Add Project Status</span>
+        }
+    </h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Home/Settings">Settings</a></li>
+        <li><a href="/Home/Companies">Manage Company Settings</a></li>
+        <li><a href="/Home/Companies/statuses">Statuses & Reasons Lost</a></li>
+        <li class="active">@(Model.ProjectStatusId == 0 ? "New" : Model.Name )</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="block-flat">
+        @using (Html.BeginForm("UpdateProjectStatus", "Home", FormMethod.Post, new { @class = "form-horizontal" }))
+        {
+            @Html.ValidationSummary(true)
+            <div>
+                @Html.HiddenFor(model => model.CompanyId)
+                @Html.HiddenFor(model => model.ProjectStatusId)
+                @Html.HiddenFor(model => model.DispatchId)
+                <div class="form-group">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.Name)
+                    </div>
+                    <div class="col-md-10">
+                        
+                        @if (Model.ProjectStatusId == 0)
+                        {
+                            @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                        }else{
+                            @Html.TextBoxFor(model => model.Name, new { @class = "form-control",@readonly="readonly" })
+                        }
+                        @Html.ValidationMessageFor(model => model.Name, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.StatusType)
+                    </div>
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.StatusType, Model.StatusTypes, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.StatusType, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10 col-sm-offset-2">
+                        <div class="checkbox">
+                            <label>
+                                @Html.CheckBoxFor(model => model.IncludeOnForecastPage)
+                                @Html.DisplayNameFor(model => model.IncludeOnForecastPage)
+                                @Html.ValidationMessageFor(model => model.IncludeOnForecastPage, string.Empty, new { @class = "help-inline" })
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10 col-sm-offset-2">
+                        <div class="checkbox">
+                            <label>
+                                @Html.CheckBoxFor(model => model.TreatAsInactiveForPipelinePage)
+                                @Html.DisplayNameFor(model => model.TreatAsInactiveForPipelinePage)
+                                @Html.ValidationMessageFor(model => model.TreatAsInactiveForPipelinePage, string.Empty, new { @class = "help-inline" })
+                            </label> 
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10 col-sm-offset-2">
+                        <div class="checkbox">
+                            <label>
+                                @Html.CheckBoxFor(model => model.Active)
+                                @Html.DisplayNameFor(model => model.Active)
+                                @Html.ValidationMessageFor(model => model.Active, string.Empty, new { @class = "help-inline" })
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10 col-md-offset-2">
+                        <input type="submit" value="@(Model.ProjectStatusId > 0 ? "Update" : "Create")" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+
+    <script>
+        $(document).ready(function () {
+            var statusesReasonsLostAccess = '@(ViewBag.AccessRule.HasStatusesReasonsLostAccess == SIRolePermissionLevelConstants.FULL_ACCESS)';
+            if (statusesReasonsLostAccess == 'False')
+            { disableEveryThing(); }
+
+        });
+        $.validator.setDefaults({
+            highlight: function (element) {
+                $(element).closest(".control-group").addClass("error");
+            },
+            unhighlight: function (element) {
+                $(element).closest(".control-group").removeClass("error");
+            }
+        });
+    </script>
+}
+
+
+

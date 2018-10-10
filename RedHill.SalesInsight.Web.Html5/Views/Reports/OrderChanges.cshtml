@@ -1,0 +1,219 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.OrderChangePage
+
+@{
+    ViewBag.Title = "Manage Order Changes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.UsingDatePicker = true;
+}
+<div class="page-head">
+    <h2>Order Change Data</h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        @if (ViewBag.AccessRule.HasReportsAccess == SIRolePermissionLevelConstants.NO_ACCESS)
+        {
+            <li><a href="/Home/Settings">Settings</a></li>
+            <li><a href="/Reports/Settings">Report Settings</a></li>
+        }
+        else
+        {
+            <li><a href="/Reports/Index">Reports</a></li>
+            <li><a href="/Reports/Settings">Settings</a></li>
+        }
+        <li class="active">Order Change</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    @Html.Partial("_UploadTabs", "orderChanges")
+    <div class="block-flat">
+        @using (Html.BeginForm("OrderChanges", "Reports", FormMethod.Post, new { @class = "form-inline", @id = "filter-form" }))
+        {
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-group">
+                        <label class="control-label">Ticket Date</label>
+                        @Html.HiddenFor(m => m.PageNum)
+                        @Html.HiddenFor(m => m.RowCount)
+                        @Html.HiddenFor(m => m.SortBy)
+                        @Html.HiddenFor(m => m.SortDirection)
+                        @Html.TextBoxFor(m => m.StartDate, "{0:M/d/yyyy}", new { @class = "form-control datepicker" })
+                    </div>
+                    <div class="form-group">
+                        @Html.TextBoxFor(m => m.EndDate, "{0:M/d/yyyy}", new { @class = "form-control datepicker" })
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary filter-btn">Filter Data</button>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @if (ViewBag.AccessRule.HasReportSettingsAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                        {
+                            <button type="button" data-toggle="modal" data-target="#UploadModal" class="btn btn-primary"><i class="fa fa-fw fa-upload"></i> Upload</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="block-flat">
+        <table class="table table-responsive table-bordered table-striped pipeline-table">
+            <thead class="header">
+                <tr>
+                    <th data-id="OrderId">Order Id @Html.Partial("_Caret", new string[] { "OrderId", Model.SortBy, Model.SortDirection }) </th>
+                    <th data-id="CustomerNumber">Customer Number @Html.Partial("_Caret", new string[] { "CustomerNumber", Model.SortBy, Model.SortDirection }) </th>
+                    <th data-id="CustomerName">Customer Name @Html.Partial("_Caret", new string[] { "CustomerName", Model.SortBy, Model.SortDirection }) </th>
+                    <th data-id="ConcreteProductId">Concrete Product Id @Html.Partial("_Caret", new string[] { "ConcreteProductId", Model.SortBy, Model.SortDirection }) </th>
+                    <th data-id="ConcreteProductVolume">Volume @Html.Partial("_Caret", new string[] { "ConcreteProductVolume", Model.SortBy, Model.SortDirection }) </th>
+                    <th data-id="ReportDate">Report Date @Html.Partial("_Caret", new string[] { "ReportDate", Model.SortBy, Model.SortDirection }) </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var row in Model.Rows)
+                {
+                    <tr>
+                        <td>@row.OrderId</td>
+                        <td>@row.CustomerNumber</td>
+                        <td>@row.CustomerName</td>
+                        <td>@row.ConcreteProductId</td>
+                        <td>@row.ConcreteProductVolume</td>
+                        <td>@row.ReportDate.ToString("M/d/yyyy H:m")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="col-sm-12">
+                @{ViewBag.LastCount =
+                      (Model.Rows.Count < Model.RowCount) ?
+                      (Model.RowCount * (Model.PageNum - 1) + Model.Rows.Count) :
+                      (Model.RowCount * Model.PageNum);}
+                <span>@((Model.PageNum - 1) * Model.RowCount + 1) to @(ViewBag.LastCount) of @(Model.NumRecords.ToString("N0")) records</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12" style="margin-top: 10px;">
+                <div class="pull-left">
+                    <div class="form-inline">
+                        <select id="rows_per_page" class="form-control">
+                            <option value="10" @(Model.RowCount == 10 ? "selected=selected" : "")>10</option>
+                            <option value="20" @(Model.RowCount == 20 ? "selected=selected" : "")>20</option>
+                            <option value="50" @(Model.RowCount == 50 ? "selected=selected" : "")>50</option>
+                            <option value="100" @(Model.RowCount == 100 ? "selected=selected" : "")>100</option>
+                        </select>
+                        <label class="control-label">Records per page</label>
+                    </div>
+                </div>
+                <div class="pull-right">
+                    <ul class="pagination">
+                        @if (Model.PageNum > 1)
+                        {
+                            <li class="previous">
+                                <a href="#"><span class="glyphicon glyphicon-chevron-left"></span><span>Previous</span></a>
+                            </li>
+                        }
+                        @{ViewBag.first = Model.PageNum <= 5 ? 1 : Model.PageNum - 5;}
+                        @{ViewBag.last = Model.PageNum + 5 >= (Model.NumRecords / Model.RowCount) ? (Model.NumRecords / Model.RowCount) + 1 : ViewBag.first + 10;}
+                        @for (int i = ViewBag.first; i <= ViewBag.last; i++)
+                        {
+                            <li class="@(Model.PageNum == i ? "active" : "")"><a href="#" class="pageNumber">@(i)</a></li>
+                        }
+                        @if (Model.Rows.Count == Model.RowCount)
+                        {
+                            <li class="next"><a href="#"><span>Next</span> <span class="glyphicon glyphicon-chevron-right"></span></a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@using (Html.BeginForm("UploadOrderChanges", "Reports", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="modal md-modal colored-header fade" data-backdrop="static" id="UploadModal">
+        <div class="modal-dialog">
+            <div class="md-content modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-backdrop="static" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Upload Order Change Data</h4>
+                </div>
+                <div class="modal-body form">
+                    <div class="alert alert-info">
+                        Please upload the Excel File in <a class="label label-primary" href="~/SampleUploads/OrderChange.xlsx">this format</a> . Once uploaded, the application will return the excel to you with the import success summary against each row. NOTE: Pre-existing data within date range of current upload will be deleted.
+                    </div>
+                    <div class="form-group">
+                        <input type="file" name="excel" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-flat md-close" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary btn-flat">Upload</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.datepicker').datepicker({
+                format: "m/d/yyyy"
+            }).on("changeDate", function (e) {
+                $(this).datepicker('hide');
+            });
+
+            $("th[data-id]").click(function (e) {
+                column = $(this).data("id");
+                presentColumn = $("#SortBy").val();
+                direction = $("#SortDirection").val();
+                if (column != presentColumn) {
+                    $("#SortDirection").val("asc");
+                    $("#SortBy").val(column);
+                } else {
+                    if (direction == "desc")
+                        $("#SortDirection").val("asc");
+                    else
+                        $("#SortDirection").val("desc");
+                }
+                $("#PageNum").val(1);
+                $("#filter-form").submit();
+            });
+
+            $(".previous a").click(function (e) {
+                current = parseInt($("#PageNum").val());
+                if (current > 0) {
+                    $("#PageNum").val(current - 1);
+                    $("#filter-form").submit();
+                }
+                return false;
+            });
+            $(".next a").click(function (e) {
+                current = parseInt($("#PageNum").val());
+                $("#PageNum").val(current + 1);
+                $("#filter-form").submit();
+                return false;
+            });
+            $(".filter-btn").click(function (e) {
+                $("#PageNum").val(1);
+            });
+            $("a.pageNumber").click(function (e) {
+                start = (parseInt($(this).text()));
+                if (start >= 0) {
+                    $("#PageNum").val(start);
+                    $("#filter-form").submit();
+                }
+                return false;
+            });
+            $(".first a").click(function (e) {
+                $("#PageNum").val(1);
+                $("#filter-form").submit();
+                return false;
+            });
+
+            $("#rows_per_page").change(function (e) {
+                $("#RowCount").val($(this).val());
+                $("#PageNum").val(1);
+                $("#filter-form").submit();
+            });
+        });
+    </script>
+}

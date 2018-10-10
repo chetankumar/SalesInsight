@@ -1,0 +1,13 @@
+﻿-- Chetan : Done
+-- Bharat : Done
+-- Shelly :
+-- Avnish : Done
+-- Dinesh : Done
+-------2017-03-02 1:24 PM ---Column is Shifted to ReportSetting ----AVNISH
+ALTER TABLE ReportFilterSetting DROP COLUMN StartDate,EndDate;
+GO
+-------2017-03-02 1:24 PM ---Column is Added to ReportSetting ----AVNISH
+ALTER TABLE [dbo].[ReportSetting]
+ADD	[StartDate] [datetime] NULL,
+	[EndDate] [datetime] NULL
+GO

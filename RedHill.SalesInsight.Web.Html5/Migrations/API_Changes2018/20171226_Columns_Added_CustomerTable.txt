@@ -1,0 +1,33 @@
+﻿--DONE FOR::
+------------------------
+--BRN
+--AGGBLOCK
+--Test
+--GCC
+--PBM
+--SEQUATCHIE
+--CEMEX
+--BRANNAN
+--MMM
+--APITest
+--Demo
+
+ALTER TABLE CUSTOMER
+ADD [APIActiveStatus] [bit] NULL,
+	[OverrideAUStatus] [bit] NULL
+
+--DONE FOR::
+----------------------
+--TEST
+--AGGBLOCK
+--APITest
+--BRN
+--SCS
+--GCC
+--CMX
+--PBM
+--MMM
+--Demo
+
+ALTER TABLE COMPANYSETTINGS
+ADD [DisableCustomerStatusSync] [bit] NULL

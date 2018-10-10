@@ -1,0 +1,344 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ESI.TrendAnalysisReportView
+@{
+    ViewBag.Title = "Trend Analysis";
+    Layout = "~/Views/Shared/_ESILayout.cshtml";
+    ViewBag.IsESIModule = true;
+    ViewBag.UsingDatePicker = true;
+    ViewBag.UsingMultiselect = true;
+}
+<div class="page-head">
+    <h2>
+        <i class="fa fa-line-chart"></i>  Trend Analysis
+        <a class="btn btn-primary pull-right" data-toggle="modal" data-target="#Add_Report">
+            <i class="fa fa-plus-circle"></i>
+            Report
+        </a>
+    </h2>
+</div>
+<div class="esi-dashboard">
+    @Html.Partial("_AddReport")
+    @if (Model.ReportId != 0)
+    {
+        @Html.Partial("_TrendReportConfig")
+        <div class="cl-mcont">
+            <div class="block-flat">
+                @Html.Partial("_ReportFilters")
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div id="container" style="height: 400px; min-width: 310px"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<script>
+    function disableButton()
+    {
+        var submitBtn = $(".reportSetting_Save_btn");
+        submitBtn.attr("disabled",true);
+        submitBtn.prepend("<i>");
+        submitBtn.find("i").addClass("fa fa-spinner fa-spin");
+    }
+
+    $(document).ready(function () {
+        //$(".inplace-delete").on("click", function () {
+        //    if ($(this).hasClass("confirm-delete")) {
+        //        $(this).attr("disabled", "disabled").find("span").html("").removeClass("fa-trash").addClass("fa-spinner fa-spin");
+        //        return true
+        //    } else {
+        //        $(this).addClass("confirm-delete").find("span span").show(200);
+        //        return false;
+        //    }
+        //});
+
+        //$(window).click(function () {
+        //    $(".confirm-delete").removeClass("confirm-delete").find("span span").hide(300);
+        //});
+        //$(document).on("click", ".confirm-delete", function () {
+        //    console.log("CLicked");
+        //});
+        $("#StartDate,#EndDate").change(function () {
+            $("#RunReport_btn").show(600);
+        });
+
+        $("#RunReport_btn").click(function () {
+            $(this).find("a").prepend("<i>").attr("disabled", true);
+            $(this).find("a i").addClass("fa fa-spin fa-spinner");
+            $("#FilterForm").submit();
+        });
+
+        $("input[name=ReportName]").blur(function () {
+            updateReportName();
+            changeReportDDLName();
+        });
+
+        function updateReportName()
+        {
+            var reportName = $("input[name=ReportName]").val();
+            var reportType = $("input[name=Type]").val();
+                        var params = {
+                reportId: eval(@Model.ReportId),
+                reportType: reportType,
+                reportName : reportName
+            }
+            $.ajax({
+                url: '/ESI/UpdateReportName',
+                data: params,
+                method: 'POST',
+                success: function (data) {
+                    //console.log(data);
+                },
+                error: function (res) {
+                }
+            });
+        }
+
+        function changeReportDDLName() {
+           var name = $("input[name=ReportName]").val();
+           var reportId = eval(@Model.ReportId);
+           $(".rptList option[value=" + reportId + "]").html(name);
+           $(".rptList")[0].sumo.reload();
+        }
+
+        $(".fa-heart").click(function () {
+            //$(".fa-heart").toggleClass("fav").toggleClass("non-fav");
+            if ($(this).hasClass("non-fav")) {
+                $(this).removeClass("non-fav").addClass("fav").attr("title", "Click to remove it from favourite");
+            }
+            else {
+                $(this).removeClass("fav").addClass("non-fav").attr("title", "Click to make this as favourite");
+            }
+            updateReportDetails();
+        });
+        $("input[name=IsDefault]").click(function () {
+            updateReportDetails();
+        });
+        $(".rptList").on("change", (function () {
+            var reportId = $(this).val();
+            if (reportId != "") {
+                window.location = "/ESI/TrendAnalysis/" + reportId;
+            }
+        }));
+        $('.datepicker').datepicker({ format: "mm/dd/yyyy" });
+        $("multiselect").SumoSelect();
+
+
+        function updateReportDetails() {
+
+            var isDefault = $("input[name=IsDefault]").is(':checked');
+            var reportType = $("input[name=Type]").val();
+            //var reportName = $("input[name=ReportName]").val();
+
+            var isFavorite = $(".fa-heart").hasClass("fav") ? true : false;
+            var params = {
+                isDefault: isDefault,
+                isFavorite: isFavorite,
+                reportType: reportType,
+                reportId: eval(@Model.ReportId)
+            }
+
+            $.ajax({
+                url: '/ESI/UpdateReportSetting',
+                data: params,
+                method: 'POST',
+                success: function (data) {
+                    //console.log(data);
+                },
+                error: function (res) {
+                }
+            });
+        }
+
+        $(".mode").click(function () {
+            $(this).find('i').toggleClass("slow-spin").toggleClass("");
+            $(".setting-mode").toggle(600);
+        });
+
+        $(".filter-count").html($(".reprt-filters .multiselect :selected").length);
+
+        $(".clear-all-filter").click(function () {
+            $(".reprt-filters .multiselect").each(function (i, val) {
+                $(".reprt-filters .multiselect option:selected").each(function (j, val) {
+                    $(".reprt-filters .multiselect")[i].sumo.unSelectItem($(this).val());
+                });
+            })
+        });
+    });
+    @{
+        var response = Model.ToJson();
+    }
+    response = @Html.Raw(string.IsNullOrWhiteSpace(response) ? "[]" : response);
+    //var lowerLimit = response[1].Values[0][1] - eval(Model.LowerControlLimit)
+    //var upperLimit = response[1].Values[0][1] + eval(Model.UpperControlLimit)
+    var lowerLimitData = [], upperLimitData = [];
+    if (response[1] != undefined) {
+        var data = response[1].Values;
+        let upperControlLimit = parseFloat('@Model.UpperControlLimit');
+        let lowerControlLimit = parseFloat('@Model.LowerControlLimit');
+
+        $.each(data, function (i, e) {
+            //var val = data[0][1];
+            lowerLimitData.push([data[i][0], parseFloat(data[i][1]) - lowerControlLimit]);
+            upperLimitData.push([data[i][0], parseFloat(data[i][1]) + upperControlLimit]);
+        });
+    }
+
+    Highcharts.stockChart('container', {
+        rangeSelector: {
+            selected: 1
+        },
+        title: {
+            text: ''
+        },
+        xAxis: {
+            type: 'datetime',
+            labels: {
+                format: '{value:%Y-%m-%d}'
+            }
+        },
+        yAxis: {
+            @{
+                if (!Model.IsScallingAutoFit)
+                {
+                <text>
+            min: 0,
+            </text>
+                }
+            }
+            opposite: false,
+            title: {
+                text: '@(Model.PrimaryMetric)'
+            }
+        },
+
+        //    plotLines:  array ,
+        //        {
+        //        //value: eval(model.lowecontrollimit),
+        //        value: array,
+        //        color: 'blue',
+        //        dashStyle: 'Solid',
+        //        width: 1,
+        //        label: {
+        //            text: 'Lower Control Limit'
+        //        }
+        //        },
+        //        {
+        //        //value: eval(Model.UpperControlLimit),
+        //        value: upperLimit,
+        //        color: 'red',
+        //        dashStyle: 'Solid',
+        //        width: 1,
+        //        label: {
+        //            text: 'Upper Control Limit'
+        //        }
+        //    }, {
+        //        //value: upperRate,
+        //        color: 'green',
+        //        dashStyle: 'shortdash',
+        //        width: 1,
+        //        label: {
+        //            text: 'Target'
+        //        }
+        //    }]
+        //},
+        plotOptions: {
+            line: {
+                dataLabels: {
+                    enabled: true,
+                    style: { fontWeight: 500},
+                    formatter: function () {
+                        var first = this.series.data[0],
+                        last = this.series.data[this.series.data.length - 1];
+                        if (first != undefined) {
+                            if (this.point.category === first.category && this.point.y === first.y) {
+                                return this.series.name;
+                            }
+                            return "";
+                        }
+                        if (last != undefined) {
+                            if (this.point.category === last.category && this.point.y === last.y) {
+                                return this.series.name;
+                            }
+                            return "";
+                        }
+                        if (first === undefined && last === undefined) {
+                            return this.series.index == 1 ? this.series.name : "";
+                        }
+                    }
+                },
+            },
+        },
+        series: [
+            {
+                name: (response[0] ? response[0].MetricName : ""),
+                data: (response[0] && response[0].Values ? response[0].Values : []),
+                @if(Model.OmitPeriodsWithNoData)
+                    {
+                        <text>
+                connectNulls: true,
+                </text>
+                    }
+                tooltip: {
+                    valueDecimals: 4
+                }
+            },
+            {
+                name: (response[1] ? response[1].MetricName: ""),
+                data: (response[1] && response[1].Values ? response[1].Values: []),
+                @if(Model.OmitPeriodsWithNoData)
+                    {
+                        <text>
+                connectNulls: true,
+                </text>
+                    }
+                tooltip: {
+                    valueDecimals: 4
+                },
+                dashStyle: 'shortdash',
+                color: 'green'
+            },
+            {
+                name: "Upper Control Limit",
+                data: upperLimitData,
+                enableMouseTracking: false,
+                connectNulls: true,
+                //tooltip: {
+                //    valueDecimals: 4
+                //},
+                dashStyle: 'solid',
+                color: 'red',
+                lineWidth: 0.5
+            },
+            {
+                name: "Lower Control Limit",
+                data: lowerLimitData,
+                enableMouseTracking: false,
+                connectNulls: true,
+                //dataLabels: {
+                //    enabled: true,
+                //    align: 'left',
+                //    verticalAlign: 'middle',
+                //    overflow: true,
+                //    crop: false,
+                //    format: '{series.name}',
+                //    formatter: function () {
+                //        var first = this.series.data[3];
+                //            //last = this.series.data[this.series.data.length - 1];
+                //        if (this.point.category === first.category && this.point.y === first.y) {
+                //            return this.point.y;
+                //        }
+                //        return "";
+                //    }
+                //},
+                //tooltip: {
+                //    valueDecimals: 4
+                //},
+                dashStyle: 'solid',
+                color: 'blue',
+                lineWidth: 0.7
+            }
+        ]
+    });
+
+</script>

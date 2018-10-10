@@ -1,0 +1,18 @@
+﻿-- Chetan : Done
+-- Bharat : Done
+-- Shelly : Done
+-- Avnish : Done
+-- Dinesh : Done
+
+---------------2017 - 02 - 15 -- 5: 40 PM------Columns added to Plant Budget ------------ Avnish ---
+ALTER TABLE [dbo].[PlantBudget]
+ADD	[StartUp] [float] NULL,
+    [Shutdown] [float] NULL,
+	[InYard] [float] NULL,
+	[FirstLoadOnTimePercent] [float] NULL,
+	[TrucksPercentOperable] [float] NULL,
+	[Accidents] [float] NULL,
+	[PlantInterruptions] [float] NULL,
+	[TrucksDown] [float] NULL,
+	[BatchTolerance] [float] NULL;		
+Go

@@ -1,0 +1,191 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ESI.WorkDayCalendar
+
+@{
+    ViewBag.Title = "Workdays";
+    ViewBag.UsingSlider = true;
+    ViewBag.UsingDatePicker = true;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-head">
+    <h2>
+        <i class="fa fa-1x fa-cog"></i>
+        Settings
+    </h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Settings/Index">Settings</a></li>
+        <li>Workdays</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="">
+        @Html.Partial("_CompanyTabs", "workdaydistribution")
+        <div class="panel-body block-flat tab-content">
+            @Html.Partial("_ViewBagError", "")
+
+            <h4 class="header"><i class="fa fa-1x fa-calendar"></i> Typical Workday Percentages</h4>
+
+            <div class="panel-body">
+                <div class="col-md-12 form-group">
+                    <div class="col-md-1">Monday</div>
+                    <div class="col-md-11">
+                        <span class="badge badge-warning r-margin-10">0</span>
+                        <input type="text" class="slider_control bslider form-control" name="Monday" data-slider-enabled="@(ViewBag.CanEdit ? "true":"false")" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-orientation="horizontal" data-slider-value="@Model.Distribution.Monday" value="@Model.Distribution.Monday" />
+                        <span class="badge badge-success l-margin-10">100</span>
+                    </div>
+                </div>
+                <div class="col-md-12 form-group">
+                    <div class="col-md-1">Tuesday</div>
+                    <div class="col-md-11">
+                        <span class="badge badge-warning r-margin-10">0</span>
+                        <input type="text" class="slider_control bslider form-control" name="Tuesday" data-slider-enabled="@(ViewBag.CanEdit ? "true":"false")" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-orientation="horizontal" data-slider-value="@Model.Distribution.Tuesday" value="@Model.Distribution.Tuesday" />
+                        <span class="badge badge-success l-margin-10">100</span>
+                    </div>
+                </div>
+                <div class="col-md-12 form-group">
+                    <div class="col-md-1">Wednesday</div>
+                    <div class="col-md-11">
+                        <span class="badge badge-warning r-margin-10">0</span>
+                        <input type="text" class="slider_control bslider form-control" name="Wednesday" data-slider-enabled="@(ViewBag.CanEdit ? "true":"false")" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-orientation="horizontal" data-slider-value="@Model.Distribution.Wednesday" value="@Model.Distribution.Wednesday" />
+                        <span class="badge badge-success l-margin-10">100</span>
+                    </div>
+                </div>
+                <div class="col-md-12 form-group">
+                    <div class="col-md-1">Thursday</div>
+                    <div class="col-md-11">
+                        <span class="badge badge-warning r-margin-10">0</span>
+                        <input type="text" class="slider_control bslider form-control" name="Thursday" data-slider-enabled="@(ViewBag.CanEdit ? "true":"false")" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-orientation="horizontal" data-slider-value="@Model.Distribution.Thursday" value="@Model.Distribution.Thursday" />
+                        <span class="badge badge-success l-margin-10">100</span>
+                    </div>
+                </div>
+                <div class="col-md-12 form-group">
+                    <div class="col-md-1">Friday</div>
+                    <div class="col-md-11">
+                        <span class="badge badge-warning r-margin-10">0</span>
+                        <input type="text" class="slider_control bslider form-control" name="Friday" data-slider-enabled="@(ViewBag.CanEdit ? "true":"false")" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-orientation="horizontal" data-slider-value="@Model.Distribution.Friday" value="@Model.Distribution.Friday" />
+                        <span class="badge badge-success l-margin-10">100</span>
+                    </div>
+                </div>
+                <div class="col-md-12 form-group">
+                    <div class="col-md-1">Saturday</div>
+                    <div class="col-md-11">
+                        <span class="badge badge-warning r-margin-10">0</span>
+                        <input type="text" class="slider_control bslider form-control" name="Saturday" data-slider-enabled="@(ViewBag.CanEdit ? "true":"false")" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-orientation="horizontal" data-slider-value="@Model.Distribution.Saturday" value="@Model.Distribution.Saturday" />
+                        <span class="badge badge-success l-margin-10">100</span>
+                    </div>
+                </div>
+                <div class="col-md-12 form-group">
+                    <div class="col-md-1">Sunday</div>
+                    <div class="col-md-11">
+                        <span class="badge badge-warning r-margin-10">0</span>
+                        <input type="text" class="slider_control bslider form-control" name="Sunday" data-slider-enabled="@(ViewBag.CanEdit ? "true":"false")" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-orientation="horizontal" data-slider-value="@Model.Distribution.Sunday" value="@Model.Distribution.Sunday" />
+                        <span class="badge badge-success l-margin-10">100</span>
+                    </div>
+                </div>
+                @if (ViewBag.CanEdit)
+                {
+                    <div class="col-md-12 form-group">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-11">
+                            <button type="button" class="btn btn-primary apply_week_distribution" value="Save and Apply">Save</button>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <h4 class="header"><i class="fa fa-1x fa-warning"></i> Exceptions To Typical Workday Percentages</h4>
+
+            <div class=""> 
+                @if (ViewBag.CanEdit)
+                {
+                    using (Html.BeginForm("AddException", "Admin", FormMethod.Post, new { @class = "form-inline" }))
+                    {
+                        <div class="form-group">
+                            <label class="control-label">Date</label>
+                            @Html.TextBoxFor(x => x.WorkDayException.ExceptionDate, "{0:M/d/yyyy}", new { @class = "form-control datepicker" })
+                            <label class="control-label">Description</label>
+                            @Html.TextBoxFor(x => x.WorkDayException.Description, new { @class = "form-control" })
+                            <label class="control-label">Percentage</label>
+                            @Html.DropDownListFor(x => x.WorkDayException.Distribution, Model.ZeroToHundred, new { @class = "form-control" })
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    }
+                }
+                <br />
+                <br />
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Percentage</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var exception in Model.Exceptions)
+                        {
+                            <tr>
+                                <td>
+                                    @exception.ExceptionDate.ToString("M/d/yyyy")
+                                </td>
+                                <td>
+                                    @exception.Description
+                                </td>
+                                <td>
+                                    @exception.Distribution %
+                                </td>
+                                <td>
+                                    @if (ViewBag.CanEdit)
+                                    {
+                                        <a href="/Admin/EditException/@exception.Id" class="btn btn-primary btn-xs"><i class="fa fa-fw fa-edit"></i></a>
+                                    }
+                                    @if (ViewBag.CanEdit)
+                                    {
+                                        <a href="/Admin/DeleteException/@exception.Id" data-confirm="Are you sure you want to delete this exception? <br/> Date : @exception.ExceptionDate.ToString("M/d/yyyy") <br/> Percentage : @exception.Distribution %" class="btn btn-danger btn-xs"><i class="fa fa-fw fa-close"></i></a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".apply_week_distribution").click(function () {
+                $(this).html("<i class='fa fa-spinner fa-spin'></i> Save");
+                $(this).prop("disabled", true);
+                Monday = $("input[name=Monday]").val();
+                Tuesday = $("input[name=Tuesday]").val();
+                Wednesday = $("input[name=Wednesday]").val();
+                Thursday = $("input[name=Thursday]").val();
+                Friday = $("input[name=Friday]").val();
+                Saturday = $("input[name=Saturday]").val();
+                Sunday = $("input[name=Sunday]").val();
+                btn = $(this);
+                $.post("/Admin/UpdateWeekDayDistribution", { "monday": Monday, "tuesday": Tuesday, "wednesday": Wednesday, "thursday": Thursday, "friday": Friday, "saturday": Saturday, "sunday": Sunday }, function (data) {
+                    if (data == "OK") {
+                        btn.html("Save");
+                        btn.removeProp("disabled");
+                    }
+                });
+            });
+
+            $(".datepicker").datepicker({
+                format: "m/d/yyyy"
+            }).on("changeDate", function (e) {
+                $(this).datepicker("hide");
+            });
+
+            @if(!ViewBag.CanEdit){
+                <text>
+                setTimeout(200, function () { console.log("Hiding"); $(".bslider").slider("disable") });
+                </text>
+            }
+        });
+    </script>

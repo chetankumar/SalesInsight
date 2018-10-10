@@ -1,0 +1,181 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ManageRawMaterialTypes
+@{
+    ViewBag.Title = "Manage Raw Material Types";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.UsingDataTable = true;
+    bool aujsAPIEnabled = (ViewBag.AUJSAPIEnabled != null && ViewBag.AUJSAPIEnabled == true);
+}
+<div class="page-head">
+    <h2>Manage Raw Material Types
+
+            @if (!aujsAPIEnabled)
+            {
+            <text>
+            <a class="btn btn-primary pull-right" id="create_new_btn" data-toggle="modal" data-target="#add_edit_modal">
+                <i class="fa fa-plus-circle"></i>
+                <span>Raw Material Type</span>
+            </a>
+            </text>
+            }
+        
+    </h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Home/Settings">Settings</a></li>
+        <li><a href="/Home/Companies">Manage Company Settings</a></li>
+        <li><a href="/Admin/ManageRawMaterials">Raw Materials</a></li>
+        <li class="active">Types</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="block-flat">
+                @using (Html.BeginForm("ManageRawMaterialTypes", "Admin"))
+                {
+                    <div class="pull-left">@Html.CheckBoxFor(x => x.ShowInactives) Show Inactives</div>
+                }
+                <table class="data_table table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Raw Material Type</th>
+                            <th>Include for Cement-Based Dosing</th>
+                            <th>Include in Sack Pricing Detail</th>
+                            <th>Include in Sack Content</th>
+                            <th>Include in Ash Content</th>
+                            <th>Include in Sand Content</th>
+                            <th>Include in Rock Content</th>
+                            <th>Active</th>
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (RedHill.SalesInsight.DAL.RawMaterialType type in Model.RawMaterialTypes)
+                        {
+                            <tr>
+                                <td>@type.Name</td>
+                                <td>
+                                    @Html.Partial("_Tick", type.IsCementitious.GetValueOrDefault())
+                                </td>
+                                <td>
+                                    @Html.Partial("_Tick", type.IncludeInFSK.GetValueOrDefault())
+                                </td>
+                                <td>
+                                    @Html.Partial("_Tick", type.IncludeInSackCalculation.GetValueOrDefault())
+                                </td>
+                                <td>
+                                    @Html.Partial("_Tick", type.IncludeInAshCalculation.GetValueOrDefault())
+                                </td>
+                                <td>
+                                    @Html.Partial("_Tick", type.IncludeInSandCalculation.GetValueOrDefault())
+                                </td>
+                                <td>
+                                    @Html.Partial("_Tick", type.IncludeInRockCalculation.GetValueOrDefault())
+                                </td>
+                                <td>
+                                    @Html.Partial("_Tick", type.Active)
+                                </td>
+                                <td>
+                                    <a href="/Admin/ManageRawMaterialTypes?id=@type.Id" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@using (Html.BeginForm("UpdateRawMaterialType", "Admin", FormMethod.Post, new { data_parsley_validate = "true" }))
+{
+    <div class="modal md-modal colored-header fade" data-show="@(Model.SelectedRawMaterialType.Id > 0 ? "false" : "true")" data-backdrop="static" id="add_edit_modal">
+        <div class="modal-dialog">
+            <div class="md-content modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-backdrop="static" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">@(Model.SelectedRawMaterialType.Id > 0 ? "Update Raw Material Type" : "Add Raw Material Type")</h4>
+                </div>
+                <div class="modal-body form">
+                    @Html.Partial("_ErrorView")
+                    <div class="form-group">
+                        <label>Raw Material Type</label>
+                        @Html.HiddenFor(x => x.SelectedRawMaterialType.Id)
+                        @Html.HiddenFor(x=>x.SelectedRawMaterialType.DispatchId)
+                        @if (Model.SelectedRawMaterialType.Id == 0)
+                        {
+                            @Html.TextBoxFor(x => x.SelectedRawMaterialType.Name, new { @class = "form-control", data_parsley_trigger = "change", required = "true" })
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(x => x.SelectedRawMaterialType.Name, new { @class = "form-control", @readonly = "readonly" })
+                        }
+
+                    </div>
+                    <div class="form-group">
+                        @Html.CheckBoxFor(x => x.SelectedRawMaterialType.IsCementitious) Include for Cement-Based Dosing
+                    </div>
+                    <div class="form-group">
+                        @Html.CheckBoxFor(x => x.SelectedRawMaterialType.FSKDetail) Include in Sack Pricing Detail
+                    </div>
+                    <div class="form-group">
+                        @Html.CheckBoxFor(x => x.SelectedRawMaterialType.IncludeInSackCalculation) Include in Sack Content (sack-based pricing)
+                    </div>
+                    <div class="form-group">
+                        @Html.CheckBoxFor(x => x.SelectedRawMaterialType.IncludeInAshCalculation) Include as Ash for %Ash Calculations
+                    </div>
+                    <div class="form-group">
+                        @Html.CheckBoxFor(x => x.SelectedRawMaterialType.IncludeInSandCalculation) Include as Sand for %Fine Agg Calculations
+                    </div>
+                    <div class="form-group">
+                        @Html.CheckBoxFor(x => x.SelectedRawMaterialType.IncludeInRockCalculation) Include as Rock for %Fine Agg Calculations
+                    </div>
+                    <div class="form-group">
+                        @Html.CheckBoxFor(x => x.SelectedRawMaterialType.Active) Active
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a  class="btn btn-default btn-flat md-close" href="@Url.Action("ManageRawMaterialTypes", "Admin")">Cancel</a>
+                    <button type="submit" class="btn btn-primary btn-flat">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section Scripts{
+    <script type="text/javascript">
+        var showModal = @(Model.ShowModal ? "true" : "false");
+        $(document).ready(function (e) {
+            if (showModal){
+                $('#add_edit_modal').modal({
+                    "show":true
+                })
+            }
+
+            $("#ShowInactives").click(function(e){
+                $(this).parents("form").submit();
+            });
+
+            $("#SelectedRawMaterialType_IncludeInRockCalculation").change(function(e)
+            {
+                if ($(this).prop("checked") == true)
+                {
+                    if ($("#SelectedRawMaterialType_IncludeInSandCalculation").prop("checked") == true)
+                    {
+                        $("#SelectedRawMaterialType_IncludeInSandCalculation").prop("checked",false);
+                    }
+                }
+            });
+            $("#SelectedRawMaterialType_IncludeInSandCalculation").change(function(e)
+            {
+                if ($(this).prop("checked") == true)
+                {
+                    if ($("#SelectedRawMaterialType_IncludeInRockCalculation").prop("checked") == true)
+                    {
+                        $("#SelectedRawMaterialType_IncludeInRockCalculation").prop("checked",false);
+                    }
+                }
+            });
+        });
+    </script>
+}
+

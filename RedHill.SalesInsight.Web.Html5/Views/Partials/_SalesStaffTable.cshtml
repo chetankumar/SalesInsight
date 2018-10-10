@@ -1,0 +1,42 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.CompanyView
+
+<table class="data_table table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Fax</th>
+            <th>Email</th>
+            <th>Active</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (RedHill.SalesInsight.Web.Html5.Models.SalesStaffView staff in Model.SalesStaff)
+        {
+            <tr>
+                <td>@staff.Name</td>
+                <td>@staff.Phone</td>
+                <td>@staff.Fax</td>
+                <td>@staff.Email</td>
+                <td>
+                    @{
+            if (@staff.Active)
+            {
+                <span class="glyphicon glyphicon-ok"><span style="display:none">1</span></span>
+            }
+            else
+            {
+                <span class="glyphicon glyphicon-remove"></span>
+            }
+                    }
+                </td>
+                <td>
+                    <a href="/Home/EditStaff/@staff.SalesStaffId" class="btn btn-primary btn-xs" title="Edit Staff">
+                        <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

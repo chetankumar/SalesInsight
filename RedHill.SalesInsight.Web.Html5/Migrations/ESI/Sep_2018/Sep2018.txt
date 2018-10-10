@@ -1,0 +1,3 @@
+﻿ALTER table District
+ADD 	[PricingAvailabilityDisclaimer] [nvarchar](max) NULL,
+	[ExpirationDateLabel] [nvarchar](max) NULL

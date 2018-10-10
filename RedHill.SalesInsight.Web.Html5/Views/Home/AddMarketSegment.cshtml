@@ -1,0 +1,195 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.MarketSegmentView
+@using RedHill.SalesInsight.Web.Html5.Helpers;
+@{
+    ViewBag.Title = (Model.MarketSegmentId == 0 ? "New" : Model.Name);
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.UsingDataTable = true;
+    var company = ConfigurationHelper.Company;
+}
+<div class="page-head">
+    <h2>
+        @if (Model.MarketSegmentId > 0)
+        {
+            <span>Edit Market Segment</span>
+        }
+        else
+        {
+            <span>Add Market Segment</span>
+        }
+    </h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Home/Settings">Settings</a></li>
+        <li><a href="/Home/Companies">Manage Company Settings</a></li>
+        <li><a href="/Home/Companies/marketsegments">Market Segments</a></li>
+        <li class="active">@(Model.MarketSegmentId == 0 ? "New" : Model.Name)</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="block-flat">
+        @using (Html.BeginForm("UpdateMarketSegment", "Home", FormMethod.Post, new { @class = "form-horizontal" }))
+        {
+            @Html.ValidationSummary(true)
+
+            <div>
+                @Html.HiddenFor(model => model.MarketSegmentId, new { @class = "form-control" })
+                @Html.HiddenFor(model => model.CompanyId, new { @class = "form-control" })
+                @Html.HiddenFor(model => model.DispatchId)
+                <div class="form-group">
+
+                    <div class="control-label col-md-3">
+                        @Html.LabelFor(model => model.Name)
+                    </div>
+
+
+                    <div class="col-md-9">
+                        @if (Model.MarketSegmentId == 0)
+                        {
+                            @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @readonly = "readonly" })
+                        }
+                        @Html.ValidationMessageFor(model => model.Name, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+                <div class="form-group">
+
+                    <div class="control-label col-md-3">
+                        @Html.LabelFor(model => model.DispatchId)
+                    </div>
+
+
+                    <div class="col-md-9">
+                        @if (Model.DispatchId == null)
+                        {
+                            @Html.TextBoxFor(model => model.DispatchId, new { @class = "form-control" })
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(model => model.DispatchId, new { @class = "form-control", @readonly = "readonly" })
+                        }
+                        @Html.ValidationMessageFor(model => model.DispatchId, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-9 col-sm-offset-3">
+                        <div class="checkbox">
+                            <label>
+                                @Html.CheckBoxFor(model => model.Active)
+                                @Html.DisplayNameFor(model => model.Active)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <input type="submit" value="@(Model.MarketSegmentId > 0 ? "Update" : "Create")" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+        }
+        @if (Model.MarketSegmentId > 0)
+        {
+            <h4>District Level Settings</h4>
+            <table class="table tbl-summary table-bordered">
+                <thead>
+                    <tr>
+                        <th class="col-md-3">District</th>
+                        <th>Spread</th>
+                        <th>Contribution Margin</th>
+                        <th>Profit</th>
+                        <th>@company.DeliveryQtyUomSingular Per Hour</th>
+                        <th>Win Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (RedHill.SalesInsight.Web.Html5.Models.MarketSegmentDistrictProjection proj in Model.DistrictProjections)
+                    {
+
+                        <tr data-id="@proj.DistrictId">
+                            <td>@proj.DistrictName</td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon">$/@company.DeliveryQtyUomSingular</span>
+                                    <input type="text" class="spread form-control" value="@proj.Spread.ToString("N2")" />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon">$/@company.DeliveryQtyUomSingular</span>
+                                    <input type="text" class="contMarg form-control" value="@proj.ContMarg.ToString("N2")" />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon">$/@company.DeliveryQtyUomSingular</span>
+                                    <input type="text" class="profit form-control" value="@proj.Profit.ToString("N2")" />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <input type="text" class="cydHr form-control" value="@proj.CydHr.ToString("N2")" />
+                                    <span class="input-group-addon">@company.DeliveryQtyUomSingular/Hr</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <input type="text" class="winRate form-control" value="@proj.WinRate.ToString("N2")" />
+                                    <span class="input-group-addon">%</span>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+@section Scripts {
+    <script>
+        function dataTableInit() {
+            var marketSegmentAccess = '@(ViewBag.AccessRule.HasMarketSegmentsAccess == SIRolePermissionLevelConstants.FULL_ACCESS)';
+            if (marketSegmentAccess == 'False') {
+                disableEveryThing();
+            }
+            $('.tbl-summary').DataTable({
+                "bFilter": false,
+                "bInfo": false,
+                "bPaginate": false,
+                "aaSorting": [0,"asc"],
+                "columns": [null,{ "orderDataType": "dom-text-numeric","sType":"numeric" },{ "orderDataType": "dom-text-numeric","sType":"numeric" },{ "orderDataType": "dom-text-numeric","sType":"numeric" },{ "orderDataType": "dom-text-numeric","sType":"numeric" },{ "orderDataType": "dom-text-numeric","sType":"numeric" }]
+            });
+        }
+        $(document).ready(function (e) {
+            //Sorting input field extension
+            $.fn.dataTable.ext.order['dom-text-numeric'] = function  ( settings, col )
+            {
+                return this.api().column( col, {order:'index'} ).nodes().map( function ( td, i ) {
+                    return $('input', td).val().replace(/,/g, "")* 1;
+                } );
+            }
+            dataTableInit();
+
+            $(".spread,.contMarg,.profit,.cydHr,.winRate").blur(function (e) {
+                row = $(this).parents("tr").first();
+                marketSegmentId = @Model.MarketSegmentId;
+                districtId = row.data("id");
+                spread = removeCommas($(row).find(".spread").val());
+                contMarg = removeCommas($(row).find(".contMarg").val());
+                profit = removeCommas($(row).find(".profit").val());
+                cydHr = removeCommas($(row).find(".cydHr").val());
+                winRate = removeCommas($(row).find(".winRate").val());
+                $.get("/Home/UpdateMarketSegmentDistrictProjection/"+marketSegmentId,{"districtId" : districtId,"spread" : spread,"contMarg" : contMarg,"profit" : profit,"cydHr" : cydHr,"winRate":winRate},function(data){
+                    console.log(data);
+                })
+                //Recreate the dataTable for sorting ,after updating the column value/s
+                $(".tbl-summary").DataTable();
+            });
+        });
+    </script>
+}
+
+
+

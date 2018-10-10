@@ -1,0 +1,734 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" targetNamespace="" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="/Imports">
+      <xsd:import schemaLocation="http://localhost:4216/Services/SalesInsight.svc?xsd=xsd0" />
+      <xsd:import schemaLocation="http://localhost:4216/Services/SalesInsight.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:4216/Services/SalesInsight.svc?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+      <xsd:import schemaLocation="http://localhost:4216/Services/SalesInsight.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL.DataTypes" />
+      <xsd:import schemaLocation="http://localhost:4216/Services/SalesInsight.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/RedHill.SalesInsight.DAL" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="SalesInsight_RequiresSetup_InputMessage">
+    <wsdl:part name="parameters" element="RequiresSetup" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_RequiresSetup_OutputMessage">
+    <wsdl:part name="parameters" element="RequiresSetupResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetRoles_InputMessage">
+    <wsdl:part name="parameters" element="GetRoles" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetRoles_OutputMessage">
+    <wsdl:part name="parameters" element="GetRolesResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_ValidateUser_InputMessage">
+    <wsdl:part name="parameters" element="ValidateUser" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_ValidateUser_OutputMessage">
+    <wsdl:part name="parameters" element="ValidateUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetUsers_InputMessage">
+    <wsdl:part name="parameters" element="GetUsers" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetUsers_OutputMessage">
+    <wsdl:part name="parameters" element="GetUsersResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_AddUser_InputMessage">
+    <wsdl:part name="parameters" element="AddUser" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_AddUser_OutputMessage">
+    <wsdl:part name="parameters" element="AddUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_UpdateUser_InputMessage">
+    <wsdl:part name="parameters" element="UpdateUser" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_UpdateUser_OutputMessage">
+    <wsdl:part name="parameters" element="UpdateUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_ExecuteOperations_InputMessage">
+    <wsdl:part name="parameters" element="ExecuteOperations" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_ExecuteOperations_OutputMessage">
+    <wsdl:part name="parameters" element="ExecuteOperationsResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetForecast_InputMessage">
+    <wsdl:part name="parameters" element="GetForecast" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetForecast_OutputMessage">
+    <wsdl:part name="parameters" element="GetForecastResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetPipeline_InputMessage">
+    <wsdl:part name="parameters" element="GetPipeline" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetPipeline_OutputMessage">
+    <wsdl:part name="parameters" element="GetPipelineResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_AddProject_InputMessage">
+    <wsdl:part name="parameters" element="AddProject" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_AddProject_OutputMessage">
+    <wsdl:part name="parameters" element="AddProjectResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetProjectDetails_InputMessage">
+    <wsdl:part name="parameters" element="GetProjectDetails" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetProjectDetails_OutputMessage">
+    <wsdl:part name="parameters" element="GetProjectDetailsResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_DeleteProject_InputMessage">
+    <wsdl:part name="parameters" element="DeleteProject" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_DeleteProject_OutputMessage">
+    <wsdl:part name="parameters" element="DeleteProjectResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetDistrictFilters_InputMessage">
+    <wsdl:part name="parameters" element="GetDistrictFilters" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetDistrictFilters_OutputMessage">
+    <wsdl:part name="parameters" element="GetDistrictFiltersResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetPipelineStatusFilters_InputMessage">
+    <wsdl:part name="parameters" element="GetPipelineStatusFilters" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetPipelineStatusFilters_OutputMessage">
+    <wsdl:part name="parameters" element="GetPipelineStatusFiltersResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetPlantFilters_InputMessage">
+    <wsdl:part name="parameters" element="GetPlantFilters" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetPlantFilters_OutputMessage">
+    <wsdl:part name="parameters" element="GetPlantFiltersResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetStaffFilters_InputMessage">
+    <wsdl:part name="parameters" element="GetStaffFilters" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetStaffFilters_OutputMessage">
+    <wsdl:part name="parameters" element="GetStaffFiltersResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetCustomers_InputMessage">
+    <wsdl:part name="parameters" element="GetCustomers" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetCustomers_OutputMessage">
+    <wsdl:part name="parameters" element="GetCustomersResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetCustomer_InputMessage">
+    <wsdl:part name="parameters" element="GetCustomer" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetCustomer_OutputMessage">
+    <wsdl:part name="parameters" element="GetCustomerResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_SaveCustomer_InputMessage">
+    <wsdl:part name="parameters" element="SaveCustomer" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_SaveCustomer_OutputMessage">
+    <wsdl:part name="parameters" element="SaveCustomerResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetCustomerContacts_InputMessage">
+    <wsdl:part name="parameters" element="GetCustomerContacts" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetCustomerContacts_OutputMessage">
+    <wsdl:part name="parameters" element="GetCustomerContactsResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetCompetitors_InputMessage">
+    <wsdl:part name="parameters" element="GetCompetitors" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetCompetitors_OutputMessage">
+    <wsdl:part name="parameters" element="GetCompetitorsResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetSalesStaff_InputMessage">
+    <wsdl:part name="parameters" element="GetSalesStaff" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetSalesStaff_OutputMessage">
+    <wsdl:part name="parameters" element="GetSalesStaffResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_AddSalesStaff_InputMessage">
+    <wsdl:part name="parameters" element="AddSalesStaff" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_AddSalesStaff_OutputMessage">
+    <wsdl:part name="parameters" element="AddSalesStaffResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_UpdateSalesStaff_InputMessage">
+    <wsdl:part name="parameters" element="UpdateSalesStaff" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_UpdateSalesStaff_OutputMessage">
+    <wsdl:part name="parameters" element="UpdateSalesStaffResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetContractors_InputMessage">
+    <wsdl:part name="parameters" element="GetContractors" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetContractors_OutputMessage">
+    <wsdl:part name="parameters" element="GetContractorsResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetMarketSegments_InputMessage">
+    <wsdl:part name="parameters" element="GetMarketSegments" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetMarketSegments_OutputMessage">
+    <wsdl:part name="parameters" element="GetMarketSegmentsResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetStatuses_InputMessage">
+    <wsdl:part name="parameters" element="GetStatuses" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetStatuses_OutputMessage">
+    <wsdl:part name="parameters" element="GetStatusesResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetRegions_InputMessage">
+    <wsdl:part name="parameters" element="GetRegions" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetRegions_OutputMessage">
+    <wsdl:part name="parameters" element="GetRegionsResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetDistricts_InputMessage">
+    <wsdl:part name="parameters" element="GetDistricts" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetDistricts_OutputMessage">
+    <wsdl:part name="parameters" element="GetDistrictsResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetPlants_InputMessage">
+    <wsdl:part name="parameters" element="GetPlants" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetPlants_OutputMessage">
+    <wsdl:part name="parameters" element="GetPlantsResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetCompanies_InputMessage">
+    <wsdl:part name="parameters" element="GetCompanies" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetCompanies_OutputMessage">
+    <wsdl:part name="parameters" element="GetCompaniesResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetProjectionDate_InputMessage">
+    <wsdl:part name="parameters" element="GetProjectionDate" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetProjectionDate_OutputMessage">
+    <wsdl:part name="parameters" element="GetProjectionDateResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_UpdateProjectionDate_InputMessage">
+    <wsdl:part name="parameters" element="UpdateProjectionDate" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_UpdateProjectionDate_OutputMessage">
+    <wsdl:part name="parameters" element="UpdateProjectionDateResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetStatusTypes_InputMessage">
+    <wsdl:part name="parameters" element="GetStatusTypes" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetStatusTypes_OutputMessage">
+    <wsdl:part name="parameters" element="GetStatusTypesResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetProductTypes_InputMessage">
+    <wsdl:part name="parameters" element="GetProductTypes" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetProductTypes_OutputMessage">
+    <wsdl:part name="parameters" element="GetProductTypesResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_ExecutePlantTargetOperation_InputMessage">
+    <wsdl:part name="parameters" element="ExecutePlantTargetOperation" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_ExecutePlantTargetOperation_OutputMessage">
+    <wsdl:part name="parameters" element="ExecutePlantTargetOperationResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetPlantTargets_InputMessage">
+    <wsdl:part name="parameters" element="GetPlantTargets" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetPlantTargets_OutputMessage">
+    <wsdl:part name="parameters" element="GetPlantTargetsResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetForecastVersusPlan_InputMessage">
+    <wsdl:part name="parameters" element="GetForecastVersusPlan" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetForecastVersusPlan_OutputMessage">
+    <wsdl:part name="parameters" element="GetForecastVersusPlanResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetPlantProjections_InputMessage">
+    <wsdl:part name="parameters" element="GetPlantProjections" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetPlantProjections_OutputMessage">
+    <wsdl:part name="parameters" element="GetPlantProjectionsResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetSegmentationAnalysis_InputMessage">
+    <wsdl:part name="parameters" element="GetSegmentationAnalysis" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetSegmentationAnalysis_OutputMessage">
+    <wsdl:part name="parameters" element="GetSegmentationAnalysisResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetProjectionAccuracy_InputMessage">
+    <wsdl:part name="parameters" element="GetProjectionAccuracy" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetProjectionAccuracy_OutputMessage">
+    <wsdl:part name="parameters" element="GetProjectionAccuracyResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetProjectedActualAssetProductivity_InputMessage">
+    <wsdl:part name="parameters" element="GetProjectedActualAssetProductivity" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetProjectedActualAssetProductivity_OutputMessage">
+    <wsdl:part name="parameters" element="GetProjectedActualAssetProductivityResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetQuoteSources_InputMessage">
+    <wsdl:part name="parameters" element="GetQuoteSources" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetQuoteSources_OutputMessage">
+    <wsdl:part name="parameters" element="GetQuoteSourcesResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetQuoteSpecifications_InputMessage">
+    <wsdl:part name="parameters" element="GetQuoteSpecifications" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetQuoteSpecifications_OutputMessage">
+    <wsdl:part name="parameters" element="GetQuoteSpecificationsResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetShortLoadTypes_InputMessage">
+    <wsdl:part name="parameters" element="GetShortLoadTypes" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetShortLoadTypes_OutputMessage">
+    <wsdl:part name="parameters" element="GetShortLoadTypesResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetStandbyTimeTypes_InputMessage">
+    <wsdl:part name="parameters" element="GetStandbyTimeTypes" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetStandbyTimeTypes_OutputMessage">
+    <wsdl:part name="parameters" element="GetStandbyTimeTypesResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetUnitsOfMeasure_InputMessage">
+    <wsdl:part name="parameters" element="GetUnitsOfMeasure" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetUnitsOfMeasure_OutputMessage">
+    <wsdl:part name="parameters" element="GetUnitsOfMeasureResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetConcreteProducts_InputMessage">
+    <wsdl:part name="parameters" element="GetConcreteProducts" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetConcreteProducts_OutputMessage">
+    <wsdl:part name="parameters" element="GetConcreteProductsResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetConcreteProduct_InputMessage">
+    <wsdl:part name="parameters" element="GetConcreteProduct" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetConcreteProduct_OutputMessage">
+    <wsdl:part name="parameters" element="GetConcreteProductResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_SaveConcreteProduct_InputMessage">
+    <wsdl:part name="parameters" element="SaveConcreteProduct" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_SaveConcreteProduct_OutputMessage">
+    <wsdl:part name="parameters" element="SaveConcreteProductResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetAdditionalProducts_InputMessage">
+    <wsdl:part name="parameters" element="GetAdditionalProducts" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetAdditionalProducts_OutputMessage">
+    <wsdl:part name="parameters" element="GetAdditionalProductsResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetAdditionalProduct_InputMessage">
+    <wsdl:part name="parameters" element="GetAdditionalProduct" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetAdditionalProduct_OutputMessage">
+    <wsdl:part name="parameters" element="GetAdditionalProductResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_SaveAdditionalProduct_InputMessage">
+    <wsdl:part name="parameters" element="SaveAdditionalProduct" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_SaveAdditionalProduct_OutputMessage">
+    <wsdl:part name="parameters" element="SaveAdditionalProductResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetNextKeyValue_InputMessage">
+    <wsdl:part name="parameters" element="GetNextKeyValue" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetNextKeyValue_OutputMessage">
+    <wsdl:part name="parameters" element="GetNextKeyValueResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetQuotes_InputMessage">
+    <wsdl:part name="parameters" element="GetQuotes" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetQuotes_OutputMessage">
+    <wsdl:part name="parameters" element="GetQuotesResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetQuoteSummaries_InputMessage">
+    <wsdl:part name="parameters" element="GetQuoteSummaries" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetQuoteSummaries_OutputMessage">
+    <wsdl:part name="parameters" element="GetQuoteSummariesResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetQuoteSupport_InputMessage">
+    <wsdl:part name="parameters" element="GetQuoteSupport" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetQuoteSupport_OutputMessage">
+    <wsdl:part name="parameters" element="GetQuoteSupportResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetQuote_InputMessage">
+    <wsdl:part name="parameters" element="GetQuote" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetQuote_OutputMessage">
+    <wsdl:part name="parameters" element="GetQuoteResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_SaveQuote_InputMessage">
+    <wsdl:part name="parameters" element="SaveQuote" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_SaveQuote_OutputMessage">
+    <wsdl:part name="parameters" element="SaveQuoteResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_CopyQuote_InputMessage">
+    <wsdl:part name="parameters" element="CopyQuote" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_CopyQuote_OutputMessage">
+    <wsdl:part name="parameters" element="CopyQuoteResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_AcceptQuote_InputMessage">
+    <wsdl:part name="parameters" element="AcceptQuote" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_AcceptQuote_OutputMessage">
+    <wsdl:part name="parameters" element="AcceptQuoteResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetQuoteConcreteProducts_InputMessage">
+    <wsdl:part name="parameters" element="GetQuoteConcreteProducts" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetQuoteConcreteProducts_OutputMessage">
+    <wsdl:part name="parameters" element="GetQuoteConcreteProductsResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetQuoteAdditionalProducts_InputMessage">
+    <wsdl:part name="parameters" element="GetQuoteAdditionalProducts" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetQuoteAdditionalProducts_OutputMessage">
+    <wsdl:part name="parameters" element="GetQuoteAdditionalProductsResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetQuoteNotes_InputMessage">
+    <wsdl:part name="parameters" element="GetQuoteNotes" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetQuoteNotes_OutputMessage">
+    <wsdl:part name="parameters" element="GetQuoteNotesResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetQuoteConcreteProductColors_InputMessage">
+    <wsdl:part name="parameters" element="GetQuoteConcreteProductColors" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetQuoteConcreteProductColors_OutputMessage">
+    <wsdl:part name="parameters" element="GetQuoteConcreteProductColorsResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetProjectSuccessDashboardMajorJobSummary_InputMessage">
+    <wsdl:part name="parameters" element="GetProjectSuccessDashboardMajorJobSummary" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetProjectSuccessDashboardMajorJobSummary_OutputMessage">
+    <wsdl:part name="parameters" element="GetProjectSuccessDashboardMajorJobSummaryResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetProjectSuccessMarketShareSummary_InputMessage">
+    <wsdl:part name="parameters" element="GetProjectSuccessMarketShareSummary" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetProjectSuccessMarketShareSummary_OutputMessage">
+    <wsdl:part name="parameters" element="GetProjectSuccessMarketShareSummaryResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetProjectSuccessSalesStaffSummary_InputMessage">
+    <wsdl:part name="parameters" element="GetProjectSuccessSalesStaffSummary" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetProjectSuccessSalesStaffSummary_OutputMessage">
+    <wsdl:part name="parameters" element="GetProjectSuccessSalesStaffSummaryResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetQuoteReportHeader_InputMessage">
+    <wsdl:part name="parameters" element="GetQuoteReportHeader" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetQuoteReportHeader_OutputMessage">
+    <wsdl:part name="parameters" element="GetQuoteReportHeaderResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetQuoteReportConcreteProducts_InputMessage">
+    <wsdl:part name="parameters" element="GetQuoteReportConcreteProducts" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetQuoteReportConcreteProducts_OutputMessage">
+    <wsdl:part name="parameters" element="GetQuoteReportConcreteProductsResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetQuoteReportAdditionalProducts_InputMessage">
+    <wsdl:part name="parameters" element="GetQuoteReportAdditionalProducts" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_GetQuoteReportAdditionalProducts_OutputMessage">
+    <wsdl:part name="parameters" element="GetQuoteReportAdditionalProductsResponse" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_CalculateProfitability_InputMessage">
+    <wsdl:part name="parameters" element="CalculateProfitability" />
+  </wsdl:message>
+  <wsdl:message name="SalesInsight_CalculateProfitability_OutputMessage">
+    <wsdl:part name="parameters" element="CalculateProfitabilityResponse" />
+  </wsdl:message>
+  <wsdl:portType name="SalesInsight">
+    <wsdl:operation name="RequiresSetup">
+      <wsdl:input wsaw:Action="urn:SalesInsight/RequiresSetup" message="SalesInsight_RequiresSetup_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/RequiresSetupResponse" message="SalesInsight_RequiresSetup_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRoles">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetRoles" message="SalesInsight_GetRoles_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetRolesResponse" message="SalesInsight_GetRoles_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ValidateUser">
+      <wsdl:input wsaw:Action="urn:SalesInsight/ValidateUser" message="SalesInsight_ValidateUser_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/ValidateUserResponse" message="SalesInsight_ValidateUser_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUsers">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetUsers" message="SalesInsight_GetUsers_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetUsersResponse" message="SalesInsight_GetUsers_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AddUser">
+      <wsdl:input wsaw:Action="urn:SalesInsight/AddUser" message="SalesInsight_AddUser_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/AddUserResponse" message="SalesInsight_AddUser_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateUser">
+      <wsdl:input wsaw:Action="urn:SalesInsight/UpdateUser" message="SalesInsight_UpdateUser_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/UpdateUserResponse" message="SalesInsight_UpdateUser_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ExecuteOperations">
+      <wsdl:input wsaw:Action="urn:SalesInsight/ExecuteOperations" message="SalesInsight_ExecuteOperations_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/ExecuteOperationsResponse" message="SalesInsight_ExecuteOperations_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetForecast">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetForecast" message="SalesInsight_GetForecast_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetForecastResponse" message="SalesInsight_GetForecast_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPipeline">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetPipeline" message="SalesInsight_GetPipeline_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetPipelineResponse" message="SalesInsight_GetPipeline_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AddProject">
+      <wsdl:input wsaw:Action="urn:SalesInsight/AddProject" message="SalesInsight_AddProject_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/AddProjectResponse" message="SalesInsight_AddProject_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetProjectDetails">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetProjectDetails" message="SalesInsight_GetProjectDetails_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetProjectDetailsResponse" message="SalesInsight_GetProjectDetails_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteProject">
+      <wsdl:input wsaw:Action="urn:SalesInsight/DeleteProject" message="SalesInsight_DeleteProject_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/DeleteProjectResponse" message="SalesInsight_DeleteProject_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDistrictFilters">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetDistrictFilters" message="SalesInsight_GetDistrictFilters_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetDistrictFiltersResponse" message="SalesInsight_GetDistrictFilters_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPipelineStatusFilters">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetPipelineStatusFilters" message="SalesInsight_GetPipelineStatusFilters_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetPipelineStatusFiltersResponse" message="SalesInsight_GetPipelineStatusFilters_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPlantFilters">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetPlantFilters" message="SalesInsight_GetPlantFilters_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetPlantFiltersResponse" message="SalesInsight_GetPlantFilters_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStaffFilters">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetStaffFilters" message="SalesInsight_GetStaffFilters_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetStaffFiltersResponse" message="SalesInsight_GetStaffFilters_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCustomers">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetCustomers" message="SalesInsight_GetCustomers_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetCustomersResponse" message="SalesInsight_GetCustomers_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCustomer">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetCustomer" message="SalesInsight_GetCustomer_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetCustomerResponse" message="SalesInsight_GetCustomer_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SaveCustomer">
+      <wsdl:input wsaw:Action="urn:SalesInsight/SaveCustomer" message="SalesInsight_SaveCustomer_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/SaveCustomerResponse" message="SalesInsight_SaveCustomer_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCustomerContacts">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetCustomerContacts" message="SalesInsight_GetCustomerContacts_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetCustomerContactsResponse" message="SalesInsight_GetCustomerContacts_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCompetitors">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetCompetitors" message="SalesInsight_GetCompetitors_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetCompetitorsResponse" message="SalesInsight_GetCompetitors_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSalesStaff">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetSalesStaff" message="SalesInsight_GetSalesStaff_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetSalesStaffResponse" message="SalesInsight_GetSalesStaff_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AddSalesStaff">
+      <wsdl:input wsaw:Action="urn:SalesInsight/AddSalesStaff" message="SalesInsight_AddSalesStaff_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/AddSalesStaffResponse" message="SalesInsight_AddSalesStaff_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateSalesStaff">
+      <wsdl:input wsaw:Action="urn:SalesInsight/UpdateSalesStaff" message="SalesInsight_UpdateSalesStaff_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/UpdateSalesStaffResponse" message="SalesInsight_UpdateSalesStaff_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetContractors">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetContractors" message="SalesInsight_GetContractors_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetContractorsResponse" message="SalesInsight_GetContractors_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMarketSegments">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetMarketSegments" message="SalesInsight_GetMarketSegments_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetMarketSegmentsResponse" message="SalesInsight_GetMarketSegments_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStatuses">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetStatuses" message="SalesInsight_GetStatuses_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetStatusesResponse" message="SalesInsight_GetStatuses_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRegions">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetRegions" message="SalesInsight_GetRegions_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetRegionsResponse" message="SalesInsight_GetRegions_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDistricts">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetDistricts" message="SalesInsight_GetDistricts_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetDistrictsResponse" message="SalesInsight_GetDistricts_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPlants">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetPlants" message="SalesInsight_GetPlants_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetPlantsResponse" message="SalesInsight_GetPlants_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCompanies">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetCompanies" message="SalesInsight_GetCompanies_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetCompaniesResponse" message="SalesInsight_GetCompanies_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetProjectionDate">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetProjectionDate" message="SalesInsight_GetProjectionDate_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetProjectionDateResponse" message="SalesInsight_GetProjectionDate_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateProjectionDate">
+      <wsdl:input wsaw:Action="urn:SalesInsight/UpdateProjectionDate" message="SalesInsight_UpdateProjectionDate_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/UpdateProjectionDateResponse" message="SalesInsight_UpdateProjectionDate_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStatusTypes">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetStatusTypes" message="SalesInsight_GetStatusTypes_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetStatusTypesResponse" message="SalesInsight_GetStatusTypes_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetProductTypes">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetProductTypes" message="SalesInsight_GetProductTypes_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetProductTypesResponse" message="SalesInsight_GetProductTypes_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ExecutePlantTargetOperation">
+      <wsdl:input wsaw:Action="urn:SalesInsight/ExecutePlantTargetOperation" message="SalesInsight_ExecutePlantTargetOperation_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/ExecutePlantTargetOperationResponse" message="SalesInsight_ExecutePlantTargetOperation_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPlantTargets">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetPlantTargets" message="SalesInsight_GetPlantTargets_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetPlantTargetsResponse" message="SalesInsight_GetPlantTargets_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetForecastVersusPlan">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetForecastVersusPlan" message="SalesInsight_GetForecastVersusPlan_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetForecastVersusPlanResponse" message="SalesInsight_GetForecastVersusPlan_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPlantProjections">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetPlantProjections" message="SalesInsight_GetPlantProjections_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetPlantProjectionsResponse" message="SalesInsight_GetPlantProjections_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSegmentationAnalysis">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetSegmentationAnalysis" message="SalesInsight_GetSegmentationAnalysis_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetSegmentationAnalysisResponse" message="SalesInsight_GetSegmentationAnalysis_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetProjectionAccuracy">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetProjectionAccuracy" message="SalesInsight_GetProjectionAccuracy_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetProjectionAccuracyResponse" message="SalesInsight_GetProjectionAccuracy_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetProjectedActualAssetProductivity">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetProjectedActualAssetProductivity" message="SalesInsight_GetProjectedActualAssetProductivity_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetProjectedActualAssetProductivityResponse" message="SalesInsight_GetProjectedActualAssetProductivity_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetQuoteSources">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetQuoteSources" message="SalesInsight_GetQuoteSources_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetQuoteSourcesResponse" message="SalesInsight_GetQuoteSources_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetQuoteSpecifications">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetQuoteSpecifications" message="SalesInsight_GetQuoteSpecifications_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetQuoteSpecificationsResponse" message="SalesInsight_GetQuoteSpecifications_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetShortLoadTypes">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetShortLoadTypes" message="SalesInsight_GetShortLoadTypes_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetShortLoadTypesResponse" message="SalesInsight_GetShortLoadTypes_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStandbyTimeTypes">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetStandbyTimeTypes" message="SalesInsight_GetStandbyTimeTypes_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetStandbyTimeTypesResponse" message="SalesInsight_GetStandbyTimeTypes_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUnitsOfMeasure">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetUnitsOfMeasure" message="SalesInsight_GetUnitsOfMeasure_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetUnitsOfMeasureResponse" message="SalesInsight_GetUnitsOfMeasure_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetConcreteProducts">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetConcreteProducts" message="SalesInsight_GetConcreteProducts_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetConcreteProductsResponse" message="SalesInsight_GetConcreteProducts_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetConcreteProduct">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetConcreteProduct" message="SalesInsight_GetConcreteProduct_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetConcreteProductResponse" message="SalesInsight_GetConcreteProduct_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SaveConcreteProduct">
+      <wsdl:input wsaw:Action="urn:SalesInsight/SaveConcreteProduct" message="SalesInsight_SaveConcreteProduct_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/SaveConcreteProductResponse" message="SalesInsight_SaveConcreteProduct_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAdditionalProducts">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetAdditionalProducts" message="SalesInsight_GetAdditionalProducts_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetAdditionalProductsResponse" message="SalesInsight_GetAdditionalProducts_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAdditionalProduct">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetAdditionalProduct" message="SalesInsight_GetAdditionalProduct_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetAdditionalProductResponse" message="SalesInsight_GetAdditionalProduct_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SaveAdditionalProduct">
+      <wsdl:input wsaw:Action="urn:SalesInsight/SaveAdditionalProduct" message="SalesInsight_SaveAdditionalProduct_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/SaveAdditionalProductResponse" message="SalesInsight_SaveAdditionalProduct_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetNextKeyValue">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetNextKeyValue" message="SalesInsight_GetNextKeyValue_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetNextKeyValueResponse" message="SalesInsight_GetNextKeyValue_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetQuotes">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetQuotes" message="SalesInsight_GetQuotes_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetQuotesResponse" message="SalesInsight_GetQuotes_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetQuoteSummaries">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetQuoteSummaries" message="SalesInsight_GetQuoteSummaries_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetQuoteSummariesResponse" message="SalesInsight_GetQuoteSummaries_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetQuoteSupport">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetQuoteSupport" message="SalesInsight_GetQuoteSupport_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetQuoteSupportResponse" message="SalesInsight_GetQuoteSupport_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetQuote">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetQuote" message="SalesInsight_GetQuote_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetQuoteResponse" message="SalesInsight_GetQuote_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SaveQuote">
+      <wsdl:input wsaw:Action="urn:SalesInsight/SaveQuote" message="SalesInsight_SaveQuote_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/SaveQuoteResponse" message="SalesInsight_SaveQuote_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CopyQuote">
+      <wsdl:input wsaw:Action="urn:SalesInsight/CopyQuote" message="SalesInsight_CopyQuote_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/CopyQuoteResponse" message="SalesInsight_CopyQuote_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AcceptQuote">
+      <wsdl:input wsaw:Action="urn:SalesInsight/AcceptQuote" message="SalesInsight_AcceptQuote_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/AcceptQuoteResponse" message="SalesInsight_AcceptQuote_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetQuoteConcreteProducts">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetQuoteConcreteProducts" message="SalesInsight_GetQuoteConcreteProducts_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetQuoteConcreteProductsResponse" message="SalesInsight_GetQuoteConcreteProducts_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetQuoteAdditionalProducts">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetQuoteAdditionalProducts" message="SalesInsight_GetQuoteAdditionalProducts_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetQuoteAdditionalProductsResponse" message="SalesInsight_GetQuoteAdditionalProducts_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetQuoteNotes">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetQuoteNotes" message="SalesInsight_GetQuoteNotes_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetQuoteNotesResponse" message="SalesInsight_GetQuoteNotes_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetQuoteConcreteProductColors">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetQuoteConcreteProductColors" message="SalesInsight_GetQuoteConcreteProductColors_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetQuoteConcreteProductColorsResponse" message="SalesInsight_GetQuoteConcreteProductColors_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetProjectSuccessDashboardMajorJobSummary">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetProjectSuccessDashboardMajorJobSummary" message="SalesInsight_GetProjectSuccessDashboardMajorJobSummary_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetProjectSuccessDashboardMajorJobSummaryResponse" message="SalesInsight_GetProjectSuccessDashboardMajorJobSummary_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetProjectSuccessMarketShareSummary">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetProjectSuccessMarketShareSummary" message="SalesInsight_GetProjectSuccessMarketShareSummary_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetProjectSuccessMarketShareSummaryResponse" message="SalesInsight_GetProjectSuccessMarketShareSummary_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetProjectSuccessSalesStaffSummary">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetProjectSuccessSalesStaffSummary" message="SalesInsight_GetProjectSuccessSalesStaffSummary_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetProjectSuccessSalesStaffSummaryResponse" message="SalesInsight_GetProjectSuccessSalesStaffSummary_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetQuoteReportHeader">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetQuoteReportHeader" message="SalesInsight_GetQuoteReportHeader_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetQuoteReportHeaderResponse" message="SalesInsight_GetQuoteReportHeader_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetQuoteReportConcreteProducts">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetQuoteReportConcreteProducts" message="SalesInsight_GetQuoteReportConcreteProducts_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetQuoteReportConcreteProductsResponse" message="SalesInsight_GetQuoteReportConcreteProducts_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetQuoteReportAdditionalProducts">
+      <wsdl:input wsaw:Action="urn:SalesInsight/GetQuoteReportAdditionalProducts" message="SalesInsight_GetQuoteReportAdditionalProducts_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/GetQuoteReportAdditionalProductsResponse" message="SalesInsight_GetQuoteReportAdditionalProducts_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CalculateProfitability">
+      <wsdl:input wsaw:Action="urn:SalesInsight/CalculateProfitability" message="SalesInsight_CalculateProfitability_InputMessage" />
+      <wsdl:output wsaw:Action="urn:SalesInsight/CalculateProfitabilityResponse" message="SalesInsight_CalculateProfitability_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>

@@ -1,0 +1,6 @@
+﻿ALTER TABLE Quotation
+ADD CustomerName NVARCHAR(2000),
+	ProjectName NVARCHAR(2000),
+	SalesStaffName NVARCHAR(2000),
+	MarketSegmentName NVARCHAR(2000),
+	PlantName NVARCHAR(2000);

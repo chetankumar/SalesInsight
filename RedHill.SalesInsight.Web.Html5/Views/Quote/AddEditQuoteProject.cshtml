@@ -1,0 +1,320 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.QuotationProjectView
+
+
+@{
+    ViewBag.Title = "Add Edit Quote Project";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<div class="page-head">
+    <h2>
+        @if (Model.QuotationId > 0)
+        {
+            <span>Update Quotation @Model.QuotationId</span>
+        }
+        else
+        {
+            <span>Add new Quotation</span>
+        }
+    </h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Home/Pipeline">Projects</a></li>
+        <li>Quotations</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="block-flat">
+        <div class="well">
+            <div class="col-md-5">
+                @Html.Partial("_BasicQuotationProfile", Model.Profile)
+            </div>
+            <div class="col-md-7">
+                @Html.Partial("_QuoteActions", Model.Profile)
+            </div>
+            <div style="clear:both"></div>
+        </div>
+        <div id="summary_section"> 
+            @Html.Partial("_QuotationStatistics", Model.Profile)
+        </div>
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="heading1">
+                  <h4 class="panel-title">
+                      <a href="/Quote/AddEditQuote/@Model.QuotationId">Customer Information</a>
+                  </h4>
+                </div>
+            </div>
+            <div class="panel panel-primary">
+                <div class="panel-heading" role="tab" id="heading2">
+                  <h4 class="panel-title">
+                      Job Information
+                  </h4>
+                </div>
+                <div class="panel-body">
+                    @using (Html.BeginForm("UpdateQuotationProject", "Quote", FormMethod.Post, new { @class = "form form-horizontal" }))
+                        {
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">Project</label>
+                                    <div class="col-md-8">
+                                        <div class="input-group">
+                                            @Html.HiddenFor(x => x.QuotationId)
+                                            @Html.HiddenFor(x => x.CustomerId)
+                                            @Html.DropDownListFor(x => x.ProjectId, Model.ChooseProjects, new { @class = "form-control" })
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#NewProjectModal" ><span class="glyphicon glyphicon-plus"></span></button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>  
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">Customer Ref Name</label>
+                                    <div class="col-md-8">
+                                        <p class="form-control-static">
+                                            @Model.ProjectView.CustomerRefName
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">Address</label>
+                                    <div class="col-md-8">
+                                        <p class="form-control-static">
+                                            @Model.ProjectView.Address
+                                        </p>
+                                    </div>
+                                </div>
+                                    <div class="form-group">
+                                    <label class="control-label col-md-4">City, State, Zip</label>
+                                    <div class="col-md-8">
+                                        <p class="form-control-static">
+                                            @Model.ProjectView.City
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">Delivery Instructions</label>
+                                    <div class="col-md-8">
+                                        <p class="form-control-static">
+                                            @Model.ProjectView.DeliveryInstructions
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4"></label>
+                                    <div class="col-md-8">
+                                        <button type="submit" class="btn btn-primary">Save</button>
+                                        <a href="/Home/EditProject/@Model.ProjectId" class="btn btn-primary">Edit Project</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">To Job</label>
+                                    <div class="col-md-8">
+                                        <p class="form-control-static">
+                                            @Model.ProjectView.ToJobMinutes minutes
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">Wait on Job</label>
+                                    <div class="col-md-8">
+                                        <p class="form-control-static">
+                                            @Model.ProjectView.WaitOnJob minutes
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">Wash on Job</label>
+                                    <div class="col-md-8">
+                                        <p class="form-control-static">
+                                            @Model.ProjectView.WashMinutes minutes
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">Return</label>
+                                    <div class="col-md-8">
+                                        <p class="form-control-static">
+                                            @Model.ProjectView.ReturnMinutes minutes
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">Distance To Job</label>
+                                    <div class="col-md-8">
+                                        <p class="form-control-static">
+                                            @Model.ProjectView.DistanceToJob miles
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        @using (Html.BeginForm("AddNewProject", "Quote", FormMethod.Post, new { @class = "form form-horizontal" }))
+                        {
+                            <div class="modal fade" id="NewProjectModal">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title">Add New Project</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-4">Project Name</label>
+                                                <div class="col-md-8">
+                                                    @Html.HiddenFor(x => x.QuotationId)
+                                                    @Html.HiddenFor(x => x.CustomerId)
+                                                    @Html.TextBoxFor(x => x.NewProjectView.ProjectName, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-4">Customer Ref Name</label>
+                                                <div class="col-md-8">
+                                                    @Html.TextBoxFor(x => x.NewProjectView.CustomerRefName, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-4">Market Segment</label>
+                                                <div class="col-md-8">
+                                                    <p class="form-control-static">
+                                                        @Html.DropDownListFor(x => x.NewProjectView.MarketSegmentId, Model.ChooseMarketSegment, new {@class="form-control" })
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-4">Sales Staff</label>
+                                                <div class="col-md-8">
+                                                    <p class="form-control-static">
+                                                        @Html.DropDownListFor(x => x.SalesStaffId, Model.ChooseSalesStaff, new {@class="form-control" })
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-4">Plant</label>
+                                                <div class="col-md-8">
+                                                    @Html.DropDownListFor(x => x.NewProjectView.PlantId, Model.ChoosePlants, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-4">Address</label>
+                                                <div class="col-md-8">
+                                                    @Html.TextBoxFor(x => x.NewProjectView.Address, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-4">City, State, Zip</label>
+                                                <div class="col-md-8">
+                                                    @Html.TextBoxFor(x => x.NewProjectView.City, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-4">To Job</label>
+                                                <div class="col-md-8">
+                                                    <div class="input-group">
+                                                        @Html.TextBoxFor(x => x.NewProjectView.ToJobMinutes, new { @class = "form-control" })
+                                                        <span class="input-group-addon">minutes</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-4">Wait on Job</label>
+                                                <div class="col-md-8">
+                                                    <div class="input-group">
+                                                        @Html.TextBoxFor(x => x.NewProjectView.WaitOnJob, new { @class = "form-control" })
+                                                        <span class="input-group-addon">minutes</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                    <label class="control-label col-md-4">Wash on Job</label>
+                                                <div class="col-md-8">
+                                                    <div class="input-group">
+                                                        @Html.TextBoxFor(x => x.NewProjectView.WashMinutes, new { @class = "form-control" })
+                                                        <span class="input-group-addon">minutes</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-4">Return</label>
+                                                <div class="col-md-8">
+                                                    <div class="input-group">
+                                                        @Html.TextBoxFor(x => x.NewProjectView.ReturnMinutes, new { @class = "form-control" })
+                                                        <span class="input-group-addon">minutes</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-4">Distance To Job</label>
+                                                <div class="col-md-8">
+                                                    <div class="input-group">
+                                                        @Html.TextBoxFor(x => x.NewProjectView.DistanceToJob, new { @class = "form-control" })
+                                                        <span class="input-group-addon">miles</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-4">Delivery Instructions</label>
+                                                <div class="col-md-8">
+                                                    @Html.TextAreaFor(x => x.NewProjectView.DeliveryInstructions, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Save changes</button>
+                                        </div>
+                                    </div>
+                                </div><!-- /.modal-content -->
+                            </div>
+                        }         
+                </div>
+            </div> 
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="heading3">
+                    <h4 class="panel-title">
+                        <a href="/Quote/AddEditQuoteDetails/@Model.QuotationId">Quote Information</a>
+                    </h4>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="heading4">
+                    <h4 class="panel-title">
+                        <a href="/Quote/AddEditQuoteAddons/@Model.QuotationId">Add-Ons</a>
+                    </h4>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="heading5">
+                    <h4 class="panel-title">
+                        <a href="/Quote/AddEditQuoteMixes/@Model.QuotationId">Mixes</a>
+                    </h4>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="heading6">
+                    <h4 class="panel-title">
+                        <a href="/Quote/ShowAuditLogs/@Model.QuotationId">Audit Logs</a>
+                    </h4>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            $(".primary_customer_select").change(function () {
+                customerId = $(this).val();
+                $(".customer_contact_customer_id").val(customerId);
+            });
+        });
+    </script>
+}
+
+

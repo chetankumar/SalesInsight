@@ -1,0 +1,1154 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.QuickQuoteModel
+@using RedHill.SalesInsight.Web.Html5.Helpers;
+@{
+    ViewBag.Title = "Quick Price Tool";
+    ViewBag.UsingMultiselect = true;
+    ViewBag.UsingDatePicker = true;
+    ViewBag.UsingDataTable = true;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var company = ConfigurationHelper.Company;
+    var access = ViewBag.AccessRule;
+}
+<div class="page-head hidden-print">
+    <h2>
+        <span><i class="fa fa-fw fa-flash"></i>Quick Price Tool</span>
+    </h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Quote/Index">Quotations</a></li>
+        <li>Lookup Price</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="block-flat">
+        <div class="panel-body form-horizontal hidden-print">
+            <div class="row well">
+                <div class="col-md-3 form-group">
+                    <label class="col-md-4 control-label text-danger" title="Changing the plant will reset the mix selection">Plant</label>
+                    <div class="col-md-8">
+                        @Html.DropDownList("Plant", Model.ChoosePlants, "Choose Plant", new { @class = "form-control plant_select" })
+                    </div>
+                </div>
+                <div class="col-md-4 form-group  col-md-offset-1">
+                    <label class="col-md-4 control-label">Pricing Month</label>
+                    <div class="col-md-8">
+                        @Html.TextBox("PricingMonth", DateTime.Today.ToString("MMM, yyyy"), new { @class = "form-control pricing_month_field monthpicker" })
+                    </div>
+                </div>
+                <div class="col-md-4 form-group col-md-offset-1">
+                    <label class="col-md-4 control-label">Market Segment</label>
+                    <div class="col-md-8">
+                        @Html.DropDownList("MarketSegment", Model.ChooseMarketSegments, "Choose Market Segment", new { @class = "form-control market_segment_select" })
+                    </div>
+                </div>
+                <div class="col-md-1 form-group">
+                    <p class="text-right">
+                        <button type="button" class="btn btn-default print_btn">
+                            <span class="fa fa-fw fa-print"></span>Print
+                        </button>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-primary  hidden-print">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <i class="fa fa-fw fa-cog"></i>Project Parameters
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-3 form-group">
+                    <label class="col-md-4 control-label">To Job</label>
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            @Html.TextBox("ToJob", "", new { @class = "form-control to_job_field" })
+                            <span class="input-group-addon">Mins</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 form-group">
+                    <label class="col-md-4 control-label">Wait</label>
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            @Html.TextBox("Wait", "", new { @class = "form-control wait_field" })
+                            <span class="input-group-addon">Mins</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 form-group">
+                    <label class="col-md-4 control-label">Wash</label>
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            @Html.TextBox("Wash", "", new { @class = "form-control wash_field" })
+                            <span class="input-group-addon">Mins</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 form-group">
+                    <label class="col-md-4 control-label">Return</label>
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            @Html.TextBox("Return", "", new { @class = "form-control return_field" })
+                            <span class="input-group-addon">Mins</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-primary mixes_section  hidden-print" style="display: none;">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <i class="fa fa-fw fa-list-ul"></i>Mix Selections
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-inline">
+                        <div class="col-md-3">
+                            <a href="javascript:void(0);" class="quick_add_mix btn btn-primary btn-sm add_mix_btn">
+                                <i class="fa fa-fw fa-plus"></i>Standard Mix
+                            </a>
+                            <a href="javascript:void(0);" class="show_formulation_search btn btn-primary btn-sm">
+                                <i class="fa fa-fw fa-search"></i>Standard Mix
+                            </a>
+                            &nbsp;
+                            &nbsp;
+                            &nbsp;
+                        </div>
+                        <div class="col-md-7 form-inline">
+                            @if (ViewBag.AccessRule.Enable5skPricing)
+                            {
+                                <div class="col-md-3">
+                                    <label class="checkbox">
+                                        <input type="checkbox" class="fsk_switch" checked="checked" />
+                                        Use Sack Pricing
+                                    </label>
+                                </div>
+                                <div class="col-md-3 fsk_related" style="">
+                                    @Html.DropDownList("FskPriceId", Model.Choose5skPricingPlant, new { @id = "PricingCity", @class = "form-control multiselect input-sm fsk_pricing_city_field" })
+                                </div>
+                                <div class="col-md-3 fsk_related" style="">
+                                    @Html.TextBox("FskBasePrice", "", "{0:N2}", new { @id = "FskBasePrice", @class = "form-control input-sm fsk_base_price_field" })
+                                </div>
+                            }
+                        </div>
+                        <div class="col-md-2">
+                            <a href="javascript:void(0);" class="btn btn-primary btn-sm refresh_all_btn">
+                                <i class="fa fa-refresh"></i>Refresh All
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="no-more-tables">
+                    <table class="table table-striped table-bordered" id="quoteMixTable">
+                        <thead>
+                            <tr>
+                                <th style="" class="fsk_related">Details</th>
+                                <th>Mix</th>
+                                <th style="min-width: 200px;">Desc</th>
+                                <th style="" class="fsk_related">Content</th>
+                                <th style="max-width: 50px">@company.DeliveryQtyUomSingular</th>
+                                <th>Price</th>
+                                <th>Unload</th>
+                                <th>Avg Load</th>
+                                @if (!access.HideSpread)
+                                {
+                                    <th>Spread</th>
+                                }
+                                @if (!access.HideContribution)
+                                {
+                                    <th>Cont</th>
+                                }
+                                @if (!access.HideProfit)
+                                {
+                                    <th>Profit</th>
+                                }
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="mix_table_body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="print_box">
+            <h3>Price Lookup</h3>
+            <table class="table-condensed">
+                <thead>
+                    <tr>
+                        <th colspan="4">Based On</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-right">Plant</td>
+                        <td class="plant_name_box"></td>
+                        <td class="text-right">Pricing Month</td>
+                        <td class="pricing_month_box"></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">Market Segment</td>
+                        <td class="market_segment_box"></td>
+                        <td class="text-right">5SK Pricing City</td>
+                        <td class="fsk_pricing_city_name_box"></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">5SK Base Price</td>
+                        <td class="fsk_base_price_box"></td>
+                        <td class="text-right"></td>
+                        <td class=""></td>
+                    </tr>
+                </tbody>
+            </table>
+            <br />
+            <table class="table-condensed">
+                <thead>
+                    <tr>
+                        <th>Mix</th>
+                        <th class="fsk_related">Content</th>
+                        <th>@company.DeliveryQtyUomSingular</th>
+                        <th>Price</th>
+                        <th>Unload</th>
+                        <th>Avg Load</th>
+                        <th>Spread</th>
+                        <th>Cont</th>
+                        <th>Profit</th>
+                    </tr>
+                </thead>
+                <tbody id="print_mixes_body"></tbody>
+            </table>
+            <br />
+        </div>
+
+        <div class="panel panel-primary mixes_section" style="display: none">
+            <div class="panel-heading hidden-print">
+                <div class="panel-title">
+                    <i class="fa fa-fw fa-bar-chart"></i>Quotation Summary and Analysis
+                </div>
+            </div>
+            <div class="panel-body">
+                <div id="summary_section">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="panel-title">Summary Statistics</div>
+                                </div>
+                                <table class="table-condensed">
+                                    <thead>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-right">To Job</td>
+                                            <td class="to_job_box"></td>
+                                            <td class="text-right">Total Volume</td>
+                                            <td class="quote_total_volume_box"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-right">Wait on Job</td>
+                                            <td class="wait_box"></td>
+                                            <td class="text-right">Total Revenue</td>
+                                            <td class="quote_total_revenue_box"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-right">Unload</td>
+                                            <td class="quote_total_unload_box"></td>
+                                            <td class="text-right">Total Profit</td>
+                                            <td class="quote_total_profit_box"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-right">Wash on Job</td>
+                                            <td class="wash_box"></td>
+                                            <td class="text-right">Avg Selling Price</td>
+                                            <td class="quote_total_avg_selling_price_box"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-right">Return</td>
+                                            <td class="return_box"></td>
+                                            <td class="text-right">Avg Load</td>
+                                            <td class="quote_total_avg_load_box"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="panel-title">Critical Performance Metrics</div>
+                                </div>
+                                <table class="table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Quote</th>
+                                            <th>Target</th>
+                                            <th>Variance</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-right">Spread</td>
+                                            <td class="quote_spread_box" data-district=""></td>
+                                            <td class="district_spread_box"></td>
+                                            <td class="quote_spread_variance"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-right">Contribution</td>
+                                            <td class="quote_contribution_box" data-district=""></td>
+                                            <td class="district_cont_box"></td>
+                                            <td class="quote_contribution_variance"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-right">Profit</td>
+                                            <td class="quote_profit_box" data-district=""></td>
+                                            <td class="district_profit_box"></td>
+                                            <td class="quote_profit_variance"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-right">@company.DeliveryQtyUomSingular/Hr</td>
+                                            <td class="quote_cyd_hour_box" data-district=""></td>
+                                            <td class="district_cyd_hr_box"></td>
+                                            <td class="quote_cyd_hour_variance"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="SearchMixFormulationModal" class="modal fade search-mix-formulation" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Search Mix Formulations</h4>
+            </div>
+            <div class="modal-body">
+                @Html.Partial("_SearchMixFormulations")
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div id="FskCalculationModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Sack Pricing Calculation Details</h4>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+@section Scripts{
+<link href="~/Content/no-more-tables.css" rel="stylesheet" />
+    <style type="text/css">
+        @@media screen {
+            .print_box {
+                display: none;
+            }
+        }
+
+        @@media print {
+            .print-hidden {
+                display: none;
+            }
+
+            #head-nav {
+                display: none;
+            }
+        }
+        button.multiselect{
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    </style>
+    <link href="~/Content/no-more-tables.css" rel="stylesheet" />
+    <script type="text/javascript" src="~/Scripts/search_mix_formulations.js?v1.5"></script>
+    <script type="text/javascript">
+        var qId = 0;
+        var warnBeforePlantChange = false;
+        var mixes = [];
+        var pricing_plant_id = null;
+        var market_segment_id = null;
+        var pricing_month = new Date();
+        var formulation_data = null;  // Container for the formulations json data.
+        var fixedCost = 0;
+        var plantTime = 0;
+        var projectTime = 0;
+        var plantUtilization = 1;
+        var plantVariableCost = 0;
+        var sample_row_html = '<tr class="mix_row" data-cyd-hour="" data-mix-cost="" data-addon-cost="" data-id="" id="" style="cursor: move;"> <td data-title="5sk" class="fsk_related" style="display:none"> <a href="" class="btn show_5sk_calc_btn btn-xs btn-primary"> <i class="fa fa-fw fa-list-ul"></i> </a> </td> <td data-title="Mix"> <select class="form-control input-sm mix_field multiselect" id="mix_selection" name="mix_selection"></select> </td> <td data-title="Description"><input class="desc_field input-sm form-control" value=""/></td> <td data-title="5sk Details" style="display:none" class="fsk_related"><span class="content_field"></span></td> <td data-title="Volume"><input class="volume_field input-sm form-control" value=""></td> <td  data-title="Price" data-title="edit"><input class="price_field input-sm form-control" value=""></td> <td  data-title="Unload"><input class="unload_field input-sm form-control" value=""></td> <td data-title="Avg Load"><input class="avg_load_field input-sm form-control" value=""></td> '
+            @if (!access.HideSpread)
+            {
+                <text>
+            + '<td data-title="Spread" class="spread_box"></td> '
+            </text>
+            }
+
+            @if (!access.HideContribution)
+            {
+                <text>
+            + '<td data-title="Contribution" class="contribution_box"></td> '
+            </text>
+            }
+
+            @if (!access.HideProfit)
+            {
+                <text>
+                + '<td data-title="Profit" class="profit_box"></td>'
+                </text>
+            }
+
+            + '<td data-title="Delete"> <a href="javascript:void(0);" class="btn btn-xs btn-danger delete_mix"> <i class="fa fa-trash fa-fw"></i> </a> </td> </tr>';
+        var mixIdOffset = 100;
+
+        var district_spread = 0;
+        var district_cont = 0;
+        var district_cyd_hr = 0;
+        var district_profit = 0;
+
+        /**** Page Setup ****/
+        function refreshAll5sk() {
+            $(".mix_row").each(function (index, row) {
+                row = $(row);
+                if ($(".fsk_switch").is(":checked")) {
+                    fetchFskPrice(row, "", false);
+                }
+                else {
+                    fetchNormalPrice(row, "", false);
+                }
+            });
+        }
+        $(document).ready(function () {
+
+            //Refresh all button functionality
+            $(".refresh_all_btn").click(function () {
+                refreshAllMixPrices();
+            });
+
+            // Setup the month picker
+            $(".monthpicker").datepicker({ format: "M, yyyy", viewMode: "months", minViewMode: "months", startDate: new Date() })
+                .on('changeDate', function (ev) { $(this).datepicker('hide'); refresh_pricing_month(); refreshAllMixPrices() });
+
+            // Initialize the 5sk Base Price
+            set_fsk_base_price();
+
+            // Update the pricing_month variable;
+            refresh_pricing_month();
+        });
+
+        /****  Bindings ****/
+
+        $(document).ready(function () {
+
+            // Change the wash, return, wait, tojob default fields.
+            $(".plant_select").change(function () {
+                var plantId = $(this).val();
+                pricing_plant_id = plantId;
+                params = { "plantId": plantId };
+                $.get("/Quote/GetPlantDefaults/", params, function (data) {
+                    data = JSON.parse(data);
+                    set_default_parameters(data["ToJob"], data["Wait"], data["Wash"], data["Return"], data["FixedPrice"], data["PlantTime"], data["Utilization"], data["VariableCost"]);
+                    set_default_pricing_city(data["FskId"], data["FskPrice"]);
+                    reset_mixes_form();
+                    warnBeforePlantChange = true;
+                });
+                formulation_data = null; // Need to reset the formulations on plant change. This will repopulate in the update_search_formualtion_modal call.
+                update_search_formulation_modal();
+                check_show_mixes();
+                reset_mixes_form();
+                refresh_print_box();
+            });
+
+            $(".print_btn").click(function () {
+                window.print();
+            });
+
+            // Update variables when market segment changes.
+            $(".market_segment_select").change(function () {
+                market_segment_id = $(this).val();
+                check_show_mixes();
+                refresh_print_box();
+            });
+
+
+            // Add a default mix when clicked.
+            $(".add_mix_btn").click(function () {
+                first_mix = formulation_data[0];
+                quick_add_mix(first_mix["FormulationId"]);
+            });
+
+            // Update the calculation if the mix row's fields change.
+            $("body").on("keyup", ".volume_field,.price_field,.unload_field,.avg_load_field", function () {
+                id = $(this).parents("tr").data("id");
+                refreshMixCalculations(id);
+            });
+
+            // Update the calculation if the mix row's fields change.
+            $("body").on("keyup", ".to_job_field,.wait_field,.wash_field,.return_field", function (e) {
+                calculate_project_time();
+                refreshAllMixPrices();
+                if ($.isNumeric($(".to_job_field").val())) {
+                    $(".to_job_box").html($(".to_job_field").val() + ' min');
+                } else {
+                    $(".to_job_box").html('NaN min');
+                }
+                if ($.isNumeric($(".wait_field").val())) {
+                    $(".wait_box").html($(".wait_field").val() + ' min');
+                } else {
+                    $(".wait_box").html('NaN min');
+                }
+                if ($.isNumeric($(".wash_field").val())) {
+                    $(".wash_box").html($(".wash_field").val() + ' min');
+                } else {
+                    $(".wash_box").html('NaN min');
+                }
+                if ($.isNumeric($(".return_field").val())) {
+                    $(".return_box").html($(".return_field").val() + ' min');
+                } else {
+                    $(".return_box").html('NaN min');
+                }
+            });
+
+            // Navigation using arrows on the mix row's fields.
+            $("body").on("keydown", ".volume_field,.price_field,.unload_field,.avg_load_field", function (e) {
+                if (e.keyCode == '38') {
+                    col = $(this).parents("td").first().index();
+                    $(this).parents("tr").first().prev().find("td:eq(" + col + ") input").focus();
+                }
+            });
+
+
+
+            // Mix Selection change bindings to update the price
+            $("body").on("change", ".mix_field", function (e) {
+                row = $(this).parents("tr");
+                old_value = $(this).data("oldVal");
+                if ($(".fsk_switch").is(":checked")) {
+                    fetchFskPrice(row, old_value, true);
+                }
+                else {
+                    fetchNormalPrice(row, old_value, true);
+                }
+            });
+
+            $("body").on("click", ".show_5sk_calc_btn", function (data) {
+                modal_div = $("#FskCalculationModal");
+                mix_id = $(this).parents("tr").find(".mix_field").val();
+                fsk_price_id = $(".fsk_pricing_city_field").val();
+                fsk_base_price = $(".fsk_base_price_field").val();
+                params = { "plantId": pricing_plant_id, "standardMixId": mix_id, "fskPriceId": fsk_price_id, "fskBasePrice": fsk_base_price, "pricingMonth": pricing_month.toISOString() };
+                $.get("/Quote/Show5skCalculationsForPlant", params, function (data) {
+                    modal_div.find(".modal-body").html(data);
+                    modal_div.modal("show");
+                });
+                return false;
+            });
+
+            // Mix Selection change bindings to update the price
+            $("body").on("click", ".delete_mix", function (e) {
+                row = $(this).parents("tr");
+                row_id = row.data("id");
+                delete_mix(row_id);
+                refreshQuoteStatistics();
+            });
+
+
+            // 5sk bindings on various elements
+            try {
+                $(".fsk_switch").change(function () {
+                    fskId = "";
+                    if ($(this).is(":checked")) {
+                        $(".fsk_related").show();
+                        fskId = $(".fsk_pricing_city_field").val();
+                    } else {
+                        $(".fsk_related").hide();
+                    }
+                    set_fsk_base_price(); // This also resets all the mix prices
+                });
+                // Update calculations when pricing city changes
+                $(".fsk_pricing_city_field").change(function () {
+                    set_fsk_base_price();
+                });
+                // Update the mix prices if the base price changes.
+                $(".fsk_base_price_field").blur(function () {
+                    refreshAllMixPrices();
+                });
+            } catch (ex) {
+                // If 5sk is not enabled for the user, this will not work.
+                console.log("no fsk-switch");
+            }
+
+        });
+
+        /****** Utils ******/
+
+        // Check if 5Sk is enabled.
+        function isFskEnabled() {
+            try {
+                return $(".fsk_switch").is(":checked");
+            } catch (ex) {
+                return false;
+            }
+        }
+
+        // Getter for the project time calculations. Ref set_default_parameters
+        function calculate_project_time() {
+            try {
+                projectTime =
+                        parseInt($(".to_job_field").val()) +
+                        parseInt($(".wait_field").val()) +
+                        parseInt($(".wash_field").val()) +
+                        parseInt($(".return_field").val());
+            }
+            catch (ex) {
+                alert("Error. Please check the Plant default parameters");
+            }
+        }
+
+        // Getter for params for addition of mix row.
+        function get_qq_params(formulationId) {
+            params = {};
+            params["plantId"] = pricing_plant_id;
+            params["marketSegmentId"] = market_segment_id;
+            params["formulationId"] = formulationId;
+            params["toJob"] = $(".to_job_field").val();
+            params["waitOnJob"] = $(".wait_field").val();
+            params["washMinutes"] = $(".wash_field").val();
+            params["returnMinutes"] = $(".return_field").val();
+            if (isFskEnabled()) {
+                params["fskPriceId"] = $(".fsk_pricing_city_field").val();
+                //params["fskPriceId"] = "0";
+            }
+            params["fskBasePrice"] = $(".fsk_base_price_field").val();
+            params["pricingMonth"] = pricing_month.toISOString();
+            return params;
+        }
+
+        // Show the mix section only when the plant id and market segment id is present.
+        function check_show_mixes() {
+            if (pricing_plant_id != null && market_segment_id != null) {
+                $(".mixes_section").show();
+                refresh_district_market_segment_targets();
+            } else {
+                $(".mixes_section").hide();
+            }
+        }
+
+        // Updates the select options for a mix row's mix-selection dropdown.
+        function populate_options(select) {
+            $(formulation_data).each(function (index, formulation) {
+                option = $("<option>");
+                option.text(formulation["MixNumber"] + "-" + formulation["SalesDesc"]);
+                option.val(formulation["MixId"]);
+                option.appendTo($(select));
+            });
+        }
+
+        function add_to_row(row, value, className) {
+            td = $("<td>");
+            td.text(value);
+            if (className != null) {
+                td.addClass(className);
+            }
+            td.appendTo($(row));
+        }
+        /***** Methods *****/
+
+        // Update the plant default values. Also calculates the project time.
+        function set_default_parameters(to_job, wait, wash, returnMins, fixed_cost, plant_time, utilization, variable_cost) {
+            $(".to_job_field").val(to_job);
+            $(".wait_field").val(wait);
+            $(".wash_field").val(wash);
+            $(".return_field").val(returnMins);
+
+            $(".to_job_box").text(to_job + " min");
+            $(".wait_box").text(wait + " min");
+            $(".wash_box").text(wash + " min");
+            $(".return_box").text(returnMins + " min");
+
+            fixedCost = fixed_cost;
+            plantTime = plant_time;
+            plantUtilization = utilization;
+            plantVariableCost = variable_cost;
+            calculate_project_time();
+            refreshAllMixPrices();
+        }
+
+        function set_default_pricing_city(fskId, fskPrice) {
+            $(".fsk_pricing_city_field").val(fskId + "");
+            //$(".fsk_pricing_city_field").multiselect("rebuild");
+            $(".fsk_base_price_field").val(fskPrice);
+        }
+
+        // Update the pricing month, remove all mixes, and refresh quote stats
+        function refresh_pricing_month() {
+            date_string = "3 " + $(".pricing_month_field").val();
+            new_date = new Date(date_string);
+            pricing_month = new_date;
+        }
+
+        // Remove all mixes and refresh quote stats
+        function reset_mixes_form() {
+            $(".mix_row").remove();
+            refreshAllMixPrices();
+            refreshQuoteStatistics();
+        }
+
+        // Removes the mix row. Does not auto-update calculations
+        function delete_mix(id) {
+            row = $("#row_" + id);
+            row.remove();
+            return true;
+        }
+
+        // Refreshes all the mix row prices and triggers the quote stat recalc
+        function refreshAllMixPrices() {
+            $(".mix_row").each(function (index, row) {
+                row = $(row);
+                if ($(".fsk_switch").is(":checked")) {
+                    fetchFskPrice(row, "", false);
+                }
+                else {
+                    fetchNormalPrice(row, "", false);
+                }
+            });
+            refresh_print_box();
+        }
+
+        // Refresh the 5sk Prices for the row
+        function fetchFskPrice(row, old_value, change_description) {
+            id = row.data("id");
+            standardMix = row.find(".mix_field").val();
+            element = row.find(".mix_field");
+            fskPriceId = $(".fsk_pricing_city_field").val();
+            fskBasePrice = $(".fsk_base_price_field").val();
+
+            params = { "plantId": pricing_plant_id, "standardMixId": standardMix, "fskPriceId": fskPriceId, "fskBasePrice": fskBasePrice, "pricingMonth": pricing_month.toISOString() }
+            $.get("/Quote/Find5skPriceForPlant", params, function (data) {
+                priceData = JSON.parse(data);
+                if (priceData.mixCost == 0) {
+                    alert("This mix has ingredients without costs, and cannot be added");
+                    element.val(old_value);
+                    $(element).multiselect('deselectAll', true);
+                    $(element).multiselect('deselect', standardMix);
+                    $(element).multiselect('select', old_value);
+                } else {
+                    row.data("mix-cost", priceData.mixCost);
+                    row.attr("data-mix-cost", priceData.mixCost);
+                    row.find(".price_field").val(priceData.price);
+                    if (change_description) {
+                        row.find(".desc_field").val(priceData.name);
+                    }
+                    row.find(".content_field").text(priceData.content);
+                    refreshMixCalculations(row.data("id"));
+                }
+            });
+        }
+
+        // Refresh the normal prices for the row
+        function fetchNormalPrice(row, old_value, change_description) {
+            id = row.data("id");
+            standardMix = row.find(".mix_field").val();
+            element = row.find(".mix_field");
+            $.get("/Quote/FindStandardMixCostForPlant", { "plantId": pricing_plant_id, "marketSegmentId": market_segment_id, "standardMixId": standardMix, "pricingMonth": pricing_month.toISOString() }, function (data) {
+                priceData = JSON.parse(data);
+                if (priceData.mixCost == 0) {
+                    alert("This mix has ingredients without costs, and cannot be added");
+                    element.val(old_value);
+                    $(element).multiselect('deselectAll', true);
+                    $(element).multiselect('deselect', standardMix);
+                    $(element).multiselect('select', old_value);
+                } else {
+                    row.data("mix-cost", priceData.mixCost);
+                    row.attr("data-mix-cost", priceData.mixCost);
+                    row.find(".price_field").val(priceData.price);
+                    if (change_description)
+                        row.find(".desc_field").val(priceData.name);
+                    refreshMixCalculations(row.data("id"));
+                }
+            });
+        }
+
+        // Set the 5sk Base Price, based on the current pricing city
+        function set_fsk_base_price() {
+            fskId = $(".fsk_pricing_city_field").val();
+            //console.log(fskId);
+            $.get("/Quote/Get5skBasePrice", { "fskPriceId": fskId }, function (data) {
+                $(".fsk_base_price_field").val(data);
+                refreshAllMixPrices();
+            });
+            refresh_print_box();
+        }
+
+        // Update dms target variables when plant / market segment combo changes.
+        function refresh_district_market_segment_targets() {
+            params = { "plantId": pricing_plant_id, "marketSegmentId": market_segment_id };
+            $.get("/Quote/GetDistrictDefaults", params, function (json) {
+                data = JSON.parse(json);
+                district_spread = data["Spread"];
+                district_cont = data["Contribution"];
+                district_cyd_hr = data["CYDHr"];
+                district_profit = data["Profit"];
+
+                $(".quote_spread_box").data("district", district_spread.toFixed(2));
+                @if (!access.HideSpread)
+                {
+                    <text>
+                $(".district_spread_box").text("$" + district_spread.toFixed(2));
+                </text>
+                }
+                else
+                {
+                     <text>
+                $(".district_spread_box").text("NA");
+                </text>
+                }
+
+                $(".quote_contribution_box").data("district", district_cont.toFixed(2));
+                @if (!access.HideContribution)
+                {
+                    <text>
+                $(".district_cont_box").text("$" + district_cont.toFixed(2));
+                </text>
+                }
+                else
+                {
+                     <text>
+                $(".district_cont_box").text("NA");
+                </text>
+                }
+
+                $(".quote_cyd_hour_box").data("district", district_cyd_hr.toFixed(2));
+                $(".district_cyd_hr_box").text(district_cyd_hr.toFixed(2));
+
+                $(".quote_profit_box").data("district", district_profit.toFixed(2));
+
+                @if (!access.HideProfit)
+                {
+                    <text>
+                $(".district_profit_box").text("$" + district_profit.toFixed(2));
+                </text>
+                }
+                else
+                {
+                    <text>
+                $(".district_profit_box").text("NA");
+                </text>
+                }
+            });
+        }
+
+        // Add a default mix
+        function quick_add_mix(mixFormulationId) {
+            fskId = null;
+            if (isFskEnabled()) {
+                fskId = $(".fsk_pricing_city_field").val();
+            }
+            params = get_qq_params(mixFormulationId);
+            if (mixFormulationId != null) {
+                params["formulationId"] = mixFormulationId;
+            }
+            console.log(params);
+            $.get("/Quote/QuickAddQuotationStandardMixForQQ", params, function (data) {
+                mixData = JSON.parse(data);
+                mixDataId = (mixIdOffset + 1);
+                mixIdOffset++; //Increment the mixIdOffset
+                sample_row = $(sample_row_html);
+                sample_row.attr("id", "row_" + mixDataId);
+                sample_row.attr("data-id", mixDataId);
+                sample_row.attr("data-mix-cost", mixData.Cost);
+                sample_row.attr("data-addon-cost", 0);
+                populate_options(sample_row.find("select")); // Fill the options in the sample row based on the formualation data.
+
+                sample_row.find("select").val(mixData.MixId);
+                sample_row.find(".desc_field").val(mixData.Description);
+                if (isFskEnabled()) {
+                    sample_row.find(".fsk_related").show();
+                }
+                sample_row.find(".content_field").text(mixData.Content);
+                sample_row.find(".volume_field").val(mixData.Volume.toFixed(0));
+                sample_row.find(".price_field").val(mixData.Price.toFixed(2));
+                sample_row.find(".unload_field").val(mixData.Unload.toFixed(0));
+                sample_row.find(".avg_load_field").val(mixData.AvgLoad.toFixed(0));
+
+                sample_row.find(".multiselect").multiselect({
+                    enableFiltering: true,
+                    includeSelectAllOption: true,
+                    numberDisplayed: 1,
+                    maxHeight: 200
+                });
+
+                $("#mix_table_body").append(sample_row);
+                refreshMixCalculations(mixDataId);
+            });
+        }
+
+        // Updates a mix row's calcualtion and triggers the quote stats recalc
+        function refreshMixCalculations(id) {
+            console.log("Refreshing for " + id);
+            row = $("#row_" + id);
+            mixCost = parseFloat((row.data("mix-cost") + "").removeCommas());
+            addonCost = parseFloat(row.data("addon-cost"));
+            volume = parseFloat(row.find(".volume_field").val().removeCommas());
+            price = parseFloat(row.find(".price_field").val().removeCommas());
+            unload = parseFloat(row.find(".unload_field").val().removeCommas());
+            avg_load = parseFloat(row.find(".avg_load_field").val().removeCommas());
+
+            spread = price - mixCost - addonCost;
+
+            num_trips = Math.ceil(volume / avg_load);
+            ticketed_time = plantTime + projectTime + unload;
+            roundtrip_time = ticketed_time / plantUtilization;
+            per_hour_rate = avg_load / roundtrip_time * 60;
+            total_time = roundtrip_time * num_trips;
+            total_delivery_cost = plantVariableCost * total_time;
+            variable_delivery_cost = total_delivery_cost / volume;
+            contribution = spread - variable_delivery_cost;
+            profit = contribution - fixedCost;
+            row.find(".spread_box").text("$" + spread.toFixed(2));
+            row.find(".contribution_box").text("$" + contribution.toFixed(2));
+            row.find(".profit_box").text("$" + profit.toFixed(2));
+            row.data("cyd-hour", per_hour_rate);
+            row.attr("data-cyd-hour", per_hour_rate);
+            refreshQuoteStatistics();
+        }
+
+        // Update the quote stats
+        function refreshQuoteStatistics() {
+            total_volume = 0;
+            $(".volume_field").each(function (index, obj) { total_volume = total_volume + parseFloat($(obj).val().removeCommas()) });
+
+            total_profit = 0;
+            total_revenue = 0;
+            total_avg_selling_price = 0;
+            total_load = 0;
+            total_avg_load = 0;
+
+            total_spread = 0;
+            total_contribution = 0;
+            total_profit = 0;
+            total_cyd_hour = 0;
+            total_unload = 0;
+
+            $(".mix_row").each(function (index, html_row) {
+                row = $(html_row);
+                cyd_hour = parseFloat(row.data("cyd-hour"));
+                volume = parseFloat(row.find(".volume_field").val().removeCommas());
+                price = parseFloat(row.find(".price_field").val().removeCommas());
+                unload = parseFloat(row.find(".unload_field").val().removeCommas());
+                avg_load = parseFloat(row.find(".avg_load_field").val().removeCommas());
+
+                spread = parseFloat(row.find(".spread_box").text().removeCommas().replace(/\$/g, ''));
+                profit = parseFloat(row.find(".profit_box").text().removeCommas().replace(/\$/g, ''));
+                contribution = parseFloat(row.find(".contribution_box").text().removeCommas().replace(/\$/g, ''));
+
+                total_profit += profit * volume;
+                total_spread += spread * volume;
+                total_contribution += contribution * volume;
+                total_revenue += price * volume;
+                total_load += avg_load * volume;
+                total_cyd_hour += cyd_hour * volume;
+                total_unload += unload * volume;
+            });
+
+            total_avg_load = total_load / total_volume;
+            total_avg_selling_price = total_revenue / total_volume;
+            total_cyd_hour = total_cyd_hour / total_volume;
+            total_unload = total_unload / total_volume;
+
+            $(".quote_total_volume_box").text(Number(total_volume.toFixed(0)).toLocaleString() + " @company.DeliveryQtyUomPlural");
+            $(".quote_total_revenue_box").text("$" + Number(total_revenue.toFixed(2)).toLocaleString());
+            @if (!access.HideProfit)
+            {
+                <text>
+            $(".quote_total_profit_box").text("$" + Number(total_profit.toFixed(2)).toLocaleString());
+            </text>
+            }
+            else
+            {
+                <text>
+            $(".quote_total_profit_box").text("NA");
+            </text>
+            }
+            $(".quote_total_avg_selling_price_box").text("$" + total_avg_selling_price.toFixed(2).toLocaleString());
+            $(".quote_total_avg_load_box").text(total_avg_load.toFixed(0).toLocaleString() + " @company.DeliveryQtyUomPlural");
+            $(".quote_total_unload_box").text(total_unload.toFixed(0) + " min");
+
+            district_default = parseFloat($(".quote_spread_box").data("district"));
+            quote_spread = total_spread / total_volume;
+            @if (!access.HideSpread)
+            {
+                <text>
+            $(".quote_spread_box").text("$" + quote_spread.toFixed(2));
+            </text>
+            }
+            else
+            {
+                <text>
+            $(".quote_spread_box").text("NA");
+            </text>
+            }
+            quote_spread_variance = quote_spread - district_default;
+            cssClass = quote_spread_variance < 0 ? "red" : "green";
+
+            @if (!access.HideSpread)
+            {
+                <text>
+            $(".quote_spread_variance").text("$" + quote_spread_variance.toFixed(2)).removeClass("red").removeClass("green").addClass(cssClass);
+            </text>
+            }
+            else
+            {
+                <text>
+            $(".quote_spread_variance").text("NA");
+            </text>
+            }
+
+            district_default = parseFloat($(".quote_contribution_box").data("district"));
+            quote_contribution = total_contribution / total_volume;
+            @if (!access.HideContribution)
+            {
+                <text>
+            $(".quote_contribution_box").text("$" + quote_contribution.toFixed(2));
+            </text>
+            }
+            else
+            {
+                <text>
+            $(".quote_contribution_box").text("NA");
+            </text>
+            }
+            quote_contribution_variance = quote_contribution - district_default;
+            cssClass = quote_contribution_variance < 0 ? "red" : "green";
+            @if (!access.HideContribution)
+            {
+                <text>
+            $(".quote_contribution_variance").text("$" + quote_contribution_variance.toFixed(2)).removeClass("red").removeClass("green").addClass(cssClass);
+            </text>
+            }
+            else
+            {
+                <text>
+            $(".quote_contribution_variance").text("NA");
+            </text>
+            }
+
+            district_default = parseFloat($(".quote_profit_box").data("district"));
+            quote_profit = total_profit / total_volume;
+            @if (!access.HideProfit)
+            {
+                <text>
+            $(".quote_profit_box").text("$" + quote_profit.toFixed(2));
+            </text>
+            }
+            else
+            {
+                <text>
+            $(".quote_profit_box").text("NA");
+            </text>
+            }
+            quote_profit_variance = quote_profit - district_default;
+            cssClass = quote_profit_variance < 0 ? "red" : "green";
+            @if (!access.HideProfit)
+            {
+                <text>
+            $(".quote_profit_variance").text("$" + quote_profit_variance.toFixed(2)).removeClass("red").removeClass("green").addClass(cssClass);
+            </text>
+            }
+            else
+            {
+                <text>
+            $(".quote_profit_variance").text("NA");
+            </text>
+            }
+
+            district_default = parseFloat($(".quote_cyd_hour_box").data("district"));
+            quote_cyd_hour = total_cyd_hour;
+            $(".quote_cyd_hour_box").text(quote_cyd_hour.toFixed(2) + "");
+            quote_cyd_hour_variance = quote_cyd_hour - district_default;
+            cssClass = quote_cyd_hour_variance < 0 ? "red" : "green";
+            $(".quote_cyd_hour_variance").text(quote_cyd_hour_variance.toFixed(2) + "").removeClass("red").removeClass("green").addClass(cssClass);
+
+            refresh_print_box();
+        }
+
+        // Refresh the Print Box
+        function refresh_print_box() {
+            $(".plant_name_box").text($(".plant_select").find("option:selected").text());
+            $(".market_segment_box").text($(".market_segment_select").find("option:selected").text());
+            $(".pricing_month_box").text($(".pricing_month_field").val());
+            if (isFskEnabled()) {
+                $(".fsk_pricing_city_name_box").text($(".fsk_pricing_city_field").find("option:selected").text());
+                $(".fsk_base_price_box").text("$" + $(".fsk_base_price_field").val());
+            } else {
+                $(".fsk_pricing_city_name_box").text("-NA-");
+                $(".fsk_base_price_box").text("-NA-");
+            }
+
+            $("#print_mixes_body").find("tr").remove(); // Clear out the old rows.
+            $(".mix_row").each(function (index, row) { // Star filling the new rows.
+                new_row = $("<tr>");
+                add_to_row(new_row, $(row).find(".mix_field").find("option:selected").text());
+
+                add_to_row(new_row, $(row).find(".content_field").text(), "fsk_related");
+
+                add_to_row(new_row, $(row).find(".volume_field").val());
+                add_to_row(new_row, $(row).find(".price_field").val());
+                add_to_row(new_row, $(row).find(".unload_field").val());
+                add_to_row(new_row, $(row).find(".avg_load_field").val());
+
+                @if (!access.HideSpread)
+                {
+                    <text>
+                add_to_row(new_row, $(row).find(".spread_box").text());
+                </text>
+                }
+                @if (!access.HideContribution)
+                {
+                    <text>
+                add_to_row(new_row, $(row).find(".contribution_box").text());
+                </text>
+                }
+                @if (!access.HideProfit)
+                {
+                   <text>
+                add_to_row(new_row, $(row).find(".profit_box").text());
+                </text>
+                }
+
+                new_row.appendTo($("#print_mixes_body"));
+            });
+
+            if ($(".fsk_switch").is(":checked")) {
+                $(".fsk_related").show();
+            } else {
+                $(".fsk_related").hide();
+            }
+
+        }
+
+    </script>
+}

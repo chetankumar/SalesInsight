@@ -1,0 +1,111 @@
+﻿<div class="mix_formulation_loader">
+    <div class="inner">
+        <h4 class="text-center">
+            <i class="fa fa-spinner fa-spin"></i><span>Loading...</span>
+        </h4>
+    </div>
+</div>
+<div class="panel-body form-horizontal search_formulation_form" data-target="">
+    <div class="psi_filter col-md-6 form-group">
+        <label class="control-label col-md-4">PSI</label>
+        <div class="col-md-8">
+            <select name="psi" multiple="multiple" class="form-control multiselect"></select>
+        </div>
+    </div>
+    <div class="air_filter col-md-6 form-group">
+        <label class="control-label col-md-4">Air</label>
+        <div class="col-md-8">
+            <select name="airs" multiple="multiple" class="form-control multiselect"></select>
+        </div>
+    </div>
+    <div class="slump_filter col-md-6 form-group">
+        <label class="control-label col-md-4">Slump</label>
+        <div class="col-md-8">
+            <select name="slumps" multiple="multiple" class="form-control multiselect"></select>
+        </div>
+    </div>
+    <div class="md1_filter col-md-6 form-group">
+        <label class="control-label col-md-4">@Model.MD1String</label>
+        <div class="col-md-8">
+            <select name="md1s" multiple="multiple" class="form-control multiselect"></select>
+        </div>
+    </div>
+    <div class="md2_filter col-md-6 form-group">
+        <label class="control-label col-md-4">@Model.MD2String</label>
+        <div class="col-md-8">
+            <select name="md2s" multiple="multiple" class="form-control multiselect"></select>
+        </div>
+    </div>
+    <div class="md3_filter col-md-6 form-group">
+        <label class="control-label col-md-4">@Model.MD3String</label>
+        <div class="col-md-8">
+            <select name="md3s" multiple="multiple" class="form-control multiselect"></select>
+        </div>
+    </div>
+    <div class="md4_filter col-md-6 form-group">
+        <label class="control-label col-md-4">@Model.MD4String</label>
+        <div class="col-md-8">
+            <select name="md4s" multiple="multiple" class="form-control multiselect"></select>
+        </div>
+    </div>
+    <div class="ash_filter col-md-6 form-group">
+        <label class="control-label col-md-4" title="%Ash = Ash / Total Cementitious">Ash%</label>
+        <div class="col-md-8">
+            <select name="ashes" multiple="multiple" class="form-control multiselect"></select>
+        </div>
+    </div>
+    <div class="fine_agg_filter col-md-6 form-group">
+        <label class="control-label col-md-4" title=" [%Fine Agg = Sand / (Rock + Sand)">Fine Agg%</label>
+        <div class="col-md-8">
+            <select name="fineAggs" multiple="multiple" class="form-control multiselect"></select>
+        </div>
+    </div>
+    <div class="sacks_filter col-md-6 form-group">
+        <label class="control-label col-md-4" title="Sacks = Total Cementitious / 94lbs">Sacks</label>
+        <div class="col-md-8">
+            <select name="sacks" multiple="multiple" class="form-control multiselect"></select>
+        </div>
+    </div>
+    <div class="included_filter col-md-6 form-group">
+        <label class="control-label col-md-4">Contains</label>
+        <div class="col-md-8">
+            <select name="rawMaterialsIncluded" multiple="multiple" class="form-control multiselect"></select>
+        </div>
+    </div>
+    <div class="excluded_filter col-md-6 form-group">
+        <label class="control-label col-md-4">Doesn't contain</label>
+        <div class="col-md-8">
+            <select name="rawMaterialsExcluded" multiple="multiple" class="form-control multiselect"></select>
+        </div>
+    </div>
+    <div class="col-md-12 text-center">
+        <button class="search_mix_formulations_btn btn btn-primary"><i class="fa fa-spinner fa-spin searching_mixes" style="display: none"></i>Filter</button>
+        <button class="reset_mix_formulations_btn btn btn-warning"><i class="fa fa-spinner fa-spin resetting_mixes" style="display: none"></i>Reset </button>
+    </div>
+</div>
+
+<table class="" id="search_mix_formulation_table" style="display:none;">
+    <thead>
+        <tr>
+            <th class="">Mix Number</th>
+            <th class="">Sales Desc</th>
+            <th class="">Ash%</th>
+            <th class="">Fine Agg%</th>
+            <th class="">Sacks</th>
+            <th class="">Air</th>
+            <th class="">Slump</th>
+            <th class="">PSI</th>
+            <th class="">@Model.MD1String</th>
+            <th class="">@Model.MD2String</th>
+            <th class="">@Model.MD3String</th>
+            <th class="">@Model.MD4String</th>
+            <th class="">Cost</th>
+            <th class="search_mix_num_col">Select</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+
+
+

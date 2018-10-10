@@ -1,0 +1,4 @@
+﻿-- 2017-04-19 New Column Added to Role Access --- Avnish
+
+Alter Table RoleAccess 
+Add [HidePrice] [bit] NULL 

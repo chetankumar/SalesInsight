@@ -1,0 +1,36 @@
+﻿/****** Object:  Table [dbo].[BlockProductPriceProjection]    Script Date: 28/03/2017 23:03:54 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[BlockProductPriceProjection](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[BlockProductId] [bigint] NOT NULL,
+	[PlantId] [int] NOT NULL,
+	[ChangeDate] [datetime] NULL,
+	[Price] [decimal](18, 2) NULL,
+	[Active] [bit] NULL,
+	[CreatedAt] [datetime] NULL,
+ CONSTRAINT [PK_BlockProductPriceProjection] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[BlockProductPriceProjection]  WITH CHECK ADD  CONSTRAINT [FK_BlockProductPriceProjection_BlockProduct] FOREIGN KEY([BlockProductId])
+REFERENCES [dbo].[BlockProduct] ([Id])
+GO
+
+ALTER TABLE [dbo].[BlockProductPriceProjection] CHECK CONSTRAINT [FK_BlockProductPriceProjection_BlockProduct]
+GO
+
+ALTER TABLE [dbo].[BlockProductPriceProjection]  WITH CHECK ADD  CONSTRAINT [FK_BlockProductPriceProjection_Plant] FOREIGN KEY([PlantId])
+REFERENCES [dbo].[Plant] ([PlantId])
+GO
+
+ALTER TABLE [dbo].[BlockProductPriceProjection] CHECK CONSTRAINT [FK_BlockProductPriceProjection_Plant]
+GO

@@ -1,0 +1,85 @@
+﻿--DONE For::
+--TestSCSReadyMixInsight
+--CMXTestReadyMixInsight
+
+---------------------------New Column added Sort--------------Avnish
+ALTER TABLE Addon
+ADD [Sort] [decimal](6, 2) NULL
+
+ALTER TABLE QuotationAddon
+ADD [Sort] [decimal](6, 2) NULL
+
+ALTER TABLE QuotationAggregateAddon
+ADD [Sort] [decimal](6, 2) NULL
+
+ALTER TABLE QuotationBlockAddon
+ADD [Sort] [decimal](6, 2) NULL
+
+--------------------------------------------------------------QC Requirement---Avnish
+
+ALTER TABLE [dbo].[District] ADD [QCRequirement] [bit] NULL
+
+-----------------------------New Qc_Requirement Table
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[QC_Requirements](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](100) NULL,
+	[Active] [bit] NULL,
+ CONSTRAINT [PK_QC_Requirements] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+---------------------------------------------------- New BackupPlantId Column in Project Table
+ALTER TABLE [dbo].[Project] ADD [BackupPlantId] [bigint] NULL
+
+------------------------------------------------------------------------New Project Qc Requirement Table
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[ProjectQCRequirement](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[ProjectId] [int] NOT NULL,
+	[QCRequirementId] [bigint] NOT NULL,
+ CONSTRAINT [PK_ProjectQCRequirement] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[ProjectQCRequirement]  WITH CHECK ADD  CONSTRAINT [FK_ProjectQCRequirement_Project] FOREIGN KEY([ProjectId])
+REFERENCES [dbo].[Project] ([ProjectId])
+GO
+
+ALTER TABLE [dbo].[ProjectQCRequirement] CHECK CONSTRAINT [FK_ProjectQCRequirement_Project]
+GO
+
+ALTER TABLE [dbo].[ProjectQCRequirement]  WITH CHECK ADD  CONSTRAINT [FK_ProjectQCRequirement_QC_Requirements] FOREIGN KEY([QCRequirementId])
+REFERENCES [dbo].[QC_Requirements] ([Id])
+GO
+
+ALTER TABLE [dbo].[ProjectQCRequirement] CHECK CONSTRAINT [FK_ProjectQCRequirement_QC_Requirements]
+GO
+
+
+
+
+

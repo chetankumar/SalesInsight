@@ -1,0 +1,14 @@
+﻿.lost_jobs_color {
+    color:#700a17;
+    opacity:0.5;
+}
+.won_jobs_color {
+    color:#1a9850;
+    opacity:0.5;
+}
+.our_plants_color {
+    color:#700a17;
+}
+.project_link {
+    cursor:pointer;
+}

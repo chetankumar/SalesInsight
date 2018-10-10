@@ -1,0 +1,308 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ManageRawMaterials
+@{
+    ViewBag.Title = "Raw Materials";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.UsingDataTable = true;
+    bool aujsAPIEnabled = (ViewBag.AUJSAPIEnabled != null && ViewBag.AUJSAPIEnabled == true);
+}
+<div class="page-head">
+    <h2>Manage Sales Infrastructure</h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Home/Settings">Settings</a></li>
+        <li><a href="/Home/Companies">Manage Sales Infrastructure</a></li>
+        <li class="active">Raw Materials</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    @Html.Partial("_CompanyTabs", "rawmaterials")
+    <div class="tab-content">
+        <div class="panel-body">
+            @using (@Html.BeginForm("ManageRawMaterials", "Admin", FormMethod.Post, new { @id = "FilterForm" }))
+            {
+                <div class="col-md-2">
+                    <label class="checkbox">
+                        @Html.CheckBoxFor(x => x.ShowInactives) Show Inactives
+                    </label>
+                </div>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        @Html.TextBoxFor(x => x.SearchTerm, new { @class = "form-control" })
+                        <div class="input-group-btn">
+                            <button class="btn btn-primary reset_page">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    @if (ViewBag.AccessRule.CanUploadRawMaterialCost)
+                    {
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#upload_excel_modal" @(aujsAPIEnabled ? "disabled" : "")><span class="fa fa-fw fa-upload"></span>Upload Costs</button>
+                    }
+                    @if (ViewBag.AccessRule.HasRawMaterialsAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                    {
+                        if (!aujsAPIEnabled)
+                        {
+                            <button type="button" class="btn btn-primary reset" data-toggle="modal" data-target="#add_edit_modal"><span class="glyphicon glyphicon-plus"></span>Raw Material</button>
+                        }
+                        <a href="/Admin/ManageRawMaterialTypes" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span>Raw Material Types</a>
+                    }
+                </div>
+            }
+        </div>
+        <table class="data_table table table-bordered table-striped no_search">
+            <thead>
+                <tr>
+                    <th>Material Code</th>
+                    <th>Description</th>
+                    <th>Material Type</th>
+                    <th>Measurement Type</th>
+                    @if (ViewBag.AccessRule.Enable5skPricing)
+                    {
+                        <th>Sack-Pricing Markup</th>
+                        <th>Short Code</th>
+                    }
+                    <th>Active</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (RedHill.SalesInsight.DAL.RawMaterial mat in Model.RawMaterials)
+                {
+                    <tr>
+                        <td>@mat.MaterialCode</td>
+                        <td>@mat.Description</td>
+                        <td>@mat.RawMaterialType.Name</td>
+                        <td>@mat.MeasurementType</td>
+                        @if (ViewBag.AccessRule.Enable5skPricing)
+                        {
+                            <td>@(mat.FSKMarkup != null ? mat.FSKMarkup.GetValueOrDefault() + "%" : "") </td>
+                            <td>@mat.FSKCode</td>
+                        }
+                        <td>
+                            @if (mat.Active)
+                            {<span class="glyphicon glyphicon-ok"></span> }
+                        </td>
+
+                        <td>
+                            @if (ViewBag.AccessRule.HasRawMaterialsAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                            {
+                                <a href="/Admin/ManageRawMaterials/@mat.Id" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-edit"></span></a>
+                            }
+                            <a target="_blank" href="/Admin/ManageRawMaterialProjections/@mat.Id" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-usd"></span></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@using (Html.BeginForm("UploadRawMaterialCosts", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="modal md-modal colored-header fade" data-backdrop="static" id="upload_excel_modal">
+        <div class="modal-dialog">
+            <div class="md-content modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-backdrop="static" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Upload Raw Material Costs</h4>
+                </div>
+                <div class="modal-body form">
+                    <div class="alert alert-info">
+                        Please upload the Excel file in <a class="label label-primary" href="/Admin/RawMaterialPricingExcel">this format</a> . Once uploaded, the application will return the Excel file to you with the import success summary against each row.
+                    </div>
+                    <div class="form-group">
+                        <input type="file" name="excel" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-flat md-close" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary btn-flat">Upload</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@using (Html.BeginForm("UpdateRawMaterial", "Admin", FormMethod.Post, new { id = "UpdateRawMaterialForm", data_parsley_validate = "true" }))
+{
+    @Html.HiddenFor(x => x.SelectedRawMat.DispatchId)
+    <div class="modal md-modal colored-header fade" data-backdrop="static" id="add_edit_modal">
+        <div class="modal-dialog">
+            <div class="md-content modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-backdrop="static" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">@(Model.SelectedRawMaterialId > 0 ? "Update Raw Material" : "Add Raw Material")</h4>
+                </div>
+                <div class="modal-body form">
+                    @Html.Partial("_ErrorView")
+                    <div class="form-group">
+                        <label>Material Code</label>
+                        @Html.HiddenFor(x => x.SelectedRawMaterialId)
+                        @if (Model.SelectedRawMat.Id > 0)
+                        {
+                            @Html.TextBoxFor(x => x.SelectedRawMat.MaterialCode, new { @class = "form-control", data_parsley_trigger = "change", required = "true", @readonly = "readonly" })
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(x => x.SelectedRawMat.MaterialCode, new { @class = "form-control", data_parsley_trigger = "change", required = "true" })
+                        }
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        @if (!aujsAPIEnabled)
+                        {
+                            @Html.TextBoxFor(x => x.SelectedRawMat.Description, new { @class = "form-control" })
+                        }
+                        else
+                        {
+                            <div class="form-control-static">
+                                @Html.HiddenFor(model => model.SelectedRawMat.Description)
+                                @Model.SelectedRawMat.Description
+                            </div>
+                        }
+                    </div>
+                    <div class="form-group">
+                        <label>Material Type</label>
+                        @if (!aujsAPIEnabled)
+                        {
+                            @Html.DropDownListFor(x => x.SelectedRawMat.RawMaterialTypeId, Model.SelectedRawMat.ChooseRawMaterialTypes, "", new { @class = "form-control", data_parsley_trigger = "change", required = "true" })
+                        }
+                        else
+                        {
+                            <div class="form-control-static">
+                                @Html.HiddenFor(x => x.SelectedRawMat.RawMaterialTypeId)
+                                @(Model.SelectedRawMat.ChooseRawMaterialTypes.Where(x => x.Value == Model.SelectedRawMat.RawMaterialTypeId.ToString()).Select(x => x.Text).FirstOrDefault())
+
+                            </div>
+                        }
+                    </div>
+                    <div class="form-group">
+                        <label>Measurement Type</label>
+                        @if (!aujsAPIEnabled)
+                        {
+                            @Html.DropDownListFor(x => x.SelectedRawMat.MeasurementType, Model.SelectedRawMat.ChooseMeasurementTypes, new { @class = "form-control", data_parsley_trigger = "change", required = "true" })
+                        }
+                        else
+                        {
+                            <div class="form-control-static">
+                                @Html.HiddenFor(x => x.SelectedRawMat.MeasurementType)
+                                @(Model.SelectedRawMat.MeasurementType)
+                            </div>
+                        }
+                    </div>
+                    <div class="form-group fsk_related">
+                        <label>Sack-Pricing Markup (% of landed cost)</label>
+                        @Html.TextBoxFor(x => x.SelectedRawMat.FskMarkup, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group fsk_related">
+                        <label>Short Code (Used for 'Content code' on Edit Quote Page)</label>
+                        @Html.TextBoxFor(x => x.SelectedRawMat.FskCode, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @if (!aujsAPIEnabled)
+                        {
+                            <label>@Html.CheckBoxFor(x => x.SelectedRawMat.Active) Active</label>
+                        }
+                        else
+                        {
+                            <label>@Html.CheckBoxFor(x => x.SelectedRawMat.Active, new { @disabled = "disabled" }) Active</label>
+                            @Html.HiddenFor(x => x.SelectedRawMat.Active)
+                        }
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="/Admin/ManageRawMaterials" class="btn btn-default btn-flat">Cancel</a>
+                    <button type="submit" class="btn btn-primary btn-flat">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var showModal = @(Model.ShowModal ? "true" : "false");
+            if (showModal){
+                $('#add_edit_modal').modal({
+                    "show":true
+                })
+            }
+
+            var showFskRelated = @(Model.SelectedRawMat.RawMaterialType != null ? (Model.SelectedRawMat.RawMaterialType.IncludeInFSK.GetValueOrDefault() ? "true" : "false") : "true");
+
+            if (showFskRelated == true){
+                $(".fsk_related").slideDown();
+            }else{
+                $(".fsk_related").slideUp();
+            }
+
+            $("#SelectedRawMat_RawMaterialTypeId").change(function(){
+                rawMatId = $(this).val();
+                $.get("/Admin/GetFSKDetail",{"Id":rawMatId},function(data){
+                    if (data == "SHOW"){
+                        $(".fsk_related").slideDown();
+                    }else{
+                        $(".fsk_related").slideUp();
+                    }
+                });
+            });
+
+            $(".reset").click(function() {
+                $("#UpdateRawMaterialForm").find("input[type=text],input[type=hidden],select,textarea").val("");
+                $("#UpdateRawMaterialForm").find("input[type=text],input[type=hidden],select,textarea").removeClass("input-validation-error");
+                $("#UpdateRawMaterialForm").find(".alert").remove();
+            });
+
+            $(".reset_page").click(function(){
+                $("#CurrentPage").val(0);
+                $("#FilterForm").submit();
+            });
+
+            $("#ShowInactives").change(function(e){
+                $("#FilterForm").submit();
+            });
+
+            $("#rows_per_page").change(function (e) {
+                $("#RowsPerPage").val($(this).val());
+                $("#CurrentPage").val(0);
+                $("#FilterForm").submit();
+            });
+
+            $("#ShowInactives").change(function (e) {
+                $("#filter-form").submit();
+            });
+
+            $(".previous a").click(function (e) {
+                current = parseInt($("#CurrentPage").val());
+                if (current > 0) {
+                    $("#CurrentPage").val(current-1);
+                    $("#FilterForm").submit();
+                }
+                return false;
+            });
+
+            $("a.pageNumber").click(function (e) {
+                start = (parseInt($(this).text())-1);
+                if (start >= 0) {
+                    $("#CurrentPage").val(start);
+                    $("#FilterForm").submit();
+                }
+                return false;
+            });
+
+            $(".next a").click(function (e) {
+                current = parseInt($("#CurrentPage").val());
+                $("#CurrentPage").val(current+1);
+                $("#FilterForm").submit();
+                return false;
+            });
+
+        });
+    </script>
+}
+
+
+
+

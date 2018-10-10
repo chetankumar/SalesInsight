@@ -1,0 +1,603 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.PipelineFilter
+@using RedHill.SalesInsight.Web.Html5.Helpers;
+@{
+    ViewBag.Title = "Pipeline";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.UsingFixedHeaderTable = true;
+    ViewBag.UsingMultiselect = true;
+    var aggregateSelected = (Model.ProductTypeId == RedHill.SalesInsight.DAL.DataTypes.ProductType.Aggregate);
+    var blockSelected = (Model.ProductTypeId == RedHill.SalesInsight.DAL.DataTypes.ProductType.Block);
+}
+<div class="page-head">
+    <h2>Pipeline <a href="#" class="reload_page"><i class="fa fa-refresh"></i></a></h2>
+    <ol class="breadcrumb">
+        <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+        <li class="active">Pipeline</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    @{var opt = (List<string>)Session["PipelineOptionalColumns"];}
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+            @{TempData["Error"] = null;}
+        </div>
+                }
+    @using (Html.BeginForm("Pipeline", "Home", FormMethod.Post, new { @id = "filter-form" }))
+    {
+        <div class="block-flat">
+            <div class="row">
+                <div class="col-md-2">
+                    @Html.HiddenFor(m => m.ProductTypeId)
+                    @Html.HiddenFor(m => m.RowsPerPage)
+                    @Html.HiddenFor(m => m.CurrentStart)
+                    @Html.HiddenFor(m => m.DeletePipelineId)
+                    <div class="btn-group">
+                        <a class="btn btn-primary" href="/Home/Pipeline">All</a>
+                        <a class="btn btn-primary filter-btn">
+                            <span class="glyphicon glyphicon-filter"></span>
+                            Filter
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-inline">
+                        <div class="checkbox">
+                            <label>
+                                @Html.CheckBoxFor(m => m.ShowInactives) Show Inactives
+                            </label>
+                        </div>
+                        @if (RedHill.SalesInsight.Web.Html5.Helpers.ConfigurationHelper.AggregateEnabled || RedHill.SalesInsight.Web.Html5.Helpers.ConfigurationHelper.BlockEnabled)
+                        {
+                            @Html.DropDownListFor(x => x.SelectProductTypeId, new SelectList(Model.ProductTypes, "Value", "Text"), "---All Products---", new { @style = "margin-left: 5px;", @class = "form-control product_toggle" })
+                        }
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <select multiple="multiple" class="pipeline_optional_columns_select form-control multiselect" placeholder="Add Columns">
+                        <option @(opt.Contains("Address") ? "selected=selected" : "") value="Address">Address</option>
+                        <option @(opt.Contains("WinningCompetitor") ? "selected=selected" : "") value="WinningCompetitor">Bid Winner</option>
+                        <option @(opt.Contains("City") ? "selected=selected" : "") value="City">City</option>
+                        <option @(opt.Contains("CompetitorNamesList") ? "selected=selected" : "") value="CompetitorNamesList">Competitors</option>
+                        <option @(opt.Contains("ContractorName") ? "selected=selected" : "") value="ContractorName">Contractor</option>
+                        <option @(opt.Contains("CustomerJobRef") ? "selected=selected" : "") value="CustomerJobRef">Customer Job Ref</option>
+                        <option @(opt.Contains("EditDate") ? "selected=selected" : "") value="EditDate">Last Edit</option>
+                        <option @(opt.Contains("NoteCount") ? "selected=selected" : "") value="NoteCount">Notes</option>
+                        <option @(opt.Contains("PriceLost") ? "selected=selected" : "") value="PriceLost">Price Lost</option>
+                        <option @(opt.Contains("ProjectUploadId") ? "selected=selected" : "") value="ProjectUploadId">Project Upload Id</option>
+                        <option @(opt.Contains("QuoteCount") ? "selected=selected" : "") value="QuoteCount">Quotes</option>
+                        <option @(opt.Contains("SackPrice") ? "selected=selected" : "") value="SackPrice">Sack Price</option>
+                        <option @(opt.Contains("State") ? "selected=selected" : "") value="State">State</option>
+                        <option @(opt.Contains("Zipcode") ? "selected=selected" : "") value="Zipcode">Zipcode</option>
+                        <option @(opt.Contains("IsLocationSet") ? "selected=selected" : "") value="IsLocationSet">Location</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <form action="/Home/PipelineSearch">
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.SearchTerm, new { @class = "form-control", @placeholder = "Search" })
+                            <div class="input-group-btn">
+                                <button type="submit" class="btn btn-primary">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-3">
+                    <div class="btn-group">
+                        @if (ViewBag.AccessRule.HasPipelineAccess == SIRolePermissionLevelConstants.FULL_ACCESS || ViewBag.AccessRule.HasPipelineAccess == SIRolePermissionLevelConstants.EDIT_ONLY)
+                        {
+                            <a class="btn btn-primary" href="/Home/AddProject">
+                                <i class="glyphicon glyphicon-plus-sign"></i>
+                                Project
+                            </a>
+                        }
+                        <button type="submit" name="DoPrint" value="Print" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-cloud-download"></span>
+                            Export
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 filter-panel" style="display: none;">
+                    <div class="col-lg-3">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                Districts
+                            </div>
+                            <div class="panel-body" style="height: 200px; overflow-y: scroll;">
+                                @foreach (SelectListItem item in Model.DistrictList)
+                                {
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" value="@item.Value" name="Districts" @(item.Selected ? "checked='checked'" : "") />
+                                            @item.Text
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                Statuses
+                            </div>
+                            <div class="panel-body" style="height: 200px; overflow-y: scroll;">
+                                @foreach (SelectListItem item in Model.StatusList)
+                                {
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" value="@item.Value" name="Statuses" @(item.Selected ? "checked='checked'" : "") />
+                                            @item.Text
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                Plants
+                            </div>
+                            <div class="panel-body" style="height: 200px; overflow-y: scroll;">
+                                <div data-selector="district">Select district to populate</div>
+                                @foreach (SelectListItem item in Model.PlantList)
+                                {
+                                    <div class="checkbox" style="display: none">
+                                        <label>
+                                            <input type="checkbox" disabled="disabled" value="@item.Value" name="Plants" @(item.Selected ? "checked='checked'" : "") />
+                                            @item.Text
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                Staff
+                            </div>
+                            <div class="panel-body" style="height: 200px; overflow-y: scroll;">
+                                <div data-selector="district">Select district to populate</div>
+                                @foreach (SelectListItem item in Model.StaffList)
+                                {
+                                    <div class="checkbox" style="display: none">
+                                        <label>
+                                            <input type="checkbox" disabled="disabled" value="@item.Value" @(item.Selected ? "checked='checked'" : "") name="Staffs" />
+                                            @item.Text
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: none">
+                        @foreach (string column in new string[] { "DistrictName", "ProjectName", "CustomerJobRef", "ProjectUploadId", "CustomerName", "ContractorName", "PlantName", "Address", "City", "State", "Zipcode", "StatusName", "StaffNamesList", "MarketSegmentName", "BidDate", "StartDate", "WonLossDate", "SackPrice", "Volume", "Price", "PriceLost", "Spread", "Profit", "CompetitorNamesList", "NoteCount", "QuoteCount", "WinningCompetitor", "IsLocationSet" })
+                        {
+                            <label>
+                                <input type="checkbox" data-id="check_@(column)_DESC" name="SortColumns" value="@column DESC" @(Model.SortColumns.Contains(column + " DESC") ? "checked='checked'" : "") />
+                                <input type="checkbox" data-id="check_@(column)_ASC" name="SortColumns" value="@column ASC" @(Model.SortColumns.Contains(column + " ASC") ? "checked='checked'" : "") />
+                            </label>
+                        }
+                    </div>
+                    <div class="col-lg-12">
+                        <button type="submit" class="btn btn-primary apply-btn" value="Apply">Apply</button>
+                        <button type="button" class="btn btn-default close-btn" value="Close">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="block-flat">
+        <table class="table table-responsive table-bordered table-striped pipeline-table">
+            <thead class="header">
+                <tr>
+                    <th class="pl-15" id="StatusName">Status</th>
+                    <th class="pl-0" id="ProjectName">Project</th>
+                    <th class="pl-4 @(opt.Contains("CustomerJobRef") ? "":"optional_column")" id="CustomerJobRef">Customer Job Ref</th>
+                    <th class="pl-14 @(opt.Contains("ProjectUploadId") ? "":"optional_column")" id="ProjectUploadId">Project Upload ID</th>
+                    <th class="pl-1" id="CustomerName">Customer</th>
+                    <th class="pl-5 @(opt.Contains("ContractorName") ? "":"optional_column")" id="ContractorName">Contractor</th>
+                    <th class="pl-16" id="BidDate">Bid Date</th>
+                    <th class="pl-17" id="StartDate">Start Date</th>
+                    <th class="pl-18" id="WonLossDate">W/L Date</th>
+                    <th class="pl-3 right" id="Volume">Volume</th>
+                    <th class="pl-22" id="MarketSegmentName">Market Segment</th>
+                    <th class="pl-25" id="PlantName">Plant</th>
+                    <th class="pl-7 @(opt.Contains("Address") ? "":"optional_column")" id="Address">Address</th>
+                    <th class="pl-8 @(opt.Contains("City") ? "":"optional_column")" id="City">City</th>
+                    <th class="pl-9 @(opt.Contains("State") ? "":"optional_column")" id="State">State</th>
+                    <th class="pl-10 @(opt.Contains("Zipcode") ? "":"optional_column")" id="Zipcode">Zip Code</th>
+                    <th class="pl-23" id="StaffNamesList">Sales Staff</th>
+                    <th class="pl-24" id="DistrictName">District</th>
+                    <th class="pl-26 @(opt.Contains("SackPrice") ? "":"optional_column")" id="SackPrice">Sack Price</th>
+                    <th class="pl-19 right" id="Price">Price</th>
+                    <th class="pl-28 @(opt.Contains("PriceLost") ? "":"optional_column")" id="PriceLost">Price Lost</th>
+                    @if (!aggregateSelected && !blockSelected)
+                    {
+                        <th class="pl-20 right" id="Spread">Spread</th>
+                        <th class="pl-21 right" id="Profit">Profit</th>
+                    }
+                    else
+                    {
+                        <th class="pl-20 right" id="Freight">Freight</th>
+                    }
+                    <th class="pl-6 @(opt.Contains("CompetitorNamesList") ? "":"optional_column")" id="CompetitorNamesList">Competitors</th>
+                    <th class="pl-11 @(opt.Contains("QuoteCount") ? "":"optional_column")" id="QuoteCount">Quotes</th>
+                    <th class="pl-12 @(opt.Contains("NoteCount") ? "":"optional_column")" id="NoteCount">Notes</th>
+                    <th class="pl-13 @(opt.Contains("EditDate") ? "":"optional_column")" id="EditDate">Last Edit</th>
+                    <th class="pl-27 @(opt.Contains("WinningCompetitor") ? "" : "optional_column")" id="WinningCompetitor">Bid Winner</th>
+                    <th class="pl-29 right @(opt.Contains("IsLocationSet") ? "" : "optional_column")" id="IsLocationSet">Location</th>
+                    <th class="pl-2"></th>
+                </tr>
+            </thead>
+            <tbody class="">
+                @foreach (RedHill.SalesInsight.DAL.DataTypes.SIPipelineProject project in ViewBag.Projects)
+                {
+                    <tr>
+                        <!-- IMPORTANT NOTE!! : It's very important to have the pl-* classes to be the "first" class as I'm doing attr("class")
+                            and finding the first token for javascript to perform the optional column group. -->
+                        <td class="pl-15">@project.StatusName</td>
+                        <td class="pl-0">@project.ProjectName</td>
+                        <td class="pl-4 @(opt.Contains("CustomerJobRef") ? "":"optional_column")">@project.CustomerJobRef</td>
+                        <td class="pl-14 @(opt.Contains("ProjectUploadId") ? "":"optional_column")">@project.ProjectUploadId</td>
+                        <td class="pl-1">@project.CustomerName</td>
+                        <td class="pl-5 @(opt.Contains("ContractorName") ? "":"optional_column")">@project.ContractorName</td>
+                        <td class="pl-16">@(project.BidDate != null ? project.BidDate.GetValueOrDefault().ToString("M/d/yyyy") : "")</td>
+                        <td class="pl-17">@(project.StartDate != null ? project.StartDate.GetValueOrDefault().ToString("M/d/yyyy") : "")</td>
+                        <td class="pl-18">@(project.WonLossDate != null ? project.WonLossDate.GetValueOrDefault().ToString("M/d/yyyy") : "")</td>
+                        <td class="pl-3 right">@(project.Volume != null ? project.Volume.GetValueOrDefault(0).ToString("###,###") : "")</td>
+                        <td class="pl-22">@project.MarketSegmentName</td>
+                        <td class="pl-25">@project.PlantName</td>
+                        <td class="pl-7 @(opt.Contains("Address") ? "":"optional_column")">@Html.Raw(project.Latitude != null ? "<i title='Latitude - Longitude available' class='fa fa-fw fa-map-marker'></i>" : "") @project.Address</td>
+                        <td class="pl-8 @(opt.Contains("City") ? "":"optional_column")">@project.City</td>
+                        <td class="pl-9 @(opt.Contains("State") ? "":"optional_column")">@project.State</td>
+                        <td class="pl-10 @(opt.Contains("Zipcode") ? "":"optional_column")">@project.Zipcode</td>
+                        <td class="pl-23">@project.StaffNamesList</td>
+                        <td class="pl-24">@project.DistrictName</td>
+                        <td class="pl-26 @(opt.Contains("SackPrice") ? "":"optional_column")">$@(@project.SackPrice.ToString("N2"))</td>
+                        @if (!aggregateSelected && !blockSelected)
+                        {
+                            <td class="pl-19 right">@(project.Price != null ? (new HtmlString("$")) : new HtmlString(""))@(Decimal.Round(@project.Price.GetValueOrDefault(0), 2))</td>
+                        }
+                        else if (aggregateSelected)
+                        {
+                            <td class="pl-19 right">@(project.AggProductPrice != null ? (new HtmlString("$")) : new HtmlString(""))@(Decimal.Round(@project.AggProductPrice.GetValueOrDefault(0), 2))</td>
+                        }
+                        else if (blockSelected)
+                        {
+                        <td class="pl-19 right">@(project.BlockProductPrice != null ? (new HtmlString("$")) : new HtmlString(""))@(Decimal.Round(@project.BlockProductPrice.GetValueOrDefault(0), 2))</td>
+                        }
+                        <td class="pl-28 @(opt.Contains("PriceLost") ? "":"optional_column")">@(project.PriceLost != null ? (new HtmlString("$")) : new HtmlString(""))@(Decimal.Round(@project.PriceLost.GetValueOrDefault(0), 2))</td>
+                        @if (!aggregateSelected && !blockSelected)
+                        {
+                            <td class="pl-20 right">@(project.Spread != null ? (new HtmlString("$")) : new HtmlString(""))@(Decimal.Round(@project.Spread.GetValueOrDefault(0), 2))</td>
+                            <td class="pl-21 right">@(project.Profit != null ? (new HtmlString("$")) : new HtmlString(""))@(Decimal.Round(@project.Profit.GetValueOrDefault(0), 2))</td>
+                        }
+                        else if (aggregateSelected)
+                        {
+                            <td class="pl-20 right">@(project.AggregateFreight != null ? (new HtmlString("$")) : new HtmlString(""))@(Decimal.Round(@project.AggregateFreight.GetValueOrDefault(0), 2))</td>
+                        }
+                        else if (blockSelected)
+                        {
+                            <td class="pl-20 right">@(project.BlockFreight != null ? (new HtmlString("$")) : new HtmlString(""))@(Decimal.Round(@project.BlockFreight.GetValueOrDefault(0), 2))</td>
+                        }
+                        <td class="pl-6 @(opt.Contains("CompetitorNamesList") ? "":"optional_column")">@project.CompetitorNamesList</td>
+                        <td class="pl-11 @(opt.Contains("QuoteCount") ? "":"optional_column")">@project.QuoteCount</td>
+                        <td class="pl-12 @(opt.Contains("NoteCount") ? "":"optional_column")">@project.NoteCount</td>
+                        <td class="pl-13 @(opt.Contains("EditDate") ? "":"optional_column")">@(project.EditDate != null ? project.EditDate.GetValueOrDefault().ToString("M/d/yyyy") : "")</td>
+                        <td class="pl-27 @(opt.Contains("WinningCompetitor") ? "" : "optional_column")">@project.WinningCompetitor</td>
+                        <td class="pl-29 @(opt.Contains("IsLocationSet") ? "" : "optional_column")">
+                            @if (project.IsLocationSet)
+                            {
+                                <i class="fa fa-check"></i>
+                            }
+                        </td>
+                        <td class="pl-2">
+                            <div class="btn-group">
+
+                                <a target="_blank" href="/Home/EditProject/@project.ProjectId" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i></a> <br />
+                                @if (ViewBag.AccessRule.HasPipelineAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                                {                                     <a href="javascript:DeletePipeline('@project.ProjectId');" data-projectid="@project.ProjectId" class="btn btn-xs btn-danger"
+                                                                         data-confirm="Deletion is permanent and cannot be reversed.
+                                        <br /> Project Name: @project.ProjectName <br /> Customer: @project.CustomerName <br /> Delete this Project?" >
+                                        <i class="glyphicon glyphicon-trash"></i>
+                                    </a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="col-sm-12">
+                @{ViewBag.LastCount = (ViewBag.RowCount < (Model.RowsPerPage * ViewBag.CurrentPage)) ? ViewBag.RowCount : (Model.RowsPerPage * ViewBag.CurrentPage);}
+                <span>@(((ViewBag.CurrentPage - 1) * Model.RowsPerPage + 1).ToString("N0")) to @(ViewBag.LastCount.ToString("N0")) of @(ViewBag.RowCount.ToString("N0")) records</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12" style="margin-top: 10px;">
+                <div class="pull-left">
+                    <div class="form-inline">
+                        <select id="rows_per_page" class="form-control">
+                            <option value="10" @(Model.RowsPerPage == 10 ? "selected=selected" : "")>10</option>
+                            <option value="25" @(Model.RowsPerPage == 25 ? "selected=selected" : "")>25</option>
+                            <option value="50" @(Model.RowsPerPage == 50 ? "selected=selected" : "")>50</option>
+                            <option value="100" @(Model.RowsPerPage == 100 ? "selected=selected" : "")>100</option>
+                        </select>
+                        <label class="control-label">Records per page</label>
+                    </div>
+                </div>
+                <div class="pull-right">
+                    <ul class="pagination">
+                        <li class="previous">
+                            <a href="#"><span class="glyphicon glyphicon-chevron-left"></span><span>Previous</span></a>
+                        </li>
+                        @{ViewBag.first = ViewBag.CurrentPage <= 5 ? 1 : ViewBag.CurrentPage - 5;}
+                        @{ViewBag.last = ViewBag.CurrentPage + 5 >= ViewBag.NumPages ? ViewBag.NumPages : ViewBag.first + 7;}
+                        @for (int i = ViewBag.first; i <= ViewBag.last; i++)
+                        {
+                            <li class="@(ViewBag.CurrentPage == i ? "active" : "")"><a href="#" class="pageNumber">@(i)</a></li>
+                        }
+                        @if (ViewBag.CurrentPage + 1 <= ViewBag.NumPages)
+                        {
+                            <li class="next"><a href="#"><span>Next</span> <span class="glyphicon glyphicon-chevron-right"></span></a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <link href="~/Content/pipeline-responsive-table.css" rel="stylesheet" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".product_toggle").on("change", function (e) {
+                var $this = $(this);
+                var $productType = $("#ProductTypeId");
+                $("#CurrentStart").val(0);
+                $productType.val($this.val());
+                $("form#filter-form").submit();
+            });
+
+            $("#DeletePipelineId").val("");
+            ScrubPlants();
+            ScrubSalesStaffs();
+            $(".previous a").click(function (e) {
+                current = parseInt($("#CurrentStart").val());
+                if (current > 0) {
+                    $("#CurrentStart").val(current - @Model.RowsPerPage);
+                    $("#filter-form").submit();
+                }
+                return false;
+            });
+            $(".next a").click(function (e) {
+                current = parseInt($("#CurrentStart").val());
+                $("#CurrentStart").val(current + @Model.RowsPerPage);
+                $("#filter-form").submit();
+                return false;
+            });
+            $("a.pageNumber").click(function (e) {
+                start = (parseInt($(this).text()) - 1) * @Model.RowsPerPage;
+                if (start >= 0) {
+                    $("#CurrentStart").val(start);
+                    $("#filter-form").submit();
+                }
+                return false;
+            });
+            $(".first a").click(function (e) {
+                $("#CurrentStart").val(0);
+                $("#filter-form").submit();
+                return false;
+            });
+
+            $("#rows_per_page").change(function (e) {
+                $("#RowsPerPage").val($(this).val());
+                $("#CurrentStart").val(0);
+                $("#filter-form").submit();
+            });
+
+            $("#ShowInactives").change(function (e) {
+                $("#filter-form").submit();
+            });
+
+            // Ok, find the TH. Then find the first class it has.
+            // Then find the tds for that first class and add/remove optional_column class
+            $(".pipeline_optional_columns_select").change(function(e){
+                var list = []
+                $(this).find("option").each(function(index,opt){
+                    id = $(opt).val();
+                    if (id != undefined){
+                        console.log(id);
+                        th = $("#"+id);
+                        other_class = th.attr("class").split(" ")[0];
+                        console.log(other_class);
+                        if ($(opt).is(":checked")){
+                            $("td."+other_class).removeClass("optional_column");
+                            th.removeClass("optional_column");
+                            list.push(id);
+                        }else{
+                            $("td."+other_class).addClass("optional_column");
+                            th.addClass("optional_column");
+                        }
+                    }
+                });
+                console.log(list);
+                jQuery.ajaxSettings.traditional = true;
+                $.post("/Home/SaveOptionalColumns",{"mode":"pipeline","options":list},function(data){});
+            });
+
+            $(".filter-btn").click(function (e) {
+                if($(".filter-panel").is(":visible")){
+                    $(".filter-panel").slideUp();
+                }else{
+                    $(".filter-panel").slideDown();
+                }
+                return false;
+            });
+
+            $(".close-btn").click(function (e) {
+                $(".filter-panel").slideUp();
+            });
+            $(".apply-btn").click(function (e) {
+                $("#SearchTerm").val("");
+                $(".filter-panel").slideUp();
+            });
+
+            $("input[name=SortColumns]").each(function (index, o) {
+                if ($(o).is(":checked")) {
+                    column = $(o).val();
+                    tokens = column.split(" ");
+                    name = tokens[0];
+                    name = name.replace(/\./g, '_');
+                    direction = tokens[1];
+                    if (direction == "ASC") {
+                        $("#" + name).append(" &#9660;");
+                        $("#" + name).attr("direction", "ASC");
+                    }
+                    else {
+                        $("#" + name).append(" &#9650;");
+                        $("#" + name).attr("direction", "DESC");
+                    }
+                }
+            });
+
+            $(".reload_page").click(function(){
+                $("#filter-form").submit();
+            });
+
+
+            $(".header th").click(function (e) {
+                sort = $(this).attr("id");
+                sort = sort.replace(/_/g, '.');
+                
+                direction = "ASC";
+                if ($(this).attr("direction") != 'undefined') {
+                    direction = $(this).attr("direction") == "ASC" ? "DESC" : "ASC";
+                } else {
+                    $(this).attr("direction", "ASC");
+                }
+                if (!(e.shiftKey)) {
+                    $("input[name=SortColumns]").prop("checked", false);
+                } else {
+                    $("input[data-id='check_" + sort + "_ASC']").prop("checked", false);
+                    $("input[data-id='check_" + sort + "_DESC']").prop("checked", false);
+                }
+                $("input[data-id='check_" + sort + "_" + direction + "']").prop("checked", true);
+                //if (sort != 'StaffNamesList' && sort != 'CompetitorNamesList' && sort != 'IsLocationSet') {
+                    $("#filter-form").submit();
+                //}
+            });
+
+            $(".filter-panel input[name='Districts']").change(function () {
+                ScrubPlants();
+                ScrubSalesStaffs();
+            });
+
+            function ScrubPlants() {
+                regions = getCheckedValues(".filter-panel input[name='Districts']");
+                queryString = "";
+                $(regions).each(function (i, x) {
+                    queryString += "&ParentIds=" + x;
+                });
+                if (queryString != "") {
+                    $.get("/Json/GetStructureList?StructureType=PLANT" + queryString, function (data) {
+                        if (data != "NOK") {
+                            districts = eval(data);
+                            $(".filter-panel input[name='Plants']").each(function (i, x) {
+                                id = parseInt($(x).val());
+                                if (districts.indexOf(id) == -1) {
+                                    $(x).prop("checked", false);
+                                    $(x).prop("disabled", true);
+                                    $(x).parent().parent().css("display", "none");
+                                } else {
+                                    $(x).prop("disabled", false);
+                                    $(x).parent().parent().css("display", "block");
+                                }
+                            });
+
+                            if(districts && districts.length>0)
+                                toggleDistrictPrompt(false);
+                        }
+                    });
+                } else {
+                    $(".filter-panel input[name='Plants']").each(function (i, x) {
+                        $(x).prop("checked", false);
+                        $(x).prop("disabled", true);
+                        $(x).parent().parent().css("display", "none");
+                    });
+                    toggleDistrictPrompt(true);
+                }
+            }
+
+            function ScrubSalesStaffs() {
+                regions = getCheckedValues(".filter-panel input[name='Districts']");
+                queryString = "";
+                $(regions).each(function (i, x) {
+                    queryString += "&ParentIds=" + x;
+                });
+                if (queryString != "") {
+                    $.get("/Json/GetStructureList?StructureType=SALES_STAFF" + queryString, function (data) {
+                        if (data != "NOK") {
+                            districts = eval(data);
+                            $(".filter-panel input[name='Staffs']").each(function (i, x) {
+                                id = parseInt($(x).val());
+                                if (districts.indexOf(id) == -1) {
+                                    $(x).prop("checked", false);
+                                    $(x).prop("disabled", true);
+                                    $(x).parent().parent().css("display", "none");
+                                } else {
+                                    $(x).prop("disabled", false);
+                                    $(x).parent().parent().css("display", "block");
+                                }
+                                toggleDistrictPrompt(false);
+                            });
+                        }
+                    });
+                } else {
+                    $(".filter-panel input[name='Staffs']").each(function (i, x) {
+                        $(x).prop("checked", false);
+                        $(x).prop("disabled", true);
+                        $(x).parent().parent().css("display", "none");
+                    });
+                    toggleDistrictPrompt(true);
+                }
+            }
+
+            function toggleDistrictPrompt(show){
+                var $item=$("[data-selector='district']");
+                if(show){
+                    $item.show();
+                }else{
+                    $item.hide();
+                }
+            }
+
+
+
+            function getCheckedValues(selector) {
+                values = [];
+                $(selector+":checked").each(function (index, item) {
+                    values.push($(item).val());
+                });
+                return values;
+            }
+        });
+
+        function DeletePipeline(pipeline)
+        {
+            $("#DeletePipelineId").val(pipeline);
+            document.forms[0].submit();
+        }
+    </script>
+}
+
+

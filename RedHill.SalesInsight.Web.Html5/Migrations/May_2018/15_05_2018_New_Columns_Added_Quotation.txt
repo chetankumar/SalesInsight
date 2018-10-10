@@ -1,0 +1,6 @@
+﻿--Below Query executed in:
+--Test
+--Demo
+ALTER TABLE [Quotation] 
+Add [EditingEnabledBy] [uniqueidentifier] NULL,
+	[EditingEnabledDate] [datetime] NULL

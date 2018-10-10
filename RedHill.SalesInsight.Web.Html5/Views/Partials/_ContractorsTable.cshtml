@@ -1,0 +1,31 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.CompanyView
+
+<table class="data_table table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Active</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (RedHill.SalesInsight.Web.Html5.Models.ContractorView c in Model.Contractors)
+        {
+            <tr>
+                <td>@c.Name</td>
+                <td> @{
+                    if (@c.Active){
+                        <span class="glyphicon glyphicon-ok"></span>
+                    }
+                    else{
+                        <span class="glyphicon glyphicon-remove"></span>
+                    }
+                }
+                </td>
+                <td>
+                    <a href="/Home/EditContractor/@c.ContractorId">Edit</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

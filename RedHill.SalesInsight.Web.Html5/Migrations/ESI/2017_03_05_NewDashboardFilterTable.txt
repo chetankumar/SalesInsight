@@ -1,0 +1,42 @@
+﻿-- Chetan : 
+-- Bharat : Done
+-- Shelly :
+-- Avnish : Done
+-- Dinesh : 
+-- Server : Done
+----- 2017-03-05 10:22 PM---- New Table Added DashboardFiler --- Avnish
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[DashboardFilter](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[DashboardId] [bigint] NOT NULL,
+	[EntityType] [varchar](50) NOT NULL,
+	[EntityRefId] [bigint] NOT NULL,
+	[CreatedAt] [datetime] NOT NULL,
+ CONSTRAINT [PK_DashboardFilter] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[DashboardFilter]  WITH CHECK ADD  CONSTRAINT [FK_DashboardFilter_DashboardSettings] FOREIGN KEY([DashboardId])
+REFERENCES [dbo].[DashboardSettings] ([Id])
+GO
+
+ALTER TABLE [dbo].[DashboardFilter] CHECK CONSTRAINT [FK_DashboardFilter_DashboardSettings]
+GO
+
+
+ 

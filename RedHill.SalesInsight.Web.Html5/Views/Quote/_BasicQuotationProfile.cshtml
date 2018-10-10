@@ -1,0 +1,484 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.QuotationProfile
+
+<div class="form-horizontal no-wrap clearfix white_table small-font padding-0">
+    <div class="col-md-6 padding-0 clearfix">
+        <label class="col-xs-5 padding-right text-right">Quote Id</label>
+        <div class="col-xs-7 padding-0">
+            @Model.QuoteId&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@((Model.PlantDispatchId != null && Model.PlantDispatchId.Trim().Length > 0) ? "(" + @Model.PlantDispatchId + ")" : "")
+        </div>
+    </div>
+    <div class="col-md-6 padding-0 clearfix">
+        <label class="col-xs-5 padding-right text-right">Project</label>
+        <div class="col-xs-7 padding-0">
+            @Model.ProjectName
+        </div>
+    </div>
+    <div class="col-md-6 padding-0 clearfix">
+        <label class="col-xs-5 padding-right text-right">Created On</label>
+        <div class="col-xs-7 padding-0">
+            @Model.CreationDate.ToShortDateString()
+        </div>
+    </div>
+    <div class="col-md-6 padding-0 clearfix">
+        <label class="col-xs-5 padding-right text-right">Customer</label>
+        <div class="col-xs-7 padding-0">
+            @Model.CustomerName
+        </div>
+    </div>
+    <div class="col-md-6 padding-0 clearfix">
+        <label class="col-xs-5 padding-right text-right">Created By</label>
+        <div class="col-xs-7 padding-0">
+            @Model.User.Username
+        </div>
+    </div>
+    <div class="col-md-6 padding-0 clearfix">
+        <label class="col-xs-5 padding-right text-right">Plant(s)</label>
+        <div class="col-xs-7 padding-0">
+            <span class="plant_names">@Model.PlantName</span>
+        </div>
+    </div>
+</div>
+@using (Html.BeginForm("RequestApproval", "Quote", FormMethod.Post))
+{
+    <div class="modal fade" id="request_approval_modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Quote Approval Request</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Send To</label>
+                            <div class="col-md-10">
+                                @Html.HiddenFor(x => x.QuoteId)
+                                @Html.ListBoxFor(x => x.ApprovalRecipients, Model.QuoteApprovalRecipients, new { @class = "selectize" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Subject:</label>
+                            <div class="col-md-10">
+                                @Html.HiddenFor(x => x.ApprovalSubject)
+                                <p class="form-control-static">@Model.ApprovalSubject</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Message</label>
+                            <div class="col-md-10">
+                                @Html.TextAreaFor(x => x.ApprovalText, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary check_before_submit" data-selector="#ApprovalRecipients" data-entities="recipients">Send</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+}
+@using (Html.BeginForm("SendProjectEntryNotification", "Quote", FormMethod.Post))
+{
+    <div class="modal fade" id="project_entry_notification_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Send Notification</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Send To</label>
+                            <div class="col-md-10">
+                                @Html.HiddenFor(x => x.QuoteId)
+                                @Html.ListBoxFor(x => x.NotificationRecipients, Model.AllNotificationRecipients, new { @class = "selectize" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Subject:</label>
+                            <div class="col-md-10">
+                                @Html.HiddenFor(x => x.NotificationSubject)
+                                <p class="form-control-static">@Model.NotificationSubject</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Message</label>
+                            <div class="col-md-10">
+                                @Html.TextAreaFor(x => x.NotificationText, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary check_before_submit" data-selector="#NotificationRecipients" data-entities="recipients">Send</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+}
+@using (Html.BeginForm("SendComments", "Quote", FormMethod.Post))
+{
+    <div class="modal fade" id="send_comments_modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Send Comments</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Send To</label>
+                            <div class="col-md-10">
+                                @Html.HiddenFor(x => x.QuoteId)
+                                @Html.ListBoxFor(x => x.CommentRecipients, Model.AllNotificationRecipients, new { @class = "selectize" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Subject:</label>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(x => x.CommentSubject, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Message</label>
+                            <div class="col-md-10">
+                                @Html.TextAreaFor(x => x.CommentText, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary check_before_submit" data-selector="#CommentRecipients" data-entities="recipients">Send</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+}
+
+@using (Html.BeginForm("UpdateQuoteWithSyncCustomer", "Quote", FormMethod.Post))
+{
+    <div class="modal fade" id="assign_customer_model">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close sync-close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title sync-title hidden">Select quote customer from list below and then click send</h4>
+                    <h4 class="modal-title sync-dv hidden">
+                        <span class="col-md-4">Syncing Customer....</span><span class="sync_span col-md-2"></span><br />
+                    </h4>
+                </div>
+                <div class="modal-body sync-body hidden">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Customer</label>
+                            @Html.HiddenFor(x => x.CustomerId)
+                            @Html.HiddenFor(x => x.QuoteId)
+                            <div class="customer_ddl_dv col-md-9">
+                                <select name="newCustomerId" class="customer_ddl"></select>
+                                <br />
+                                <br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer sync-footer hidden">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary disabled" data-entity="syn_button">Send</button>
+                    <a class="btn btn-default" href="javascript:void(0);" data-toggle="tooltip" title="Add customer to AUJS then re-click [Send to Dispatch] button">
+                        Not in this list <span class="fa fa-exclamation"></span>
+                    </a>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+}
+@using (Html.BeginForm("ApproveQuote", "Quote", FormMethod.Post))
+{
+    <div class="modal fade" id="approve_quote_modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Approve Quotation</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Send To</label>
+                            <div class="col-md-10">
+                                @Html.HiddenFor(x => x.QuoteId)
+                                @Html.HiddenFor(x => x.ProjectId)
+                                @Html.ListBoxFor(x => x.ApprovalNotificationRecipients, Model.AllNotificationRecipients, new { @class = "selectize" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Subject:</label>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(x => x.ApprovalNotificationSubject, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Message</label>
+                            <div class="col-md-10">
+                                @Html.TextAreaFor(x => x.ApprovalNotificationText, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    @*@Html.CheckBoxFor(x => x.NotifyUser) Notify User*@
+                    <button type="submit" name="notifyUser" value="withoutNotify" class="btn btn-default">Approve w/o Notification</button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" name="notifyUser" value="withNotify" class="btn btn-primary check_before_submit" data-selector="#ApprovalNotificationRecipients" data-entities="recipients">Send</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+}
+
+@using (Html.BeginForm("EnableQuoteEditing", "Quote", FormMethod.Post))
+{
+
+    <div class="modal fade" id="enable_edit_quote_modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <div class="row">
+                        <h4 class="modal-title col-md-3">Enable Quotation Edit</h4>
+                        @Html.HiddenFor(x => x.UserIsApprover)
+                        <div class="col-md-3">
+
+                            @if (Model.UserIsApprover)
+                            {
+                                @Html.CheckBoxFor(x => x.EnableWithoutNotification); <span> Without Notification</span>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Send To</label>
+                            <div class="col-md-10">
+                                @Html.HiddenFor(x => x.QuoteId)                                
+                                @Html.HiddenFor(x => x.ApprovedBy)
+                                @Html.HiddenFor(x => x.IsUserQuotationLimit)
+                               <div class="col-md-2">@Html.TextBoxFor(x => x.ApproverName, new { @class = "form-control", @readOnly = true,@title=Model.ApproverName })</div> 
+                                @Html.ListBoxFor(x => x.EnableEditRecipients, Model.AllEnableEditRecipients, new { @class = "selectize col-md-10" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Subject:</label>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(x => x.EnableEditSubject, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Message</label>
+                            <div class="col-md-10">
+                                @Html.TextAreaFor(x => x.EnableEditText, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary check_before_submit">Send</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+}
+@using (Html.BeginForm("SendQuoteToCustomers", "Quote", FormMethod.Post))
+{
+
+}
+<!-- /.modal -->
+<script type="text/javascript" src="~/Scripts/selectize.min.js"></script>
+<link rel="stylesheet" type="text/css" href="~/Content/selectize.bootstrap3.css" />
+<style>
+    .left-inner-addon {
+        position: relative;
+    }
+
+        .left-inner-addon input {
+            padding-left: 30px;
+        }
+
+        .left-inner-addon i {
+            position: absolute;
+            padding: 10px 12px;
+            pointer-events: none;
+        }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //hide enable quotation edit body when user is approver
+        var userIsApprover = '@(Model.UserIsApprover)';
+        var isUserQuotationLimit = '@(Model.IsUserQuotationLimit)';
+        if (isUserQuotationLimit == 'True')
+        {
+            $("#enable_edit_quote_modal button[type=submit]").text("Enable");
+        }
+        if (userIsApprover == 'True') {
+            $("#enable_edit_quote_modal .modal-body").hide();
+            $("#enable_edit_quote_modal button[type=submit]").text("Enable");
+        }
+        $("#enable_edit_quote_modal input:checkbox").click(function () {
+            $("#enable_edit_quote_modal .modal-body").toggle(300);
+            if ($(this).prop("checked"))
+                $("#enable_edit_quote_modal button[type=submit]").text("Enable");
+            else {
+                if (isUserQuotationLimit == 'False') {
+                    $("#enable_edit_quote_modal button[type=submit]").text("Send");
+                }
+                else
+                {
+                    $("#enable_edit_quote_modal button[type=submit]").text("Enable");
+                }
+            }
+        });
+        //remove cancel option from enable edit quote first recipient
+        //$("button[data-target=#enable_edit_quote_modal]").click(function () {
+        //    $("#enable_edit_quote_modal .item:first a").remove();
+        //});
+        //     Customer Sync Script
+        $("button[data-entity=selectCustomer]").click(function () {
+            $(".sync-close").addClass("hidden");
+            var syncButton = $(".sync_span");
+            syncButton.find("i").remove();
+            if (syncButton.find("i.fa-spinner").length == 0)
+                syncButton.prepend($("<i/>").addClass("fa fa-spinner"))
+            syncButton.find("i.fa-spinner").addClass("fa-spin fa-lg text-primary");
+
+            $.ajax({
+                url: '/Admin/ImportEntity',
+                method: 'POST',
+                data: { entityType: "customer" },
+                beforeSend: function () { },
+                success: function (res) {
+                    if (res.success) {
+                        syncButton.find("i.fa-spinner").removeClass("fa-spinner fa-spin").addClass("fa-check-circle-o fa-lg").css("color", "green");
+                        //All Synced Customer_Number DropDown
+                        $(".sync-body").removeClass("hidden");
+                        $(".sync-footer").removeClass("hidden");
+                        $(".sync-dv").addClass("hidden");
+                        $(".sync-title").removeClass("hidden");
+                        $(".sync-close").removeClass("hidden");
+
+                        var sortedList = new Array();
+                        sortedList[0] = "CustomerNumber DESC";
+                        console.log("Imported Entity");
+                        $.ajax({
+                            url: '/Json/GetCustomers',
+                            method: 'POST',
+                            traditional: true,
+                            datatype: 'json',
+                            data: { id: '@Model.CompanyId', showInactives: "false", sortList: sortedList },
+                            beforeSend: function () { },
+                            success: function (res) {
+                                if (res != null) {
+                                    $(".customer_ddl").append("<option value=></option>");
+
+                                    for (var i = 0; i < res.length; i++) {
+                                        if (res[i].DispatchId != null)
+                                            $(".customer_ddl").append("<option value=" + res[i].CustomerId + ">(" + res[i].Number + ")  " + res[i].Name + "</option>");
+                                    }
+                                    $(".customer_ddl").multiselect({
+                                        enableFiltering: true,
+                                        includeSelectAllOption: true,
+                                        numberDisplayed: 1,
+                                        maxHeight: 400
+                                    });
+                                }
+                                console.log("Got Customer");
+
+                            },
+                            error: function (err) {
+                                console.log("Got Customer Error");
+                            },
+                            complete: function (data) {
+                                console.log("Customer Completed");
+
+                            }
+                        });
+                    }
+                    else {
+                        syncButton.find("i").remove();
+                        syncButton.prepend($("<i/>").addClass("fa fa-times fa-lg text-danger"));
+                    }
+                },
+                error: function (err) {
+                    syncButton.find("i").remove();
+                    syncButton.prepend($("<i/>").addClass("fa fa-times fa-lg text-danger"));
+                },
+                complete: function (data) {
+
+                }
+            });
+
+        });
+
+        $(".customer_ddl").on("change", function () {
+
+            if ($(this).val() == "")
+                $(this).closest("form").find("button[type=submit]").addClass("disabled");
+            else
+                $(this).closest("form").find("button[type=submit]").removeClass("disabled");
+        });
+
+        $("button[data-entity=syn_button]").click(function () {
+            $(this).addClass("disabled");
+        });
+
+        $(".selectize").selectize({
+            plugins: ['remove_button'],
+            delimiter: ',',
+            placeholder: '',
+            persist: false,
+            create: false
+        });
+
+        $(".selectize-create").selectize({
+            plugins: ['remove_button'],
+            delimiter: ',',
+            placeholder: '',
+            persist: false,
+            create: function (input) {
+                return {
+                    value: input,
+                    text: input
+                }
+            }
+        });
+    });
+
+    function Sync() {
+        var syncButton = $(".sync_span");
+        syncButton.find("i").remove();
+        $(".sync-body").addClass("hidden");
+        $(".sync-footer").addClass("hidden");
+        $(".sync-title").addClass("hidden");
+        $(".sync-dv").removeClass("hidden");
+    }
+</script>

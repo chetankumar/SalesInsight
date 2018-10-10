@@ -1,0 +1,39 @@
+﻿---Shelly - Done
+---Chetan - 
+---Bharat - Done
+---Avnish - Done
+---Dinesh - Done
+---Server - Done
+
+/****** Object:  Table [dbo].[TrendAnalysisReportConfig]    Script Date: 04/03/2017 14:46:50 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[TrendAnalysisReportConfig](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[ReportSettingId] [bigint] NOT NULL,
+	[MetricDefinitionId] [int] NOT NULL,
+	[TargetMetricDefinitionId] [int] NULL,
+	[UpperControlLimit] [float] NULL,
+	[LowerControlLimit] [float] NULL,
+	[OmitPeriodsWithNoData] [bit] NULL,
+	[ScalingMin] [float] NULL,
+	[ScalingMax] [float] NULL,
+	[CreatedAt] [datetime] NULL,
+ CONSTRAINT [PK_TrendAnalysisReportConfig] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[TrendAnalysisReportConfig]  WITH CHECK ADD  CONSTRAINT [FK_TrendAnalysisReportConfig_ReportSetting] FOREIGN KEY([ReportSettingId])
+REFERENCES [dbo].[ReportSetting] ([Id])
+GO
+
+ALTER TABLE [dbo].[TrendAnalysisReportConfig] CHECK CONSTRAINT [FK_TrendAnalysisReportConfig_ReportSetting]
+GO

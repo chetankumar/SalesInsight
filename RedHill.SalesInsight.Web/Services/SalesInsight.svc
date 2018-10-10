@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="RedHill.SalesInsight.Web.Services.SalesInsight" CodeBehind="SalesInsight.svc.cs" %>

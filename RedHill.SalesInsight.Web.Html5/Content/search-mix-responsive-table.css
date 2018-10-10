@@ -1,0 +1,19 @@
+﻿@media screen and (max-width: 320px)    {.sm-1    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 360px)    {.sm-2    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 400px)    {.sm-3    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 442px)    {.sm-4    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 484px)    {.sm-5    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 526px)    {.sm-6    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 568px)    {.sm-7    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 610px)    {.sm-8    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 652px)    {.sm-9    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 694px)    {.sm-10   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 736px)    {.sm-11   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 778px)    {.sm-12   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 820px)    {.sm-13   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 862px)    {.sm-14   {display:none!important;visibility:hidden!important}}
+
+.optional_column {
+    display:none;
+    visibility:hidden;
+}

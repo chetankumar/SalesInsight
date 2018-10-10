@@ -1,0 +1,24 @@
+﻿--2017-04-20 --- Changes in the column data type of QuotationAggregate  and QuotationBlock Table -- Avnish
+
+ALTER TABLE QuotationAggregate 
+ALTER COLUMN Freight decimal(18,2)
+Go
+
+ALTER TABLE QuotationAggregate 
+ALTER COLUMN TotalPrice decimal(18,2)
+Go
+
+ALTER TABLE QuotationAggregate 
+ALTER COLUMN TotalRevenue decimal(18,2)
+Go
+
+ALTER TABLE QuotationBlock 
+ALTER COLUMN Freight decimal(18,2)
+Go
+
+ALTER TABLE QuotationBlock 
+ALTER COLUMN TotalPrice decimal(18,2)
+Go
+
+ALTER TABLE QuotationBlock 
+ALTER COLUMN TotalRevenue decimal(18,2)

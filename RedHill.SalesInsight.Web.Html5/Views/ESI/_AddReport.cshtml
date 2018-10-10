@@ -1,0 +1,170 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ESI.ReportSettingView
+@using RedHill.SalesInsight.DAL.Constants;
+@{
+    var accessRule = ViewBag.AccessRule;
+    string reportType = ViewBag.ReportType;
+    bool isAdmin = ViewBag.IsAdmin;
+    bool canCreateStandardReports = false;
+    string reportName = "Goal Analysis";
+    string message = "";
+    bool disableEditing = false;
+    switch (reportType)
+    {
+        case RedHill.SalesInsight.DAL.Constants.ESIReportType.GOAL_ANALYSIS:
+            canCreateStandardReports = (accessRule.HasGoalAnalysisAccess == SIRolePermissionLevelConstants.ADMIN);
+            reportName = "Goal Analysis";
+            break;
+        case RedHill.SalesInsight.DAL.Constants.ESIReportType.TREND_ANALYSIS:
+            canCreateStandardReports = (accessRule.HasTrendAnalysisAccess == SIRolePermissionLevelConstants.ADMIN);
+            reportName = "Trend Analysis";
+            break;
+        case RedHill.SalesInsight.DAL.Constants.ESIReportType.BENCHMARK_ANALYSIS:
+            canCreateStandardReports = (accessRule.HasBenchmarkAnalysisAccess == SIRolePermissionLevelConstants.ADMIN);
+            reportName = "Benchmark Analysis";
+            break;
+        case RedHill.SalesInsight.DAL.Constants.ESIReportType.DRILL_IN:
+            canCreateStandardReports = (accessRule.HasDrillInAccess == SIRolePermissionLevelConstants.ADMIN);
+            reportName = "Drill In";
+            break;
+    }
+    disableEditing = (Model.AccessType == "Standard" && canCreateStandardReports == false);
+}
+@if (Model.ReportId != 0)
+{
+    <div class="cl-mcont setting-mode" style="display:@(ViewBag.IsNewReport?"block":"none")">
+        <div class="edit-mode">
+            <div class="form-inline">
+                <div class="edit-mode-title">
+                    Edit Mode
+                </div>
+                <input name="ReportName" type="text" @(disableEditing?"disabled":"") class="form-control" value="@Model.ReportName" />
+                <div class="checkbox-inline">
+                    <label>
+                        <input type="checkbox" name="IsDefault" @(Model.IsDefault ? "checked" : "" ) /> default
+                    </label>
+                </div>
+                @if(Model.AccessType == "Personal" && canCreateStandardReports==true)
+                {
+                <div class="checkbox-inline">
+                        <a href="javascript:changeAccessType()" name="setAsStandard" title="click to make this as Standard report" data-confirm="Are you sure you want to set this report as standard"  class="btn btn-primary"> Make Standard</a>
+                </div>
+                }
+                @if (!disableEditing)
+                {
+                <a class="btn btn-primary btn-customize" data-toggle="modal" data-target="@(ViewBag.ReportType == ESIReportType.GOAL_ANALYSIS ? "#reportConfig_GoalAnalysis" : ViewBag.ReportType ==  ESIReportType.BENCHMARK_ANALYSIS ? "#reportConfig_BenchMarkAnalysis": ViewBag.ReportType == ESIReportType.DRILL_IN ? "#reportConfig_DrillIn" : "#reportConfig_TrendAnalysis")">
+                    <i class="fa fa-gears" aria-hidden="true"></i>
+                    Customize Current Report
+                </a>
+                <div class="pull-right">
+                    <a href="/ESI/DeleteReport/@Model.ReportId?reportType=@Model.Type" class="btn btn-danger btn-sm inplace-delete">
+                        <i class="fa fa-trash" aria-hidden="true"><span title="click again to confirm delete" style="display:none;">&nbsp;&nbsp;Confirm?</span></i>
+                    </a>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+@using (Html.BeginForm("AddNewReport", "ESI", FormMethod.Post))
+{
+    <div class="modal fade" id="Add_Report">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Create New Report</h4>
+                    <input type="hidden" name="Type" value="@ViewBag.ReportType" />
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Name</label>
+                            <div class="col-md-6">
+                                <input type="hidden" name="ReportId" value="0" />
+                                <input type="text" class="form-control" name="ReportName" value="" required="required" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Type</label>
+                            <div class="col-md-6">
+                                <div class="radio">
+                                    <label> <input type="radio" name="AccessType" checked value="Personal" /> Personal</label>
+                                </div>
+                                    @{if(!canCreateStandardReports)
+                                    {
+                                        message = string.Format("{0} Admin access required to create STANDARD Report", reportName);
+                                    }
+
+                                    <text>
+                                        <div class="radio stdReport">
+                                            <label title="@message" data-toggle="tooltip" data-placement="bottom">
+                                                <input type="radio" name="AccessType" value="Standard" @(canCreateStandardReports ? "" : "disabled") /> Standard
+                                            </label>
+                                        </div>
+                                    </text>
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+   }
+<script>
+    $(".inplace-delete").on("click", function () {
+        if ($(this).hasClass("confirm-delete")) {
+            $(this).attr("disabled", "disabled").html("");
+            $(this).append("<i>");
+            $(this).find("i").addClass("fa fa-spinner fa-spin");
+            return true
+        } else {
+            $(this).addClass("confirm-delete").find("span").show(200);
+            return false;
+        }
+    });
+
+    $(window).click(function () {
+        $(".confirm-delete").removeClass("confirm-delete").find("span").hide(300);
+    });
+
+    $(window).on('load', function () {
+        var isNewReport = JSON.parse('@(ViewBag.IsNewReport)'.toLowerCase());
+        if (isNewReport)
+            $(".btn-customize").trigger("click");    
+    });
+
+     //save as standard report
+        function changeAccessType() {
+            var reportType = $("input[name=Type]").val();
+            //var reportName = $("input[name=ReportName]").val();
+
+            var AccessType = "Standard";
+            var params = {
+                type: reportType,
+                accessType: AccessType,
+                reportId: eval(@Model.ReportId)
+            }
+
+            $.ajax({
+                url: '/ESI/UpdateReportAccessType',
+                data: params,
+                method: 'POST',
+                success: function (data) {
+                    //console.log(data);
+                    window.location.reload();
+                },
+                error: function (res) {
+                }
+            });
+
+        }
+
+</script>

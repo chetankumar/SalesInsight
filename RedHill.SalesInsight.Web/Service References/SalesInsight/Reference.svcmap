@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="bc2c0e8a-a3a4-4c77-ac73-45bb81d1927f" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:4216/Services/SalesInsight.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="SalesInsight.xsd" MetadataType="Schema" ID="57d7e2b5-fc08-4969-a320-40df942e44b4" SourceId="1" SourceUrl="http://localhost:4216/Services/SalesInsight.svc?xsd=xsd1" />
+    <MetadataFile FileName="SalesInsight.disco" MetadataType="Disco" ID="ae8be38d-386f-4e0f-a371-1ff54b718863" SourceId="1" SourceUrl="http://localhost:4216/Services/SalesInsight.svc?disco" />
+    <MetadataFile FileName="SalesInsight1.xsd" MetadataType="Schema" ID="b6ba3ada-e830-4f6b-90aa-d844bf51bb0c" SourceId="1" SourceUrl="http://localhost:4216/Services/SalesInsight.svc?xsd=xsd3" />
+    <MetadataFile FileName="SalesInsight2.xsd" MetadataType="Schema" ID="82a83867-ad65-4310-99b8-10a6f4a80784" SourceId="1" SourceUrl="http://localhost:4216/Services/SalesInsight.svc?xsd=xsd0" />
+    <MetadataFile FileName="SalesInsight3.xsd" MetadataType="Schema" ID="fddaf2a2-0a23-4bfe-bf5e-26c59e53302b" SourceId="1" SourceUrl="http://localhost:4216/Services/SalesInsight.svc?xsd=xsd2" />
+    <MetadataFile FileName="SalesInsight.wsdl" MetadataType="Wsdl" ID="74bf9085-f885-423c-b02c-f1c679e62317" SourceId="1" SourceUrl="http://localhost:4216/Services/SalesInsight.svc?wsdl=wsdl0" />
+    <MetadataFile FileName="SalesInsight1.wsdl" MetadataType="Wsdl" ID="382f56f4-8bff-4598-9a4c-9bf30f07dc0a" SourceId="1" SourceUrl="http://localhost:4216/Services/SalesInsight.svc?wsdl" />
+    <MetadataFile FileName="SalesInsight4.xsd" MetadataType="Schema" ID="e006c19b-91d7-4040-a130-684d7d09d401" SourceId="1" SourceUrl="http://localhost:4216/Services/SalesInsight.svc?xsd=xsd4" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

@@ -1,0 +1,151 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.User
+@using RedHill.SalesInsight.Web.Html5.Helpers;
+@{
+    ViewBag.Title = "Add User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var company = ConfigurationHelper.Company;
+}
+<div class="page-head">
+    <h2>Add User</h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Home/Settings">Settings</a></li>
+        <li><a href="@Url.Action("Users", "Home")">Users</a></li>
+        <li class="active">New</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="block-flat">
+        @using (Html.BeginForm("NewUser", "Home", FormMethod.Post, new { @id = "user_form", @class = "form -horizontal", @role = "form", @autocomplete = "off" }))
+        {
+            @Html.ValidationSummary(true)
+
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-sm-3 control-label">
+                        @Html.LabelFor(model => model.Name)
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                        <label class="field_error"></label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-3 control-label">
+                        @Html.LabelFor(model => model.Username)
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(model => model.Username, new { @class = "form-control" })
+                        <label class="field_error">@Html.ValidationMessageFor(model => model.Username)</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3 control-label">
+                        @Html.LabelFor(model => model.Email)
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
+                        <label class="field_error">@Html.ValidationMessageFor(model => model.Email)</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3 control-label">
+                        @Html.LabelFor(model => model.Role)
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.DropDownListFor(model => model.Role, Model.AllRoles, new { @class = "form-control" })
+                        <label class="field_error">@Html.ValidationMessageFor(model => model.Role)</label>
+                    </div>
+                </div>
+                @if (ConfigurationHelper.AggregateEnabled == true || ConfigurationHelper.BlockEnabled == true)
+                {
+                    <div class="form-group">
+                        <div class="col-sm-3 control-label">
+                            @Html.LabelFor(model => model.PostedProductIds)
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.CheckBoxListFor(model => model.PostedProductIds, model => model.AvailableDefaultQuoteProducts, item => item.Value, item => item.Text, item => item.Selected, Position.Vertical)
+                            <label class="field_error">@Html.ValidationMessageFor(model => model.PostedProductIds)</label>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    @Html.HiddenFor(model => model.PostedProductIds,new { @Value="1"})
+                }
+                <div class="form-group">
+                    <div class="col-sm-3 control-label">
+                        @Html.LabelFor(model => model.Company)
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.DropDownListFor(model => model.Company, Model.AllCompanies, new { @class = "form-control" })
+                        <label class="field_error">@Html.ValidationMessageFor(model => model.Company)</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3 control-label">
+                        @Html.LabelFor(model => model.Districts)
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.CheckBoxListFor(model => model.Districts, model => model.AllDistricts, d => d.DistrictId, d => d.Name, d => d.IsSelected, Position.Vertical)
+                        <label class="field_error">@Html.ValidationMessageFor(model => model.Districts)</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        Project Entry Form (Default Recipient)
+                    </label>
+                    <div class="col-sm-6">
+                        <p class="form-control-static">
+                            @Html.CheckBoxFor(x => x.QuotationAccess)
+                        </p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        Quotation Authorization Limit
+                    </label>
+                    <div class="col-sm-6">
+                        <span class="input-group">
+                            @Html.TextBoxFor(x => x.QuotationLimit, new { @class = "form-control comma_field" })
+                            <span class="input-group-addon">@company.DeliveryQtyUomPlural</span>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-6 col-sm-offset-3">
+                        <div class="checkbox">
+                            <label>
+                                @Html.CheckBoxFor(model => model.Active)
+                                @Html.DisplayNameFor(model => model.Active)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3 ">
+                    </div>
+                    <div class="col-sm-6">
+                        <button type="submit" value="Save" class="btn btn-primary remove_commas_btn">
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("form#user_form").on("submit", function (e) {
+            if ($("input[type='checkbox'][name='PostedProductIds']").length != 0) {
+                if (!$("[name='PostedProductIds']:checked").length) {
+                    $("[data-valmsg-for='PostedProductIds']").html("At least one Default Quote Product must be selected");
+                    $("[name='PostedProductIds']").focus();
+                    return false;
+                }
+            }
+        });
+    });
+</script>

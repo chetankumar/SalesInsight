@@ -1,0 +1,1139 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.QuotationCustomMixView
+@using RedHill.SalesInsight.Web.Html5.Helpers;
+@{
+    if (Model.QuotationMixId > 0)
+    {
+        ViewBag.Title = "Edit Custom Mix";
+    }
+    else
+    {
+        ViewBag.Title = "Add Custom Mix";
+    }
+    ViewBag.UsingMultiselect = true;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var company = ConfigurationHelper.Company;
+}
+
+<div class="page-head">
+    <h2>
+        @if (Model.QuotationMixId > 0)
+        {
+            <span>Edit Custom Mix</span>
+        }
+        else
+        {
+            <span>Add Custom Mix</span>
+        }
+    </h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Quote/Index">Quotations</a></li>
+        @if (Model.Profile.ProjectId > 0)
+        {
+            <li><a href="/Home/EditProject/@Model.Profile.ProjectId">@Model.Profile.ProjectName</a></li>
+        }
+        <li><a href="/Quote/AddEditQuote/@Model.QuotationId">Quote# @Model.QuotationId</a></li>
+        @if (Model.QuotationMixId > 0)
+        {
+            <li>@Model.QuotedDescription</li>
+        }
+        else
+        {
+            <li>New</li>
+        }
+    </ol>
+</div>
+<div class="cl-mcont">
+    @Html.Partial("_ErrorView")
+    <div class="block-flat">
+        @if (Model.QuotationId > 0)
+        {
+            <div class="well">
+                <div class="col-md-8">
+                    @Html.Partial("_BasicQuotationProfile", Model.Profile)
+                </div>
+                <div class="col-md-4">
+                </div>
+                <div style="clear: both"></div>
+            </div>
+
+            <div id="summary_section">
+            </div>
+        }
+        <div class="panel-body row">
+            <div class="col-md-8">
+                @using (Html.BeginForm("CreateQuotationCustomMix", "Quote", FormMethod.Post, new { @class = "form-horizontal" }))
+                {
+                    @Html.HiddenFor(x => x.QuotationId)
+                    @Html.HiddenFor(x => x.QuotationMixId)
+                    @Html.HiddenFor(x => x.DistrictId)
+                    <fieldset>
+                        <legend>Mix</legend>
+                    </fieldset>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Custom Mix Id</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(x => x.QuotationCustomMixId, new { @class = "form-control", @Value = (Model.QuotationCustomMixId == null ? "Custom" : Model.QuotationCustomMixId) })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Quoted Description</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(x => x.QuotedDescription, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Volume</label>
+                        <div class="col-md-9">
+                            <div class="input-group">
+                                @Html.TextBoxFor(x => x.Volume,  new { @class = "form-control volume_field" })
+                                <span class="input-group-addon">
+                                    @company.DeliveryQtyUomPlural
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Price</label>
+                        <div class="col-md-9">
+                            <div class="input-group">
+                                @Html.TextBoxFor(x => x.Price, "{0:N2}", new { @class = "form-control price_field" })
+                                @Html.HiddenFor(x => x.MixCost)
+                                @Html.HiddenFor(x => x.AddOnCost)
+                                <span class="input-group-addon">
+                                    $/@company.DeliveryQtyUomSingular
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Average Load</label>
+                        <div class="col-md-9">
+                            <div class="input-group">
+                                @Html.TextBoxFor(x => x.AverageLoad, new { @class = "form-control avg_load_field" })
+                                <span class="input-group-addon">
+                                    @company.DeliveryQtyUomPlural
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Unload</label>
+                        <div class="col-md-9">
+                            <div class="input-group">
+                                @Html.TextBoxFor(x => x.Unload, new { @class = "form-control unload_field" })
+                                <span class="input-group-addon">
+                                    Mins
+                                </span>
+                                @Html.HiddenFor(x => x.Spread)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Private Notes</label>
+                        <div class="col-md-9">
+                            @Html.TextAreaFor(x => x.PrivateNotes, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Public Comments (on quote)</label>
+                        <div class="col-md-9">
+                            @Html.TextAreaFor(x => x.PublicNotes, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3"></label>
+                        <div class="col-md-9">
+                            <button type="submit" class="btn btn-primary">
+                                @if (Model.QuotationMixId == 0)
+                                {
+                                    <text>Add Ingredients</text>
+                                }
+                                else
+                                {
+                                    <text>Update</text>
+                                }
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="col-md-4 ">
+                <div class="form-horizontal">
+                    <fieldset>
+                        <legend>
+                            Calculations
+                        </legend>
+                        <div class="well">
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Mix Cost</label>
+                                <div class="col-md-6">
+                                    <p class="form-control-static">
+                                        $<span class="mix_cost">@Model.MixCost.ToString("N2")</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Add-On Cost</label>
+                                <div class="col-md-6">
+                                    <p class="form-control-static">
+                                        $<span class="addon_cost">@Model.AddOnCost.ToString("N2")</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Spread</label>
+                                <div class="col-md-6">
+                                    <p class="form-control-static spread_info_box">
+                                        $<span class="spread_box">@Model.Spread.ToString("N2")</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Contribution</label>
+                                <div class="col-md-4">
+                                    <p class="form-control-static contribution_info_box">
+                                        $<span class="contribution_box">@Model.Contribution.ToString("N2")</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Profit</label>
+                                <div class="col-md-4">
+                                    <p class="form-control-static profit_info_box">
+                                        $<span class="profit_box">@Model.Profit.ToString("N2")</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+        @if (Model.QuotationMixId > 0)
+        {
+            <div id="tab_panel">
+                <h3>Add/Edit Constituent</h3>
+                <hr />
+                <div id="messages" data-dismissible="true">
+                </div>
+                <div role="tabpanel" style="visibility: hidden; display: none;">
+                    <div class="panel-body">
+                        <ul class="nav nav-tabs" role="tablist" style="display: none;">
+                            <li role="presentation" class="@((ViewBag.ShowTab == "RawMat" || ViewBag.ShowTab == null) ? "active" : "")"><a href="#raw_material_tab" aria-controls="profile" role="tab" data-toggle="tab">Raw Material</a></li>
+                            <li role="presentation" class="@((ViewBag.ShowTab == "Addon") ? "active" : "")"><a href="#addon_tab" aria-controls="home" role="tab" data-toggle="tab">Add-On</a></li>
+                            <li role="presentation" class="@((ViewBag.ShowTab == "CusMat") ? "active" : "")"><a href="#non_standard_tab" aria-controls="messages" role="tab" data-toggle="tab">Non Standard Constituent</a></li>
+                        </ul>
+                        <div class="tab-content" style="display: none;">
+                            <div role="tabpanel" class="tab-pane @((ViewBag.ShowTab == "RawMat" || ViewBag.ShowTab == null) ? "active" : "")" id="raw_material_tab">
+                                @using (Html.BeginForm("UpdateCustomRawMaterial", "Quote", FormMethod.Post, new { @class = "form-horizontal" }))
+                                {
+                                    if (TempData["RawMatError"] != null)
+                                    {
+                                        <div class="alert alert-danger">
+                                            @TempData["RawMatError"]
+                                        </div>
+                                    }
+                                    <div class="form-group">
+                                        @Html.HiddenFor(x => x.QuotationId)
+                                        @Html.HiddenFor(x => x.QuotationMixId)
+                                        @Html.HiddenFor(x => x.RawMaterialConstituent.Id)
+                                        <label class="control-label col-md-2">Raw Material</label>
+                                        <div class="col-md-9">
+                                            <div class="col-md-12">
+                                                @Html.DropDownListFor(x => x.RawMaterialConstituent.RawMaterialId, Model.RawMaterialConstituent.ChooseRawMaterial(Model.RawMaterialConstituent.RawMaterialId),
+                                                new
+                                                {
+                                                    @class = "form-control master_select",
+                                                    @data_dependent = "#RawMaterialConstituent_QuantityUomId",
+                                                    @data_url = "/Json/GetUnitOfMeasurements/",
+                                                    @data_selected = Model.RawMaterialConstituent.QuantityUomId
+                                                })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2">Quantity</label>
+                                        <div class="col-md-9">
+                                            <div class="col-md-4">
+                                                @Html.TextBoxFor(x => x.RawMaterialConstituent.Quantity, new { @class = "form-control col-md-2" })
+                                            </div>
+                                            <div class="col-md-4">
+                                                @Html.DropDownListFor(x => x.RawMaterialConstituent.QuantityUomId, Model.RawMaterialConstituent.ChooseQuantityUOM(Model.RawMaterialConstituent.QuantityUomId), new { @class = "form-control" })
+                                            </div>
+                                            <div class="col-md-4">
+                                                <p class="form-control-static">
+                                                    @Html.CheckBoxFor(x => x.RawMaterialConstituent.PerCementWeight) Per Cement Weight?
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2"></label>
+                                        <div class="col-md-9">
+                                            <button class="btn btn-primary" type="submit">Save Raw Material</button>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <div role="tabpanel" class="tab-pane @(ViewBag.ShowTab == "Addon" ? "active" : "")" id="addon_tab">
+                                @using (Html.BeginForm("UpdateCustomMixAddon", "Quote", FormMethod.Post, new { @class = "form-horizontal" }))
+                                {
+                                    if (TempData["AddonError"] != null)
+                                    {
+                                        <div class="alert alert-danger">
+                                            @TempData["AddonError"]
+                                        </div>
+                                    }
+                                    <div class="form-group">
+                                        @Html.HiddenFor(x => x.QuotationId)
+                                        @Html.HiddenFor(x => x.QuotationMixId)
+                                        @Html.HiddenFor(x => x.AddonConstituent.Id)
+                                        <label class="control-label col-md-2">Add-On</label>
+                                        <div class="col-md-9">
+                                            @Html.DropDownListFor(x => x.AddonConstituent.AddonId, Model.AddonConstituent.ChooseAddon(Model.AddonConstituent.AddonId), new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2">Quantity</label>
+                                        <div class="col-md-9">
+                                            @Html.TextBoxFor(x => x.AddonConstituent.Quantity, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2"></label>
+                                        <div class="col-md-9">
+                                            <button class="btn btn-primary" type="submit">Save Add-On</button>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <div role="tabpanel" class="tab-pane @(ViewBag.ShowTab == "CusMat" ? "active" : "")" id="non_standard_tab">
+                                @using (Html.BeginForm("UpdateCustomNonStandardConstituent", "Quote", FormMethod.Post, new { @class = "form-horizontal" }))
+                                {
+                                    if (TempData["CusMatError"] != null)
+                                    {
+                                        <div class="alert alert-danger">
+                                            @TempData["CusMatError"]
+                                        </div>
+                                    }
+                                    <div class="form-group">
+                                        @Html.HiddenFor(x => x.QuotationMixId)
+                                        @Html.HiddenFor(x => x.NonStandardConstituent.Id)
+                                        <label class="control-label col-md-2">Description</label>
+                                        <div class="col-md-9">
+                                            <div class="col-md-12">
+                                                @Html.TextBoxFor(x => x.NonStandardConstituent.Description, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2">Cementitious?</label>
+                                        <div class="col-md-9">
+                                            <div class="col-md-12">
+                                                <p class="form-control-static">
+                                                    @Html.CheckBoxFor(x => x.NonStandardConstituent.IsCementitious)
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2">Quantity</label>
+                                        <div class="col-md-9">
+                                            <div class="col-md-4">
+                                                @Html.TextBoxFor(x => x.NonStandardConstituent.Quantity, new { @class = "form-control col-md-2" })
+                                            </div>
+                                            <div class="col-md-4">
+                                                @Html.DropDownListFor(x => x.NonStandardConstituent.QuantityUomId, Model.NonStandardConstituent.ChooseQuantityUOM(Model.NonStandardConstituent.QuantityUomId), new { @class = "form-control" })
+                                            </div>
+                                            <div class="col-md-4">
+                                                <p class="form-control-static">
+                                                    @Html.CheckBoxFor(x => x.NonStandardConstituent.PerCementWeight) Per Cement Weight?
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2">Cost</label>
+                                        <div class="col-md-9">
+                                            <div class="col-md-4">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        $
+                                                    </span>
+                                                    @Html.TextBoxFor(x => x.NonStandardConstituent.Cost, new { @class = "form-control col-md-2" })
+                                                    <span class="input-group-addon">
+                                                        Per
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                @Html.DropDownListFor(x => x.NonStandardConstituent.CostUomId, Model.NonStandardConstituent.ChooseCostUOM(Model.NonStandardConstituent.CostUomId), new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2"></label>
+                                        <div class="col-md-9">
+                                            <button class="btn btn-primary" type="submit">Save</button>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="no-more-tables panel-body">
+                    <div>
+                        <div>
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#raw_materials" data-toggle="tab">Raw Materials</a></li>
+                                <li><a href="#add_ons" data-toggle="tab">Add Ons</a></li>
+                                <li><a href="#non_standard_constituents" data-toggle="tab">Non Standard Constituents</a></li>
+                            </ul>
+                        </div>
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="raw_materials">
+                                <button type="button" class="btn btn-primary btn-sm add_raw_material">
+                                    <i class="fa fa-plus"></i>
+                                    Raw Material
+                                </button>
+                                <div id="mix_raw_material" class="">
+                                    @foreach (RedHill.SalesInsight.DAL.CustomMixConstituent mixConst in Model.CustomMixConstituents.Where(x => x.RawMaterialId > 0))
+                                    {
+                                        <div class="row item-row raw_material">
+                                            <div class="col-sm-1">
+                                                <a class="btn btn-danger btn-sm" href="javascript:void(0);" data-advanced-confirm="Confirm?" data-target="/Quote/DeleteCustomMixConstituent/@mixConst.Id">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                                @Html.HiddenFor(x => mixConst.Id, new { @Name = "Id" })
+                                            </div>
+                                            <div class="col-sm-3">
+                                                @Html.DropDownListFor(x => mixConst.RawMaterialId, Model.RawMaterialConstituent.ChooseRawMaterial(mixConst.RawMaterialId.GetValueOrDefault()),
+                                        new
+                                        {
+                                            @Name = "RawMaterialId",
+                                            @class = "form-control multiselect",
+                                            //@data_dependent = "#RawMaterialConstituent_QuantityUomId"
+                                            //,
+                                            //@data_url = "/Json/GetUnitOfMeasurements/",
+                                            @data_selected = mixConst.RawMaterialId
+                                        })
+                                                @*@mixConst.Description*@
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="uom-ddl">
+                                                    <input type="text" class="form-control input-small" name="Quantity" value="@mixConst.Quantity" />
+                                                    @Html.DropDownListFor(x => mixConst.QuantityUomId, Model.RawMaterialConstituent.ChooseQuantityUOM(mixConst.QuantityUomId.GetValueOrDefault(),mixConst.RawMaterialId.GetValueOrDefault()), new { @Name = "UomId", @class = "form-control" })
+                                                    <span>
+                                                        @*@(mixConst.QuantityUomId != null ? mixConst.QuantityUom.Name : "")*@
+                                                        @(mixConst.PerCementWeight.GetValueOrDefault(false) ? "/Cw" : "")
+                                                    </span>
+                                                </div>
+                                                <label>
+                                                    <input type="checkbox" name="PerCementWeight" @(mixConst.PerCementWeight.GetValueOrDefault() ? "checked" : "") />
+                                                    Per Cement Weight?
+                                                </label>
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <div class="form-control-static input-small">
+                                                    <label>Cost: </label>
+                                                    <span>$</span><span class="cost_box">@(mixConst.Cost)</span> <span class="uomName_box">@(mixConst.CostUomId != null ? "/" + mixConst.CostUom.Name : "")</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="add_ons">
+                                <button type="button" class="btn btn-primary btn-sm add_add_on">
+                                    <i class="fa fa-plus"></i>
+                                    Add On
+                                </button>
+                                <div id="mix_add_ons">
+                                    @foreach (RedHill.SalesInsight.DAL.CustomMixConstituent mixConst in Model.CustomMixConstituents.Where(x => x.RawMaterialId == null || x.RawMaterialId == 0).Where(x => x.AddonId > 0))
+                                    {
+                                        <div class="row item-row add_on">
+                                            <div class="col-sm-1">
+                                                <a class="btn btn-danger btn-sm" href="javascript:void(0);" data-advanced-confirm="Confirm?" data-target="/Quote/DeleteCustomMixConstituent/@mixConst.Id">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <input type="hidden" name="Id" value="@mixConst.Id" />
+                                                @Html.DropDownListFor(x => mixConst.AddonId, Model.AddonConstituent.ChooseAddon(mixConst.AddonId.GetValueOrDefault()), new { @class = "form-control add-ons multiselect", @Name = "AddOnId" })
+                                            </div>
+                                            <div class="col-sm-1">
+                                                @Html.TextBoxFor(x => mixConst.Quantity, new { @placeholder = "Quantity", @Name = "Quantity", @class = "form-control input-small" })
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <div class="form-control-static">
+                                                    <label class="">Cost : </label>
+                                                    <span>$</span><span class="cost_box">@(mixConst.Cost)</span> <span class="uom_box">@(mixConst.CostUomId != null ? "/" + mixConst.CostUom.Name : "")</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="non_standard_constituents">
+                                <button type="button" class="btn btn-primary btn-sm add_non_standard_const">
+                                    <i class="fa fa-plus"></i>
+                                    Non Standard Constituent
+                                </button>
+                                <div id="mix_non_standard_consts">
+                                    @foreach (RedHill.SalesInsight.DAL.CustomMixConstituent mixConst in Model.CustomMixConstituents.Where(x => x.RawMaterialId == null || x.RawMaterialId == 0).Where(x => x.AddonId == null || x.AddonId == 0))
+                                    {
+                                        <div class="row item-row non_standard_const">
+                                            <div class="col-sm-1">
+                                                <a class="btn btn-danger btn-sm" href="javascript:void(0);" data-advanced-confirm="Confirm?" data-target="/Quote/DeleteCustomMixConstituent/@mixConst.Id">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <input type="hidden" name="Id" value="@mixConst.Id" />
+                                                <input type="text" class="form-control" name="Description" value="@mixConst.Description" />
+                                                <label>
+                                                    <input type="checkbox" name="IsCementitious" @(mixConst.IsCementitious.GetValueOrDefault() ? "checked" : "") />
+                                                    Cementitious?
+                                                </label>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="uom-ddl">
+                                                    <input type="text" class="form-control input-small" name="Quantity" value="@mixConst.Quantity" />
+                                                    @Html.DropDownListFor(x => mixConst.QuantityUomId, Model.NonStandardConstituent.ChooseQuantityUOM(mixConst.QuantityUomId.GetValueOrDefault()), new { @Name = "QuantityUomId", @class = "form-control" })
+                                                    @*<span>
+                @(mixConst.PerCementWeight.GetValueOrDefault(false) ? "/Cw" : "")
+            </span>*@
+                                                </div>
+                                                <label>
+                                                    <input type="checkbox" name="PerCementWeight" @(mixConst.PerCementWeight.GetValueOrDefault() ? "checked" : "") />
+                                                    Per Cement Weight
+                                                </label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="form-inline">
+                                                    <div class="input-group">
+                                                        <div class="input-group-addon">$</div>
+                                                        <input type="text" class="form-control input-small" name="Cost" value="@mixConst.Cost" />
+                                                        <div class="input-group-addon">Per</div>
+                                                    </div>
+                                                    @Html.DropDownListFor(x => mixConst.CostUomId, Model.NonStandardConstituent.ChooseCostUOM(mixConst.CostUomId.GetValueOrDefault()), new { @Name = "CostUomId", @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+@section Scripts{
+    <link href="~/Content/no-more-tables.css" rel="stylesheet" />
+
+    <script type="text/javascript">
+        var quotationId = @Model.QuotationId;
+        var addonCost = @Model.AddOnCost;
+        var mixCost = @Model.MixCost;
+
+        $(document).ready(function () {
+            var enableEditing = '@Model.Profile.EnableEdit';
+            var approved = '@(Model.Profile.Status == "APPROVED")';
+
+            if(approved == 'True' && enableEditing == 'False')
+            {
+                $("input,select,button,textarea").prop("disabled",true).attr("title","Cannot change since the quotation is approved");
+                $(".btn").hide();
+            }
+
+            if ("@ViewBag.ScrollToTabs" == "True") {
+                $('html, body').animate({
+                    scrollTop: $("#tab_panel").offset().top
+                }, 500);
+            }
+
+            $(".volume_field, .price_field, .avg_load_field, .unload_field").blur(function () {
+                volume = $(".volume_field").val().replace(/,/g, '');
+                price = $(".price_field").val().replace(/,/g, '');
+                avg_load = $(".avg_load_field").val().replace(/,/g, '');
+                unload = $(".unload_field").val().replace(/,/g, '');
+                var addon_Cost = $("#AddOnCost").val();
+                var mix_Cost = $("#MixCost").val();
+                $.get("/Quote/CalculateMixMetrics", { "id": quotationId, "volume": volume, "price": price, "averageLoad": avg_load, "unload": unload, "addonCost": addon_Cost, "mixCost": mix_Cost }, function (data) {
+                    if (data == "error") {
+                        alert("Error in calculating Metrics.");
+                    } else {
+                        obj = JSON.parse(data);
+                        $(".spread_info_box").text("$" + obj["spread"] + "/@company.DeliveryQtyUomSingular");
+                        $(".contribution_info_box").text("$" + obj["contribution"] + "/@company.DeliveryQtyUomSingular");
+                        $(".profit_info_box").text("$" + obj["profit"] + "/@company.DeliveryQtyUomSingular");
+                    }
+                });
+            });
+
+            $(document).on("masterSelectChange",function(event){
+                //re-populate the Quantity UOM list
+                var lists = $("[data-type='QuantityUomList']");
+                $.each(lists,function(lIndex,list){
+                    $(list).empty();
+                    $.each(event.items,function(i,e){
+                        $(list).append("<li><a href='#' data-val='"+ e.value + "'>" + e.text +"</a></li>");
+                    });
+                });
+            });
+
+            var customMixActions = {
+                rawMaterials: [],
+                rawMaterialUomMap: [],
+                addOns: [],
+                costUoms: [],
+                quantityUoms: [],
+                bindUomList: function(selector,rawMaterialId, callback){
+                    $.get("/Json/GetUnitOfMeasurements/" + rawMaterialId, function(data){
+                        callback && callback(data);
+                    });
+                },
+                getQuantityUoms: function(callback){
+                    var options = [];
+                    if(customMixActions.quantityUoms.length > 0){
+                        callback && callback(customMixActions.quantityUoms);
+                    }else{
+                        //Get Uoms from Server
+                        $.get("/Quote/GetQuantityUoms", function(data){
+                            $.each(data,function(i,e){
+                                var opt = "<option value='" + e.Id + "'>" + e.Name + "</option>";
+                                options.push(opt);
+                                customMixActions.quantityUoms.push(e);
+                            });
+                            callback && callback(customMixActions.quantityUoms);
+                        });
+                    }
+                },
+                getCostUoms: function(callback){
+                    var options = [];
+                    if(customMixActions.costUoms.length > 0){
+                        callback && callback(customMixActions.costUoms);
+                    }else{
+                        //Get Uoms from Server
+                        $.get("/Quote/GetCostUomsByPriority2", function(data){
+                            $.each(data,function(i,e){
+                                var opt = "<option value='" + e.Id + "'>" + e.Name + "</option>";
+                                options.push(opt);
+                                customMixActions.costUoms.push(e);
+                            });
+                            callback && callback(customMixActions.costUoms);
+                        });
+                    }
+                },
+                addRawMaterialRow: function(){
+                    //quick add raw material
+                    var rmResponse = { customMixConstId: 0, quantity: 1, cost: 0 };
+                    $.ajax({
+                        url: '/Quote/QuickAddRawMaterial',
+                        data: {quotationMixId: eval(@Model.QuotationMixId)},
+                        method: 'POST',
+                        success: function(data){
+                            if(data.Success){
+                                rmResponse.customMixConstId = data.CustomMixConstId;
+                                rmResponse.quantity = data.Quantity;
+                                rmResponse.cost = data.Cost;
+                                rmResponse.costUomName = data.CostUomName;
+                                var mixRawMaterial = $("#mix_raw_material");
+                                var options = [], uomOptions = [];
+                                var uomSelect = $("<select name='UomId' />");
+                                uomSelect.addClass("form-control uom-ddl uom-items");
+                                var row = $("<div/>").addClass("row item-row raw_material");
+                                var firstCol = $("<div/>").addClass("col-sm-1"),
+                                    secondCol = $("<div/>").addClass("col-sm-3"),
+                                    thirdCol = $("<div/>").addClass("col-sm-2"),
+                                    fourthCol = $("<div/>").addClass("col-sm-6");
+
+                                //Bind Delete link
+                                firstCol.append($("<a/>").attr("data-advanced-confirm","Confirm?").attr("href","javascript:void(0);").attr("data-target","/Quote/DeleteCustomMixConstituent/"+ data.CustomMixConstId).addClass("btn btn-sm btn-danger btn-remove").append($("<i/>").addClass("fa fa-trash")));
+
+                                var hId = $("<input type='hidden'/>");
+                                hId.attr("name","Id").val(rmResponse.customMixConstId);
+                                firstCol.append(hId);
+
+                                //Fill Up Raw Material list
+                                var rmSelect = $("<select name='RawMaterialId' />").addClass("form-control multiselect");
+
+                                $.get('/Quote/GetRawMaterials/@Model.QuotationId', function(data){
+                                    $.each(data,function(i,e){
+                                        var opt = "<option value='" + e.Id + "'>" + e.Name + "</option>";
+                                        options.push(opt);
+                                        customMixActions.rawMaterials.push(e);
+                                    });
+                                    rmSelect.html(options);
+                                    rmSelect.trigger("change");
+
+                                    if (rmSelect[0].sumo) {
+                                        rmSelect[0].sumo.reload();
+                                    }
+                                }).fail(function(res){
+                                    //Do something about the error
+                                });
+
+                                secondCol.append(rmSelect);
+
+                                //Bind Quantity
+                                var inputBox = $("<div/>");
+                                inputBox.addClass("uom-ddl");
+
+                                var quantityInput = $("<input type='text' name='Quantity' />");
+                                quantityInput.addClass("form-control input-small");
+                                quantityInput.attr("placeholder","Quantity");
+                                quantityInput.val(rmResponse.quantity);
+                                inputBox.append(quantityInput);
+                                //uomSelect.html(uomOptions);
+                                inputBox.append(" ").append(uomSelect);
+
+                                thirdCol.append(inputBox);
+
+                                //Bind Per cement Weight checkbox
+                                var perCementWeightCheck = $("<label><input type='checkbox' name='PerCementWeight'/> Per Cement Weight</label>");
+
+                                thirdCol.append(perCementWeightCheck);
+                                var costBox = $("<div class='form-control-static' />");
+                                costBox.append('<label>Cost: </label> <span>$</span><span class="cost_box">' + rmResponse.cost + "</span><span class='uomName_box'>"+(rmResponse.costUomName ==""?"":" /"+rmResponse.costUomName)+"</span>");
+
+                                fourthCol.append(costBox);
+
+                                row.append(firstCol)
+                                   .append(secondCol)
+                                   .append(thirdCol)
+                                   .append(fourthCol)
+                                mixRawMaterial.append(row);
+
+                                updateMixCalculations();
+                            }
+                        }
+                    });
+                },
+                addAddOnRow: function(){
+                    var mixAddOn = $("#mix_add_ons");
+                    $.ajax({
+                        url: '/Quote/QuickAddAddOn',
+                        data: {quotationMixId: eval(@Model.QuotationMixId)},
+                        method: 'POST',
+                        success: function(data){
+                            if(data.Success){
+                                var options = [];
+                                var row = $("<div/>").addClass("row item-row add_on");
+                                var firstCol = $("<div/>").addClass("col-sm-1"),
+                                    secondCol = $("<div/>").addClass("col-sm-3"),
+                                    thirdCol = $("<div/>").addClass("col-sm-1"),
+                                    fourthCol = $("<div/>").addClass("col-sm-5");
+
+                                //Bind Delete link
+                                firstCol.append($("<a/>").attr("data-advanced-confirm","Confirm?").attr("href","javascript:void(0);").attr("data-target","/Quote/DeleteCustomMixConstituent/"+ data.CustomMixConstId).addClass("btn btn-sm btn-danger btn-remove").append($("<i/>").addClass("fa fa-trash")));
+
+                                var hId = $("<input type='hidden'/>");
+                                hId.attr("name","Id").val(data.CustomMixConstId);
+                                firstCol.append(hId);
+
+                                //Fill Up Raw Material list
+                                var aoSelect = $("<select/>").addClass("form-control add-ons multiselect");
+                                aoSelect.attr("name","AddOnId");
+                                $.get("/Quote/GetAddons/@Model.QuotationMixId", function(data){
+                                    $.each(data,function(i,e){
+                                        var opt = "<option value='" + e.Value + "'>" + e.Text + "</option>";
+                                        options.push(opt);
+                                        customMixActions.addOns.push(e);
+                                    });
+                                    aoSelect.html(options);
+                                    if (aoSelect[0].sumo) {
+                                        aoSelect[0].sumo.reload();
+                                    }
+                                });
+                                secondCol.append(aoSelect);
+
+                                //Bind Quantity
+                                var inputBox = $("<div/>");
+                                inputBox.addClass("input-group");
+
+                                var quantityInput = $("<input type='text' />");
+                                quantityInput.addClass("form-control input-small");
+                                quantityInput.attr("placeholder","Quantity");
+                                quantityInput.attr("name", "Quantity");
+                                quantityInput.val(data.Quantity);
+                                inputBox.append(quantityInput);
+
+                                thirdCol.append(inputBox);
+
+                                var costBox = $("<div class='form-control-static'><label>Cost : </label><span> $</span><span class='cost_box'>"+ parseFloat(data.Cost).toFixed(2) +"</span><span class='uom_box'>"+ (data.CostUomName==""?"":" /"+data.CostUomName)+ " </span></div>");
+                                fourthCol.append(costBox);
+
+                                row.append(firstCol)
+                                   .append(secondCol)
+                                   .append(thirdCol)
+                                   .append(fourthCol)
+                                mixAddOn.append(row);
+
+                                updateMixCalculations();
+                            }else{
+                                showAlert(data.Message);
+                            }
+                        },
+                        error: function(res){
+
+                        }
+                    });
+                },
+                addNonStandardConstituent: function(){
+                    var mixNonStandardConsts = $("#mix_non_standard_consts");
+                    $.ajax({
+                        url: '/Quote/QuickAddNonStandardConstituent',
+                        data: {quotationMixId: eval(@Model.QuotationMixId)},
+                        method: 'POST',
+                        success: function(data){
+                            if (data.Success) {
+                                var row = $("<div/>").addClass("row item-row non_standard_const");
+                                var firstCol = $("<div/>").addClass("col-sm-1"),
+                                    secondCol = $("<div/>").addClass("col-sm-3"),
+                                    thirdCol = $("<div/>").addClass("col-sm-2"),
+                                    fourthCol = $("<div/>").addClass("col-sm-6");
+
+                                //Bind Delete link
+                                firstCol.append($("<a/>").attr("data-advanced-confirm","Confirm?").attr("href","javascript:void(0);").attr("data-target","/Quote/DeleteCustomMixConstituent/"+ data.CustomMixConstId).addClass("btn btn-sm btn-danger btn-remove").append($("<i/>").addClass("fa fa-trash")));
+
+                                var hId = $("<input type='hidden'/>");
+                                hId.attr("name","Id").val(data.CustomMixConstId);
+                                firstCol.append(hId);
+
+                                var descInput = $("<input type='text' />");
+                                descInput.addClass("form-control");
+                                descInput.attr("placeholder","Description");
+                                descInput.attr("name","Description");
+                                descInput.val(data.Description);
+                                secondCol.append(descInput);
+
+                                var cementitiousCheck = $("<label type='checkbox'><input type='checkbox' name='IsCementitious' /> Cementitious?</label>");
+                                secondCol.append(cementitiousCheck);
+
+                                //Bind Quantity
+                                var inputBox = $("<div/>");
+                                inputBox.addClass("uom-ddl");
+
+                                var quantityInput = $("<input text='text' />");
+                                quantityInput.addClass("form-control input-small");
+                                quantityInput.attr("placeholder","Quantity");
+                                quantityInput.attr("name","Quantity");
+                                quantityInput.val(data.Quantity);
+                                inputBox.append(quantityInput);
+
+                                var quantityUomList = $("<select/>");
+                                quantityUomList.addClass("form-control");
+                                quantityUomList.attr("name","QuantityUomId");
+
+                                customMixActions.getQuantityUoms(function(uoms){
+                                    var qUoms = [];
+                                    $.each(uoms, function(i,e){
+                                        var option = $("<option value='"+ e.Id + "'>" + e.Name + "</option>");
+                                        qUoms.push(option);
+                                    });
+                                    quantityUomList.html(qUoms);
+                                });
+
+                                inputBox.append(" ").append(quantityUomList);
+
+                                //Bind Per cement Weight checkbox
+                                var perCementWeightCheck = $("<label class=''><input type='checkbox' name='PerCementWeight' /> Per Cement Weight</label>");
+
+                                thirdCol.append(inputBox);
+                                thirdCol.append(perCementWeightCheck);
+
+                                //Bind Cost
+                                var costContainer = $("<div/>");
+                                costContainer.addClass("form-inline");
+                                var costBox = $("<div/>");
+                                costBox.addClass("input-group");
+                                costBox.append($("<div/>").addClass("input-group-addon").append("$"));
+
+                                var costText = $("<input type='text' name='Cost' class='form-control input-small cost'/>")
+                                costText.val(data.Cost);
+                                costText.attr("placeholder","Cost");
+                                costBox.append(costText);
+                                costBox.append($("<div/>").addClass("input-group-addon").append("Per"));
+
+                                var costUomList = $("<select/>");
+                                costUomList.attr("name","CostUomId").addClass("form-control");
+                                customMixActions.getCostUoms(function(uoms){
+                                    var costUoms = [];
+                                    $.each(uoms, function(i,e){
+                                        var option = $("<option value='"+ e.Id + "'>" + e.Name + "</option>");
+                                        costUoms.push(option);
+                                    });
+                                    costUomList.html(costUoms);
+                                });
+
+                                costContainer.append(costBox);
+                                costContainer.append(costUomList);
+                                fourthCol.append(costContainer);
+
+                                row.append(firstCol)
+                                   .append(secondCol)
+                                   .append(thirdCol)
+                                   .append(fourthCol);
+                                mixNonStandardConsts.append(row);
+
+                                updateMixCalculations();
+                            }
+                        }
+                    });
+                }
+            }
+
+            function showAlert(message){
+                //Show error message
+                var mbox = $("#messages");
+                mbox.addClass("alert alert-danger");
+                mbox.html(message);
+
+                setTimeout(function(){
+                    mbox.html("");
+                    mbox.removeClass("alert alert-danger");
+                }, 5000);
+            }
+
+            $("#raw_materials").on("change","select[name='RawMaterialId']",function(d){
+                //Load UOMs
+                var rawMaterialId = $(this).find("option:selected").attr("value");
+                var rowItem = $(this).parents(".item-row");
+                var uomList = rowItem.find("select[name='UomId']");
+                customMixActions.bindUomList(this,rawMaterialId,function(uoms){
+                    uomList.empty();
+                    $.each(uoms,function(i,e){
+                        var uomOption = "<option value='" + e.value + "'>" + e.text + "</option>";
+                        uomList.append(uomOption);
+                    });
+                });
+            });
+
+            $(".add_raw_material").click(function(){
+                customMixActions.addRawMaterialRow();
+                setTimeout(function(){
+                    $(".multiselect").SumoSelect({search : true});
+                },2000);
+            });
+            $(".add_add_on").click(function(){
+                customMixActions.addAddOnRow();
+                setTimeout(function(){
+                    $(".multiselect").SumoSelect({search : true});
+                },2000);
+            });
+            $(".add_non_standard_const").click(function(){
+                customMixActions.addNonStandardConstituent();
+            });
+
+            var updateMixCalculations = function(){
+                $.post("/Quote/GetQuotationMixCalculations/@Model.QuotationMixId",function(data){
+                    data = JSON.parse(data);
+                    if(data){
+                        $(".mix_cost").text(data.MixCost);
+                        $("#MixCost").val(data.MixCost);
+                        $(".addon_cost").text(data.AddOnCost);
+                        $("#AddOnCost").val(data.AddOnCost);
+                        $(".spread_info_box").text("$" + data.Spread + "/@company.DeliveryQtyUomSingular");
+                        $("#Spread").val(data.Spread);
+                        $(".contribution_info_box").text("$" + data.Contribution + "/@company.DeliveryQtyUomSingular");
+                        $(".profit_info_box").text("$" + data.Profit + "/@company.DeliveryQtyUomSingular");
+                        if(data.Price){
+                            $("#Price").val(data.Price.toFixed(2));
+                        }
+                    }
+                });
+            }
+
+            function saveRawMaterialConsts(item) {
+                var rm = $(item).parents(".raw_material");
+                if(rm.length){
+                    var mixConst = {};
+                    mixConst.Id = $(rm.find("[name='Id']")[0]).val();
+                    mixConst.RawMaterialId = $(rm.find("[name='RawMaterialId']")[0]).val();
+                    mixConst.Quantity = $(rm.find("[name='Quantity']")[0]).val();
+                    mixConst.QuantityUomId = $(rm.find("[name='UomId']")[0]).val();
+                    mixConst.PerCementWeight = $(rm.find("[name='PerCementWeight']")[0]).is(":checked");
+                    mixConst.QuotationMixId = eval(@Model.QuotationMixId);
+                }
+                console.log(mixConst);
+                $.ajax({
+                    url: '/Quote/SaveCustomMixConstituentRawMaterial',
+                    method: 'POST',
+                    dataType: 'json',
+                    data: mixConst,
+                    beforeSend: function(){
+                        rm.find("[name]").attr("disabled","disabled");
+                    },
+                    success: function(data){
+                        if(data.Success){
+                            var cb = rm.find(".cost_box");
+                            var uomBox = rm.find(".uomName_box");
+                            cb.html(data.Cost);
+                            if (data.CostUomName != "" || data.CostUomName != "null") {
+                                uomBox.html(" /"+data.CostUomName);
+                                console.log("True");
+                            }
+                            else {
+                                console.log("false");
+                                uomBox.html("");
+                            }
+                                
+                        }
+                        updateMixCalculations();
+                    },
+                    error: function(res){
+                        console.log(res);
+                    },
+                    complete: function(){
+                        rm.find("[name]").removeAttr("disabled");
+                        $(".sumo_RawMaterialId").removeClass("disabled");
+                    }
+                });
+            }
+
+            function saveAddons(item){
+                var itemRow = $(item).parents(".add_on");
+                if(itemRow.length){
+                    var mixConst = {};
+                    mixConst.Id = $(itemRow.find("[name='Id']")[0]).val();
+                    mixConst.AddOnId = $(itemRow.find("[name='AddOnId']")[0]).val();
+                    mixConst.Quantity = $(itemRow.find("[name='Quantity']")[0]).val();
+                    mixConst.QuotationMixId = eval(@Model.QuotationMixId);
+                }
+                $.ajax({
+                    url: '/Quote/SaveCustomMixConstituentAddon',
+                    method: 'POST',
+                    dataType: 'json',
+                    data: mixConst,
+                    beforeSend: function(){
+                        itemRow.find("[name]").attr("disabled","disabled");
+                    },
+                    success: function(data){
+                        if(data.Success){
+                            var cb = itemRow.find(".cost_box");
+                            var ub = itemRow.find(".uom_box");
+                            cb.html(data.Cost.toFixed(2));
+                            ub.html(data.CostUomName==""?"":" /"+data.CostUomName);
+                        }
+                        updateMixCalculations();
+                    },
+                    error: function(res){
+                        console.log(res);
+                    },
+                    complete: function(){
+                        itemRow.find("[name]").removeAttr("disabled");
+                    }
+                });
+            }
+
+            function saveNonStandardConsts(item){
+                var itemRow = $(item).parents(".non_standard_const");
+                if(itemRow.length){
+                    var mixConst = {};
+                    mixConst.Id = $(itemRow.find("[name='Id']")[0]).val();
+                    mixConst.Description = $(itemRow.find("[name='Description']")[0]).val();
+                    mixConst.IsCementitious = $(itemRow.find("[name='IsCementitious']")[0]).is(":checked");
+                    mixConst.Quantity = $(itemRow.find("[name='Quantity']")[0]).val();
+                    mixConst.QuantityUomId = $(itemRow.find("[name='QuantityUomId']")[0]).val();
+                    mixConst.PerCementWeight = $(itemRow.find("[name='PerCementWeight']")[0]).is(":checked");
+                    mixConst.Cost = $(itemRow.find("[name='Cost']")[0]).val();
+                    mixConst.CostUomId = $(itemRow.find("[name='CostUomId']")[0]).val();
+                    mixConst.QuotationMixId = eval(@Model.QuotationMixId);
+                }
+                $.ajax({
+                    url: '/Quote/SaveCustomMixConstituentNonStandardConst',
+                    method: 'POST',
+                    dataType: 'json',
+                    data: mixConst,
+                    beforeSend: function(){
+                        itemRow.find("[name]").attr("disabled","disabled");
+                    },
+                    success: function(data){
+                        if(data.Success){
+
+                        }
+                        updateMixCalculations();
+                    },
+                    error: function(res){
+                        console.log(res);
+                    },
+                    complete: function(){
+                        itemRow.find("[name]").removeAttr("disabled");
+                    }
+                });
+            }
+
+            $(document).on("click","[data-advanced-confirm]:not(.state-confirm)",function(e){
+                e.preventDefault();
+                var item = $(this);
+                var originalHtml = item.attr("data-original-html") ? item.attr("data-original-html"): item.html();
+                item.attr("data-original-html", originalHtml);
+                if(item.hasClass("state-confirm")){
+                    item.removeClass("state-confirm");
+                    item.attr("title", "");
+                }else{
+                    item.prepend(item.attr("data-advanced-confirm")).addClass("state-confirm");
+                    item.attr("title","Click again to confirm");
+                }
+            }).on("click",function(e){
+                if(e.target && !$(e.target).attr("data-advanced-confirm") && !$(e.target).parents().attr("data-advanced-confirm")){
+                    var items = $("[data-advanced-confirm].state-confirm");
+                    $.each(items,function(i,e){
+                        $(e).removeClass("state-confirm");
+                        $(e).html($(e).attr("data-original-html"));
+                    });
+                }
+            }).on("click","[data-advanced-confirm].state-confirm",function(){
+                var item = $(this);
+                var itemRow = item.parents(".item-row");
+                $.ajax({
+                    url: item.attr("data-target"),
+                    beforeSend: function(){
+                        item.html("Deleting...").attr("disabled","disabled");
+                        itemRow.find("[name]").attr("disabled","disabled");
+                    },
+                    success: function(data){
+                        if(data.Success){
+                            item.parents(".item-row").fadeOut(200,function(){
+                                item.remove();
+                            });
+                            updateMixCalculations();
+                        }
+                    },
+                    error: function(){
+                        itemRow.find("[name]").attr("disabled","disabled");
+                        item.html(item.attr("data-original-html"));
+                        item.removeClass("state-confirm");
+                        alert('Could not delete the mix constituent');
+                    }
+                });
+
+            });
+
+            $("#raw_materials").on("blur","input[type='text'][name]",function(e){
+                saveRawMaterialConsts(this);
+            }).on("change","select[name], input[type='checkbox']", function(e){
+                    saveRawMaterialConsts(this);
+            });
+
+            $("#add_ons").on("blur","input[type='text'][name]",function(e){
+                saveAddons(this);
+            }).on("change","select[name], input[type='checkbox']",function(e){
+                saveAddons(this);
+            });
+
+            $("#non_standard_constituents").on("blur","input[type='text'][name]",function(e){
+                saveNonStandardConsts(this);
+            }).on("change","select[name], input[type='checkbox']", function(e){
+                saveNonStandardConsts(this);
+            });
+        });
+    </script>
+}

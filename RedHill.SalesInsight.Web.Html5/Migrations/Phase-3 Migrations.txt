@@ -1,0 +1,324 @@
+﻿ALTER TABLE Project
+  ADD LastEditTime datetime;
+
+ALTER TABLE Project
+  ADD ProjectionEditTime datetime;
+
+ALTER TABLE Quotation
+  ADD FskBasePrice decimal(18,2);
+
+ALTER TABLE Quotation
+  ADD SalesStaffId int;
+
+ALTER TABLE Quotation
+	ADD FOREIGN KEY (SalesStaffId)
+	REFERENCES SalesStaff(SalesStaffId)
+
+Update Quotation set SalesStaffId = (select top 1 SalesStaffId from ProjectSalesStaff pss where pss.ProjectId = Quotation.ProjectId);
+Update Quotation set FskBasePrice = (select BasePrice from FskPrice p where p.Id = Quotation.FskPriceId);
+
+ALTER TABLE District
+  ADD MapCenterLat varchar(50);
+
+ALTER TABLE District
+  ADD MapCenterLong varchar(50);
+
+ALTER TABLE District
+  ADD MapZoomLevel int;
+
+CREATE TABLE [dbo].[CompetitorPlant](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[CompetitorId] [int] NOT NULL,
+	[DistrictId] [int] NOT NULL,
+	[Name] [varchar](50) NULL,
+	[Latitude] [varchar](50) NULL,
+	[Longitude] [varchar](50) NULL,
+	[Active] [bit] NULL,
+ CONSTRAINT [PK_CompetitorPlant] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[CompetitorPlant]  WITH CHECK ADD  CONSTRAINT [FK_CompetitorPlant_Competitor] FOREIGN KEY([CompetitorId])
+REFERENCES [dbo].[Competitor] ([CompetitorId])
+GO
+
+ALTER TABLE [dbo].[CompetitorPlant] CHECK CONSTRAINT [FK_CompetitorPlant_Competitor]
+GO
+
+ALTER TABLE [dbo].[CompetitorPlant]  WITH CHECK ADD  CONSTRAINT [FK_CompetitorPlant_District] FOREIGN KEY([DistrictId])
+REFERENCES [dbo].[District] ([DistrictId])
+GO
+
+ALTER TABLE [dbo].[CompetitorPlant] CHECK CONSTRAINT [FK_CompetitorPlant_District]
+GO
+
+ALTER TABLE Project
+  ADD Latitude varchar(50);
+
+ALTER TABLE Project
+  ADD Longitude varchar(50);
+
+ALTER TABLE Plant
+  ADD Latitude varchar(50);
+
+ALTER TABLE Plant
+  ADD Longitude varchar(50);
+
+ALTER TABLE District
+  ADD MapScaleRadius10 int;
+
+ALTER TABLE District
+  ADD MapScaleRadius100 int;
+
+Alter table PlantBudget
+	add Ticketing float;
+
+Alter table PlantBudget
+	add Loading float;
+
+Alter table PlantBudget
+	add Tempering float;
+
+Alter table PlantBudget
+	add ToJob float;
+
+Alter table PlantBudget
+	add Wait float;
+
+Alter table PlantBudget
+	add Wash float;
+
+Alter table PlantBudget
+	add Unload float;
+
+Alter table PlantBudget
+	add FromJob float;q
+
+Alter table PlantBudget
+	add CydHr float;
+
+Alter table PlantBudget
+	add AvgLoad float;
+
+Alter table PlantBudget
+	alter column Budget float;
+
+Alter table PlantBudget
+	alter column Trucks float;
+
+CREATE TABLE [dbo].[PlantFinancialBudget](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[PlantId] [int] NOT NULL,
+	[Revenue] [decimal](18, 2) NULL,
+	[MaterialCost] [decimal](18, 2) NULL,
+	[Profit] [decimal](18, 2) NULL,
+	[DeliveryVariable] [float] NULL,
+	[PlantVariable] [float] NULL,
+	[DeliveryFixed] [float] NULL,
+	[PlantFixed] [float] NULL,
+	[SGA] [float] NULL
+ CONSTRAINT [PK_PlantFinancialBudget] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[PlantFinancialBudget]  WITH CHECK ADD  CONSTRAINT [FK_PlantFinancialBudget_PlantFinancialBudget] FOREIGN KEY([PlantId])
+REFERENCES [dbo].[Plant] ([PlantId])
+GO
+
+ALTER TABLE [dbo].[PlantFinancialBudget] CHECK CONSTRAINT [FK_PlantFinancialBudget_PlantFinancialBudget]
+GO
+
+ALTER TABLE PlantFinancialBudget 
+	ADD [Month] [int] NOT NULL
+
+ALTER TABLE PlantFinancialBudget 
+	ADD	[YEAR] [int] NOT NULL
+
+
+ALTER TABLE MarketSegment
+	add  DispatchId varchar(50)
+
+ALTER TABLE Plant
+	add  DispatchId varchar(50)
+
+CREATE TABLE [dbo].[MetricIndicatorAllowances](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Metric] [varchar](50) NOT NULL,
+	[Ok] [float] NOT NULL,
+	[Caution] [float] NOT NULL,
+	[LessIsBetter] [bit] NULL,
+ CONSTRAINT [PK_IndicatorAllowances] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+CREATE TABLE [dbo].[TargetIndicatorAllowances](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Metric] [varchar](50) NULL,
+	[Target] [float] NOT NULL,
+	[Ok] [float] NOT NULL,
+	[Caution] [float] NOT NULL,
+	[LessIsBetter] [bit] NULL,
+ CONSTRAINT [PK_TargetIndicatorAllowances] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+CREATE TABLE [dbo].[CustomerAging](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[CustomerNumber] [varchar](100) NOT NULL,
+	[CustomerName] [varchar](200) NOT NULL,
+	[Balance] [decimal](18, 2) NOT NULL,
+	[CurrentAmount] [decimal](18, 2) NOT NULL,
+	[Over1Month] [decimal](18, 2) NOT NULL,
+	[Over2Month] [decimal](18, 2) NOT NULL,
+	[Over3Month] [decimal](18, 2) NOT NULL,
+	[DSO] [decimal](18, 2) NOT NULL,
+	[ReportDate] [datetime] NOT NULL,
+ CONSTRAINT [PK_CustomerAging] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+CREATE TABLE [dbo].[CustomerOrderChanges](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[OrderId] [varchar](50) NOT NULL,
+	[CustomerNumber] [varchar](100) NOT NULL,
+	[ConcreteProductId] [varchar](50) NOT NULL,
+	[ConcreteProductVolume] [float] NOT NULL,
+	[ReportDate] [datetime] NOT NULL,
+ CONSTRAINT [PK_CustomerOrderChanges] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+CREATE TABLE [dbo].[CustomerProductivity](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[ReportDate] [datetime] NOT NULL,
+	[CustomerNumber] [varchar](100) NOT NULL,
+	[CustomerName] [varchar](200) NOT NULL,
+	[OrderCode] [varchar](200) NOT NULL,
+	[TicketCode] [varchar](50) NOT NULL,
+	[IsFOB] [bit] NOT NULL,
+	[PlantDispatchCode] [varchar](50) NOT NULL,
+	[TruckCode] [varchar](50) NULL,
+	[Quantity] [float] NOT NULL,
+	[Ticketing] [float] NOT NULL,
+	[LoadTemper] [float] NOT NULL,
+	[ToJob] [float] NOT NULL,
+	[Wait] [float] NOT NULL,
+	[Unload] [float] NOT NULL,
+	[Wash] [float] NOT NULL,
+	[FromJob] [float] NOT NULL,
+ CONSTRAINT [PK_CustomerProductivity] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+CREATE TABLE [dbo].[CustomerProfitability](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[ReportDate] [datetime] NOT NULL,
+	[CustomerNumber] [varchar](100) NOT NULL,
+	[CustomerName] [varchar](200) NOT NULL,
+	[SegmentId] [varchar](50) NOT NULL,
+	[Revenue] [decimal](18, 2) NOT NULL,
+	[MaterialCost] [decimal](18, 2) NOT NULL,
+ CONSTRAINT [PK_CustomerProfitability] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+ALTER table CustomerProductivity
+	add SegmentId varchar(50)
+
+ALTER table CustomerAging
+	add Over4Month decimal(18,2)
+
+Alter table CustomerOrderChanges
+	add CustomerName varchar(200)
+
+Alter table CustomerOrderChanges
+	add VolumeChange float
+
+ALTER table CustomerProfitability
+	add PlantCode varchar(50) not null
+
+ALTER table DistrictMarketSegment
+	add WinRate float 
+
+-- DEMO IMPORTED
+
+alter table MetricIndicatorAllowances 
+	add DisplayName varchar(100);
+
+alter table MetricIndicatorAllowances 
+	add NumFormat varchar(10);
+
+alter table TargetIndicatorAllowances 
+	add DisplayName varchar(100);
+
+alter table TargetIndicatorAllowances 
+	add NumFormat varchar(10);
+
+update MetricIndicatorAllowances set DisplayName='Ticketing',NumFormat='N1' where Metric='Ticketing';
+update MetricIndicatorAllowances set DisplayName='Price',NumFormat='N1' where Metric='Price';
+update MetricIndicatorAllowances set DisplayName='Loading',NumFormat='N1' where Metric='Loading';
+update MetricIndicatorAllowances set DisplayName='Tempering',NumFormat='N1' where Metric='Tempering';
+update MetricIndicatorAllowances set DisplayName='To Job',NumFormat='N1' where Metric='ToJob';
+update MetricIndicatorAllowances set DisplayName='Wait',NumFormat='N1' where Metric='Wait';
+update MetricIndicatorAllowances set DisplayName='Unload',NumFormat='N1' where Metric='Unload';
+update MetricIndicatorAllowances set DisplayName='Wash',NumFormat='N1' where Metric='Wash';
+update MetricIndicatorAllowances set DisplayName='From Job',NumFormat='N1' where Metric='FromJob';
+update MetricIndicatorAllowances set DisplayName='CYD/Hr',NumFormat='N2' where Metric='CYDHr';
+update MetricIndicatorAllowances set DisplayName='Avg Load',NumFormat='N2' where Metric='AvgLoad';
+update MetricIndicatorAllowances set DisplayName='Price',NumFormat='N2' where Metric='Price';
+update MetricIndicatorAllowances set DisplayName='Material',NumFormat='N2' where Metric='Material';
+update MetricIndicatorAllowances set DisplayName='Spread',NumFormat='N2' where Metric='Spread';
+update MetricIndicatorAllowances set DisplayName='Delivery Variable',NumFormat='N2' where Metric='Delivery Variable';
+update MetricIndicatorAllowances set DisplayName='Plant Variable',NumFormat='N2' where Metric='Plant Variable';
+update MetricIndicatorAllowances set DisplayName='Delivery Fixed',NumFormat='N2' where Metric='Delivery Fixed';
+update MetricIndicatorAllowances set DisplayName='Plant Fixed',NumFormat='N2' where Metric='Plant Fixed';
+update MetricIndicatorAllowances set DisplayName='SG&A',NumFormat='N2' where Metric='SG&A';
+update MetricIndicatorAllowances set DisplayName='Profit',NumFormat='N2' where Metric='Profit';
+
+update TargetIndicatorAllowances set DisplayName='DSO',NumFormat='N2' where Metric='DSO';
+update TargetIndicatorAllowances set DisplayName='Cancellation %',NumFormat='N2' where Metric='Cancellations';
+
+
+-- Alter table Notification add ProjectId int null
+-- Alter table Notification add ConversationId bigint null
+-- ALTER TABLE [dbo].[Notification]  WITH CHECK ADD  CONSTRAINT [FK_Notification_Conversation] FOREIGN KEY([ConversationId]) REFERENCES [dbo].[Conversation] ([Id])
+-- ALTER TABLE [dbo].[Notification]  WITH CHECK ADD  CONSTRAINT [FK_Notification_Project] FOREIGN KEY([ProjectId]) REFERENCES [dbo].[Project] ([ProjectId])
+-- ALTER TABLE Notification ALTER COLUMN QuotationId BIGINT NOT NULL
+-- ALTER TABLE RawMaterialTypes Add IncludeInSackCalculation bit null
+
+ALTER TABLE FskPrice ADD SackCount float NOT NULL DEFAULT 5
+ALTER TABLE PROJECT ADD SackPrice decimal null;
+ALTER TABLE RawMaterialType ADD IncludeInSackCalculation bit null;
+
+-- TEST IMPORTED
+-- CEMEX IMPORTED
+-- GCC IMPORTED
+-- PBM IMPORTED
+-- BRN IMPORTED

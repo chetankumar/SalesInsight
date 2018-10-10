@@ -1,0 +1,12 @@
+﻿
+--Drop the check constraint for ProductType
+ALTER TABLE [dbo].[Plant] DROP CONSTRAINT [CC_Plant_ProductTypeId]
+GO
+
+
+ALTER TABLE Plant
+ADD PostLoadMinutes INT NULL,
+	ToJobMinutes INT NULL,
+	UnloadMinutes INT NULL,
+	ToPlantMinutes INT NULL,
+	AvgLoadSize INT NULL;

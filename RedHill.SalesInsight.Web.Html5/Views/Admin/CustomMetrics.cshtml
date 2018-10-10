@@ -1,0 +1,458 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ESI.CustomMetricsModel
+@{
+    ViewBag.Title = "Custom Metric Types";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.UsingDataTable = true;
+    ViewBag.UsingDatePicker = true;
+}
+<div class="page-head">
+    <h2>
+        <i class="fa fa-1x fa-cog"></i>
+        Settings
+    </h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Settings/Index">Settings</a></li>
+        <li>Custom Metrics</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="">
+        @Html.Partial("_CompanyTabs", "esicustomMetrics")
+        <div class="panel-body block-flat tab-content">
+            @Html.Partial("_ViewBagError", "")
+
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-md-8">
+                        <div class="alert alert-danger alert-dismissable errorMsgForMetric hidden">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+                            <strong>Error! </strong> Somthing went wrong unable to update the metric value.
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>Day Date Time</label>
+                    </div>
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(x => x.DayDateTime, "{0:M/d/yyyy}", new { @class = "form-control validate datepicker" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            Select Plant
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        @Html.DropDownListFor(x => x.PlantId, new SelectList(ViewBag.Plants, "PlantId", "Name"), "--Select--", new { @class = "form-control validate" })
+                    </div>
+                    <div class="col-md-4">
+                        <div class="alert alert-danger errorMsgForPlant hidden">
+                            <strong>Error! </strong> Please select a plant.
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            Produced Volume
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="ProducedVolume" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            Trucks Assigned
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="TrucksAssigned" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            Truck Available
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="TruckAvailable" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            Drivers On Payroll
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="DriversOnPayroll" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            Drivers Available
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="DriversAvailable" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            Plant Interruptions
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="PlantInterruptions" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            Bad Or Rejected Loads
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="BadOrRejectedLoads" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            Accidents
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="Accidents" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            Total Loads
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="TotalLoads" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            Total Orders
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="TotalOrders" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            First Load On Time Percent
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="FirstLoadOnTimePercent" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            Driver Delivered Volume
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="DriverDeliveredVolume" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            Scheduled Volume
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="ScheduledVolume" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            Scheduled Trucks
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="ScheduledTrucks" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            Total Clock Hours
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="TotalClockHours" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            Drivers Utilized
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="DriversUtilized" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            Average Load Size
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="AverageLoadSize" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            Start Up Time
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="StartUpTime" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            Shut Down Time
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="ShutdownTime" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            In Yard Time
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="InYardTime" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            Ticket Time
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="TicketTime" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            Load Time
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="LoadTime" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            Tempering Time
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="TemperingTime" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            To Job Time
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="ToJobTime" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            Wait On Job Time
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="WaitOnJobTime" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            Pour Time
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="PourTime" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            Wash On Job Time
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="WashOnJobTime" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            From Job Time
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="FromJobTime" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            Truck Breakdowns
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="TruckBreakdowns" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            Non Delivery Hours
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="NonDeliveryHours" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>
+                            Notes
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="Notes" value="" class="form-control validate updateValue" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        var plantId;
+        customMetricContainerShowHide();
+        $('#PlantId, #DayDateTime').change(function () {
+            var plantId = $("#PlantId").val();
+            var day = $("#DayDateTime").val();
+            $.ajax({
+                url: "/Admin/LoadCustomMetricValues",
+                method: 'POST',
+                data: { day: day, plantId: plantId },
+                success: function (data) {
+                    renderValues(data);
+                    customMetricContainerShowHide();
+                    $("[name='ProducedVolume']").focus();
+                },
+                error: function (res) {
+
+                }
+            });
+        });
+
+        function renderValues(obj) {
+            if (obj) {
+                obj = JSON.parse(obj);
+                for (let k in obj) {
+                    var val = obj[k];
+                    var input = $("input[name='" + k + "']");
+                    if (input) {
+                        if (k == 'DayDateTime') {
+                            //Format date value
+                            var d = moment(new Date(val));
+                            input.val(d ? d.format("M/D/YYYY") : "");
+                        } else if (input.is("input")) {
+                            input.val(val);
+                        } else if (input.is("select")) {
+                            input.val(val);
+                        }
+                    }
+                }
+            } else {
+                resetValues();
+            }
+        }
+
+        function resetValues() {
+            $(".updateValue").val("");
+        }
+
+        function customMetricContainerShowHide() {
+            plantId = $("#PlantId option:selected").val();
+            if (plantId != "") {
+                $('.updateValue').removeAttr('readonly');
+            }
+            else {
+                $('.updateValue').attr('readonly', true);
+            }
+        }
+
+        $('input.updateValue').change(function (e) {
+            plantId = $("#PlantId option:selected").val();
+            var name = $(this).attr("name");
+            var value = $(this).val();
+
+            var day = moment($("#DayDateTime").val(), "M/D/YYYY").format("YYYY-MM-DD");
+            // Ajax call to update the value of the metric repect to their plant with date.
+            $.get("/Admin/AddUpdateCustomMetrics", { day: day, plantId: plantId, metricType: name, metricValue: value }, function (data) {
+                if (data == "True") {
+                }
+                else {
+                    $('.errorMsgForMetric').removeClass('hidden');
+                }
+            });
+        });
+
+        $("#DayDateTime").val('@Model.DayDateTime.ToString("M/d/yyyy")');
+
+        $(".datepicker").datepicker({
+            format: "m/d/yyyy"
+        }).on("changeDate", function (e) {
+            $(this).datepicker("hide");
+        });
+    });
+
+</script>

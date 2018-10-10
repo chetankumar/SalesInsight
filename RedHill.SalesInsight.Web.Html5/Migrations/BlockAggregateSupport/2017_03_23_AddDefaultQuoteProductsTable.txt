@@ -1,0 +1,6 @@
+﻿CREATE TABLE DefaultQuoteProduct(
+	Id INT PRIMARY KEY IDENTITY(1,1),
+	ProductTypeId INT NOT NULL,
+	UserId UNIQUEIDENTIFIER,
+	CreatedAt DATETIME
+)

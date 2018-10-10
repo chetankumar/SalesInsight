@@ -1,0 +1,88 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ESI.TrendAnalysisReportView
+@using (Html.BeginForm("ApplyTrendReportConfig", "ESI", FormMethod.Post, new { onsubmit = "disableButton()" }))
+{
+    <input type="hidden" name="PersistFilter" value="" />
+    <input type="hidden" name="WidgetId" value="0" />
+    <div class="modal fade" id="reportConfig_TrendAnalysis">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Report Configuration</h4>
+                    <input type="hidden" name="ReportId" value="@Model.ReportId" />
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">Select Metric</label>
+                            <div class="col-sm-5">
+                                <select name="MetricDefinitionId" class="form-control metricOpt" required>
+                                    @if (Model.MetricDefinitionList != null)
+                                    {
+                                        <option value="select">--Select--</option>
+                                        foreach (SelectListItem item in Model.MetricDefinitionList)
+                                        {
+                                            <option @(item.Selected ? "selected" : "") value="@item.Value">@item.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">Select Target Metric</label>
+                            <div class="col-sm-5">
+                                <select name="TargetDimensionId" class="form-control targetMetric" required>
+                                    @if (Model.TargetMetricList != null)
+                                    {
+                                        <option value="select">--Select--</option>
+                                        foreach (SelectListItem item in Model.TargetMetricList)
+                                        {
+                                            <option @(item.Selected ? "selected" : "") value="@item.Value">@item.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">Upper Control Limit</label>
+                            <div class="col-sm-5">
+                                <input type="text" name="UpperControlLimit" class="form-control" value="@(Model.UpperControlLimit > 0 ? Model.UpperControlLimit : 0 )" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">Lower Control Limit</label>
+                            <div class="col-sm-5">
+                                <input type="text" class="form-control" name="LowerControlLimit" value="@(Model.LowerControlLimit > 0 ? Model.LowerControlLimit : 0)" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-5 col-sm-offset-5">
+                                <div class="checkbox">
+                                    <label>
+                                        @Html.CheckBoxFor(x => x.OmitPeriodsWithNoData)
+                                        Exlude Periods With No Data
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-5 col-sm-offset-5">
+                                <div class="checkbox">
+                                    <label>
+                                        @Html.CheckBoxFor(x => x.IsScallingAutoFit)
+                                        Enable Auto fit
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default reportSetting_close_btn" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary reportSetting_Save_btn">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

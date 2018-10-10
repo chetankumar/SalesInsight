@@ -1,0 +1,301 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.QuotationPreview
+@{
+    ViewBag.Title = "Project Entry Form";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-head">
+    <h2>
+        <span>Project Entry Form</span>
+    </h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Quote/Index">Quotations</a></li>
+        <li><a href="/Home/EditProject/@Model.Profile.ProjectId">@Model.Profile.ProjectName</a></li>
+        <li><a href="/Quote/AddEditQuote/@Model.Profile.QuoteId">Quote# @Model.QuoteId</a></li>
+        <li>Project Entry Form</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="block-flat">
+        <div class="container">
+            @if (Model.Id > 0)
+            {
+                <div class="well">
+                    <div class="col-md-5">
+                        @Html.Partial("_BasicQuotationProfile", Model.Profile)
+                    </div>
+                    <div class="col-md-7">
+                        <div class="row pull-right">
+                            <button class="btn btn-default" data-toggle="modal" data-target="#project_entry_notification_modal">
+                                <span class="glyphicon glyphicon-print"></span> Send Notification
+                            </button>
+                            <a class="btn btn-default" target="_blank" href="/Quote/ProjectEntryPDF/@Model.Profile.QuoteId">
+                                <span class="glyphicon glyphicon-file"></span> Save as PDF
+                            </a>
+                        </div>
+                    </div>
+                    <div style="clear:both"></div>
+                </div>
+            }
+            <fieldset class="form-horizontal">
+                <legend style="text-transform:uppercase">Other Information</legend>
+                <dl class="dl-horizontal">
+                    <dt>Last Sent Notification Date</dt>
+                    <dd>@(Model.ProjectFormNotificationDate == null ? "" : @Model.ProjectFormNotificationDate.Value.ToString("M/d/yyyy"))</dd>
+                    <dt>Last PDF Generated Date</dt>
+                    <dd>@(Model.PDFGeneratedDate == null ? "" : @Model.PDFGeneratedDate.Value.ToString("M/d/yyyy"))</dd>
+                </dl>
+            </fieldset>
+
+            <fieldset class="form-horizontal">
+                <legend style="text-transform:uppercase">Customer Information</legend>
+                <dl class="dl-horizontal">
+                    <dt>Customer Number</dt>
+                    <dd>@Model.Profile.CustomerNumber</dd>
+                    <dt>Customer Name</dt>
+                    <dd>@Model.Profile.CustomerName</dd>
+                    <dt>Market Segment</dt>
+                    <dd>@Model.Profile.MarketSegment</dd>
+                    <dt>Tax Code - Description</dt>
+                    <dd>@Model.Profile.TaxCode</dd>
+                    <dt>Tax Exempt Reason</dt>
+                    <dd>@Model.Profile.TaxExceptReason</dd>
+                </dl>
+            </fieldset>
+            <fieldset class="form-horizontal">
+                <legend style="text-transform:uppercase">Project Information</legend>
+                <dl class="dl-horizontal">
+                    <dt>Customer Job Reference</dt>
+                    <dd>@Model.Profile.CustomerJobRef</dd>
+                    <dt>Project Name</dt>
+                    <dd>@Model.Profile.ProjectName</dd>
+                    <dt>Address</dt>
+                    <dd>@Model.Address</dd>
+                    <dt>City, State, Zip</dt>
+                    <dd>@Model.CityStateZip</dd>
+                    <dt>Project Bid Date</dt>
+                    <dd>@(Model.Profile.BidDate)</dd>
+                    <dt>Project Start Date</dt>
+                    <dd>@(Model.Profile.StartDate)</dd>
+                    <dt>To Job (minutes)</dt>
+                    <dd>@Model.Profile.ProjectToJob</dd>
+                    <dt>Distance To Job (miles)</dt>
+                    <dd>@(Model.Profile.DistanceToJob)</dd>
+                    <dt>Delivery Instructions</dt>
+                    <dd>@(Model.Profile.DeliveryInstructions)</dd>
+                </dl>
+            </fieldset>
+            <fieldset class="form-horizontal">
+                <legend style="text-transform:uppercase">Pricing Information</legend>
+                <dl class="dl-horizontal">
+                    <dt>Quote Date</dt>
+                    <dd>@(Model.QuoteDate == null ? "" : @Model.QuoteDate.Value.ToString("M/d/yyyy"))</dd>
+                    <dt>Quote Expiration Date</dt>
+                    <dd>@(Model.QuoteExpiry == null ? "" : @Model.QuoteExpiry.Value.ToString("M/d/yyyy"))</dd>
+                    <dt>Sales Staff</dt>
+                    <dd>@Model.SalesStaff</dd>
+                    <dt>Pricing Plant</dt>
+                    <dd>@Model.Profile.PlantName</dd>
+                    <dt>Pricing Month</dt>
+                    <dd>@(Model.Profile.PricingMonth != null ? Model.Profile.PricingMonth.Value.ToString("M/d/yyyy") : "")</dd>
+                    <dt>Price Increase #1</dt>
+                    <dd>$@Model.PriceIncrease1.ToString("N2")/CYD (effective @(Model.PriceIncreaseDate1 == null ? "" : Model.PriceIncreaseDate1.Value.ToString("M/d/yyyy")))</dd>
+                    <dt>Price Increase #2</dt>
+                    <dd>$@Model.PriceIncrease2.ToString("N2")/CYD (effective @(Model.PriceIncreaseDate2 == null ? "" : Model.PriceIncreaseDate2.Value.ToString("M/d/yyyy")))</dd>
+                    <dt>Price Increase #3</dt>
+                    <dd>$@Model.PriceIncrease3.ToString("N2")/CYD (effective @(Model.PriceIncreaseDate3 == null ? "" : Model.PriceIncreaseDate3.Value.ToString("M/d/yyyy")))</dd>
+                </dl>
+            </fieldset>
+            @if (Model.Profile.ConcreteEnabled)
+            {  <fieldset class="form-horizontal">
+                <legend style="text-transform:uppercase">Approved Mixes - Concrete</legend>
+                <table class="table table-striped table-condensed table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Quoted Description</th>
+                            <th>Mix ID</th>
+                            <th>Price</th>
+                            <th>Public Comments</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (RedHill.SalesInsight.DAL.QuotationMix mix in Model.MixDescriptions)
+                        {
+                            <tr>
+                                <td class="col-md-6">@mix.QuotedDescription</td>
+                                <td>@(mix.StandardMix == null ? mix.CustomMixId : mix.StandardMix.Number)</td>
+                                <td>$@(mix.Price != null ? mix.Price.Value.ToString("N2") : "")/CYD</td>
+                                <td>@(mix.PublicNotes != null ? mix.PublicNotes : "")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </fieldset>
+            }
+            <fieldset class="form-horizontal">
+                <legend style="text-transform:uppercase">Quoted Fees, Charges and Add-On PRODUCTS - Concrete</legend>
+                <table class="table table-striped table-condensed table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var addon in Model.QuoteAddonModel.OrderBy(x => x.Description))
+                        {
+                            <tr>
+                                <td class="col-md-6">@addon.Description</td>
+                                <td>$@addon.Price/@addon.QuoteUomName</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </fieldset>
+
+
+            @if (Model.Profile.AggregateEnabled)
+            {
+                if (Model.AggregateProducts.Count != 0)
+                {
+                    <fieldset class="form-horizontal">
+                        <legend style="text-transform:uppercase">Approved Mixes - Aggregate</legend>
+                        <table class="table table-striped table-condensed table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Quoted Description</th>
+                                    <th>Code</th>
+                                    <th>Price</th>
+                                    <th>Public Comments</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var aggProduct in Model.AggregateProducts)
+                        {
+                        <tr>
+                            <td class="col-md-6">@aggProduct.QuotedDescription</td>
+                            <td>@aggProduct.Code</td>
+                            <td>$@(aggProduct.Price != 0 ? aggProduct.Price.ToString("N2") : "")/CYD</td>
+                            <td>@(aggProduct.PublicNotes != null ? aggProduct.PublicNotes : "")</td>
+                        </tr>
+                        }
+                            </tbody>
+                        </table>
+                    </fieldset>
+                }
+                if (Model.AggregateAddons.Count != 0)
+                {
+                    <fieldset class="form-horizontal">
+                        <legend style="text-transform:uppercase">Quoted Fees, Charges and Add-On PRODUCTS - Aggregate</legend>
+                        <table class="table table-striped table-condensed table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var addon in Model.AggregateAddons.OrderBy(x => x.Description))
+                        {
+                        <tr>
+                            <td class="col-md-6">@addon.Description</td>
+                            <td>$@addon.Price/@addon.QuoteUomName</td>
+                        </tr>
+                        }
+                            </tbody>
+                        </table>
+                    </fieldset>
+                }
+            }
+
+            @if (Model.Profile.BlockEnabled)
+            {
+                if (Model.BlockProducts.Count != 0)
+                {
+                    <fieldset class="form-horizontal">
+                        <legend style="text-transform:uppercase">Approved Mixes - Block</legend>
+                        <table class="table table-striped table-condensed table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Quoted Description</th>
+                                    <th>Code</th>
+                                    <th>Price</th>
+                                    <th>Public Comments</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var blockProduct in Model.BlockProducts)
+                                {
+                                    <tr>
+                                        <td class="col-md-6">@blockProduct.QuotedDescription</td>
+                                        <td>@blockProduct.Code</td>
+                                        <td>$@(blockProduct.Price != 0 ? blockProduct.Price.ToString("N2") : "")/CYD</td>
+                                        <td>@(blockProduct.PublicNotes != null ? blockProduct.PublicNotes : "")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </fieldset>
+                }
+                if (Model.BlockAddons.Count != 0)
+                {
+                    <fieldset class="form-horizontal">
+                        <legend style="text-transform:uppercase">Quoted Fees, Charges and Add-On PRODUCTS - Block</legend>
+                        <table class="table table-striped table-condensed table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var addon in Model.BlockAddons.OrderBy(x => x.Description))
+                                {
+                                    <tr>
+                                        <td class="col-md-6">@addon.Description</td>
+                                        <td>$@addon.Price/@addon.QuoteUomName</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </fieldset>
+                }
+            }
+            <fieldset class="form-horizontal">
+                <legend style="text-transform:uppercase">Quotation Notes</legend>
+                <dl class="dl-horizontal">
+                    <dt>Public Note</dt>
+                    <dd>@Model.PublicComments</dd>
+                    <dt>Private Note</dt>
+                    <dd>@Model.PrivateComments</dd>
+                </dl>
+            </fieldset>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/Scripts/jquery.tablednd.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".pdf_btn").click(function () {
+                $("#SelectedAction").val("Print");
+                $(".settings_form").submit();
+            });
+
+            $("#draggable").tableDnD({
+                onDrop: function (table, row) {
+                    var rows = table.tBodies[0].rows;
+                    for (var i = 0; i < rows.length; i++) {
+                        tmp_row = rows[i];
+                        console.log(tmp_row);
+                        console.log(i);
+                        $(tmp_row).find("span").html(i);
+                        $(tmp_row).find(".position_box").val(i);
+                    }
+                }
+            });
+        });
+    </script>
+}
+

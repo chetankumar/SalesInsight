@@ -1,0 +1,36 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ProjectView
+@using (Html.BeginForm("UpdateLossInformation","Home",FormMethod.Post,new {@class="form-horizontal"})){
+    @Html.HiddenFor(m => m.ProjectId)
+    <div class="form-group">
+        <label class="control-label col-sm-2">Reason</label>
+        <div class="col-sm-5">
+            @Html.DropDownListFor(m=>m.ReasonLossId,Model.ReasonsForLossList,string.Empty,new {@class="form-control"})
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2">Competitor</label>
+        <div class="col-sm-5">
+            @Html.DropDownListFor(m=>m.CompetitorLost,Model.LossCompetitorList,string.Empty,new {@class="form-control"})
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2">Price Lost</label>
+        <div class="col-sm-5">
+            @Html.TextBoxFor(m=>m.PriceLost,"{0:N2}",new {@class="form-control"})
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2">Notes</label>
+        <div class="col-sm-5">
+            @Html.TextBoxFor(m=>m.LostNotes,new {@class="form-control"})
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-5 col-sm-offset-2">
+            <input type="submit" class="btn btn-primary" value="Update" />
+        </div>
+    </div>
+}
+
+
+

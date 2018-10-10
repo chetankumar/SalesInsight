@@ -1,0 +1,21 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ProjectNoteView
+
+<div class="row">
+    @using (Html.BeginForm("AddProjectNote", "Home", FormMethod.Post, new { @class = "form-inline" }))
+    {
+        @Html.ValidationSummary(false)
+        <div class="col-sm-12">
+            @Html.HiddenFor(m => m.ProjectNoteId)
+            @Html.HiddenFor(m => m.ProjectId)
+            <div class="form-inline">
+                @Html.TextAreaFor(m => m.NoteText, 2, 80, new { @class = "form-control", @placeholder = "Add Note", @style = "box-sizing: border-box;" })
+                <input type="submit" class="btn btn-lg btn-primary" value="@(Model.ProjectNoteId > 0 ? "Update" : "Add")" />
+            </div>
+        </div>
+    }
+</div>
+
+
+
+
+

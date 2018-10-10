@@ -1,0 +1,13 @@
+﻿--- 2017-05-12  Indexing for Quotation Table --- Avnish
+
+CREATE INDEX IX_Quotation_PlantId
+ON Quotation (PlantId)
+
+CREATE INDEX IX_Quotation_SalesStaffId
+ON Quotation (SalesStaffId)
+
+CREATE INDEX IX_Quotation_ProjectId
+ON Quotation (ProjectId)
+
+CREATE INDEX IX_Quotation_CustomerId
+ON Quotation (CustomerId)

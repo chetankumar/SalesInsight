@@ -1,0 +1,54 @@
+﻿-- Chetan : Done
+-- Bharat : Done
+-- Shelly : Done
+-- Avnish : Done
+-- Dinesh : Done
+-- Create the distribution table
+CREATE TABLE [dbo].[WeekDayDistribution](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Sunday] [float] NOT NULL,
+	[Monday] [float] NOT NULL,
+	[Tuesday] [float] NOT NULL,
+	[Wednesday] [float] NOT NULL,
+	[Thursday] [float] NOT NULL,
+	[Friday] [float] NOT NULL,
+	[Saturday] [float] NOT NULL,
+ CONSTRAINT [PK_WorkDayDistribution] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+-- Create a default distribution
+Insert into WeekDayDistribution (Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday) values (100.0,100.0,100.0,100.0,100.0,0.0,0.0);
+Go
+
+-- Create the exceptions table
+CREATE TABLE [dbo].[WorkDayExceptions](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[ExceptionDate] [datetime] NOT NULL,
+	[Distribution] [float] NOT NULL,
+	[Description] [varchar](100) NULL,
+ CONSTRAINT [PK_WorkDayExceptions] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+-- Create the WorkDayDistribution Table
+CREATE TABLE [dbo].[WorkDayDistribution](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[WorkDay] [datetime] NOT NULL,
+	[Distribution] [float] NOT NULL,
+ CONSTRAINT [PK_Work1DayDistribution] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+

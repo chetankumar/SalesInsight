@@ -1,0 +1,96 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ThreadedChat
+
+<div id="si_chat">
+    <div class="sichat-box-header">
+        <a href="javascript:;" class="sichat-box-heading" data-toggle="chat">Chat</a>
+        <div class="sichat-settings-gear dropdown">
+            <a href="javascript:;" class="" data-toggle="dropdown">
+                <i class="fa fa-sliders"></i>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="drop1" style="left: auto; right: 0;">
+                <li>
+                    <a href="javascript:;" data-toggle="modules" data-target="participants">Manage Participants
+                    </a>
+                </li>
+                <li role="separator" class="divider"></li>
+                <li><a href="javascript:;" data-toggle="modules" data-target="notifications">Notification Settings</a></li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="sichat-box-content">
+        <div data-module="participants" class="sichat-participants sichat-pane">
+            <h5 class="sichat-pane-title">Participants</h5>
+            <div>
+                <select id="search_participants" class="multiselect" multiple="multiple">
+                </select>
+            </div>
+            <div class="nano sichat-subscribers-nano">
+                <div class="content sichat-subscribers">
+                </div>
+            </div>
+            <div class="sichat-settings-actions">
+                <div class="text-right">
+                    <button type="button" class="btn btn-sm btn-default" data-toggle="module" data-target="participants">
+                        <i class="fa fa-times"></i>Cancel
+                    </button>
+                    <button type="button" class="btn btn-sm btn-success sichat_update_subscribers">
+                        <i class="fa fa-check"></i>Done
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div data-module="notifications" class="sichat-pane">
+            <h5 class="sichat-pane-title">Notification Settings</h5>
+            <div>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-5">
+                            Mute 
+                        </label>
+                        <div class="col-sm-7">
+                            <input type="checkbox" class="switch" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sichat-settings-actions">
+                <div class="text-right">
+                    <button type="button" class="btn btn-sm btn-default" data-toggle="module" data-target="notifications">
+                        <i class="fa fa-times"></i>Cancel
+                    </button>
+                    <button type="button" class="btn btn-sm btn-success">
+                        <i class="fa fa-check"></i>Done
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label class="control-label col-sm-3">Project</label>
+                <div class="col-sm-9">
+                    @Html.HiddenFor(x => x.ChatConversationId, new { @id = "Chat_ConvId" })
+                    @Html.DropDownListFor(x => x.ProjectId, new SelectList(Model.Projects, "Value", "Text"), "---Select Project---", new { @class = "multi-selector form-control input-sm", @id = "Chat_ProjectId", @data_child = "#Chat_QuoteId", @data_child_url = "/Json/LoadQuotes" })
+                </div>
+            </div>
+            <div class="form-group quote_group">
+                <label class="control-label col-sm-3">Quote</label>
+                <div class="col-sm-9">
+                    @Html.DropDownListFor(x => x.QuoteId, new SelectList(Model.Quotes, "Value", "Text"), new { @id = "Chat_QuoteId", @class = "multi-selector form-control input-sm" })
+                    <div class="chat-participants">
+                        <a href="javascript:;" data-toggle="modules" data-target="participants" class="participant_count">5 participant(s)</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="sichat-loader">
+        <div class="sichat-loader-inner">
+            <i class="fa fa-spinner fa-spin"></i>
+        </div>
+    </div>
+</div>
+
+
+
+

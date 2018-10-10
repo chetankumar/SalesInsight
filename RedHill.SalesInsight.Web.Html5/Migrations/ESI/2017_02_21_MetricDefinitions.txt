@@ -1,0 +1,29 @@
+﻿-- Chetan : Done
+-- Bharat : Done
+-- Shelly : Done
+-- Avnish : Done
+-- Dinesh : Done
+
+CREATE TABLE [dbo].[MetricDefinition](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[MetricName] [varchar](50) NOT NULL,
+	[MoreIsBetter] [bit] NULL,
+	[DefaultAggregation] [varchar](50) NULL,
+	[IsBudgetType] [bit] NULL,
+	[BudgetOfId] [int] NULL,
+	[DataSource] [varchar](50) NULL,
+	[ColumnProperty] [varchar](50) NULL,
+ CONSTRAINT [PK_MetricDefinition] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[MetricDefinition]  WITH CHECK ADD  CONSTRAINT [FK_MetricDefinition_MetricDefinition] FOREIGN KEY([BudgetOfId])
+REFERENCES [dbo].[MetricDefinition] ([Id])
+GO
+
+ALTER TABLE [dbo].[MetricDefinition] CHECK CONSTRAINT [FK_MetricDefinition_MetricDefinition]
+GO

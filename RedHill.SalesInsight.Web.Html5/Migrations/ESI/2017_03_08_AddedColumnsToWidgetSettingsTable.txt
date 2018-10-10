@@ -1,0 +1,10 @@
+﻿--Shelly - Done
+--Avnish - 
+--Dinesh - Done
+--Chetan -
+--Bharat - Done
+
+
+ALTER TABLE WidgetSettings
+ADD Position INT NULL,
+	CreatedAt DateTime NULL;

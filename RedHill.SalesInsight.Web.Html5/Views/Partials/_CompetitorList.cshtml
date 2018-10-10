@@ -1,0 +1,45 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.CompanyView
+<table class="data_table table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Districts</th>
+            <th>Plants</th>
+            <th>Active</th>
+            @if (ViewBag.AccessRule.HasCompetitorsAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+            {
+                <th></th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (RedHill.SalesInsight.Web.Html5.Models.CompetitorView competitor in Model.Competitors)
+        {
+            <tr>
+                <td>@competitor.Name</td>
+                <td>@competitor.DistrictNames</td>
+                <td>@competitor.PlantsCount <a class="btn btn-xs btn-primary pull-right" href="/Home/AddCompetitorPlant/@competitor.CompetitorId">Manage Plants</a></td>
+                <td>
+                    @{
+            if (@competitor.Active)
+            {
+                <span class="glyphicon glyphicon-ok"><span style="display:none">1</span></span>
+            }
+            else
+            {
+                <span class="glyphicon glyphicon-remove"></span>
+            }
+                    }
+                </td>
+                @if (ViewBag.AccessRule.HasCompetitorsAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                {
+                    <td>
+                        <a href="/Home/EditCompetitor/@competitor.CompetitorId" class="btn btn-xs btn-primary" title="Edit Competitor">
+                            <i class="glyphicon glyphicon-edit"></i>
+                        </a>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

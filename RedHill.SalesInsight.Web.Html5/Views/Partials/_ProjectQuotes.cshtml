@@ -1,0 +1,275 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ProjectView
+@using RedHill.SalesInsight.Web.Html5.Helpers;
+@{
+    var company = ConfigurationHelper.Company;
+}
+<style>
+    .bootstrap-switch.bootstrap-switch-on .bootstrap-switch-label {
+        background: #5cb85c !important;
+    }
+
+    .bootstrap-switch .bootstrap-switch-label:after {
+        border: 3px solid #5cb85c !important;
+    }
+
+    .bootstrap-switch.bootstrap-switch-off .bootstrap-switch-label:after {
+        border-color: #e3e3e3 !important;
+    }
+
+    .loss label, .won label, .won_lost label {
+        color: #444444;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12">
+        <div class="col-md-1">
+            @if (ViewBag.AccessRule.HasQuotationAccess == SIRolePermissionLevelConstants.FULL_ACCESS || ViewBag.AccessRule.HasQuotationAccess == SIRolePermissionLevelConstants.EDIT_ONLY)
+            {
+                <button id="add_new_quote_btn" type="button" data-toggle="modal" data-target="#new_quote_modal" class="btn btn-primary"><span class="fa fa-fw fa-plus-circle"></span>Quote</button>
+            }
+        </div>
+        <label class="checkbox text-right col-md-11">
+            <div class="check-awarded">
+                <input type="checkbox" class="hideShow_Unawarded">
+                <span>Show Hidden Quotes</span>
+            </div>
+        </label>
+    </div>
+</div>
+<br />
+<table class="table table-responsive table-bordered table-striped proj-quote">
+    <thead>
+        <tr>
+            @if (ViewBag.AccessRule.HasQuotationAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+            {
+                <th>Edit</th>
+            }
+            @if (ViewBag.AccessRule.HasQuotationAccess == SIRolePermissionLevelConstants.FULL_ACCESS || ViewBag.AccessRule.HasQuotationAccess == SIRolePermissionLevelConstants.EDIT_ONLY)
+            {
+                <th>Copy</th>
+            }
+            <th>Quote ID</th>
+            <th>Quote Date</th>
+            <th>Customer</th>
+            <th>Price</th>
+            <th>Spread</th>
+            <th>Contr.</th>
+            <th>Profit</th>
+            <th>Total Profit</th>
+            @if (ViewBag.AccessRule.Enable5skPricing == true)
+            {
+                <th>Sack Price</th>
+            }
+            <th>Active</th>
+            <th>Awarded</th>
+            <th>Approved</th>
+            @if (ViewBag.AccessRule.HasQuotationAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+            {
+                <th>Delete</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (RedHill.SalesInsight.Web.Html5.Models.QuotationProfile profile in Model.Quotations.OrderByDescending(x => x.QuoteId))
+        {
+            <tr class="@(profile.Awarded?"showQuote":"hideQuote")">
+
+                @if (ViewBag.AccessRule.HasQuotationAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+                {
+                    <td>
+                        <a href="/Quote/AddEditQuote/@profile.QuoteId" class="btn btn-primary btn-xs edit-enabled"><span class="glyphicon glyphicon-edit"></span></a>
+                    </td>
+                }
+                @if (ViewBag.AccessRule.HasQuotationAccess == SIRolePermissionLevelConstants.FULL_ACCESS || ViewBag.AccessRule.HasQuotationAccess == SIRolePermissionLevelConstants.EDIT_ONLY)
+                {
+                    <td>
+                        <a class="btn btn-primary btn-xs quotation_copy" data-id="@profile.QuoteId">
+                            <span class="fa fa-fw fa-copy"></span>
+                        </a>
+                    </td>
+                }
+                <td>@profile.QuoteRefNumber</td>
+                <td>@(profile.QuoteDate != null ? profile.QuoteDate.Value.ToShortDateString() : "")</td>
+                <td>@profile.CustomerName</td>
+                <td>$@(profile.AverageSellingPrice.ToString("N2"))</td>
+                <td>$@(profile.QuoteSpread.ToString("N2"))</td>
+                <td>$@(profile.QuoteContribution.ToString("N2"))</td>
+                <td>$@(profile.QuoteProfit.ToString("N2"))</td>
+                <td>$@(profile.TotalProfit.ToString("N2"))</td>
+                @if (ViewBag.AccessRule.Enable5skPricing == true)
+                {
+                    <td>$@(profile.SackPrice.ToString("N2"))</td>
+                }
+                <td><span class="@(profile.Active == true ? "fa fa-check" : "")"></span></td>
+                <td>
+                    @if (profile.Awarded)
+                    {
+                        <input type="checkbox" name="quote_@(profile.QuoteId)" checked class="switch" id="quote_@(profile.QuoteId)" data-quoteid="@(profile.QuoteId)" data-on-text="&nbsp;" data-off-text="&nbsp;" data-on-color="success" />
+                    }
+                    else if (Model.ProjectStatusType != RedHill.SalesInsight.DAL.DataTypes.SIStatusType.Pipeline.Id)
+                    {
+                        <input type="checkbox" name="quote_@(profile.QuoteId)" class="switch" id="quote_@(profile.QuoteId)" data-quoteid="@(profile.QuoteId)" data-on-text="&nbsp;" data-off-text="&nbsp;" data-on-color="success" />
+                    }
+                </td>
+                <td><span class="@(profile.Status == "APPROVED" ? "fa fa-check" : "")"></span></td>
+                @if (ViewBag.AccessRule.HasQuotationAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                {
+                    <td>
+                        <a href="/Quote/DeleteQuote/@profile.QuoteId?projectId=@Model.ProjectId"
+                           data-confirm="Deletion is permanent and cannot be reversed.
+                            <br /> Quoted Id: @profile.QuoteRefNumber <br /> Customer: @profile.CustomerName <br /> Delete this Quotation?"
+                            class="btn btn-danger btn-xs"><span class="fa fa-fw fa-trash"></span>
+                        </a>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+<div class="modal fade" id="new_quote_modal">
+    <div class="modal-dialog">
+        <div class="modal-content check_customer">
+            @using (Html.BeginForm("NewQuoteFromProject", "Quote", FormMethod.Post))
+            {
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h3 class="modal-title">Create New Quote</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Customer</label>
+                            <div class="col-md-6">
+                                @Html.HiddenFor(x => x.CopyFromQuoteId)
+                                @*@Html.HiddenFor(x => x.ProjectId)*@
+                                @Html.Hidden("Address", "default")
+                                @*@Html.DropDownListFor(x => x.NewQuoteCustomer, new SelectList(Model.CustomerList, "CustomerId", "Name", ""), "",
+                                            new { @class = "form-control quote_customer multiselect", @data_target = "new_quote_btn" })*@
+                                @*<select id="NewQuoteCustomer" name="NewQuoteCustomer" class="form-control quote-customer multiselect" data-target="new_quote_btn">
+                                    <option value=""></option>
+                                </select>*@
+                            <input id="Customer" class="form-control clearable" hidden-id="NewQuoteCustomer" placeholder="Begin typing to search Project" name="Customer" autocomplete="off" />
+                            <input type="hidden" id="NewQuoteCustomer" name="NewQuoteCustomer" value="" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4"></label>
+                            <div class="col-md-6">
+                                <p class="form-control-static">
+                                    <input type="checkbox" class="quote_decide_check" />
+                                    Decide Later
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Project</label>
+                            <div class="col-md-6">
+                                @Html.Hidden("Address", "default")
+                                @*@Html.DropDownListFor(x => x.NewQuoteProject, new SelectList(Model.ProjectList, "ProjectId", "Name", Model.ProjectId), "",
+                                            new { @class = "form-control quote_project multiselect", @data_target = "new_quote_btn" })*@
+                                @*<select id="NewQuoteProject" name="NewQuoteProject" class="form-control quote_project multiselect" data-target="new_quote_btn">
+                                    <option value=""></option>
+                                </select>*@
+                                <input id="Project" class="form-control clearable" hidden-id="NewQuoteProject" placeholder="Begin typing to search Project" name="Project" autocomplete="off" />
+                                <input type="hidden" id="NewQuoteProject" name="NewQuoteProject" value="" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" disabled="disabled" id="new_quote_btn" class="btn btn-primary">Create new</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<script>
+
+    $(document).on("switchChange.bootstrapSwitch", "[id^='quote_']", function () {
+        var checkBox = $(this);
+        var award = checkBox.is(":checked");
+        if (award) {
+            $(".check-awarded").show();
+            if ($(".proj-quote tbody tr.showQuote").length === 0) {
+                $(".hideShow_Unawarded").prop("checked", true);
+            }
+            checkBox.closest('tr').removeClass("hideQuote").addClass('showQuote');
+            if ($(".proj-quote tbody tr.hideQuote").length === 0) {
+                $(".hideShow_Unawarded").prop("checked", true);
+                $(".check-awarded").hide();
+            }
+        }
+        else {
+            $(".check-awarded").show();
+            checkBox.closest('tr').removeClass("showQuote").addClass('hideQuote');
+            if ($(".proj-quote tbody tr.showQuote").length === 0) {
+                $(".proj-quote tbody tr.hideQuote").show();
+                $(".hideShow_Unawarded").prop("checked", true);
+                $(".check-awarded").hide();
+            }
+            if ($(".proj-quote tbody tr.hideQuote").length === 0) {
+                $(".proj-quote tbody tr.showQuote").show();
+                $(".hideShow_Unawarded").prop("checked", true);
+                $(".check-awarded").hide();
+            }
+        }
+        var quoteId = checkBox.attr("data-quoteId");
+        var projId = '@(Model.ProjectId)';
+        param = { projectID: projId, quotationId: quoteId, award: award };
+        $.ajax({
+            url: '/Json/AwardQuotation',
+            method: 'POST',
+            dataType: 'json',
+            data: param,
+            success: function (res) {
+                console.log(res.plantVolumeStatus);
+                $("#Price").val(res.price);
+                $("#Spread").val(res.spread);
+                $(".proj-volume").text(res.volume + ' ' + '@company.DeliveryQtyUomPlural');
+                $("#Profit").val(res.profit);
+                var customerId = (res.customerId);
+                var cutomerDDL = $("#CustomerId");
+                cutomerDDL[0].sumo.selectItem(customerId);
+                var ddl = $("#Awarded");
+                $('input[type=checkbox][id^="quote_"]').each(function () {
+                    if ($(this).is(":checked"))
+                        ddl[0].sumo.selectItem($(this).attr("data-quoteid"));
+                    else
+                        ddl[0].sumo.unSelectItem($(this).attr("data-quoteid"));;
+                });
+            },
+            complete: function () {
+            }
+        });
+    });
+    $(document).on("click", ".hideShow_Unawarded", function () {
+        var chChecked = $(this).is(":checked");
+        if (chChecked) {
+            $(".proj-quote tbody tr.hideQuote").show();
+        }
+        else {
+            $(".proj-quote tbody tr.hideQuote").hide();
+        }
+    });
+    $(document).ready(function () {
+        hideShowUnAwardedQuote();
+    });
+
+    function hideShowUnAwardedQuote() {
+        $(".hideShow_Unawarded").attr("checked", false);
+        if ($(".proj-quote tbody tr.showQuote").length === 0) {
+            $(".check-awarded").hide();
+            $(".proj-quote tbody tr.hideQuote").show();
+        }
+        else if ($(".proj-quote tbody tr.hideQuote").length === 0) {
+            $(".check-awarded").hide();
+            $(".proj-quote tbody tr.showQuote").show();
+        }
+        else {
+            $(".check-awarded").show();
+            $(".proj-quote tbody tr.showQuote").show();
+            $(".proj-quote tbody tr.hideQuote").hide();
+        }
+    }
+</script>

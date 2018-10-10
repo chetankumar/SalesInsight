@@ -1,0 +1,11 @@
+﻿---Shelly -  
+---Chetan -  
+---Bharat - Done
+---Avnish -  Done
+---Dinesh - Done
+---Server - Done
+
+/****** Object:  Table [dbo].[ReportColumnConfig]    Script Date: 05/03/2017 03:39:50 Dinesh ******/ 
+
+ALTER TABLE ReportColumnConfig
+ADD MetricDefinitionId int NULL;

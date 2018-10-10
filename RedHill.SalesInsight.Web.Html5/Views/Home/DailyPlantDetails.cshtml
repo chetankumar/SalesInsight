@@ -1,0 +1,555 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ESI.CustomMetricsModel
+@{
+    ViewBag.Title = "Daily Plant Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var accessRule = ViewBag.AccessRule;
+    ViewBag.UsingDataTable = true;
+    ViewBag.UsingDatePicker = true;
+}
+
+<div class="page-head">
+    <h2>
+        <i class="fab fa-wpforms"></i>
+        Daily Plant Details
+    </h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li>Daily Plant Entries</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="">
+
+        <div class="panel-body block-flat tab-content">
+            @Html.Partial("_ViewBagError", "")
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-sm-8">
+                                <div class="alert alert-danger alert-dismissable errorMsgForMetric hidden">
+                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+                                    <strong>Error! </strong> Somthing went wrong unable to update the metric value.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">Date</label>
+                            <div class="col-sm-7">
+                                @Html.TextBoxFor(x => x.DayDateTime, "{0:M/d/yyyy}", new { @class = "form-control validate datepicker" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                Plant Name
+                            </label>
+                            <div class="col-sm-7">
+                                @Html.DropDownListFor(x => x.PlantId, new SelectList(ViewBag.Plants, "PlantId", "Name"), "--Select--", new { @class = "form-control validate" })
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                Produced Volume
+                            </label>
+                            <div class="col-sm-7">
+                                <input type="text" name="ProducedVolume" value="" class="form-control validate updateValue" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group"></div>
+                    <div class="form-group"></div>
+                    <div class="form-group">
+                        <div class="col-sm-4">
+                            <div class="alert alert-danger errorMsgForPlant hidden">
+                                <strong>Error! </strong> Please select a plant.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h4 class="header"> Output </h4>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                Driver Delivered Volume
+                            </label>
+                            <div class="col-sm-7">
+                                <input type="text" name="DriverDeliveredVolume" id="deliveredVolume" value="" class="form-control validate updateValue" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                Total Loads
+                            </label>
+                            <div class="col-sm-7">
+                                <input type="text" name="TotalLoads" id="totalLoads" value="" class="form-control validate updateValue" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                Average Load Size
+                            </label>
+                            <div class="col-sm-7">
+                                <input type="text" name="AverageLoadSize" id="avgLoadSize" value="" class="form-control validate updateReadOnly" readonly />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                Total Orders
+                            </label>
+                            <div class="col-sm-7">
+                                <input type="text" name="TotalOrders" value="" class="form-control validate updateValue" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                Scheduled Volume
+                            </label>
+                            <div class="col-sm-7">
+                                <input type="text" name="ScheduledVolume" value="" class="form-control validate updateValue" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                Scheduled Trucks
+                            </label>
+                            <div class="col-sm-7">
+                                <input type="text" name="ScheduledTrucks" value="" class="form-control validate updateValue" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h4 class="header">Capacity</h4>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-horizontal">
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                Drivers On Payroll
+                            </label>
+
+                            <div class="col-sm-7">
+                                <input type="text" name="DriversOnPayroll" value="" class="form-control validate updateValue" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                Drivers Available
+                            </label>
+
+                            <div class="col-sm-7">
+                                <input type="text" name="DriversAvailable" value="" class="form-control validate updateValue" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            <label class="control-label col-sm-5">
+                                Drivers Utilized
+                            </label>
+
+                            <div class="col-sm-7">
+                                <input type="text" name="DriversUtilized" value="" class="form-control validate updateValue" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                Trucks Assigned
+                            </label>
+
+                            <div class="col-sm-7">
+                                <input type="text" name="TrucksAssigned" value="" class="form-control validate updateValue" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                Truck Available
+                            </label>
+                            <div class="col-sm-7">
+                                <input type="text" name="TruckAvailable" value="" class="form-control validate updateValue" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h4 class="header">Drivers Time</h4>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                Total Clock Hours
+                            </label>
+                            <div class="col-sm-7">
+                                <input type="text" name="TotalClockHours" value="" class="form-control validate updateValue" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                Total Start Up Time
+                            </label>
+                            <div class="col-sm-7">
+                                <div class="input-group">
+                                    <input type="text" name="StartUpTime" value="" class="form-control validate updateValue" />
+                                    <span class="input-group-addon">min</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                Total Shut Down Time
+                            </label>
+                            <div class="col-sm-7">
+                                <div class="input-group">
+                                    <input type="text" name="ShutdownTime" value="" class="form-control validate updateValue" />
+                                    <span class="input-group-addon">min</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                Total In-Yard Time
+                            </label>
+                            <div class="col-sm-7">
+                                <div class="input-group">
+                                    <input type="text" name="InYardTime" value="" class="form-control validate updateValue" />
+                                    <span class="input-group-addon">min</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                Non Delivery Clock Hours
+                            </label>
+
+                            <div class="col-sm-7">
+                                <input type="text" name="NonDeliveryHours" value="" class="form-control validate updateValue" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <h4 class="header">Ticket Time</h4>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                Avg Ticket Time
+                            </label>
+                            <div class="col-sm-7">
+                                <div class="input-group">
+                                    <input type="text" name="TicketTime" value="" class="form-control validate updateValue" />
+                                    <span class="input-group-addon">min</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                Avg Load Time
+                            </label>
+                            <div class="col-sm-7">
+                                <div class="input-group">
+                                    <input type="text" name="LoadTime" value="" class="form-control validate updateValue" />
+                                    <span class="input-group-addon">min</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                Avg Tempering Time
+                            </label>
+                            <div class="col-sm-7">
+                                <div class="input-group">
+                                    <input type="text" name="TemperingTime" value="" class="form-control validate updateValue" />
+                                    <span class="input-group-addon">min</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                Avg To Job Time
+                            </label>
+                            <div class="col-sm-7">
+                                <div class="input-group">
+                                    <input type="text" name="ToJobTime" value="" class="form-control validate updateValue" />
+                                    <span class="input-group-addon">min</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                Avg Wait On Job Time
+                            </label>
+                            <div class="col-sm-7">
+                                <div class="input-group">
+                                    <input type="text" name="WaitOnJobTime" value="" class="form-control validate updateValue" />
+                                    <span class="input-group-addon">min</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                Avg Pour Time
+                            </label>
+                            <div class="col-sm-7">
+                                <div class="input-group">
+                                    <input type="text" name="LoadTime" value="" class="form-control validate updateValue" />
+                                    <span class="input-group-addon">min</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                Avg Wash On Job Time
+                            </label>
+                            <div class="col-sm-7">
+                                <div class="input-group">
+                                    <input type="text" name="WashOnJobTime" value="" class="form-control validate updateValue" />
+                                    <span class="input-group-addon">min</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                Avg From Job Time
+                            </label>
+                            <div class="col-sm-7">
+                                <div class="input-group">
+                                   <input type="text" name="FromJobTime" value="" class="form-control validate updateValue" />
+                                   <span class="input-group-addon">min</span>
+                               </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h4 class="header"> Misc </h4>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                First Load On Time %
+                            </label>
+                            <div class="col-sm-7">
+                                <input type="text" name="FirstLoadOnTimePercent" value="" class="form-control validate updateValue" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                Accidents
+                            </label>
+                            <div class="col-sm-7">
+                                <input type="text" name="Accidents" value="" class="form-control validate updateValue" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                Plant Interruptions
+                            </label>
+                            <div class="col-sm-7">
+                                <input type="text" name="PlantInterruptions" value="" class="form-control validate updateValue" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                Batch Tolerance
+                            </label>
+
+                            <div class="col-sm-7">
+                                <input type="text" name="BadOrRejectedLoads" value="" class="form-control validate updateValue" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                Truck Breakdowns
+                            </label>
+                            <div class="col-sm-7">
+                                <input type="text" name="TruckBreakdowns" value="" class="form-control validate updateValue" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-5">
+                                Leased Trucks Used
+                            </label>
+                            <div class="col-sm-7">
+                                <input type="text" name="LeasedTruckUsed" value="" class="form-control validate updateValue" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h4 class="header">Notes</h4>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <textarea name="Notes" id="textNotes" value="" class="form-control validate updateValue" placeholder="Enter Comments Here"></textarea>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        var plantId;
+        customMetricContainerShowHide();
+        $('#PlantId, #DayDateTime').change(function () {
+            var plantId = $("#PlantId").val();
+            var day = $("#DayDateTime").val();
+            $.ajax({
+                url: "/Home/LoadCustomMetricValues",
+                method: 'POST',
+                data: { day: day, plantId: plantId },
+                success: function (data) {
+                    renderValues(data);
+                     @if(accessRule.HasCustomWebDataFormAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                     {
+                         <text> customMetricContainerShowHide(); </text>
+                     }
+                    $("[name='ProducedVolume']").focus();
+                },
+                error: function (res) {
+                    resetValues();
+                }
+            });
+        });
+
+        function renderValues(obj) {
+            if (obj) {
+                obj = JSON.parse(obj);
+                for (let k in obj) {
+                    var val = obj[k];
+                    var input = $("input[name='" + k + "']");
+                    if (input) {
+                        if (k == 'DayDateTime') {
+                            //Format date value
+                            var d = moment(new Date(val));
+                            input.val(d ? d.format("M/D/YYYY") : "");
+                        } else if (input.is("input")) {
+                            input.val(val);
+                        } else if (input.is("select")) {
+                            input.val(val);
+                        }
+                        else if (k == 'Notes') {
+                            $("#textNotes").val(val);
+                        }
+                    }
+                    else {
+                        resetValues();
+                    }
+                }
+            }
+            else {
+                resetValues();
+            }
+        }
+        function resetValues() {
+            $(".updateValue").val("");
+            $(".updateReadOnly").val("");         
+        }
+
+        function customMetricContainerShowHide() {
+            plantId = $("#PlantId option:selected").val();
+            if (plantId != "") {
+                $('.updateValue').removeAttr('readonly');
+            }
+            else {
+                $('.updateValue').attr('readonly', true);
+            }
+        }
+
+        $('input.updateValue,#textNotes').change(function (e) {
+            plantId = $("#PlantId option:selected").val();
+            var name = $(this).attr("name");
+            var value = $(this).val();
+
+            var day = moment($("#DayDateTime").val(), "M/D/YYYY").format("YYYY-MM-DD");
+            // Ajax call to update the value of the metric repect to their plant with date.
+            $.get("/Home/AddUpdateCustomMetrics", { day: day, plantId: plantId, metricType: name, metricValue: value }, function (data) {
+                if (data == "True") {
+                }
+                else {
+                    $('.errorMsgForMetric').removeClass('hidden');
+                }
+            });
+        });
+
+        $("#DayDateTime").val('@Model.DayDateTime.ToString("M/d/yyyy")');
+
+        $(".datepicker").datepicker({
+            format: "m/d/yyyy"
+        }).on("changeDate", function (e) {
+            $(this).datepicker("hide");
+        });
+    });
+
+    $('#totalLoads,#deliveredVolume').change(function () {
+        var totalLoads = $('#totalLoads').val();
+        var driverDeliveredVolume = $('#deliveredVolume').val();
+        if (totalLoads > 0) {
+            avgLoadSize = driverDeliveredVolume / totalLoads;
+        }
+        else {
+            avgLoadSize = 0;
+        }
+
+        plantId = $("#PlantId option:selected").val();
+        var name = $('#avgLoadSize').attr("name");
+        var value = avgLoadSize.toFixed(2);
+        $('#avgLoadSize').val(value);
+        var day = moment($("#DayDateTime").val(), "M/D/YYYY").format("YYYY-MM-DD");
+        // Ajax call to update the value of the metric repect to their plant with date.
+        $.get("/Home/AddUpdateCustomMetrics", { day: day, plantId: plantId, metricType: name, metricValue: value }, function (data) {
+            if (data == "True") {
+            }
+            else {
+                $('.errorMsgForMetric').removeClass('hidden');
+            }
+        });
+    })
+
+   
+</script>

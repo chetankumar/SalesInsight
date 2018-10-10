@@ -1,0 +1,4 @@
+﻿ALTER TABLE Quotation
+ADD ConcreteEnabled BIT NULL,
+	AggregateEnabled BIT NULL,
+	BlockEnabled BIT NULL;

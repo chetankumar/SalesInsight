@@ -1,0 +1,10 @@
+﻿-- Chetan : Done
+-- Bharat : Done
+-- Shelly : Done
+-- Avnish : Done
+-- Dinesh : Done
+-- Server : Done
+---------2017-03-02  04:41 PM ---New Column added to the ReportRowConfig table for Report Metric Setting ----Dinesh
+ALTER TABLE [dbo].[ReportRowConfig]
+ADD [IsHorizontalSeperator] [bit] NULL
+GO

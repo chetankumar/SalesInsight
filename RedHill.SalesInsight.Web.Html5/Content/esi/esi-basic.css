@@ -1,0 +1,386 @@
+.esi-dashboard .graphline {
+    display: flex;
+}
+
+.esi-dashboard .slow-spin {
+    -webkit-animation: fa-spin 6s infinite linear;
+    animation: fa-spin 10s infinite linear;
+}
+
+.esi-dashboard .nav-tabs > li > a {
+    padding: 9px 10px;
+    font-size: 13px;
+    margin-right: 0;
+    min-width: 72px;
+    text-align: center;
+}
+
+.esi-dashboard .widget-deletor {
+    cursor: pointer;
+    display: block;
+    color: #333;
+    background: rgba(0,0,0,.075);
+    width: 40px;
+    height: 18px;
+    top: 0;
+    position: absolute;
+    text-align: center;
+    line-height: 1;
+}
+
+.esi-dashboard .change_color {
+    cursor: pointer;
+    display: block;
+    color: #333;
+    background: rgba(0,0,0,.075);
+    width: 40px;
+    height: 18px;
+    top: 0;
+    left: 50px;
+    position: absolute;
+    text-align: center;
+    line-height: 1;
+}
+
+.esi-dashboard .editor {
+    cursor: pointer;
+    display: block;
+    color: #333;
+    background: rgba(0,0,0,.075);
+    width: 40px;
+    height: 18px;
+    top: 0;
+    right: 0;
+    position: absolute;
+    text-align: center;
+    line-height: 0;
+}
+
+.esi-dashboard .gridly {
+    position: relative;
+    /*width: 960px;*/
+}
+
+.esi-dashboard .brick {
+    text-align: center;
+    overflow: hidden;
+    font-size: 16px;
+    padding: 10px 0px;
+}
+
+.esi-dashboard .brick img {
+    padding: 10px;
+}
+
+.esi-dashboard .brick div {
+    padding: 5px 0px;
+}
+
+.esi-dashboard .brick.small {
+    width: 140px;
+    height: 140px;
+    background-color: gray;
+}
+
+.esi-dashboard .brick.large {
+    width: 460px;
+    height: 460px;
+    background-color: #B0B0B0;
+}
+
+.esi-dashboard .brick.small {
+    width: 140px;
+    height: 140px;
+}
+
+.esi-dashboard .brick .widget-static-msg {
+    font-size: 13px;
+}
+
+.esi-dashboard .widget-content.front, .esi-dashboard .widget-content.back {
+    display: none;
+    padding: 5px !important;
+}
+
+.esi-dashboard .widget-content.active {
+    display: block;
+}
+
+.esi-dashboard .widget-content .widget-var-indication i {
+    font-size: 16px;
+}
+
+.esi-dashboard .widget-content .widget-var-indication span {
+    margin-left: 5px;
+}
+
+.esi-dashboard .widget-action-indicator {
+    font-size: 19px;
+}
+
+.esi-dashboard .widget-nav .list-group-item {
+    padding: 2px;
+}
+
+.esi-dashboard .widget-content .widget-nav {
+    margin-top: -10px;
+}
+
+.esi-dashboard .loading {
+    width: 48px;
+    height: 48px;
+    display: block;
+    position: absolute;
+    left: 30%;
+    top: 30%;
+    color: #4d90fd;
+    font-size: 21px;
+}
+
+/*.esi-dashboard .widget-visualization {
+    
+    text-align: center;
+    margin: 0px auto;
+    overflow: hidden;
+    position: absolute;
+    bottom: 5px;
+    width: 100%;
+}
+
+.esi-dashboard .esi-widget-title {
+    font-size: 19px;
+    font-weight: bold;
+}
+
+.esi-dashboard .widget-value {
+    font-size: 19px;
+    margin-right: 5px;
+}*/
+.esi-dashboard .widget-visualization {
+    /*width: 80%;*/
+    text-align: center;
+    margin: 0px auto;
+    overflow: hidden;
+    position: absolute;
+    bottom: 5px;
+    width: 100%;
+}
+
+.esi-dashboard .esi-widget-title {
+    font-size: 19px;
+    font-weight: bold;
+}
+
+.esi-dashboard .esi-widget-value {
+    font-size: 19px;
+    font-weight: bold;
+    position: absolute;
+    bottom: 45px;
+    width: 100%;
+}
+
+.esi-dashboard .edit-mode {
+    border: 2px solid #fff;
+    background-color: #fff;
+    display: block;
+    padding: 10px 5px;
+    /*box-shadow: 0 -60px 30px 0 rgba(0,0,0,.2),0 -9px 45px 0 rgba(0,0,0,.19);
+    border-radius: 5px;*/
+}
+
+.esi-dashboard .edit-mode .form-inline > * {
+    margin-right: 15px;
+}
+
+.esi-dashboard .edit-mode-title {
+    font-size: 19px;
+    padding: 6px 8px;
+    display: inline;
+}
+
+.esi-dashboard .dasbrd-name {
+    text-align: center;
+    border: 1px solid rgba(0,0,0,.12);
+}
+
+.esi-dashboard .mode {
+    cursor: pointer;
+}
+
+.esi-dashboard .default-dash {
+}
+
+.esi-dashboard .mode-btn {
+    padding-top: 4px;
+}
+
+.esi-dashboard .non-fav {
+    color: #d3d3d3;
+}
+
+.esi-dashboard .fav {
+    color: #e44c34;
+}
+
+.esi-dashboard .report-group-endline td {
+    border-bottom: 3px solid #000000 !important;
+}
+
+.esi-dashboard .row-datacell td:first-child {
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.esi-dashboard .row-datacell th:not(:first-child), .row-datacell td:not(:first-child) {
+    text-align: center;
+}
+
+.esi-dashboard .row-datacell th {
+    background-color: rgba(211, 211, 211, 0.26);
+}
+
+.esi-dashboard .filter-count {
+    color: white;
+    background: #e44c34;
+    padding: 0px 3px 0px 3px;
+}
+
+.esi-dashboard .cl-mcont {
+    padding: 15px 30px 5px 30px;
+}
+
+.esi-dashboard .dashboard-list li.opt.selected::before {
+    position: absolute;
+    width: 8px;
+    left: 5px;
+    height: 8px;
+    background: #78cc2e;
+    content: ' ';
+    bottom: 12px;
+    border-radius: 50%;
+}
+
+.form-group.line-below {
+    border-bottom: solid 1px #ccc;
+    padding-bottom: 15px;
+}
+
+.form-group.line-above {
+    border-top: solid 1px #ccc;
+    padding-top: 15px;
+}
+
+.esi-table {
+    border: solid 1px #ccc;
+}
+
+.esi-table tbody tr th {
+    border: none;
+    border-right: solid 1px #888;
+    font-size: 14px;
+}
+
+.esi-table tbody tr td {
+    border: none;
+    border-right: solid 1px #888;
+    font-size: 14px;
+}
+
+.selectDivBox {
+    border: 1px solid silver;
+    margin: 3px;
+    padding: 5px 15px;
+    position: relative;
+    background: #fff;
+}
+
+.selectDivBox::before {
+    display: inline-block;
+    width: 5px;
+    content: '::';
+    position: absolute;
+    left: 0px;
+    font-size: 18px;
+    color: #999;
+}
+
+.selectDivBox input[type=checkbox] {
+    float: right;
+}
+
+.selectDivArea {
+    border: solid 1px silver;
+    min-height: 100px;
+    padding: 10px;
+    box-shadow: inset 0px 0px 0px 1px #eee;
+    background: #fafafa;
+}
+
+.esi-control-group {
+    margin-bottom: 10px;
+}
+
+.esi-control-group > div {
+    margin-bottom: 10px;
+}
+
+.esi-dashboard .SumoSelect > .optWrapper > .options li.opt label {
+    font-size: 12px;
+    padding: 0px;
+    font-weight: normal;
+    margin: 0px;
+}
+
+.esi-dashboard .SumoSelect > .optWrapper > .options li.opt {
+    padding-top: 6px;
+    padding-bottom: 6px;
+    position: relative;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.esi-dashboard .SumoSelect > .optWrapper > .options li.group > label {
+    padding: 2px 6px;
+}
+
+.esi-dashboard .row-divider {
+    border-bottom: solid 1px #888;
+}
+
+.esi-dashboard .drill-total {
+    border-top: solid 1px #888;
+}
+
+.widget-detail.preloader {
+    position: absolute;
+    width: auto;
+    margin: 0px auto;
+    left: 35%;
+    top: 20%;
+    z-index: 9999999;
+    background: #ccc;
+    padding: 15px;
+    border-radius: 5px;
+    font-size: 28px;
+    line-height: 28px;
+    font-weight: normal;
+}
+
+.esi-widget .loading i {
+    transform: translate(0px);
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    font-size: 28px;
+}
+
+.esi-dashboard .loading {
+    width: 100%;
+    height: 100%;
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #4d90fd;
+    font-size: 21px;
+    background: rgba(255, 255, 255, 0.7);
+}

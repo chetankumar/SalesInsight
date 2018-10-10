@@ -1,0 +1,513 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.MiscView
+
+@{
+    ViewBag.Title = "Miscellaneous";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    bool aujsAPIEnabled = (ViewBag.AUJSAPIEnabled != null && ViewBag.AUJSAPIEnabled == true);
+    ViewBag.UsingDataTable = true;
+}
+
+<div class="page-head">
+    <h2>Manage Sales Infrastructure</h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Home/Settings">Settings</a></li>
+        <li><a href="/Home/Companies">Manage Sales Infrastructure</a></li>
+        <li class="active">Miscellaneous</li>
+    </ol>
+</div>
+
+<div class="cl-mcont">
+    @Html.Partial("_CompanyTabs", "misc")
+
+    <div class="tab-content">
+        @using (Html.BeginForm("ManageMiscSettings", "Admin", FormMethod.Post))
+        {
+            <div class="panel-body">
+                <h2>User Defined Fields</h2>
+                <p class="spacer2"></p>
+                <fieldset class="col-md-6 form form-horizontal">
+                    <legend>Mix Design Fields</legend>
+                    <div class="form-group">
+                        <label class="control-label col-md-5">Mix Design Field 1</label>
+                        <div class="col-md-7">
+                            @Html.HiddenFor(x => x.Id)
+                            @Html.TextBoxFor(x => x.MD1, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-5">Mix Design Field 2</label>
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(x => x.MD2, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-5">Mix Design Field 3</label>
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(x => x.MD3, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-5">Mix Design Field 4</label>
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(x => x.MD4, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="col-md-6 form form-horizontal">
+                    <legend>Job Info Fields</legend>
+                    <div class="form-group">
+                        <label class="control-label col-md-5">Job Info Field 1</label>
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(x => x.JI1, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-5">Job Info Field 2</label>
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(x => x.JI2, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="panel-body">
+                <h2>Other Settings</h2>
+                <div class="col-md-1">
+                    @Html.DropDownListFor(x => x.NonFutureCutoff, Model.ChooseDaysInAMonth, new { @class = "form-control" })
+                </div>
+                <div class="col-md-6 form-control-static">
+                    Day of month cutoff for "editing non-future projections" control in role settings
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-2 pull-right">
+                    <button type="submit" class="btn btn-block btn-primary">Save</button>
+                </div>
+            </div>
+        }
+        <hr />
+        <div id="tax_codes" class="panel-body">
+            <h2>Tax Codes</h2>
+            @if (TempData["TaxError"] != null)
+            {
+                <div class="alert alert-danger">
+                    @TempData["TaxError"]
+                </div>
+            }
+            @if (Model.SelectedTaxCode.Id > 0 && aujsAPIEnabled)
+            {
+                using (Html.BeginForm("AddUpdateTaxCodes", "Admin", FormMethod.Post))
+                {
+                    <div class="form form-inline">
+                        <div class="form-group">
+                            @Html.HiddenFor(x => x.SelectedTaxCode.Id)
+                            @Html.TextBoxFor(x => x.SelectedTaxCode.Code, aujsAPIEnabled ? (object)new { @class = "form-control", @placeholder = "Tax Code", @readonly = "readonly" } : (object)new { @class = "form-control", @placeholder = "Tax Code" })
+                            @Html.TextBoxFor(x => x.SelectedTaxCode.Description, new { @class = "form-control", @placeholder = "Description" })
+                            <button type="submit" class="btn btn-primary">@Html.Raw(Model.SelectedTaxCode.Id > 0 ? "Update" : "Save")</button>
+                        </div>
+                    </div>
+                }
+            }
+            else if (!aujsAPIEnabled)
+            {
+                using (Html.BeginForm("AddUpdateTaxCodes", "Admin", FormMethod.Post))
+                {
+                    <div class="form form-inline">
+                        <div class="form-group">
+                            @Html.HiddenFor(x => x.SelectedTaxCode.Id)
+                            @Html.TextBoxFor(x => x.SelectedTaxCode.Code, aujsAPIEnabled ? (object)new { @class = "form-control", @placeholder = "Tax Code", @readonly = "readonly" } : (object)new { @class = "form-control", @placeholder = "Tax Code" })
+                            @Html.TextBoxFor(x => x.SelectedTaxCode.Description, new { @class = "form-control", @placeholder = "Description" })
+                            <button type="submit" class="btn btn-primary">@Html.Raw(Model.SelectedTaxCode.Id > 0 ? "Update" : "Save")</button>
+                        </div>
+                    </div>
+                }
+            }
+            <div class="spacer2"></div>
+            <div>
+                <table class="table table-bordered dataTable">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Description</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (RedHill.SalesInsight.DAL.TaxCode tc in Model.TaxCodes)
+                        {
+                            <tr>
+                                <td>@tc.Code</td>
+                                <td>@tc.Description</td>
+                                <td>
+                                    <a href="/Admin/ManageMiscSettings/@(tc.Id)?#tax_codes" @(aujsAPIEnabled ? "disabled" : "") class="btn btn-xs btn-primary">
+                                        <span class="glyphicon glyphicon-edit"></span>
+                                    </a>
+                                    @if (ViewBag.AccessRule.HasMiscellaneousAccess != SIRolePermissionLevelConstants.EDIT_ONLY)
+                                    {
+                                        <a href="/Admin/DeleteTaxCode/@tc.Id" @(aujsAPIEnabled ? "disabled" : "") data-confirm="Are you sure want to delete tax code @tc.Code ?" class="btn btn-xs btn-danger">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <hr />
+        <div class="panel-body">
+            <h2>Logo Settings</h2>
+            <p class="spacer2"></p>
+            <fieldset class="col-md-6 form form-horizontal">
+                <legend>Logo Preview</legend>
+                <div class="col-md-6">
+                    <img src="/home/logo" height="50" />
+                </div>
+                <div class="col-md-6">
+                    @using (Html.BeginForm("UploadLogo", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        <div>
+                            @Html.TextBox("LogoFile", "", new { type = "file" })
+                            <span id="spLogoFile" style="display: none;" class="field_error"></span>
+                            <br />
+                            <input type="submit" value="Upload logo" class="btn btn-primary" />
+                        </div>
+
+                    }
+                </div>
+            </fieldset>
+
+
+        </div>
+        <hr />
+        @if (aujsAPIEnabled)
+        {
+            <div class="panel-body">
+                <h2>API Settings</h2>
+                <p class="spacer2"></p>
+                <fieldset class="col-md-6 form form-horizontal">
+                    <div id="SyncError"></div>
+                    <legend>
+                        Sync and Status
+                        <button type="submit" class="btn btn-primary pull-right" data-entity="SyncAll" style="margin-top: -17px;">Sync</button>
+                    </legend>
+                    <div class="form-group" data-entity="MarketSegment">
+                        <label class="control-label col-md-5">Market Segments</label>
+                        <div class="control-label col-md-1">
+                            <span data-entity="MarketSegment"></span>
+                        </div>
+                        <div class="control-label col-md-6">
+                            <span class="last_sync_date"></span>
+                        </div>
+                    </div>
+                    <div class="form-group" data-entity="RawMaterialType">
+                        <label class="control-label col-md-5">Raw Material Types</label>
+                        <div class="control-label col-md-1">
+                            <span data-entity="RawMaterialType"></span>
+                        </div>
+                        <div class="control-label col-md-6">
+                            <span class="last_sync_date"></span>
+                        </div>
+                    </div>
+                    <div class="form-group" data-entity="Plant">
+                        <label class="control-label col-md-5">Plants</label>
+                        <div class="control-label col-md-1">
+                            <span data-entity="Plant"></span>
+                        </div>
+                        <div class="control-label col-md-6">
+                            <span class="last_sync_date"></span>
+                        </div>
+                    </div>
+                    <div class="form-group" data-entity="ProjectStatus">
+                        <label class="control-label col-md-5">Project Statuses</label>
+                        <div class="control-label col-md-1">
+                            <span data-entity="ProjectStatus"></span>
+                        </div>
+                        <div class="control-label col-md-6">
+                            <span class="last_sync_date"></span>
+                        </div>
+                    </div>
+                    <div class="form-group" data-entity="TaxCode">
+                        <label class="control-label col-md-5">Tax Codes</label>
+                        <div class="control-label col-md-1">
+                            <span data-entity="TaxCode"></span>
+                        </div>
+                        <div class="control-label col-md-6">
+                            <span class="last_sync_date"></span>
+                        </div>
+                    </div>
+                    <div class="form-group" data-entity="Uom">
+                        <label class="control-label col-md-5">UOMs</label>
+                        <div class="control-label col-md-1">
+                            <span data-entity="Uom"></span>
+                        </div>
+                        <div class="control-label col-md-6">
+                            <span class="last_sync_date"></span>
+                        </div>
+                    </div>
+                    <div class="form-group" data-entity="RawMaterial">
+                        <label class="control-label col-md-5">Raw Materials</label>
+                        <div class="control-label col-md-1">
+                            <span data-entity="RawMaterial"></span>
+                        </div>
+                        <div class="control-label col-md-6">
+                            <span class="last_sync_date"></span>
+                        </div>
+                    </div>
+                        <div class="form-group" data-entity="Customer">
+                            <label class="control-label col-md-5">Customers</label>
+                            <div class="control-label col-md-1">
+                                <span data-entity="Customer"></span>
+                            </div>
+                            <div class="control-label col-md-6">
+                                <span class="last_sync_date"></span>
+                            </div>
+                        </div>
+                    <div class="form-group" data-entity="SalesStaff">
+                        <label class="control-label col-md-5">Sales Staff</label>
+                        <div class="control-label col-md-1">
+                            <span data-entity="SalesStaff"></span>
+                        </div>
+                        <div class="control-label col-md-6">
+                            <span class="last_sync_date"></span>
+                        </div>
+                    </div>
+                    <div class="form-group" data-entity="StandardMixConstituent">
+                        <label class="control-label col-md-5">Standard Mixes & Constituents</label>
+                        <div class="control-label col-md-1">
+                            <span data-entity="StandardMixConstituent"></span>
+                        </div>
+                        <div class="control-label col-md-6">
+                            <span class="last_sync_date"></span>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <hr />
+        }
+        <div class="spacer2"></div>
+        <div class="panel-body">
+            @using (Html.BeginForm("ResetPasswordRules", "Admin", FormMethod.Post, new { @role = "form", @class = "form-horizontal", @style = "margin-bottom: 0px!important;" }))
+            {
+                <h3>Reset Password Verification Rule</h3>
+                @Html.Partial("_ViewBagError", "")
+                <div class="form-group">
+                    <label class="control-label col-md-5">Require One Upper</label>
+                    <div class="col-md-7">
+                        @Html.HiddenFor(x => x.UserPasswordSettings.Id)
+                        <div class="checkbox">
+                            <label>@Html.CheckBoxFor(x => x.UserPasswordSettings.RequireOneCaps, new { @class = "" })</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-5">Require One Lower</label>
+                    <div class="col-md-7">
+                        @Html.CheckBoxFor(x => x.UserPasswordSettings.RequireOneLower, new { @class = "" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-5">Require One Digit</label>
+                    <div class="col-md-7">
+                        @Html.CheckBoxFor(x => x.UserPasswordSettings.RequireOneDigit, new { @class = "" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-5">Require Special Character</label>
+                    <div class="col-md-7">
+                        <label>
+                            @Html.CheckBoxFor(x => x.UserPasswordSettings.RequireSpecialChar, new { @class = "", @autocomplete = "off" })
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-5">Password Age</label>
+                    <div class="col-md-7">
+                        @Html.DropDownListFor(x => x.UserPasswordSettings.MaximumPasswordAge, Enumerable.Range(1, 732).Select(i => new SelectListItem { Text = i.ToString(), Value = i.ToString() }), new { @class = "form-control input-small", @type = "number" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-5">Password Minimum Length</label>
+                    <div class="col-md-7">
+                        @Html.DropDownListFor(x => x.UserPasswordSettings.MinimumLength, Enumerable.Range(5, 8).Select(i => new SelectListItem { Text = i.ToString(), Value = i.ToString() }), new { @class = "form-control input-small", @type = "number" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-5">Password History Limit</label>
+                    <div class="col-md-7">
+                        @Html.DropDownListFor(x => x.UserPasswordSettings.PasswordHistoryLimit, Enumerable.Range(0, 6).Select(i => new SelectListItem { Text = i.ToString(), Value = i.ToString() }), new { @class = "form-control input-small", @type = "number" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-5">Expire Password For Existing Users<i class="fa fa-fw fa-question-circle" data-toggle="tooltip" title="All users will be required to set their password again except you"></i></label>
+                    <div class="col-md-7">
+                        <label>
+                            @Html.CheckBoxFor(x => x.ExpirePasswordForExistingUsers, new { @class = "", @autocomplete = "off" })
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-7 col-sm-offset-5">
+                        <button type="submit" class="btn btn-primary btn_save_setting">Confirm Settings</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".dataTable").DataTable();
+
+        var miscAccess = '@(ViewBag.AccessRule.HasMiscellaneousAccess == SIRolePermissionLevelConstants.FULL_ACCESS || ViewBag.AccessRule.HasMiscellaneousAccess == SIRolePermissionLevelConstants.EDIT_ONLY)'
+        if (miscAccess == 'False')
+        {
+            $(":input").prop("disabled", true);
+            $("a").attr("disabled", true);
+        }
+        $("form").submit(function () {
+            if ($(this).find("input[type=file]").val() == "") {
+                $(this).find("#spLogoFile").show().text("Please choose logo image");
+                return false;
+            }
+            else { $(this).find("#spLogoFile").hide(); }
+        });
+        $("input[type=file]").change(function () {
+            var fileExtension = ['jpg', 'png'];
+            $("#spLogoFile").hide();
+            if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
+                alert("Only [ " + fileExtension.join(', ') + " ] formats are allowed");
+                $(this).val("");
+            }
+        });
+        $(document).on("click", ".btn_save_setting", function () {
+
+            if (confirm("Are you sure you want to save these changes?") == true) {
+            } else {
+                return false;
+            }
+        });
+        loadSyncHistory();
+    });
+
+    function loadSyncHistory() {
+        $.ajax({
+            url: '/Admin/LoadFetchHistory',
+            method: 'GET',
+            success: function (res) {
+                for (var i in res) {
+                    var obj = res[i];
+                    var divObj = $("div[data-entity='" + obj.Entity + "'");
+                    if (divObj.length > 0) {
+                        $(divObj).find("span.last_sync_date").html("<strong>Last Sync : </strong>" + obj.LastImportDate);
+                    }
+                }
+            },
+            error: function (err) {
+
+            },
+            complete: function (data) {
+
+            }
+        });
+    }
+
+    $(function () {
+        $("button[data-entity=SyncAll]").on("click", function (e) {
+            window.onbeforeunload = function () {
+                return "Are you sure you want to leave syncing !";
+            };
+            var syncAllButton = $(this);
+            syncAllButton.attr('disabled', 'disabled');
+            //var arr = ["Customer"];
+            var arr = ["MarketSegment", "RawMaterialType", "Plant", "ProjectStatus", "TaxCode", "Uom", "RawMaterial", "Customer", "SalesStaff", "StandardMixConstituent"];
+            var arrObj = [];
+
+            for (var i = 0; i < arr.length; i++) {
+                var tempObj = {};
+                tempObj["Name"] = arr[i];
+                tempObj["Status"] = false;
+                arrObj.push(tempObj);
+
+                var syncButton = $("span[data-entity=" + arr[i] + "]");
+                syncButton.find("i").remove();
+                syncButton.prepend($("<i/>").addClass("fa fa-pause"))
+            }
+            //var isPending = false;
+            processObject(arrObj);
+
+
+        });
+
+        function processObject(obj) {
+            for (var i = 0; i < obj.length; i++) {
+                var currentObj = obj[i];
+                if (currentObj.Status === false) {
+                    var syncButton = $("span[data-entity=" + currentObj.Name + "]");
+                    var entity = currentObj.Name;
+                    var syncTableName = $(syncButton).parent().prev().text();
+
+                    syncButton.find("i").remove();
+
+                    if (syncButton.find("i.fa-spinner").length == 0)
+                        syncButton.prepend($("<i/>").addClass("fa fa-spinner"))
+
+                    syncButton.find("i.fa-spinner").addClass("fa-spin fa-lg text-primary");
+                    syncButton.attr("disabled", "disabled");
+                    var syncError = "<a href='#' class='close' data-dismiss='alert' aria-label='close' title='close'>×</a><strong>Sync Failed !</strong> for ";
+
+                    $.ajax({
+                        url: '/Admin/ImportEntity',
+                        method: 'POST',
+                        data: { entityType: entity },
+                        beforeSend: function () { },
+                        success: function (res) {
+                            if (res.success) {
+                                syncButton.find("i.fa-spinner").removeClass("fa-spinner fa-spin").addClass("fa-check-circle-o fa-lg").css("color", "green");
+                                currentObj.Status = true;
+                                obj.shift()
+                                processObject(obj);
+                                if (obj.length == 0) {
+                                    $("button[data-entity=SyncAll]").removeAttr('disabled');
+                                    window.onbeforeunload = null;
+                                }
+                            }
+                            else {
+                                syncButton.find("i").remove();
+                                var div = $('<div class="alert alert-danger fade in"></div>');
+                                div.html(syncError + syncTableName + "<br/>" + res.message);
+                                div.appendTo('#SyncError');
+
+                                $.each(obj, function (i, val) {
+                                    var syncSpan = $("span[data-entity=" + val.Name + "]");
+                                    syncSpan.find("i").remove();
+                                    syncSpan.prepend($("<i/>").addClass("fa fa-times fa-lg text-danger"));
+                                });
+
+                                $("button[data-entity=SyncAll]").removeAttr('disabled');
+                                window.onbeforeunload = null;
+                            }
+                        },
+                        error: function (err) {
+                            $.each(obj, function (i, val) {
+                                var syncSpan = $("span[data-entity=" + val.Name + "]");
+                                syncSpan.find("i").remove();
+                                syncSpan.prepend($("<i/>").addClass("fa fa-times"));
+                            });
+                            $("button[data-entity=SyncAll]").removeAttr('disabled');
+                            window.onbeforeunload = null;
+                        },
+                        complete: function (data) {
+                            loadSyncHistory();
+                            syncButton.removeAttr("disabled");
+                        }
+                    });
+                }
+                break;
+            }
+        }
+    });
+
+</script>

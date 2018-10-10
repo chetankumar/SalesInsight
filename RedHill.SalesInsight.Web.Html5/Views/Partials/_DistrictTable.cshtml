@@ -1,0 +1,33 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.CompanyView
+
+<table class="data_table table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Avg Load</th>
+            <th>Avg Unload</th>
+            <th>Avg Wash</th>
+            <th>Avg To Job</th>
+            <th>Avg Return</th>
+            <th>Active</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (RedHill.SalesInsight.Web.Html5.Models.DistrictView c in Model.Districts)
+        {
+            <tr>
+                <td>@c.Name</td>
+                <td> @c.Load</td>
+                <td> @c.Unload</td>
+                <td> @c.Wash</td>
+                <td> @c.ToJob</td>
+                <td> @c.Return</td>
+                <td> @Html.Partial("_Tick", c.Active)</td>
+                <td>
+                    <a href="/Home/EditDistrict/@c.DistrictId" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-edit"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

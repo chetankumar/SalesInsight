@@ -1,0 +1,185 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.CompetitorPlantView
+
+
+@{
+    ViewBag.Title = (Model.Id == 0 ? "Add Competitor Plant" : "Edit Competitor Plant"); ;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.UsingDataTable = true;
+    ViewBag.UsingMaps = true;
+}
+
+<div class="page-head">
+    <h2>
+        @if (Model.Id > 0)
+        {
+            <span>Edit Competitor Plant</span>
+        }
+        else
+        {
+            <span>Add Competitor Plant</span>
+        }
+    </h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Home/Settings">Settings</a></li>
+        <li><a href="/Home/Companies">Manage Company Settings</a></li>
+        <li><a href="/Home/Companies/competitors">Competitors</a></li>
+        <li><a href="/Home/EditCompetitor/@Model.CompetitorId">@Model.CompetitorName</a></li>
+        <li class="active">@(Model.Id == 0 ? "New" : Model.Name)</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="block-flat">
+        @using (Html.BeginForm("UpdateCompetitorPlant", "Home", FormMethod.Post, new { @class = "form-horizontal" }))
+        {
+            @Html.ValidationSummary(true)
+
+            <fieldset>
+                <legend>
+                    @if (Model.Id > 0)
+                    {
+                        <span>Update @Model.Name</span>
+                    }
+                    else
+                    {
+                        <span>Create Plant for @Model.CompetitorName</span>
+                    }
+                </legend>
+
+
+                @Html.HiddenFor(model => model.CompetitorId, new { @class = "form-control" })
+                <input type="hidden" name="Id" value="@Model.Id" />
+
+                <div class="form-group">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.Name)
+                    </div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Name, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <div class="control-label col-md-2">
+                        <label>District</label>
+                    </div>
+
+
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.DistrictId, Model.AvailableDistricts, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.DistrictId, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <div class="control-label col-md-2">
+                        <label>Map Location</label>
+                    </div>
+
+
+                    <div class="col-md-10 clearfix">
+                        <div class="col-xs-3 padding-0">
+                            @Html.TextBoxFor(x => x.Latitude, new { @class = "form-control", @readonly = "readyonly" })
+                            @Html.ValidationMessageFor(model => model.Latitude, string.Empty, new { @class = "help-inline" })
+                        </div>
+                        <div class="col-xs-3 ">
+                            @Html.TextBoxFor(x => x.Longitude, new { @class = "form-control", @readonly = "readyonly" })
+                            @Html.ValidationMessageFor(model => model.Longitude, string.Empty, new { @class = "help-inline" })
+                        </div>
+                        <div class="col-xs-6">
+                            <button type="button" class="btn btn-primary map_marker_btn" data-address="@Model.Name" data-latitude="@Model.Latitude" data-longitude="@Model.Longitude" data-default-latitude="@Model.DistrictLatitude" data-default-longitude="@Model.DistrictLongitude" data-trigger="modal" data-target="map_modal">
+                                <i class="fa fa-map-marker fa-fw"></i>
+                                Set Location
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.Active)
+                    </div>
+                    <div class="col-md-10">
+                        @Html.CheckBoxFor(model => model.Active)
+                        @Html.ValidationMessageFor(model => model.Active, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-10 col-md-offset-2">
+                        <input type="submit" value="@(Model.Id > 0 ? "Update" : "Create")" class="btn btn-primary" />
+                    </div>
+                </div>
+            </fieldset>
+        }
+    </div>
+
+    <table class="table table-bordered table-striped data_table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>District</th>
+                <th>Latitude</th>
+                <th>Longitude</th>
+                <th>Active</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var plant in Model.Plants)
+            {
+                <tr>
+                    <td>@plant.Name</td>
+                    <td>@plant.District.Name</td>
+                    <td>@plant.Latitude</td>
+                    <td>@plant.Longitude</td>
+                    <td>@Html.Partial("_Tick", plant.Active)</td>
+                    <td>
+                        <a class="btn btn-primary btn-xs" href="/Home/EditCompetitorPlant/@plant.Id">
+                            <i class="fa fa-fw fa-edit"></i>
+                        </a>
+                        <a class="btn btn-danger btn-xs" data-confirm="Are you sure you want to delete this plant? <br/><br/> Name : @plant.Name<br/>District: @plant.District.Name" href="/Home/DeleteCompetitorPlant/@plant.Id">
+                            <i class="fa fa-fw fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@Html.Partial("_MapMarker", true)
+
+
+@section Scripts {
+
+    <script>
+
+        $(document).ready(function () {
+            $("body").on("MarkerMoved", function (e, data) {
+                $("#Latitude").val(e.latitude);
+                $("#Longitude").val(e.longitude);
+            });
+            $("body").on("MapMoved", function (e, data) {
+            });
+
+            var competitorAccess = '@(ViewBag.AccessRule.HasCompetitorsAccess == SIRolePermissionLevelConstants.FULL_ACCESS)';
+            if (competitorAccess == 'False')
+            { disableEveryThing(); }
+        });
+
+        $.validator.setDefaults({
+            highlight: function (element) {
+                $(element).closest(".control-group").addClass("error");
+            },
+            unhighlight: function (element) {
+                $(element).closest(".control-group").removeClass("error");
+            }
+        });
+    </script>
+}
+
+
+

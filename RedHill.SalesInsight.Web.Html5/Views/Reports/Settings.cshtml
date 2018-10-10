@@ -1,0 +1,51 @@
+﻿@{
+    ViewBag.Title = "Settings";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="page-head">
+    <h2>Report Settings</h2>
+    <ol class="breadcrumb">
+        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+        @if (ViewBag.AccessRule.HasReportsAccess == SIRolePermissionLevelConstants.NO_ACCESS)
+        {
+            <li>@Html.ActionLink("Settings", "Settings", "Home")</li>
+            <li class="active">Report Settings</li>
+
+        }
+        else
+        {
+            <li>@Html.ActionLink("Reports", "Index", "Reports")</li>
+            <li class="active">Settings</li>
+
+        }
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="">
+        <div>
+            <a href="@Url.Action("CustomerProductivity", "Reports")">
+                <div class="butpro butstyle flat">
+                    <div class="sub">
+                        <h2 class="text-primary">Customer Uploads</h2>
+                        <div>Productivity, Profitability, Order Changes, Aging</div>
+                    </div>
+                    <div class="stat">
+                        <i class="fa fa-2x text-primary fa-users"></i>
+                    </div>
+                </div>
+            </a>
+            <a href="@Url.Action("Indicators", "Reports")">
+                <div class="butpro butstyle flat">
+                    <div class="sub">
+                        <h2 class="text-primary">Indicators</h2>
+                        <div>Finacial & Productivity, Caution / OK <br /></div>
+                    </div>
+                    <div class="stat">
+                        <i class="fa fa-2x text-primary fa-exclamation-triangle"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+

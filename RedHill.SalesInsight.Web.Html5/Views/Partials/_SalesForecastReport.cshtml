@@ -1,0 +1,54 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ReportFilter
+
+@using (Html.BeginForm("SalesForecastReport", "Reports", FormMethod.Post, new { @class = "" }))
+{
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="form-inline">
+                <div class="form-group">
+                    <label class="control-label">Projection Date</label>
+                    @Html.HiddenFor(m => m.Print)
+                    @Html.TextBoxFor(m => m.ProjectionMonth, new { @class = "form-control datepicker" })
+                </div>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            @Html.CheckBoxFor(x => x.FilterBacklogLimit, new { @data_toggle = "tooltip", @title = "When not checked, Backlog includes all future months." })
+                            @*<input type="checkbox" name="FilterBacklogLimit" data-toggle="tooltip" title="When not checked, Backlog includes all future months.">*@ Limit Backlog to 12 Months
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @if (RedHill.SalesInsight.Web.Html5.Helpers.ConfigurationHelper.AggregateEnabled || RedHill.SalesInsight.Web.Html5.Helpers.ConfigurationHelper.BlockEnabled)
+                    {
+                        @Html.DropDownListFor(x => x.SelectProductTypeId, new SelectList(RedHill.SalesInsight.Web.Html5.Helpers.ConfigurationHelper.ProductTypes, "Value", "Text"), new { @style = "margin-left: 5px;", @class = "form-control product_toggle" })
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Districts
+                </div>
+                <div class="panel-body">
+                    @foreach (SelectListItem item in Model.DistrictList)
+                    {
+                        <div class="checkbox col-md-3">
+                            <label>
+                                <input type="checkbox" value="@item.Value" name="Districts" @(item.Selected ? "checked='checked'" : "") /> @item.Text
+                            </label>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="">
+        <button class="btn btn-primary">Run Report</button>
+    </div>
+}
+

@@ -1,0 +1,16 @@
+﻿ALTER TABLE [Quotation] 
+Add [Disclaimers] [nvarchar](max) NULL,
+	[Disclosures] [nvarchar](max) NULL,
+	[TermsAndConditions] [nvarchar](max) NULL
+
+ALTER TABLE [District]
+ADD [AdjustMixPrice] [float] NULL
+
+ALTER TABLE [Quotation]
+ADD [AdjustMixPrice] [float] NULL
+
+ALTER TABLE [dbo].[District] ADD [LettingDate] [bit] NULL
+
+ALTER TABLE Quotation 
+ADD 	[BiddingDate] [datetime] NULL,
+	[IncludeAsLettingDate] [bit] NULL

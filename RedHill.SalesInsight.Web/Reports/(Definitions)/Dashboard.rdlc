@@ -1,0 +1,1530 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <DataSources>
+    <DataSource Name="DummyDataSource">
+      <rd:DataSourceID>1ea3fdd4-fc50-4a22-a83e-6d2b74f8908a</rd:DataSourceID>
+      <ConnectionProperties>
+        <DataProvider>SQL</DataProvider>
+        <ConnectString />
+      </ConnectionProperties>
+    </DataSource>
+  </DataSources>
+  <InteractiveHeight>11in</InteractiveHeight>
+  <rd:DrawGrid>true</rd:DrawGrid>
+  <InteractiveWidth>8.5in</InteractiveWidth>
+  <rd:SnapToGrid>true</rd:SnapToGrid>
+  <RightMargin>0.25in</RightMargin>
+  <LeftMargin>0.25in</LeftMargin>
+  <BottomMargin>0.25in</BottomMargin>
+  <rd:ReportID>33e1c341-e945-4ce7-afe6-37c88d61e54c</rd:ReportID>
+  <EmbeddedImages>
+    <EmbeddedImage Name="gcc">
+      <MIMEType>image/jpeg</MIMEType>
+      <ImageData>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</ImageData>
+    </EmbeddedImage>
+  </EmbeddedImages>
+  <PageWidth>11in</PageWidth>
+  <DataSets>
+    <DataSet Name="SIPlantProjections">
+      <Fields>
+        <Field Name="MonthName">
+          <DataField>MonthName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="PlantName">
+          <DataField>PlantName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ForecastQuantity">
+          <DataField>ForecastQuantity</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="TargetQuantity">
+          <DataField>TargetQuantity</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="DistrictName">
+          <DataField>DistrictName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DummyDataSource</DataSourceName>
+        <CommandText />
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <rd:DataSetInfo>
+        <rd:ObjectDataSourceType>RedHill.SalesInsight.DAL.SIDAL, RedHill.SalesInsight.DAL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</rd:ObjectDataSourceType>
+        <rd:ObjectDataSourceSelectMethod>GetPlantProjections</rd:ObjectDataSourceSelectMethod>
+        <rd:ObjectDataSourceSelectMethodSignature>System.Collections.Generic.List`1[RedHill.SalesInsight.DAL.DataTypes.SIPlantProjections] GetPlantProjections(System.Guid, Int32[], Int32[])</rd:ObjectDataSourceSelectMethodSignature>
+      </rd:DataSetInfo>
+    </DataSet>
+    <DataSet Name="SISegmentationAnalysis">
+      <Fields>
+        <Field Name="MonthName">
+          <DataField>MonthName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="MarketSegmentName">
+          <DataField>MarketSegmentName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ForecastQuantity">
+          <DataField>ForecastQuantity</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="TargetQuantity">
+          <DataField>TargetQuantity</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DummyDataSource</DataSourceName>
+        <CommandText />
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <rd:DataSetInfo>
+        <rd:ObjectDataSourceType>RedHill.SalesInsight.DAL.SIDAL, RedHill.SalesInsight.DAL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</rd:ObjectDataSourceType>
+        <rd:ObjectDataSourceSelectMethod>GetSegmentationAnalysis</rd:ObjectDataSourceSelectMethod>
+        <rd:ObjectDataSourceSelectMethodSignature>System.Collections.Generic.List`1[RedHill.SalesInsight.DAL.DataTypes.SISegmentationAnalysis] GetSegmentationAnalysis(System.Guid, Int32[], Int32[])</rd:ObjectDataSourceSelectMethodSignature>
+      </rd:DataSetInfo>
+    </DataSet>
+    <DataSet Name="SIProjectedActualAssetProductivity">
+      <Fields>
+        <Field Name="TruckCount">
+          <DataField>TruckCount</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="PlantName">
+          <DataField>PlantName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="MonthName">
+          <DataField>MonthName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ForecastQuantity">
+          <DataField>ForecastQuantity</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="TargetQuantity">
+          <DataField>TargetQuantity</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="DistrictName">
+          <DataField>DistrictName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DummyDataSource</DataSourceName>
+        <CommandText />
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <rd:DataSetInfo>
+        <rd:ObjectDataSourceType>RedHill.SalesInsight.DAL.SIDAL, RedHill.SalesInsight.DAL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</rd:ObjectDataSourceType>
+        <rd:ObjectDataSourceSelectMethod>GetProjectedActualAssetProductivity</rd:ObjectDataSourceSelectMethod>
+        <rd:ObjectDataSourceSelectMethodSignature>System.Collections.Generic.List`1[RedHill.SalesInsight.DAL.DataTypes.SIProjectedActualAssetProductivity] GetProjectedActualAssetProductivity(System.Guid, Int32[], Int32[])</rd:ObjectDataSourceSelectMethodSignature>
+      </rd:DataSetInfo>
+    </DataSet>
+    <DataSet Name="SIProjectionAccuracy">
+      <Fields>
+        <Field Name="SalesStaffName">
+          <DataField>SalesStaffName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ForecastQuantity">
+          <DataField>ForecastQuantity</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ActualQuantity">
+          <DataField>ActualQuantity</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DummyDataSource</DataSourceName>
+        <CommandText />
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <rd:DataSetInfo>
+        <rd:ObjectDataSourceType>RedHill.SalesInsight.DAL.SIDAL, RedHill.SalesInsight.DAL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</rd:ObjectDataSourceType>
+        <rd:ObjectDataSourceSelectMethod>GetProjectionAccuracy</rd:ObjectDataSourceSelectMethod>
+        <rd:ObjectDataSourceSelectMethodSignature>System.Collections.Generic.List`1[RedHill.SalesInsight.DAL.DataTypes.SIProjectionAccuracy] GetProjectionAccuracy(System.Guid, Int32[], Int32[])</rd:ObjectDataSourceSelectMethodSignature>
+      </rd:DataSetInfo>
+    </DataSet>
+    <DataSet Name="SIForecastVersusPlan">
+      <Fields>
+        <Field Name="MonthName">
+          <DataField>MonthName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="DistrictName">
+          <DataField>DistrictName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ForecastQuantity">
+          <DataField>ForecastQuantity</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="TargetQuantity">
+          <DataField>TargetQuantity</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DummyDataSource</DataSourceName>
+        <CommandText />
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <rd:DataSetInfo>
+        <rd:ObjectDataSourceType>RedHill.SalesInsight.DAL.SIDAL, RedHill.SalesInsight.DAL, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</rd:ObjectDataSourceType>
+        <rd:ObjectDataSourceSelectMethod>GetForecastVersusPlan</rd:ObjectDataSourceSelectMethod>
+        <rd:ObjectDataSourceSelectMethodSignature>System.Collections.Generic.List`1[RedHill.SalesInsight.DAL.DataTypes.SIForecastVersusPlan] GetForecastVersusPlan(System.Guid, Int32[], Int32[])</rd:ObjectDataSourceSelectMethodSignature>
+      </rd:DataSetInfo>
+    </DataSet>
+  </DataSets>
+  <Code />
+  <Width>10in</Width>
+  <Body>
+    <ReportItems>
+      <Image Name="image1">
+        <Sizing>AutoSize</Sizing>
+        <Width>1.59375in</Width>
+        <MIMEType>image/jpeg</MIMEType>
+        <Source>Embedded</Source>
+        <Style />
+        <ZIndex>9</ZIndex>
+        <Height>0.625in</Height>
+        <Value>gcc</Value>
+      </Image>
+      <Rectangle Name="currentMonthMarketSegmentationRectangle">
+        <Left>6.05in</Left>
+        <ZIndex>8</ZIndex>
+        <ReportItems>
+          <Rectangle Name="rectangle6">
+            <ZIndex>1</ZIndex>
+            <ReportItems>
+              <Textbox Name="textbox23">
+                <Width>2.25in</Width>
+                <Style>
+                  <FontSize>8pt</FontSize>
+                  <FontWeight>700</FontWeight>
+                  <TextAlign>Center</TextAlign>
+                  <PaddingRight>1pt</PaddingRight>
+                  <PaddingTop>1pt</PaddingTop>
+                  <PaddingBottom>1pt</PaddingBottom>
+                </Style>
+                <Left>0.875in</Left>
+                <Value>Current Month Market Segmentation</Value>
+              </Textbox>
+            </ReportItems>
+            <Style>
+              <BackgroundColor>LightSteelBlue</BackgroundColor>
+              <BorderStyle>
+                <Default>Solid</Default>
+              </BorderStyle>
+            </Style>
+            <Height>0.17in</Height>
+          </Rectangle>
+          <Chart Name="currentMonthMarketSegmentationChart">
+            <Legend>
+              <Visible>true</Visible>
+              <Style>
+                <FontSize>6pt</FontSize>
+              </Style>
+              <Position>BottomCenter</Position>
+              <Layout>Row</Layout>
+            </Legend>
+            <CategoryAxis>
+              <Axis>
+                <Title />
+                <MajorGridLines>
+                  <Style>
+                    <BorderStyle>
+                      <Default>Solid</Default>
+                    </BorderStyle>
+                  </Style>
+                </MajorGridLines>
+                <MinorGridLines>
+                  <Style>
+                    <BorderStyle>
+                      <Default>Solid</Default>
+                    </BorderStyle>
+                  </Style>
+                </MinorGridLines>
+                <Min>0</Min>
+                <Visible>true</Visible>
+              </Axis>
+            </CategoryAxis>
+            <DataSetName>SISegmentationAnalysis</DataSetName>
+            <PlotArea>
+              <Style>
+                <BackgroundColor>LightGrey</BackgroundColor>
+                <BorderStyle>
+                  <Default>Solid</Default>
+                </BorderStyle>
+              </Style>
+            </PlotArea>
+            <ThreeDProperties>
+              <Rotation>30</Rotation>
+              <Inclination>30</Inclination>
+              <Shading>Simple</Shading>
+              <WallThickness>50</WallThickness>
+            </ThreeDProperties>
+            <PointWidth>0</PointWidth>
+            <Filters>
+              <Filter>
+                <FilterExpression>=Right(Fields!MonthName.Value,3)</FilterExpression>
+                <Operator>Equal</Operator>
+                <FilterValues>
+                  <FilterValue>Act</FilterValue>
+                </FilterValues>
+              </Filter>
+            </Filters>
+            <Top>0.25in</Top>
+            <Subtype>Plain</Subtype>
+            <ValueAxis>
+              <Axis>
+                <Title>
+                  <Position>Far</Position>
+                </Title>
+                <MajorGridLines>
+                  <Style>
+                    <BorderStyle>
+                      <Default>Solid</Default>
+                    </BorderStyle>
+                  </Style>
+                </MajorGridLines>
+                <MinorGridLines>
+                  <Style>
+                    <BorderStyle>
+                      <Default>Solid</Default>
+                    </BorderStyle>
+                  </Style>
+                </MinorGridLines>
+                <MajorTickMarks>Cross</MajorTickMarks>
+                <Min>0</Min>
+                <Margin>true</Margin>
+                <Visible>true</Visible>
+                <Scalar>true</Scalar>
+              </Axis>
+            </ValueAxis>
+            <Type>Pie</Type>
+            <Width>3.65in</Width>
+            <CategoryGroupings>
+              <CategoryGrouping>
+                <DynamicCategories>
+                  <Grouping Name="currentMonthMarketSegmentationChart_CategoryGroup1">
+                    <GroupExpressions>
+                      <GroupExpression>=Fields!MarketSegmentName.Value</GroupExpression>
+                    </GroupExpressions>
+                  </Grouping>
+                  <Label />
+                </DynamicCategories>
+              </CategoryGrouping>
+            </CategoryGroupings>
+            <Palette>Excel</Palette>
+            <ChartData>
+              <ChartSeries>
+                <DataPoints>
+                  <DataPoint>
+                    <DataValues>
+                      <DataValue>
+                        <Value>=Fields!ForecastQuantity.Value - Fields!TargetQuantity.Value</Value>
+                      </DataValue>
+                    </DataValues>
+                    <DataLabel>
+                      <Style />
+                      <Value>#PERCENT{0}%</Value>
+                      <Position>TopLeft</Position>
+                      <Visible>true</Visible>
+                    </DataLabel>
+                    <Style />
+                    <Marker>
+                      <Type>Auto</Type>
+                      <Size>6pt</Size>
+                    </Marker>
+                  </DataPoint>
+                </DataPoints>
+              </ChartSeries>
+            </ChartData>
+            <Style>
+              <BackgroundColor>White</BackgroundColor>
+            </Style>
+            <Title>
+              <Style />
+            </Title>
+            <Height>1.9in</Height>
+            <Left>0.1in</Left>
+          </Chart>
+        </ReportItems>
+        <Top>5.45in</Top>
+        <Width>3.875in</Width>
+        <Style>
+          <BorderStyle>
+            <Default>Solid</Default>
+          </BorderStyle>
+        </Style>
+        <Label>CurrentMonthMarketSegmentation</Label>
+      </Rectangle>
+      <Rectangle Name="SegmentationAnalysisRectangle">
+        <ZIndex>7</ZIndex>
+        <ReportItems>
+          <Rectangle Name="rectangle2">
+            <ZIndex>1</ZIndex>
+            <ReportItems>
+              <Textbox Name="textbox25">
+                <Width>3.875in</Width>
+                <Style>
+                  <FontSize>8pt</FontSize>
+                  <FontWeight>700</FontWeight>
+                  <TextAlign>Center</TextAlign>
+                  <PaddingRight>1pt</PaddingRight>
+                  <PaddingTop>1pt</PaddingTop>
+                  <PaddingBottom>1pt</PaddingBottom>
+                </Style>
+                <Left>1in</Left>
+                <Value>Segmentation Analysis</Value>
+              </Textbox>
+            </ReportItems>
+            <Style>
+              <BackgroundColor>LightSteelBlue</BackgroundColor>
+              <BorderStyle>
+                <Default>Solid</Default>
+              </BorderStyle>
+            </Style>
+            <Height>0.17in</Height>
+          </Rectangle>
+          <Matrix Name="matrix2">
+            <MatrixColumns>
+              <MatrixColumn>
+                <Width>0.6in</Width>
+              </MatrixColumn>
+            </MatrixColumns>
+            <DataSetName>SISegmentationAnalysis</DataSetName>
+            <RowGroupings>
+              <RowGrouping>
+                <Width>1.5in</Width>
+                <DynamicRows>
+                  <Grouping Name="matrix2_MarketSegmentName">
+                    <GroupExpressions>
+                      <GroupExpression>=Fields!MarketSegmentName.Value</GroupExpression>
+                    </GroupExpressions>
+                  </Grouping>
+                  <ReportItems>
+                    <Textbox Name="MarketSegmentName">
+                      <rd:DefaultName>MarketSegmentName</rd:DefaultName>
+                      <Style>
+                        <FontSize>9pt</FontSize>
+                        <TextAlign>Left</TextAlign>
+                        <PaddingLeft>1pt</PaddingLeft>
+                        <PaddingRight>1pt</PaddingRight>
+                        <PaddingTop>1pt</PaddingTop>
+                        <PaddingBottom>1pt</PaddingBottom>
+                      </Style>
+                      <Value>=Fields!MarketSegmentName.Value</Value>
+                    </Textbox>
+                  </ReportItems>
+                </DynamicRows>
+              </RowGrouping>
+            </RowGroupings>
+            <Top>0.25in</Top>
+            <ColumnGroupings>
+              <ColumnGrouping>
+                <Height>0.25in</Height>
+                <DynamicColumns>
+                  <Grouping Name="matrix2_MonthName">
+                    <GroupExpressions>
+                      <GroupExpression>=Fields!MonthName.Value</GroupExpression>
+                    </GroupExpressions>
+                  </Grouping>
+                  <ReportItems>
+                    <Textbox Name="MonthName_1">
+                      <rd:DefaultName>MonthName_1</rd:DefaultName>
+                      <Style>
+                        <FontSize>9pt</FontSize>
+                        <FontWeight>700</FontWeight>
+                        <TextAlign>Right</TextAlign>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                      <CanGrow>true</CanGrow>
+                      <Value>=Fields!MonthName.Value</Value>
+                    </Textbox>
+                  </ReportItems>
+                </DynamicColumns>
+              </ColumnGrouping>
+            </ColumnGroupings>
+            <Width>2.1in</Width>
+            <Corner>
+              <ReportItems>
+                <Textbox Name="textbox3">
+                  <rd:DefaultName>textbox3</rd:DefaultName>
+                  <Style>
+                    <FontSize>9pt</FontSize>
+                    <FontWeight>700</FontWeight>
+                    <TextAlign>Left</TextAlign>
+                    <PaddingLeft>2pt</PaddingLeft>
+                    <PaddingRight>2pt</PaddingRight>
+                    <PaddingTop>2pt</PaddingTop>
+                    <PaddingBottom>2pt</PaddingBottom>
+                  </Style>
+                  <CanGrow>true</CanGrow>
+                  <Value>Segment</Value>
+                </Textbox>
+              </ReportItems>
+            </Corner>
+            <MatrixRows>
+              <MatrixRow>
+                <Height>0.2in</Height>
+                <MatrixCells>
+                  <MatrixCell>
+                    <ReportItems>
+                      <Textbox Name="ForecastQuantity_1">
+                        <rd:DefaultName>ForecastQuantity_1</rd:DefaultName>
+                        <Style>
+                          <FontSize>9pt</FontSize>
+                          <Format>###,##0</Format>
+                          <TextAlign>Right</TextAlign>
+                          <PaddingLeft>1pt</PaddingLeft>
+                          <PaddingRight>1pt</PaddingRight>
+                          <PaddingTop>1pt</PaddingTop>
+                          <PaddingBottom>1pt</PaddingBottom>
+                        </Style>
+                        <Value>=Sum(Fields!ForecastQuantity.Value - Fields!TargetQuantity.Value )</Value>
+                      </Textbox>
+                    </ReportItems>
+                  </MatrixCell>
+                </MatrixCells>
+              </MatrixRow>
+            </MatrixRows>
+            <Height>0.45in</Height>
+            <Left>0.125in</Left>
+          </Matrix>
+        </ReportItems>
+        <Top>5.45in</Top>
+        <Width>5.95in</Width>
+        <Style>
+          <BorderStyle>
+            <Default>Solid</Default>
+          </BorderStyle>
+        </Style>
+        <Label>SegmentationAnalysis</Label>
+      </Rectangle>
+      <Rectangle Name="projectActualAssetProductivityRectangle">
+        <Left>6.05in</Left>
+        <ZIndex>6</ZIndex>
+        <ReportItems>
+          <Rectangle Name="rectangle5">
+            <ZIndex>2</ZIndex>
+            <ReportItems>
+              <Textbox Name="textbox22">
+                <Width>2.25in</Width>
+                <Style>
+                  <FontSize>8pt</FontSize>
+                  <FontWeight>700</FontWeight>
+                  <TextAlign>Center</TextAlign>
+                  <PaddingRight>1pt</PaddingRight>
+                  <PaddingTop>1pt</PaddingTop>
+                  <PaddingBottom>1pt</PaddingBottom>
+                </Style>
+                <Left>0.875in</Left>
+                <Value>Asset Productivity</Value>
+              </Textbox>
+            </ReportItems>
+            <Style>
+              <BackgroundColor>LightSteelBlue</BackgroundColor>
+              <BorderStyle>
+                <Default>Solid</Default>
+              </BorderStyle>
+            </Style>
+            <Height>0.17in</Height>
+          </Rectangle>
+          <Matrix Name="matrix3">
+            <MatrixColumns>
+              <MatrixColumn>
+                <Width>0.5in</Width>
+              </MatrixColumn>
+            </MatrixColumns>
+            <ZIndex>1</ZIndex>
+            <DataSetName>SIProjectedActualAssetProductivity</DataSetName>
+            <RowGroupings>
+              <RowGrouping>
+                <Width>1.5in</Width>
+                <DynamicRows>
+                  <Grouping Name="matrix3_PlantName">
+                    <GroupExpressions>
+                      <GroupExpression>=Fields!PlantName.Value</GroupExpression>
+                    </GroupExpressions>
+                  </Grouping>
+                  <Subtotal>
+                    <ReportItems>
+                      <Textbox Name="textbox10">
+                        <rd:DefaultName>textbox10</rd:DefaultName>
+                        <Style>
+                          <FontSize>9pt</FontSize>
+                          <FontWeight>700</FontWeight>
+                          <PaddingLeft>1pt</PaddingLeft>
+                          <PaddingRight>1pt</PaddingRight>
+                          <PaddingTop>1pt</PaddingTop>
+                          <PaddingBottom>1pt</PaddingBottom>
+                        </Style>
+                        <Value>Total</Value>
+                      </Textbox>
+                    </ReportItems>
+                    <Style>
+                      <FontWeight>700</FontWeight>
+                    </Style>
+                  </Subtotal>
+                  <ReportItems>
+                    <Textbox Name="PlantName_1">
+                      <rd:DefaultName>PlantName_1</rd:DefaultName>
+                      <Style>
+                        <FontSize>9pt</FontSize>
+                        <PaddingLeft>1pt</PaddingLeft>
+                        <PaddingRight>1pt</PaddingRight>
+                        <PaddingTop>1pt</PaddingTop>
+                        <PaddingBottom>1pt</PaddingBottom>
+                      </Style>
+                      <Value>=Fields!PlantName.Value</Value>
+                    </Textbox>
+                  </ReportItems>
+                </DynamicRows>
+              </RowGrouping>
+            </RowGroupings>
+            <Top>0.25in</Top>
+            <ColumnGroupings>
+              <ColumnGrouping>
+                <Height>0.2in</Height>
+                <StaticColumns>
+                  <StaticColumn>
+                    <ReportItems>
+                      <Textbox Name="textbox6">
+                        <rd:DefaultName>textbox6</rd:DefaultName>
+                        <Style>
+                          <FontSize>9pt</FontSize>
+                          <FontWeight>700</FontWeight>
+                          <TextAlign>Center</TextAlign>
+                          <PaddingLeft>1pt</PaddingLeft>
+                          <PaddingRight>1pt</PaddingRight>
+                          <PaddingTop>1pt</PaddingTop>
+                          <PaddingBottom>1pt</PaddingBottom>
+                        </Style>
+                        <Value>Trucks</Value>
+                      </Textbox>
+                    </ReportItems>
+                  </StaticColumn>
+                </StaticColumns>
+              </ColumnGrouping>
+            </ColumnGroupings>
+            <Width>2in</Width>
+            <Corner>
+              <ReportItems>
+                <Textbox Name="textbox4">
+                  <rd:DefaultName>textbox4</rd:DefaultName>
+                  <Style>
+                    <FontSize>9pt</FontSize>
+                    <FontWeight>700</FontWeight>
+                    <PaddingLeft>1pt</PaddingLeft>
+                    <PaddingRight>1pt</PaddingRight>
+                    <PaddingTop>1pt</PaddingTop>
+                    <PaddingBottom>1pt</PaddingBottom>
+                  </Style>
+                  <CanGrow>true</CanGrow>
+                  <Value>Plant</Value>
+                </Textbox>
+              </ReportItems>
+            </Corner>
+            <MatrixRows>
+              <MatrixRow>
+                <Height>0.2in</Height>
+                <MatrixCells>
+                  <MatrixCell>
+                    <ReportItems>
+                      <Textbox Name="ForecastQuantity_2">
+                        <rd:DefaultName>ForecastQuantity_2</rd:DefaultName>
+                        <Style>
+                          <FontSize>9pt</FontSize>
+                          <TextAlign>Center</TextAlign>
+                          <PaddingLeft>1pt</PaddingLeft>
+                          <PaddingRight>1pt</PaddingRight>
+                          <PaddingTop>1pt</PaddingTop>
+                          <PaddingBottom>1pt</PaddingBottom>
+                        </Style>
+                        <Value>=Sum(Fields!TruckCount.Value)/2</Value>
+                      </Textbox>
+                    </ReportItems>
+                  </MatrixCell>
+                </MatrixCells>
+              </MatrixRow>
+            </MatrixRows>
+            <Height>0.6in</Height>
+            <Left>0.125in</Left>
+          </Matrix>
+          <Matrix Name="matrix4">
+            <MatrixColumns>
+              <MatrixColumn>
+                <Width>0.85in</Width>
+              </MatrixColumn>
+            </MatrixColumns>
+            <DataSetName>SIProjectedActualAssetProductivity</DataSetName>
+            <RowGroupings>
+              <RowGrouping>
+                <Width>0.03125in</Width>
+                <DynamicRows>
+                  <Grouping Name="matrix4_PlantName">
+                    <GroupExpressions>
+                      <GroupExpression>=Fields!PlantName.Value</GroupExpression>
+                    </GroupExpressions>
+                  </Grouping>
+                  <Subtotal>
+                    <ReportItems>
+                      <Textbox Name="textbox12">
+                        <rd:DefaultName>textbox12</rd:DefaultName>
+                        <Visibility>
+                          <Hidden>true</Hidden>
+                        </Visibility>
+                        <Style>
+                          <FontSize>9pt</FontSize>
+                          <FontWeight>700</FontWeight>
+                          <PaddingLeft>1pt</PaddingLeft>
+                          <PaddingRight>1pt</PaddingRight>
+                          <PaddingTop>1pt</PaddingTop>
+                          <PaddingBottom>1pt</PaddingBottom>
+                        </Style>
+                        <Value>Total</Value>
+                      </Textbox>
+                    </ReportItems>
+                    <Style>
+                      <FontWeight>700</FontWeight>
+                    </Style>
+                  </Subtotal>
+                  <ReportItems>
+                    <Textbox Name="PlantName_2">
+                      <rd:DefaultName>PlantName_2</rd:DefaultName>
+                      <Visibility>
+                        <Hidden>true</Hidden>
+                      </Visibility>
+                      <Style>
+                        <FontSize>9pt</FontSize>
+                        <PaddingLeft>1pt</PaddingLeft>
+                        <PaddingRight>1pt</PaddingRight>
+                        <PaddingTop>1pt</PaddingTop>
+                        <PaddingBottom>1pt</PaddingBottom>
+                      </Style>
+                      <Value>=Fields!PlantName.Value</Value>
+                    </Textbox>
+                  </ReportItems>
+                </DynamicRows>
+              </RowGrouping>
+            </RowGroupings>
+            <Top>0.25in</Top>
+            <ColumnGroupings>
+              <ColumnGrouping>
+                <Height>0.2in</Height>
+                <DynamicColumns>
+                  <Grouping Name="matrix4_MonthName">
+                    <GroupExpressions>
+                      <GroupExpression>=Fields!MonthName.Value</GroupExpression>
+                    </GroupExpressions>
+                  </Grouping>
+                  <ReportItems>
+                    <Textbox Name="MonthName_2">
+                      <rd:DefaultName>MonthName_2</rd:DefaultName>
+                      <Style>
+                        <FontSize>9pt</FontSize>
+                        <FontWeight>700</FontWeight>
+                        <TextAlign>Center</TextAlign>
+                        <PaddingLeft>1pt</PaddingLeft>
+                        <PaddingRight>1pt</PaddingRight>
+                        <PaddingTop>1pt</PaddingTop>
+                        <PaddingBottom>1pt</PaddingBottom>
+                      </Style>
+                      <Value>=Fields!MonthName.Value + " CYD/Trk"</Value>
+                    </Textbox>
+                  </ReportItems>
+                </DynamicColumns>
+              </ColumnGrouping>
+            </ColumnGroupings>
+            <Width>0.88125in</Width>
+            <Corner>
+              <ReportItems>
+                <Textbox Name="textbox11">
+                  <rd:DefaultName>textbox11</rd:DefaultName>
+                  <Visibility>
+                    <Hidden>true</Hidden>
+                  </Visibility>
+                  <Style>
+                    <FontSize>9pt</FontSize>
+                    <PaddingLeft>1pt</PaddingLeft>
+                    <PaddingRight>1pt</PaddingRight>
+                    <PaddingTop>1pt</PaddingTop>
+                    <PaddingBottom>1pt</PaddingBottom>
+                  </Style>
+                  <Value />
+                </Textbox>
+              </ReportItems>
+            </Corner>
+            <MatrixRows>
+              <MatrixRow>
+                <Height>0.2in</Height>
+                <MatrixCells>
+                  <MatrixCell>
+                    <ReportItems>
+                      <Textbox Name="textbox14">
+                        <rd:DefaultName>textbox14</rd:DefaultName>
+                        <Style>
+                          <FontSize>9pt</FontSize>
+                          <Format>#.0</Format>
+                          <TextAlign>Center</TextAlign>
+                          <PaddingLeft>1pt</PaddingLeft>
+                          <PaddingRight>1pt</PaddingRight>
+                          <PaddingTop>1pt</PaddingTop>
+                          <PaddingBottom>1pt</PaddingBottom>
+                        </Style>
+                        <Value>=AVG(((IIF(Fields!TruckCount.Value = 0,0,Fields!ForecastQuantity.Value) / IIF(Fields!TruckCount.Value = 0,1,Fields!TruckCount.Value))) / 21)</Value>
+                      </Textbox>
+                    </ReportItems>
+                  </MatrixCell>
+                </MatrixCells>
+              </MatrixRow>
+            </MatrixRows>
+            <Height>0.6in</Height>
+            <Left>2.125in</Left>
+          </Matrix>
+        </ReportItems>
+        <Top>3.125in</Top>
+        <Width>3.875in</Width>
+        <Style>
+          <BorderStyle>
+            <Default>Solid</Default>
+          </BorderStyle>
+        </Style>
+        <Label>ProjectedActualAssetProductivity</Label>
+        <Height>2.225in</Height>
+      </Rectangle>
+      <Rectangle Name="plantProjectionsRectangle">
+        <ZIndex>5</ZIndex>
+        <ReportItems>
+          <Rectangle Name="rectangle1">
+            <ZIndex>1</ZIndex>
+            <ReportItems>
+              <Textbox Name="textbox20">
+                <Width>3.875in</Width>
+                <Style>
+                  <FontSize>8pt</FontSize>
+                  <FontWeight>700</FontWeight>
+                  <TextAlign>Center</TextAlign>
+                  <PaddingRight>1pt</PaddingRight>
+                  <PaddingTop>1pt</PaddingTop>
+                  <PaddingBottom>1pt</PaddingBottom>
+                </Style>
+                <Left>1in</Left>
+                <Value>Plant Projections</Value>
+              </Textbox>
+            </ReportItems>
+            <Style>
+              <BackgroundColor>LightSteelBlue</BackgroundColor>
+              <BorderStyle>
+                <Default>Solid</Default>
+              </BorderStyle>
+            </Style>
+            <Height>0.17in</Height>
+          </Rectangle>
+          <Matrix Name="matrix1">
+            <MatrixColumns>
+              <MatrixColumn>
+                <Width>0.6in</Width>
+              </MatrixColumn>
+            </MatrixColumns>
+            <DataSetName>SIPlantProjections</DataSetName>
+            <RowGroupings>
+              <RowGrouping>
+                <Width>1.5in</Width>
+                <DynamicRows>
+                  <Grouping Name="matrix1_PlantName">
+                    <GroupExpressions>
+                      <GroupExpression>=Fields!PlantName.Value</GroupExpression>
+                    </GroupExpressions>
+                  </Grouping>
+                  <Subtotal>
+                    <ReportItems>
+                      <Textbox Name="textbox2">
+                        <rd:DefaultName>textbox2</rd:DefaultName>
+                        <Style>
+                          <FontSize>9pt</FontSize>
+                          <FontWeight>700</FontWeight>
+                          <TextAlign>Left</TextAlign>
+                          <PaddingLeft>1pt</PaddingLeft>
+                          <PaddingRight>1pt</PaddingRight>
+                          <PaddingTop>1pt</PaddingTop>
+                          <PaddingBottom>1pt</PaddingBottom>
+                        </Style>
+                        <Value>Total</Value>
+                      </Textbox>
+                    </ReportItems>
+                    <Style>
+                      <FontWeight>700</FontWeight>
+                    </Style>
+                  </Subtotal>
+                  <ReportItems>
+                    <Textbox Name="PlantName">
+                      <rd:DefaultName>PlantName</rd:DefaultName>
+                      <Style>
+                        <FontSize>9pt</FontSize>
+                        <TextAlign>Left</TextAlign>
+                        <PaddingLeft>1pt</PaddingLeft>
+                        <PaddingRight>1pt</PaddingRight>
+                        <PaddingTop>1pt</PaddingTop>
+                        <PaddingBottom>1pt</PaddingBottom>
+                      </Style>
+                      <Value>=Fields!PlantName.Value</Value>
+                    </Textbox>
+                  </ReportItems>
+                </DynamicRows>
+              </RowGrouping>
+            </RowGroupings>
+            <Top>0.25in</Top>
+            <ColumnGroupings>
+              <ColumnGrouping>
+                <Height>0.2in</Height>
+                <DynamicColumns>
+                  <Grouping Name="matrix1_MonthName">
+                    <GroupExpressions>
+                      <GroupExpression>=Fields!MonthName.Value</GroupExpression>
+                    </GroupExpressions>
+                  </Grouping>
+                  <ReportItems>
+                    <Textbox Name="MonthName">
+                      <rd:DefaultName>MonthName</rd:DefaultName>
+                      <Style>
+                        <FontSize>9pt</FontSize>
+                        <FontWeight>700</FontWeight>
+                        <TextAlign>Right</TextAlign>
+                        <PaddingLeft>1pt</PaddingLeft>
+                        <PaddingRight>1pt</PaddingRight>
+                        <PaddingTop>1pt</PaddingTop>
+                        <PaddingBottom>1pt</PaddingBottom>
+                      </Style>
+                      <Value>=Fields!MonthName.Value</Value>
+                    </Textbox>
+                  </ReportItems>
+                </DynamicColumns>
+              </ColumnGrouping>
+            </ColumnGroupings>
+            <Width>2.1in</Width>
+            <Corner>
+              <ReportItems>
+                <Textbox Name="textbox1">
+                  <rd:DefaultName>textbox1</rd:DefaultName>
+                  <Style>
+                    <FontSize>9pt</FontSize>
+                    <FontWeight>700</FontWeight>
+                    <TextAlign>Left</TextAlign>
+                    <PaddingLeft>1pt</PaddingLeft>
+                    <PaddingRight>1pt</PaddingRight>
+                    <PaddingTop>1pt</PaddingTop>
+                    <PaddingBottom>1pt</PaddingBottom>
+                  </Style>
+                  <Value>Plant</Value>
+                </Textbox>
+              </ReportItems>
+            </Corner>
+            <MatrixRows>
+              <MatrixRow>
+                <Height>0.2in</Height>
+                <MatrixCells>
+                  <MatrixCell>
+                    <ReportItems>
+                      <Textbox Name="ForecastQuantity">
+                        <rd:DefaultName>ForecastQuantity</rd:DefaultName>
+                        <Style>
+                          <Color>=Iif(SUM(Fields!ForecastQuantity.Value)&gt;=SUM(Fields!TargetQuantity.Value), "Green", "Red")</Color>
+                          <FontSize>9pt</FontSize>
+                          <Format>###,##0</Format>
+                          <TextAlign>Right</TextAlign>
+                          <PaddingLeft>1pt</PaddingLeft>
+                          <PaddingRight>1pt</PaddingRight>
+                          <PaddingTop>1pt</PaddingTop>
+                          <PaddingBottom>1pt</PaddingBottom>
+                        </Style>
+                        <Value>=Sum(Fields!ForecastQuantity.Value)</Value>
+                      </Textbox>
+                    </ReportItems>
+                  </MatrixCell>
+                </MatrixCells>
+              </MatrixRow>
+            </MatrixRows>
+            <Height>0.6in</Height>
+            <Left>0.125in</Left>
+          </Matrix>
+        </ReportItems>
+        <Top>3.125in</Top>
+        <Width>5.95in</Width>
+        <Style>
+          <BorderStyle>
+            <Default>Solid</Default>
+          </BorderStyle>
+        </Style>
+        <Label>PlantProjections</Label>
+        <Height>2.225in</Height>
+      </Rectangle>
+      <Rectangle Name="projectionAccuracyRectangle">
+        <Left>6.05in</Left>
+        <ZIndex>4</ZIndex>
+        <ReportItems>
+          <Rectangle Name="rectangle4">
+            <ZIndex>1</ZIndex>
+            <ReportItems>
+              <Textbox Name="textbox19">
+                <Width>2.125in</Width>
+                <Style>
+                  <FontSize>8pt</FontSize>
+                  <FontWeight>700</FontWeight>
+                  <TextAlign>Center</TextAlign>
+                  <PaddingRight>1pt</PaddingRight>
+                  <PaddingTop>1pt</PaddingTop>
+                  <PaddingBottom>1pt</PaddingBottom>
+                </Style>
+                <Left>0.875in</Left>
+                <Value>Projection Accuracy</Value>
+              </Textbox>
+            </ReportItems>
+            <Style>
+              <BackgroundColor>LightSteelBlue</BackgroundColor>
+              <BorderStyle>
+                <Default>Solid</Default>
+              </BorderStyle>
+            </Style>
+            <Height>0.17in</Height>
+          </Rectangle>
+          <Table Name="table1">
+            <DataSetName>SIProjectionAccuracy</DataSetName>
+            <Top>0.25in</Top>
+            <Width>3.625in</Width>
+            <Details>
+              <TableRows>
+                <TableRow>
+                  <TableCells>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="SalesStaffName">
+                          <rd:DefaultName>SalesStaffName</rd:DefaultName>
+                          <Style>
+                            <FontSize>9pt</FontSize>
+                            <TextAlign>Right</TextAlign>
+                            <PaddingLeft>1pt</PaddingLeft>
+                            <PaddingRight>1pt</PaddingRight>
+                            <PaddingTop>1pt</PaddingTop>
+                            <PaddingBottom>1pt</PaddingBottom>
+                          </Style>
+                          <Value>=Fields!SalesStaffName.Value</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="ActualQuantity">
+                          <rd:DefaultName>ActualQuantity</rd:DefaultName>
+                          <Style>
+                            <FontSize>9pt</FontSize>
+                            <Format>###,##0</Format>
+                            <TextAlign>Right</TextAlign>
+                            <PaddingLeft>1pt</PaddingLeft>
+                            <PaddingRight>1pt</PaddingRight>
+                            <PaddingTop>1pt</PaddingTop>
+                            <PaddingBottom>1pt</PaddingBottom>
+                          </Style>
+                          <Value>=Fields!ActualQuantity.Value</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="ForecastQuantity_3">
+                          <rd:DefaultName>ForecastQuantity_3</rd:DefaultName>
+                          <Style>
+                            <FontSize>9pt</FontSize>
+                            <Format>###,##0</Format>
+                            <TextAlign>Right</TextAlign>
+                            <PaddingLeft>1pt</PaddingLeft>
+                            <PaddingRight>1pt</PaddingRight>
+                            <PaddingTop>1pt</PaddingTop>
+                            <PaddingBottom>1pt</PaddingBottom>
+                          </Style>
+                          <Value>=Fields!ForecastQuantity.Value</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="textbox13">
+                          <rd:DefaultName>textbox13</rd:DefaultName>
+                          <Style>
+                            <Color>=Iif(Fields!ActualQuantity.Value&gt;=Fields!ForecastQuantity.Value, "Green", "Red")</Color>
+                            <FontSize>9pt</FontSize>
+                            <TextAlign>Right</TextAlign>
+                            <PaddingLeft>1pt</PaddingLeft>
+                            <PaddingRight>1pt</PaddingRight>
+                            <PaddingTop>1pt</PaddingTop>
+                            <PaddingBottom>1pt</PaddingBottom>
+                          </Style>
+                          <Value>=Iif(Fields!ForecastQuantity.Value &gt; 0, FormatPercent((Fields!ActualQuantity.Value/Fields!ForecastQuantity.Value ) -1.0,1),0.0)</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                  </TableCells>
+                  <Height>0.2in</Height>
+                </TableRow>
+              </TableRows>
+            </Details>
+            <Header>
+              <TableRows>
+                <TableRow>
+                  <TableCells>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="textbox5">
+                          <rd:DefaultName>textbox5</rd:DefaultName>
+                          <Style>
+                            <FontSize>9pt</FontSize>
+                            <FontWeight>700</FontWeight>
+                            <TextAlign>Right</TextAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <CanGrow>true</CanGrow>
+                          <Value>Salesperson</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="textbox7">
+                          <rd:DefaultName>textbox7</rd:DefaultName>
+                          <Style>
+                            <FontSize>9pt</FontSize>
+                            <FontWeight>700</FontWeight>
+                            <TextAlign>Right</TextAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <CanGrow>true</CanGrow>
+                          <Value>Actual</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="textbox8">
+                          <rd:DefaultName>textbox8</rd:DefaultName>
+                          <Style>
+                            <FontSize>9pt</FontSize>
+                            <FontWeight>700</FontWeight>
+                            <TextAlign>Right</TextAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <CanGrow>true</CanGrow>
+                          <Value>Proj</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="textbox9">
+                          <rd:DefaultName>textbox9</rd:DefaultName>
+                          <Style>
+                            <FontSize>9pt</FontSize>
+                            <FontWeight>700</FontWeight>
+                            <TextAlign>Right</TextAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                          <CanGrow>true</CanGrow>
+                          <Value>Variance</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                  </TableCells>
+                  <Height>0.25in</Height>
+                </TableRow>
+              </TableRows>
+            </Header>
+            <TableColumns>
+              <TableColumn>
+                <Width>1.375in</Width>
+              </TableColumn>
+              <TableColumn>
+                <Width>0.75in</Width>
+              </TableColumn>
+              <TableColumn>
+                <Width>0.75in</Width>
+              </TableColumn>
+              <TableColumn>
+                <Width>0.75in</Width>
+              </TableColumn>
+            </TableColumns>
+            <Height>0.65in</Height>
+            <Footer>
+              <TableRows>
+                <TableRow>
+                  <TableCells>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="textbox16">
+                          <rd:DefaultName>textbox16</rd:DefaultName>
+                          <Style>
+                            <FontSize>9pt</FontSize>
+                            <FontWeight>700</FontWeight>
+                            <TextAlign>Right</TextAlign>
+                            <PaddingLeft>1pt</PaddingLeft>
+                            <PaddingRight>1pt</PaddingRight>
+                            <PaddingTop>1pt</PaddingTop>
+                            <PaddingBottom>1pt</PaddingBottom>
+                          </Style>
+                          <Value>Current Month Total</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="textbox17">
+                          <rd:DefaultName>textbox17</rd:DefaultName>
+                          <Style>
+                            <FontSize>9pt</FontSize>
+                            <FontWeight>700</FontWeight>
+                            <Format>###,##0</Format>
+                            <TextAlign>Right</TextAlign>
+                            <PaddingLeft>1pt</PaddingLeft>
+                            <PaddingRight>1pt</PaddingRight>
+                            <PaddingTop>1pt</PaddingTop>
+                            <PaddingBottom>1pt</PaddingBottom>
+                          </Style>
+                          <Value>=Sum(Fields!ActualQuantity.Value)</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="textbox18">
+                          <rd:DefaultName>textbox18</rd:DefaultName>
+                          <Style>
+                            <FontSize>9pt</FontSize>
+                            <FontWeight>700</FontWeight>
+                            <Format>###,##0</Format>
+                            <TextAlign>Right</TextAlign>
+                            <PaddingLeft>1pt</PaddingLeft>
+                            <PaddingRight>1pt</PaddingRight>
+                            <PaddingTop>1pt</PaddingTop>
+                            <PaddingBottom>1pt</PaddingBottom>
+                          </Style>
+                          <Value>=Sum(Fields!ForecastQuantity.Value)</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                    <TableCell>
+                      <ReportItems>
+                        <Textbox Name="textbox15">
+                          <rd:DefaultName>textbox15</rd:DefaultName>
+                          <Style>
+                            <Color>=Iif(SUM(Fields!ActualQuantity.Value)&gt;=SUM(Fields!ForecastQuantity.Value), "Green", "Red")</Color>
+                            <FontSize>9pt</FontSize>
+                            <FontWeight>700</FontWeight>
+                            <TextAlign>Right</TextAlign>
+                            <PaddingLeft>1pt</PaddingLeft>
+                            <PaddingRight>1pt</PaddingRight>
+                            <PaddingTop>1pt</PaddingTop>
+                            <PaddingBottom>1pt</PaddingBottom>
+                          </Style>
+                          <Value>=Iif(SUM(Fields!ForecastQuantity.Value) &gt; 0,FormatPercent((Sum(Fields!ActualQuantity.Value) / Sum(Fields!ForecastQuantity.Value)) -1,1),0.0)</Value>
+                        </Textbox>
+                      </ReportItems>
+                    </TableCell>
+                  </TableCells>
+                  <Height>0.2in</Height>
+                </TableRow>
+              </TableRows>
+            </Footer>
+            <Left>0.125in</Left>
+          </Table>
+        </ReportItems>
+        <Top>0.75in</Top>
+        <Width>3.875in</Width>
+        <Style>
+          <BorderStyle>
+            <Default>Solid</Default>
+          </BorderStyle>
+        </Style>
+        <Label>ProjectionAccuracy</Label>
+        <Height>2.25in</Height>
+      </Rectangle>
+      <Textbox Name="reportDateTextbox">
+        <Top>0.4in</Top>
+        <Width>3.875in</Width>
+        <Style>
+          <Color>MediumBlue</Color>
+          <FontSize>8pt</FontSize>
+          <FontWeight>700</FontWeight>
+          <TextAlign>Right</TextAlign>
+          <PaddingLeft>1pt</PaddingLeft>
+          <PaddingRight>1pt</PaddingRight>
+          <PaddingTop>1pt</PaddingTop>
+          <PaddingBottom>1pt</PaddingBottom>
+        </Style>
+        <ZIndex>3</ZIndex>
+        <Left>6.05in</Left>
+        <Height>0.18in</Height>
+        <Value>=MonthName(Month(Now()),false) + " " + Str(Year(Now()))</Value>
+      </Textbox>
+      <Textbox Name="reportEntityTextbox">
+        <Top>0.2in</Top>
+        <Width>3.875in</Width>
+        <Style>
+          <FontSize>8pt</FontSize>
+          <FontWeight>700</FontWeight>
+          <TextAlign>Right</TextAlign>
+        </Style>
+        <ZIndex>2</ZIndex>
+        <CanGrow>true</CanGrow>
+        <Left>6.05in</Left>
+        <Height>0.18in</Height>
+        <Value>=First(Fields!DistrictName.Value, "SIForecastVersusPlan")</Value>
+      </Textbox>
+      <Textbox Name="reportTitleTextbox">
+        <Width>3.875in</Width>
+        <Style>
+          <FontWeight>700</FontWeight>
+          <TextAlign>Right</TextAlign>
+          <LineHeight>10pt</LineHeight>
+        </Style>
+        <ZIndex>1</ZIndex>
+        <Left>6.05in</Left>
+        <Height>0.18in</Height>
+        <Value>Sales Forecast</Value>
+      </Textbox>
+      <Rectangle Name="forecastVersusPlanRectangle">
+        <ReportItems>
+          <Rectangle Name="rectangle3">
+            <ZIndex>1</ZIndex>
+            <ReportItems>
+              <Textbox Name="textbox21">
+                <Width>3.875in</Width>
+                <Style>
+                  <FontSize>8pt</FontSize>
+                  <FontWeight>700</FontWeight>
+                  <TextAlign>Center</TextAlign>
+                  <PaddingRight>1pt</PaddingRight>
+                  <PaddingTop>1pt</PaddingTop>
+                  <PaddingBottom>1pt</PaddingBottom>
+                </Style>
+                <Left>1in</Left>
+                <Value>District Forecast versus Plan</Value>
+              </Textbox>
+            </ReportItems>
+            <Style>
+              <BackgroundColor>LightSteelBlue</BackgroundColor>
+              <BorderStyle>
+                <Default>Solid</Default>
+              </BorderStyle>
+            </Style>
+            <Height>0.17in</Height>
+          </Rectangle>
+          <Chart Name="forecastVersusPlanChart">
+            <Legend>
+              <Visible>true</Visible>
+              <Style />
+              <Position>BottomCenter</Position>
+              <Layout>Row</Layout>
+            </Legend>
+            <CategoryAxis>
+              <Axis>
+                <Title />
+                <MajorGridLines>
+                  <Style>
+                    <BorderStyle>
+                      <Default>Solid</Default>
+                    </BorderStyle>
+                  </Style>
+                </MajorGridLines>
+                <MinorGridLines>
+                  <Style>
+                    <BorderStyle>
+                      <Default>Solid</Default>
+                    </BorderStyle>
+                  </Style>
+                </MinorGridLines>
+                <Min>0</Min>
+                <Visible>true</Visible>
+              </Axis>
+            </CategoryAxis>
+            <DataSetName>SIForecastVersusPlan</DataSetName>
+            <PlotArea>
+              <Style>
+                <BackgroundColor>LightGrey</BackgroundColor>
+                <BorderStyle>
+                  <Default>Solid</Default>
+                </BorderStyle>
+              </Style>
+            </PlotArea>
+            <ThreeDProperties>
+              <Rotation>30</Rotation>
+              <Inclination>30</Inclination>
+              <Shading>Simple</Shading>
+              <WallThickness>50</WallThickness>
+            </ThreeDProperties>
+            <PointWidth>0</PointWidth>
+            <SeriesGroupings>
+              <SeriesGrouping>
+                <StaticSeries>
+                  <StaticMember>
+                    <Label>Sales Forecast</Label>
+                  </StaticMember>
+                  <StaticMember>
+                    <Label>Budget</Label>
+                  </StaticMember>
+                </StaticSeries>
+              </SeriesGrouping>
+            </SeriesGroupings>
+            <Top>0.25in</Top>
+            <Subtype>Plain</Subtype>
+            <ValueAxis>
+              <Axis>
+                <Title>
+                  <Position>Far</Position>
+                </Title>
+                <MajorGridLines>
+                  <Style>
+                    <BorderStyle>
+                      <Default>Solid</Default>
+                    </BorderStyle>
+                  </Style>
+                </MajorGridLines>
+                <MinorGridLines>
+                  <Style>
+                    <BorderStyle>
+                      <Default>Solid</Default>
+                    </BorderStyle>
+                  </Style>
+                </MinorGridLines>
+                <MajorTickMarks>Cross</MajorTickMarks>
+                <Min>0</Min>
+                <Margin>true</Margin>
+                <Visible>true</Visible>
+                <Scalar>true</Scalar>
+              </Axis>
+            </ValueAxis>
+            <Type>Column</Type>
+            <Width>5.625in</Width>
+            <CategoryGroupings>
+              <CategoryGrouping>
+                <DynamicCategories>
+                  <Grouping Name="forecastVersusPlanChart_CategoryGroup1">
+                    <GroupExpressions>
+                      <GroupExpression>=Fields!MonthName.Value</GroupExpression>
+                    </GroupExpressions>
+                  </Grouping>
+                  <Label>=Fields!MonthName.Value</Label>
+                </DynamicCategories>
+              </CategoryGrouping>
+            </CategoryGroupings>
+            <Palette>Default</Palette>
+            <ChartData>
+              <ChartSeries>
+                <DataPoints>
+                  <DataPoint>
+                    <DataValues>
+                      <DataValue>
+                        <Value>=Sum(Fields!ForecastQuantity.Value)</Value>
+                      </DataValue>
+                    </DataValues>
+                    <DataLabel />
+                    <Style>
+                      <BackgroundColor>DarkBlue</BackgroundColor>
+                      <BorderColor>
+                        <Default>Black</Default>
+                      </BorderColor>
+                      <BorderStyle>
+                        <Default>Solid</Default>
+                      </BorderStyle>
+                      <BorderWidth>
+                        <Default>0.5pt</Default>
+                      </BorderWidth>
+                    </Style>
+                    <Marker>
+                      <Size>6pt</Size>
+                    </Marker>
+                  </DataPoint>
+                </DataPoints>
+              </ChartSeries>
+              <ChartSeries>
+                <DataPoints>
+                  <DataPoint>
+                    <DataValues>
+                      <DataValue>
+                        <Value>=Sum(Fields!TargetQuantity.Value)</Value>
+                      </DataValue>
+                    </DataValues>
+                    <DataLabel />
+                    <Style>
+                      <BorderColor>
+                        <Default>Red</Default>
+                      </BorderColor>
+                      <BorderStyle>
+                        <Default>Solid</Default>
+                      </BorderStyle>
+                      <BorderWidth>
+                        <Default>2.5pt</Default>
+                      </BorderWidth>
+                    </Style>
+                    <Marker>
+                      <Size>6pt</Size>
+                    </Marker>
+                  </DataPoint>
+                </DataPoints>
+                <PlotType>Line</PlotType>
+              </ChartSeries>
+            </ChartData>
+            <Style>
+              <BackgroundColor>White</BackgroundColor>
+            </Style>
+            <Title>
+              <Style />
+            </Title>
+            <Height>1.925in</Height>
+            <Left>0.125in</Left>
+          </Chart>
+        </ReportItems>
+        <Top>0.75in</Top>
+        <Width>5.95in</Width>
+        <Style>
+          <BorderStyle>
+            <Default>Solid</Default>
+          </BorderStyle>
+        </Style>
+        <Label>ForecastVersusPlan</Label>
+        <Height>2.25in</Height>
+      </Rectangle>
+    </ReportItems>
+    <Height>7.7in</Height>
+  </Body>
+  <Language>en-US</Language>
+  <TopMargin>0.25in</TopMargin>
+  <PageHeight>8.5in</PageHeight>
+</Report>

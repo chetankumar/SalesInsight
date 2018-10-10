@@ -1,0 +1,122 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.QuotationAuditLogView
+
+
+@{
+    ViewBag.Title = "Quotation Logs";
+    ViewBag.UsingDatePicker = true;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-head">
+    <h2>
+        @if (Model.QuotationId > 0)
+        {
+            <span>Update Quotation @Model.QuotationId</span>
+        }
+        else
+        {
+            <span>Add new Quotation</span>
+        }
+    </h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Home/Pipeline">Projects</a></li>
+        <li>Quotations</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="block-flat">
+        <div class="well">
+            <div class="col-md-5">
+                @Html.Partial("_BasicQuotationProfile", Model.Profile)
+            </div>
+            <div class="col-md-7">
+                @Html.Partial("_QuoteActions", Model.Profile)
+            </div>
+            <div style="clear:both"></div>
+        </div>
+        <div id="summary_section"> 
+            @Html.Partial("_QuotationStatistics", Model.Profile)
+        </div>
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="heading1">
+                  <h4 class="panel-title">
+                      <a href="/Quote/AddEditQuote/@Model.QuotationId">Customer Information</a>
+                  </h4>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="heading2">
+                  <h4 class="panel-title">
+                      <a href="/Quote/AddEditQuoteProject/@Model.QuotationId">Job Information</a>
+                  </h4>
+                </div>
+            </div> 
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="heading3">
+                    <h4 class="panel-title">
+                        <a href="/Quote/AddEditQuoteDetails/@Model.QuotationId">Quote Information</a>
+                    </h4>
+                </div>
+            </div>
+            <div class="panel panel-primary">
+                <div class="panel-heading" role="tab" id="heading4">
+                    <h4 class="panel-title">
+                        <a href="/Quote/AddEditQuoteAddons/@Model.QuotationId">Add-Ons</a>
+                    </h4>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="heading5">
+                    <h4 class="panel-title">
+                        <a href="/Quote/AddEditQuoteMixes/@Model.QuotationId">Mixes</a>
+                    </h4>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="heading6">
+                    <h4 class="panel-title">
+                        Audit Logs
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-striped table-condensed table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Log</th>
+                                <th>User</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.AuditLogs)
+                            {
+                                <tr>
+                                    <td>@item.Text</td>
+                                    <td>@item.Username</td>
+                                    <td>@item.CreatedOn.ToString("M/d/yyyy")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+@section Scripts{
+
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            $('.datepicker').datepicker({
+                format: 'd M, yyyy' // Default is 'mm/yyyy' and separator char is not mandatory
+            }).on('changeDate', function(ev) {
+                $(this).datepicker('hide');
+            });
+        });
+    </script>
+}
+
+

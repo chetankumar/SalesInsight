@@ -1,0 +1,534 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.CustomerView
+@using RedHill.SalesInsight.Web.Html5.Helpers;
+
+@{
+    ViewBag.Title = (Model.CustomerId == 0 ? "New" : Model.Name);
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    bool aujsAPIEnabled = (ViewBag.AUJSAPIEnabled != null && ViewBag.AUJSAPIEnabled == true);
+}
+
+<div class="page-head">
+    <h2>@(Model.CustomerId > 0 ? "Edit Customer" : "Add Customer")</h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Home/Settings">Settings</a></li>
+        <li><a href="/Home/Companies">Manage Company Settings</a></li>
+        <li><a href="/Home/Companies/customers">Customers</a></li>
+        <li class="active">@(Model.CustomerId == 0 ? "New" : Model.Name)</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div>
+        @using (Html.BeginForm("AddCustomer", "Home", FormMethod.Post, new { @class = "form-horizontal" }))
+            {
+            @Html.ValidationSummary(true)
+            <div>
+                <div class="block-flat">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.HiddenFor(model => model.CustomerId, new { @class = "form-control" })
+                                @Html.HiddenFor(model => model.CompanyId, new { @class = "form-control" })
+                                @Html.HiddenFor(model => model.ProjectId, new { @class = "form-control" })
+                                @Html.HiddenFor(model => model.QuotationId, new { @class = "form-control" })
+                                @Html.HiddenFor(model => model.DispatchId)
+                                <div class="control-label col-sm-3">
+                                    @Html.LabelFor(model => model.Name)
+                                </div>
+                                <div class="col-sm-9">
+                                    @if (!aujsAPIEnabled)
+                                    {
+                                        @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.Name, string.Empty, new { @class = "help-inline" })
+                                    }
+                                    else
+                                    {
+                                        <div class="form-control-static">
+                                            @Html.HiddenFor(model => model.Name)
+                                            @Model.Name
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="control-label col-sm-3">
+                                    @Html.LabelFor(model => model.Number)
+                                </div>
+                                <div class="col-sm-9">
+                                    @if (!aujsAPIEnabled)
+                                    {
+                                        @Html.TextBoxFor(model => model.Number, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.Number, string.Empty, new { @class = "help-inline" })
+                                    }
+                                    else
+                                    {
+                                        <div class="form-control-static">
+                                            @Html.HiddenFor(model => model.Number)
+                                            @Model.Number
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            @if (ConfigurationHelper.AggregateEnabled == true || ConfigurationHelper.BlockEnabled == true)
+                            {
+                                <div class="form-group">
+                                    <div class="col-sm-3 control-label">
+                                        @Html.LabelFor(model => model.PostedProductIds)
+                                    </div>
+                                    <div class="col-sm-6">
+                                        @for (int i = 0; i < Model.AvailableDefaultQuoteProducts.Count; i++)
+                                        {
+                                            <div>
+                                                <label>
+                                                    @Html.HiddenFor(model => Model.AvailableDefaultQuoteProducts[i].Value)
+                                                    @if (aujsAPIEnabled)
+                                                    {
+                                                        <input type="checkbox" @(Model.AvailableDefaultQuoteProducts[i].Selected ? "checked" : "") disabled="disabled" />
+                                                        @Html.HiddenFor(model => Model.AvailableDefaultQuoteProducts[i].Selected, new { @Value = Model.AvailableDefaultQuoteProducts[i].Selected.ToString().ToLower() })
+                                                    }
+                                                    else
+                                                    {
+                                                        @Html.CheckBoxFor(model => Model.AvailableDefaultQuoteProducts[i].Selected)
+                                                    }
+                                                    @Html.Raw(Model.AvailableDefaultQuoteProducts[i].Text)
+                                                </label>
+                                            </div>
+                                        }
+                                        <label class="field_error">@Html.ValidationMessageFor(model => model.AvailableDefaultQuoteProducts)</label>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div style="display:none;">
+                                    <label>
+                                        <input id="AvailableDefaultQuoteProducts_0__Value" name="AvailableDefaultQuoteProducts[0].Value" type="hidden" value="1">
+                                        <input checked="checked" data-val="true" data-val-required="The Selected field is required." id="AvailableDefaultQuoteProducts_0__Selected" name="AvailableDefaultQuoteProducts[0].Selected" type="checkbox" value="true"><input name="AvailableDefaultQuoteProducts[0].Selected" type="hidden" value="false">                                                    Concrete
+                                    </label>
+                                </div>
+
+                                @Html.HiddenFor(model => model.PostedProductIds, new { @Value = "1" })
+                            }
+                            <div class="form-group">
+                                <div class="col-sm-3 control-label">
+                                    @Html.LabelFor(model => model.Districts)
+                                </div>
+                                <div class="col-sm-9">
+                                    @Html.CheckBoxListFor(model => model.Districts, model => model.AllDistricts, d => d.DistrictId, d => d.Name, d => d.IsSelected, Position.Vertical)
+                                    <label class="field_error">@Html.ValidationMessageFor(model => model.Districts)</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-9 col-sm-offset-3">
+                                    <div class="checkbox">
+                                        <label>
+                                            @if (!aujsAPIEnabled)
+                                            {
+                                                @Html.CheckBoxFor(model => model.Active)
+                                                @Html.DisplayNameFor(model => model.Active)
+                                                @Html.ValidationMessageFor(model => model.Active, string.Empty, new { @class = "help-inline" })
+                                            }
+                                            else
+                                            {
+                                                @Html.HiddenFor(model => model.Active)
+                                                @Html.CheckBoxFor(model => model.Active, new { @disabled = "disabled" })
+                                                @Html.DisplayNameFor(model => model.Active)
+                                            }
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-9 col-sm-offset-3">
+                                    <div class="checkbox">
+                                        <label>
+                                            @if (aujsAPIEnabled)
+                                            {
+                                                @Html.HiddenFor(model => model.APIActiveStatus)
+                                                @Html.CheckBoxFor(model => model.OverrideAUStatus)
+                                                @Html.DisplayNameFor(model => model.OverrideAUStatus)
+                                            }
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            @if (Model.CustomerId == 0)
+                            {
+                                <div class="form-group">
+                                    <div class="col-md-9 col-md-offset-3">
+                                        <input type="submit" value="Create" class="btn btn-primary" />
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                @if (Model.CustomerId > 0)
+                {
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#AddressPane" data-toggle="tab">Home</a></li>
+                        <li><a href="#ContactPane" data-toggle="tab">Contacts</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="AddressPane">
+                            <div class="form-group">
+                                <div class="control-label col-md-2">
+                                    @Html.LabelFor(model => model.Address1)
+                                </div>
+                                <div class="col-sm-10">
+                                    @if (!aujsAPIEnabled)
+                                    {
+                                        @Html.TextAreaFor(model => model.Address1, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.Address1, string.Empty, new { @class = "help-inline" })
+                                    }
+                                    else
+                                    {
+                                        <div class="form-control-static">
+                                            @Html.HiddenFor(model => model.Address1)
+                                            @Model.Address1
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="control-label col-md-2">
+                                    @Html.LabelFor(model => model.Address2)
+                                </div>
+                                <div class="col-sm-10">
+                                    @if (!aujsAPIEnabled)
+                                    {
+                                        @Html.TextAreaFor(model => model.Address2, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.Address2, string.Empty, new { @class = "help-inline" })
+                                    }
+                                    else
+                                    {
+                                        <div class="form-control-static">
+                                            @Html.HiddenFor(model => model.Address2)
+                                            @Model.Address2
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="control-label col-md-2">
+                                    @Html.LabelFor(model => model.Address3)
+                                </div>
+                                <div class="col-sm-10">
+                                    @Html.TextAreaFor(model => model.Address3, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Address3, string.Empty, new { @class = "help-inline" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="control-label col-md-2">
+                                    @Html.LabelFor(model => model.City)
+                                </div>
+                                <div class="col-sm-10">
+                                    @if (!aujsAPIEnabled)
+                                    {
+                                        @Html.TextBoxFor(model => model.City, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.City, string.Empty, new { @class = "help-inline" })
+                                    }
+                                    else
+                                    {
+                                        <div class="form-control-static">
+                                            @Html.HiddenFor(model => model.City)
+                                            @Model.City
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="control-label col-md-2">
+                                    @Html.LabelFor(model => model.State)
+                                </div>
+                                <div class="col-sm-10">
+                                    @if (!aujsAPIEnabled)
+                                    {
+                                        @Html.TextBoxFor(model => model.State, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.State, string.Empty, new { @class = "help-inline" })
+                                    }
+                                    else
+                                    {
+                                        <div class="form-control-static">
+                                            @Html.HiddenFor(model => model.State)
+                                            @Model.State
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="control-label col-md-2">
+                                    @Html.LabelFor(model => model.Zip)
+                                </div>
+                                <div class="col-sm-10">
+                                    @if (!aujsAPIEnabled)
+                                    {
+                                        @Html.TextBoxFor(model => model.Zip, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.Zip, string.Empty, new { @class = "help-inline" })
+                                    }
+                                    else
+                                    {
+                                        <div class="form-control-static">
+                                            @Html.HiddenFor(model => model.Zip)
+                                            @Model.Zip
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-10 col-md-offset-2">
+                                    <button type="submit" value="Update" class="btn btn-primary">
+                                        <i class="fa fa-floppy-o"></i>
+                                        <span>Update</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="ContactPane">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <button type="button" id="add_contact_btn" class="btn btn-primary" data-toggle="modal" data-target="#AddContactForm">
+                                        <i class="fa fa-plus-circle"></i>
+                                        <span>Add Contact</span>
+                                    </button>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="pull-right">
+                                        <input type="checkbox" class="toggle_contact" />
+                                        Show Inactive
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table class="table table-bordered table-compressed table-striped contact">
+                                        <thead>
+                                            <tr>
+                                                @if (ViewBag.AccessRule.HasCustomersAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                                                {
+                                                    <th></th>
+                                                }
+                                                <th>Name</th>
+                                                <th>Title</th>
+                                                <th>Phone</th>
+                                                <th>Email</th>
+                                                <th>Fax</th>
+                                                <th>Default Quote Contact</th>
+                                                <th>Active</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (RedHill.SalesInsight.Web.Html5.Models.CustomerContactView contact in Model.CustomerContacts)
+                                            {
+                                                <tr data-active="@contact.IsActive">
+                                                    @if (ViewBag.AccessRule.HasCustomersAccess == SIRolePermissionLevelConstants.FULL_ACCESS)
+                                                    {
+                                                        <td><a data-id="@contact.Id" class="edit_contact_btn" href="#">edit</a></td>
+                                                    }
+                                                    <td class="contact_name">@contact.Name</td>
+                                                    <td class="contact_title">@contact.Title</td>
+                                                    <td class="contact_phone">@contact.Phone</td>
+                                                    <td class="contact_email">@contact.Email</td>
+                                                    <td class="contact_fax">@contact.Fax</td>
+                                                    <td class="contact_quote" data-checked="@contact.IsQuoteDefault">
+                                                        @Html.Partial("_Tick", contact.IsQuoteDefault)
+                                                    </td>
+                                                    <td class="contact_active" data-checked="@contact.IsActive">
+                                                        @Html.Partial("_Tick", contact.IsActive)
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+<div id="AddContactForm" class="modal fade">
+    @using (@Html.BeginForm("AddContact", "Home", FormMethod.Post, new { @class = "form-horizontal", @id = "contact_form" }))
+    {
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Contact Details</h4>
+                </div>
+                <div class="modal-body">
+                    @Html.Hidden("CustomerId", @Model.CustomerId)
+                    @Html.Hidden("ProjectId", @Model.ProjectId)
+                    @Html.Hidden("QuotationId", @Model.QuotationId)
+                    <input type="hidden" name="Id" id="ContactId" />
+                    <div class="form-group">
+                        <div class="control-label col-md-4">
+                            @Html.Label("Name")
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.TextBox("Name", "", new { @class = "form-control addEdit_contact_name" })
+                            <span style="display:none;" class="field-validation-error contact-name"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="control-label col-md-4">
+                            @Html.Label("Title")
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.TextBox("Title", "", new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="control-label col-md-4">
+                            @Html.Label("Phone")
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.TextBox("Phone", "", new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="control-label col-md-4">
+                            @Html.Label("Email")
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.TextBox("Email", "", new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="control-label col-md-4">
+                            @Html.Label("Fax")
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.TextBox("Fax", "", new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="control-label col-md-4">
+                            @Html.Label("Quote Default?")
+                        </div>
+                        <div class="col-sm-6">
+                            <p class="form-control-static">
+                                @Html.CheckBox("IsQuoteDefault")
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="control-label col-md-4">
+                            @Html.Label("Active")
+                        </div>
+                        <div class="col-sm-6">
+                            <p class="form-control-static">
+                                @Html.CheckBox("IsActive")
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" onclick = "return validateContactForm()" class="btn btn-primary add_contact_btn">Save changes</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    }
+</div>
+<!-- /.modal -->
+@section Scripts{
+    <script type="text/javascript">
+
+        function validateContactForm() {
+            var contactId = $("#ContactId").val();
+            var customerId = $("#CustomerId").val();
+            var nameElement = $(".addEdit_contact_name");
+            var name = nameElement.val().trim();
+
+            if (name === '') {
+                $(".contact-name").html("The Name field is required");
+                $(".contact-name").show();
+                return  false;
+            }
+            else {
+                $.post("/Json/FindCustomerContactExist", { "contactId": contactId==''?0:contactId, "customerId": customerId, "name": name }, function (data) {
+                    info = JSON.parse(data);
+                    if (info.status) {
+                        $(".contact-name").html("Name already exists.");
+                        $(".contact-name").show();
+                        return false;
+                    } else {
+                        $("#contact_form").submit();
+                    }
+                });
+            }
+            return false;
+         }
+
+        $(document).ready(function (e) {
+            var competitorAccess = '@(ViewBag.AccessRule.HasCustomersAccess == SIRolePermissionLevelConstants.FULL_ACCESS)';
+            if (competitorAccess == 'False')
+            { disableEveryThing('.nav-tabs li a,.toggle_contact'); }
+
+            $("tr[data-active=False]").hide();
+            //$(".toggle_contact").change(function (e) {
+            //    $(".contact tr").toggle();
+            //});
+            $(".toggle_contact").click(function () {
+                $("tr[data-active=False]").toggle();
+            });
+
+            $("#add_contact_btn").click(function (e) {
+                $(".contact-name").hide();
+                $("#ContactId").val("");
+                $("#contact_form #Name").val("");
+                $("#Phone").val("");
+                $("#Email").val("");
+                $("#Fax").val("");
+                $("#Title").val("");
+                $("#IsQuoteDefault").prop("checked", false);
+                $("#IsActive").prop("checked", true);
+                $("#IsQuoteDefault").prop("disabled", false);
+                $('#AddContactForm').modal('show');
+                return false;
+            });
+
+            $(".edit_contact_btn").click(function (e) {
+                $(".contact-name").hide();
+                element = $(this);
+                tr = $(this).parent().parent();
+                id = element.attr("data-id");
+                title = $(tr).find(".contact_title").text().trim();
+                name = $(tr).find(".contact_name").text().trim();
+                phone = $(tr).find(".contact_phone").text().trim();
+                email = $(tr).find(".contact_email").text().trim();
+                fax = $(tr).find(".contact_fax").text().trim();
+                quoteDefault = $(tr).find(".contact_quote").data("checked") == "True";
+                active = $(tr).find(".contact_active").data("checked") == "True";
+                $("#ContactId").val(id);
+                $("#contact_form #Title").val(title);
+                $("#contact_form #Name").val(name);
+                $("#Phone").val(phone);
+                $("#Email").val(email);
+                $("#Fax").val(fax);
+                $("#IsQuoteDefault").prop("checked", quoteDefault);
+                $("#IsActive").prop("checked", active);
+
+                @*@if (Model.CustomerContacts.Count() <= 1)
+                {
+                <text>
+                $("#IsQuoteDefault").prop("checked", true);
+                $("#IsQuoteDefault").prop("disabled", true);
+                $("input[type=hidden][name=IsQuoteDefault]").val("true");
+                </text>
+                }*@
+
+                $('#AddContactForm').modal('show');
+                return false;
+            });
+        });
+
+    </script>
+}
+

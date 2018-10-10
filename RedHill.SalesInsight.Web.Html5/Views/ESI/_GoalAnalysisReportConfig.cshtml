@@ -1,0 +1,636 @@
+﻿@* Report Setting pop-up  *@
+<style>
+        /*.selectDivBox .tooltip {
+            top: -6px !important;
+        }*/
+    </style>
+<div class="modal fade" id="reportConfig_GoalAnalysis">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Report Configuration</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="esi-control-group">
+                            <div>
+                                <label class="control-label">Select Metrics</label>
+                            </div>
+                            <div>
+                                <select id="metric_opt" class="form-control metric_type multiselect" multiple="multiple">
+                                    @if (Model.MetricDefinitions.Count != 0)
+                                    {
+                                        foreach (var metric in Model.MetricDefinitions)
+                                        {
+                                            <option data-variance="@(metric.IsVarianceColumn)" @(Model.MetricDefinitionIds.Contains(metric.Id) ? "selected" : "" ) value="@metric.Id.ToString()">@(metric.DisplayName ?? metric.MetricName)</option>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <option value="0">No Target Metric</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="esi-control-group">
+                            <div>
+                                <label class="control-label">Selected Metrics</label><button type="button" class="btn btn-primary sort-columns">Sort A-Z</button>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="selectDivArea">
+                                <div class="selected_metric">
+                                    @if (Model.ReportConfigSetting.ReportRowConfigList != null)
+                                    {
+                                        int columnCount = 0;
+                                        foreach (var item in Model.ReportConfigSetting.ReportRowConfigList)
+                                        {
+                                            var isVariance = item.IsVarianceColumn != null ? item.IsVarianceColumn : false;
+                                            <div class="selectDivBox" metricId="@item.MetricDefinitionId" data-isVariance="@isVariance">
+                                                <label value="@item.DisplayName" id="@item.MetricDefinitionId">
+                                                    @item.DisplayName
+                                                    @if (isVariance)
+                                                    {<input type="checkbox" class="metricActionIndicator" title="Add action indicator" data-toggle="tooltip" @(item.ShowActionIcons == null ? "" : item.ShowActionIcons ? "checked" : "" ) metricId="@item.MetricDefinitionId">
+                                                    }
+                                                </label>
+                                                <input type="checkbox" class="metricActionSeprator" title="Insert horizontal separator below" data-toggle="tooltip" @(item.IsHorizontalSeperator == null ? "" : "checked" ) metricId="@item.MetricDefinitionId" name="@item.DisplayName">
+
+                                                <div class="indicator-selector" style="display:none">
+                                                    <div class="well-small" id="action_indicator_@(columnCount)">
+                                                        <div class="row">
+                                                            
+                                                            <div class=" col-sm-5">Comparison Metric</div>
+                                                            <div class="col-sm-7">
+                                                                <select id="comparison_metric@(columnCount)" class="form-control metric_type">
+                                                                    <option value="0">---Comparison Metric---</option>
+                                                                    @if (Model.ReportConfigSetting.ReportRowConfigList != null)
+                                                                    {
+                                                                        foreach (var metric in Model.ReportConfigSetting.ReportRowConfigList)
+                                                                        {
+                                                                            var isVarianceCol = metric.IsVarianceColumn != null ? metric.IsVarianceColumn : false;
+                                                                            if (!isVarianceCol)
+                                                                            {
+                                                                                <option @(item.ComparisonMetricId == metric.MetricDefinitionId ? "selected" : "" ) value="@metric.MetricDefinitionId">@metric.DisplayName</option>
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-sm-12">
+                                                                &nbsp;
+                                                            </div>
+                                                            <label class="control-label col-sm-2">
+                                                                <i class="fa fa-check text-success">&nbsp;Limit</i>
+                                                            </label>
+                                                            <div class="col-sm-4">
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" name="OKLimit" value="@(item.OkLimit)" id="okLimit@(columnCount)" />
+                                                                    <span class="input-group-addon">%</span>
+                                                                </div>
+                                                            </div>
+                                                            <label class="control-label col-sm-2">
+                                                                <i class="fa fa-exclamation-triangle text-warning">&nbsp;Limit</i>
+                                                            </label>
+                                                            <div class="col-sm-4">
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" name="WarningLimit" value="@(item.WarningLimit)" id="WarningLimit@(columnCount)" />
+                                                                    <span class="input-group-addon">%</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            columnCount += 1;
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clone-indicator" style="display:none;">
+                        <div class="indicator-selector" style="display:none">
+                            <div class="well-small" id="action_indicator_">
+                                <div class="row">
+                                    <div class=" col-sm-5">Comparison Metric</div>
+                                    <div class="col-sm-7">
+                                        <select id="comparison_metric" class="form-control metric_type">
+                                            <option value="0">---Comparison Metric---</option>
+                                            @if (Model.ReportConfigSetting.ReportRowConfigList != null)
+                                            {
+                                                foreach (var metric in Model.ReportConfigSetting.ReportRowConfigList)
+                                                {
+                                                    var isVarianceCol = metric.IsVarianceColumn != null ? metric.IsVarianceColumn : false;
+                                                    if (!isVarianceCol)
+                                                    {
+                                                    <option value="@metric.MetricDefinitionId">@metric.DisplayName</option>
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        &nbsp;
+                                    </div>
+                                    <label class="control-label col-sm-2">
+                                        <i class="fa fa-check text-success">&nbsp;Limit</i>
+                                    </label>
+                                    <div class="col-sm-4">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="OKLimit" value="" id="okLimit" />
+                                            <span class="input-group-addon">%</span>
+                                        </div>
+                                    </div>
+                                    <label class="control-label col-sm-2">
+                                        <i class="fa fa-exclamation-triangle text-warning">&nbsp;Limit</i>
+                                    </label>
+                                    <div class="col-sm-4">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="WarningLimit" value="" id="WarningLimit" />
+                                            <span class="input-group-addon">%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="esi-control-group">
+                            <div>
+                                <label class="control-label">Select Columns</label>
+                            </div>
+                            <div>
+                                <select id="column_opt" class="form-control multiselect column_type" multiple="multiple">
+                                    @if (Model.MetricPeriodList != null)
+                                    {
+                                        foreach (var item in Model.MetricPeriodList)
+                                        {
+                                            <option @(item.Selected ? "selected" : "") value="@item.Value">@item.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="esi-control-group">
+                            <div>
+                                <label class="control-label">Selected Columns</label>
+                            </div>
+                        </div>
+                        <div class="selectDivArea">
+                            <div class="selected_column">
+                                @{int colmunCount = 1;
+                                    foreach (var item in Model.ReportConfigSetting.ReportColumnConfigList)
+                                    {
+                                        <div class="selectDivBox" columnId="@colmunCount" value="@item.ColumnName">
+                                            <label value="@item.ColumnName" class="columnActionSeprator" id="@colmunCount">@item.DisplayName</label>
+                                        </div>
+                                    }
+                                    colmunCount = +1; }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default reportSetting_close_btn" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary reportSetting_Save_btn">Save Changes</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<div id="ActionMetricError" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"></h4>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).on("click", ".metricActionIndicator", function () {
+        hideShowIndicator($(this));
+    });
+
+    function hideShowIndicator(ele) {
+        var element = ele;
+        var parentEle = element.closest(".selectDivBox");
+
+        if (element.is(':checked')) {
+            parentEle.animate({ height: 176 }, 500);
+            parentEle.find(".indicator-selector").show();
+        }
+        else {
+            parentEle.height("");
+            parentEle.find(".indicator-selector").hide("slow");
+        }
+    }
+
+    $(document).ready(function () {
+
+        $(".metricActionIndicator").each(function () {
+            hideShowIndicator($(this));
+        });
+
+        var parentMetricArea = $('.selected_metric');
+        var parentColumnArea = $('.selected_column');
+        var metricTypeList = [];
+        var columnTypeList = [];
+        var horizontalSepratorList = [];
+
+        $(".sort-columns").on("click", function () {
+            var columns = [];
+            
+            $('.selected_metric div.selectDivBox').each(function (i, e) {
+                var $this = $(this);
+                var metricId = $this.attr("metricid");
+                var metricName = $this.find("label").attr("value");
+                var isSeperator = $this.find(".metricActionSeprator").is(':checked');
+                var isVariance = $this.attr("data-isvariance");
+                var ShowActionIcons = $this.find(".metricActionIndicator").is(':checked');;
+                var OkLimit = $this.find("[id^=okLimit]").val();
+                var WarningLimit = $this.find("[id^=WarningLimit]").val();
+                var ComparisonMetricId = $this.find("[id^=comparison_metric]").val();
+                columns.push({
+                    id: metricId,
+                    name: metricName,
+                    selected: isSeperator,
+                    isVariance: isVariance.toLowerCase() == 'true' ? true : false,
+                    showActionIcons: ShowActionIcons,
+                    okLimit: OkLimit,
+                    warningLimit: WarningLimit,
+                    comparisonMetricId: ComparisonMetricId
+                });
+            });
+
+            columns.sort((x, y) => {
+                var xN = x.name.toLowerCase(), yN = y.name.toLowerCase();
+                if (xN > yN) return 1;
+                if (xN === yN) return 0;
+                if (xN < yN) return -1;
+            });
+            appendMetrics(parentMetricArea , columns);
+        });
+
+        makeDivDraggable();
+
+        $('#metric_opt').change(function () {
+            var currentSelectedMetrics = [];
+            var ddlSelectedMetrics = [];
+
+            $('.selected_metric div.selectDivBox').each(function (i, e) {
+                var $this = $(this);
+                var metricId = $this.attr("metricid");
+                var metricName = $this.find("label").attr("value");
+                var isSeperator = $this.find(".metricActionSeprator").is(':checked');
+                var isVariance = $this.attr("data-isvariance");
+                var ShowActionIcons = $this.find(".metricActionIndicator").is(':checked');;
+                var OkLimit = $this.find("[id^=okLimit]").val();
+                var WarningLimit = $this.find("[id^=WarningLimit]").val();
+                var ComparisonMetricId = $this.find("[id^=comparison_metric]").val();
+                currentSelectedMetrics.push({
+                    id: metricId,
+                    name: metricName,
+                    selected: isSeperator,
+                    isVariance: isVariance.toLowerCase() == 'true' ? true : false,
+                    showActionIcons: ShowActionIcons,
+                    okLimit: OkLimit,
+                    warningLimit: WarningLimit,
+                    comparisonMetricId: ComparisonMetricId
+                });
+            });
+
+            $('#metric_opt option:selected').each(function (i, e) {
+                var $this = $(this);
+
+                ddlSelectedMetrics.push({ id: $this.val(), name: $this.text().trim(), isVariance: $this.attr("data-variance") == "" ? false : true });
+            });
+            var allIds = [];
+            if (currentSelectedMetrics.length > ddlSelectedMetrics.length) {
+                currentSelectedMetrics.forEach(function (v, i) {
+                    var found = ddlSelectedMetrics.some(function (val) {
+                        return v.id == val.id;
+                    });
+                    if (!found) {
+                        currentSelectedMetrics.splice($.inArray(v, currentSelectedMetrics), 1);
+                        return false;
+                    }
+                });
+            }
+            else {
+               // console.log("PUSH");
+                var pushingObj = null;
+                ddlSelectedMetrics.forEach(function (v, i) {
+                    var found = currentSelectedMetrics.some(function (val) {
+                        return v.id == val.id;
+                    });
+                    if (!found) {
+                        pushingObj = v;
+                        return false;
+                    }
+                });
+                if (pushingObj != null) {
+                    currentSelectedMetrics.push({
+                        id: pushingObj.id,
+                        name: pushingObj.name,
+                        selected: false,
+                        isVariance: pushingObj.isVariance,
+                        showActionIcons: pushingObj.showActionIcons,
+                        okLimit: pushingObj.okLimit,
+                        warningLimit: pushingObj.warningLimit,
+                        comparisonMetricId: pushingObj.ComparisonMetricId });
+                }
+            }
+
+            //parentMetricArea.empty();
+            //currentSelectedMetrics.forEach(function (e, i) {
+            //    parentMetricArea.append($('<div>', { "class": "selectDivBox", "metricId": $(this).val()})
+            //        .append($('<label>', { "value": $(e).text().trim(), "Id": $(this).val()}).append($(e).text().trim()))
+            //        .append($('<input>', { "type": "checkbox", "data-toggle": "tooltip", "title": "Insert horizontal separetor below", $(e).selected?'checked':'', "class": "metricActionSeprator", "metricId": $(this).val(), "Name": $(e).text().trim() })))
+            //});
+            appendMetrics(parentMetricArea, currentSelectedMetrics );
+
+        });
+
+        function appendMetrics(parentMetricArea, currentSelectedMetrics) {
+            var html = $(".clone-indicator").html();
+            parentMetricArea.empty();
+
+            var metricDDLList = [];
+            var metricSelectedValues = [];
+
+            currentSelectedMetrics.forEach(function (e, i) {
+                if (e.isVariance) {
+                    var sample_html = $(html);
+                    sample_html.find("div.well-small").attr("id", "action_indicator_" + i);;
+                    sample_html.find("select.metric_type").attr("id", "comparison_metric" + i);
+                    sample_html.find("[name=OKLimit]").attr("id", "okLimit" + i);
+                    sample_html.find("[name=WarningLimit]").attr("id", "WarningLimit" + i);
+                    if (e.showActionIcons) {
+                        sample_html.find("#comparison_metric" + i).val(e.comparisonMetricId);
+                        sample_html.find("#okLimit" + i).val(e.okLimit);
+                        sample_html.find("#WarningLimit" + i).val(e.warningLimit);
+                        sample_html.show();
+                        metricSelectedValues.push({ ddlId: i, metricId: e.comparisonMetricId });
+                    }
+
+                    parentMetricArea.append($('<div>', { "class": "selectDivBox", "metricId": e.id, "data-isVariance": e.isVariance })
+                        .append($('<label>', { "value": e.name, "Id": e.id }).append(e.name)
+                            .append($('<input>', { "type": "checkbox", "data-toggle": "tooltip", "title": "Add action indicator", "class": "metricActionIndicator", "metricId": e.id }).prop("checked", e.showActionIcons)))
+                        .append($('<input>', { "type": "checkbox", "data-toggle": "tooltip", "title": "Insert horizontal separetor below", "class": "metricActionSeprator", "metricId": e.id, "Name": e.name }).prop("checked", e.selected))
+                        .append(sample_html))
+                }
+                else {
+                    parentMetricArea.append($('<div>', { "class": "selectDivBox", "metricId": e.id, "data-isVariance": e.isVariance })
+                        .append($('<label>', { "value": e.name, "Id": e.id }).append(e.name))
+                        .append($('<input>', { "type": "checkbox", "data-toggle": "tooltip", "title": "Insert horizontal separetor below", "class": "metricActionSeprator", "metricId": e.id, "Name": e.name }).prop("checked", e.selected)))
+                }
+
+                if (!e.isVariance) {
+                    metricDDLList.push({ id: e.id, name: e.name });
+                }
+            });
+            fillMetricDDL(metricDDLList, metricSelectedValues);
+        }
+
+        function fillMetricDDL(metricDDLList, metricSelectedValues) {
+            var metricDDL = $("[id^=comparison_metric]");
+            $(metricDDL).each(function (i, v) {
+                var ddl = $(this);
+                ddl.empty();
+                ddl.append("<option value=0>---Comparison Metric---</option>");
+                metricDDLList.forEach(function (e, i) {
+                    ddl.append("<option value=" + e.id + ">" + e.name + "</option>");
+                });
+            });
+            //$(metricDDL).forEach(function (e,i) {
+            //    $("#comparison_metric").append("<option value=" + e.id + ">" + e.name + "</option>");
+            //});
+            metricSelectedValues.forEach(function (e, i) {
+                $("#comparison_metric" + e.ddlId).val(e.metricId);
+            });
+        }
+
+        $('#column_opt').change(function () {
+            var currentSelectedColumns = [];
+            var ddlSelectedColumns= [];
+
+            $('.selected_column div').each(function (i, e) {
+                var $this = $(this);
+                var columnId = $this.attr("value");
+                var columnName = $this.find("label").attr("value");
+                currentSelectedColumns.push({ id: columnId, name: columnName });
+            });
+
+            $('#column_opt option:selected').each(function (i, e) {
+                var $this = $(this);
+
+                ddlSelectedColumns.push({ id: $this.val(), name: $this.text().trim() });
+            });
+
+            var allIds = [];
+            if (currentSelectedColumns.length > ddlSelectedColumns.length) {
+                currentSelectedColumns.forEach(function (v, i) {
+                    var found = ddlSelectedColumns.some(function (val) {
+                        return v.id == val.id;
+                    });
+                    if (!found) {
+                        currentSelectedColumns.splice($.inArray(v, currentSelectedColumns), 1);
+                        return false;
+                    }
+                });
+            }
+            else {
+                // console.log("PUSH");
+                var pushingObj = null;
+                ddlSelectedColumns.forEach(function (v, i) {
+                    var found = currentSelectedColumns.some(function (val) {
+                        return v.id == val.id;
+                    });
+                    if (!found) {
+                        pushingObj = v;
+                        return false;
+                    }
+                });
+                if (pushingObj != null) {
+                    currentSelectedColumns.push({ id: pushingObj.id, name: pushingObj.name });
+                }
+            }
+
+            //parentMetricArea.empty();
+            //currentSelectedMetrics.forEach(function (e, i) {
+            //    parentMetricArea.append($('<div>', { "class": "selectDivBox", "metricId": $(this).val()})
+            //        .append($('<label>', { "value": $(e).text().trim(), "Id": $(this).val()}).append($(e).text().trim()))
+            //        .append($('<input>', { "type": "checkbox", "data-toggle": "tooltip", "title": "Insert horizontal separetor below", $(e).selected?'checked':'', "class": "metricActionSeprator", "metricId": $(this).val(), "Name": $(e).text().trim() })))
+            //});
+            appendColumns(currentSelectedColumns);
+        });
+
+        function appendColumns(currentSelectedColumns)
+        {
+            parentColumnArea.empty();
+            currentSelectedColumns.forEach(function (e, i) {
+                parentColumnArea.append($('<div>', { "class": "selectDivBox", "columnId": i, "value":e.id})
+                                .append($('<label>', { "value": e.name, "class": "columnActionSeprator", "Id": i})
+                                .append(e.name)))
+            });
+        }
+
+
+        function makeDivDraggable() {
+            //make the column dragable
+            $(".selected_column").sortable({
+                items: "> .selectDivBox",
+                appendTo: "parent",
+                helper: "clone",
+                placeholder: 'ui-state-highlight',
+            }).disableSelection();
+
+            //make the metric dragable
+            $(".selected_metric").sortable({
+                items: "> .selectDivBox",
+                appendTo: "parent",
+                helper: "clone"
+            }).disableSelection();
+        }
+
+        function getColumnArrangementOrder() {
+            columnTypeList = [];
+            $('.selected_column .selectDivBox').each(
+                function (i, e) {
+                    var columnOrderWithName = {};
+                    columnOrderWithName.ReportId = @Model.ReportId;
+                    columnOrderWithName.Order = i;
+                    columnOrderWithName.EntityRefId = $(e).attr("columnId");
+                    columnOrderWithName.EntityName = $(e).attr("entityName");
+                    columnOrderWithName.DisplayName = $(e).text().trim();
+                    columnOrderWithName.ColumnName = $(e).attr("value");
+                    columnTypeList.push(columnOrderWithName);
+                });
+        }
+
+        function getMetricArrangementOrder() {
+            metricTypeList = [];
+            $('.selected_metric .selectDivBox').each(
+                function (i, e) {
+                    var metricOrderWithName = {};
+                    metricOrderWithName.ReportId = @Model.ReportId;
+                    metricOrderWithName.Order = i;
+                    metricOrderWithName.ColumnId = $(e).attr("metricId");
+                    metricOrderWithName.ColumnName = $(e).find(".metricActionSeprator").attr("name").trim();
+                    metricOrderWithName.isVarianceColumn = $(e).attr("data-isVariance");
+                    metricTypeList.push(metricOrderWithName);
+                });
+        }
+
+        function getHorizontalSeprator() {
+            horizontalSepratorList = [];
+            $('.metricActionSeprator:checked').each(function (i, e) {
+                var horizontalSeprator = {};
+                horizontalSeprator.ReportId = @Model.ReportId;
+                horizontalSeprator.ColumnId = $(e).attr('metricid');
+                horizontalSeprator.ColumnName = $(e).attr('name');
+                horizontalSepratorList.push(horizontalSeprator);
+            });
+        }
+
+       var count = 0;
+       function getThresholdValue() {
+            thresholdValueList = [];
+            var status = true;
+
+            $('.selected_metric .selectDivBox').each(function (i, e) {
+                thresholdValue = {};
+                thresholdValue.ReportId = @Model.ReportId;
+                thresholdValue.ColumnId = $(e).attr('metricid');
+                thresholdValue.ColumnName = $(e).find(".metricActionSeprator").attr("name").trim();
+                thresholdValue.isVarianceColumn = $(e).attr("data-isVariance").toLowerCase();
+                thresholdValue.ShowActionIcons = false;
+
+                if (thresholdValue.isVarianceColumn == 'true') {
+                    thresholdValue.ShowActionIcons = $(e).find(".metricActionIndicator").is(':checked');
+                    var ele = $(this);
+
+                    thresholdValue.OkLimit = $(e).find("[id^=okLimit]").val();
+                    thresholdValue.WarningLimit = $(e).find("[id^=WarningLimit]").val();
+                    thresholdValue.ComparisonMetricId = $(e).find("[id^=comparison_metric]").val();
+                    count += 1;
+                    if (thresholdValue.OkLimit != "") {
+                        if (thresholdValue.WarningLimit == "") {
+                            thresholdValue.WarningLimit = 0;
+                        }
+                        thresholdValueList.push(thresholdValue);
+                    }
+                }
+                if (thresholdValue.ShowActionIcons && status) {
+                    $(e).find("[id^=comparison_metric]").css("border-color", "");
+                    $(e).find("[id^=okLimit]").css("border-color", "");
+                    $(e).find("[id^=WarningLimit]").css("border-color", "");
+                    
+                    if (thresholdValue.ComparisonMetricId == 0) {
+                        $("#ActionMetricError").find(".modal-title").html('Please select Comparison metric for "' + thresholdValue.ColumnName + '"');
+                        $("#ActionMetricError").modal("show");
+                        //alert('Please select Comparison metric for "' + thresholdValue.ColumnName+'"')
+                        status = false;
+                        $(e).find("[id^=comparison_metric]").css("border-color", "red");
+                    }
+                    else if (thresholdValue.OkLimit == "" ) {
+                        $("#ActionMetricError").find(".modal-title").html('Please fill OK limit for "' + thresholdValue.ColumnName + '"');
+                        $("#ActionMetricError").modal("show");
+                        //alert('Please fill OK limit for "' + thresholdValue.ColumnName + '"');
+                        status = false;
+                        $(e).find("[id^=okLimit]").css("border-color", "red");
+                    }
+                    else if (thresholdValue.WarningLimit == "") {
+                        $("#ActionMetricError").find(".modal-title").html('Please fill Warning limit for "' + thresholdValue.ColumnName + '"');
+                        $("#ActionMetricError").modal("show");
+                        //alert('Please fill Warning limit for "' + thresholdValue.ColumnName + '"');
+                        status = false;
+                        $(e).find("[id^=WarningLimit]").css("border-color", "red");
+
+                    }
+                }
+            });
+            return status;
+        }
+
+        // Make a ajax call to save the report setting.
+        $('.reportSetting_Save_btn').on('click', function () {
+            $(this).attr("disabled",true);
+            $(this).prepend("<i>");
+            $(this).find("i").addClass("fa fa-spinner fa-spin");
+            getMetricArrangementOrder();
+            getColumnArrangementOrder();
+            getHorizontalSeprator();
+
+            var status = getThresholdValue();
+            if (status) {
+
+                if (metricTypeList.length > 0 && columnTypeList.length > 0) {
+                    $.post("/ESI/AddReportConfiguration", { reportId: eval(@Model.ReportId), metricTypeList: JSON.stringify(metricTypeList), columnTypeList: JSON.stringify(columnTypeList), horizontalSeprator: JSON.stringify(horizontalSepratorList), thresholdValueList: JSON.stringify(thresholdValueList) },
+                        function (data) {
+                            if (data == "OK") {
+                                var url = $(location).attr("href")
+                                if (url.indexOf("IsNewReport") == -1) {
+                                    window.location.reload();
+                                } else {
+                                    window.location = url.replace(/\?.+/, '');
+
+                                }
+                            }
+                        });
+                }
+            }
+            else {
+                $(this).attr("disabled", false);
+                $(this).find("i").remove();
+            }
+        });
+    });
+</script>

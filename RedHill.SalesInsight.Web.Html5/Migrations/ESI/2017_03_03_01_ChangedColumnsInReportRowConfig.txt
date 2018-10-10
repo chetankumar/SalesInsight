@@ -1,0 +1,18 @@
+﻿---Shelly - Done
+---Bharat - Done
+---Chetan - 
+---Avnish - Done
+---Dinesh - Done
+
+-------------Changed Column in ReportRowConfig table-------------
+EXEC sp_rename 'ReportRowConfig.MetricDefinitionTypeId', 'MetricDefinitionId', 'COLUMN'
+
+ALTER TABLE ReportRowConfig
+ALTER Column MetricDefinitionId INT NULL;
+
+ALTER TABLE [dbo].[ReportRowConfig]  WITH CHECK ADD  CONSTRAINT [FK_ReportRowConfig_MetricDefinition] FOREIGN KEY([MetricDefinitionId])
+REFERENCES [dbo].[MetricDefinition] ([Id])
+GO
+
+ALTER TABLE [dbo].[ReportRowConfig] CHECK CONSTRAINT [FK_ReportRowConfig_MetricDefinition]
+GO

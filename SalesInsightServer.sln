@@ -1,0 +1,94 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.16
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedHill.SalesInsight.Web.Html5", "RedHill.SalesInsight.Web.Html5\RedHill.SalesInsight.Web.Html5.csproj", "{9F2819AB-0533-4008-A165-F6A8A49518CA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F27DB364-FB3E-4886-B07D-5E7F3475CB73} = {F27DB364-FB3E-4886-B07D-5E7F3475CB73}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedHill.SalesInsight.Tests", "RedHill.SalesInsight.Tests\RedHill.SalesInsight.Tests.csproj", "{D1C0E63E-5D25-4032-ADBF-BF1741116960}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FioLabs.MVC.CarePackage", "MVC-FIO\FioLabs.MVC.CarePackage.csproj", "{E76976E7-7DF9-4E2C-AED3-326C8471A513}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedHill.SalesInsight.AUJSIntegration", "RedHill.SalesInsight.AUJSIntegration\RedHill.SalesInsight.AUJSIntegration.csproj", "{4471BFB8-1F06-47B8-9EED-29C75A2B69EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedHill.SalesInsight.Logger", "RedHill.SalesInsight.Logger\RedHill.SalesInsight.Logger.csproj", "{4A8C4572-4A14-41C2-811C-6F08D20C0274}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedHill.SalesInsight.API", "RedHill.SalesInsight.API\RedHill.SalesInsight.API.csproj", "{A1455DC8-A5CA-4C87-971E-305C5247133D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedHill.SalesInsight.DAL", "RedHill.SalesInsight.DAL\RedHill.SalesInsight.DAL.csproj", "{D889292A-ED90-46AB-9AB2-85DFADCE61E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedHill.SalesInsight.Web", "RedHill.SalesInsight.Web\RedHill.SalesInsight.Web.csproj", "{3817AB13-ACFE-4375-82C9-9B9B358DDDEB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redhill.SalesInsight.Service", "Redhill.SalesInsight.Service\Redhill.SalesInsight.Service.csproj", "{8D3D7F40-0A12-4A94-B462-49C638C38B16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedHill.SalesInsight.ESI", "Redhill.SalesInsight.ESI\RedHill.SalesInsight.ESI.csproj", "{F27DB364-FB3E-4886-B07D-5E7F3475CB73}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D889292A-ED90-46AB-9AB2-85DFADCE61E6} = {D889292A-ED90-46AB-9AB2-85DFADCE61E6}
+		{4A8C4572-4A14-41C2-811C-6F08D20C0274} = {4A8C4572-4A14-41C2-811C-6F08D20C0274}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedHill.SalesInsight.ExcelUploader", "RedHill.SalesInsight.ExcelUploader\RedHill.SalesInsight.ExcelUploader.csproj", "{8FD8D7D9-1DE1-4C29-948D-F37E66823D63}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedHill.SalesInsight.ESIMongoTester", "RedHill.SalesInsight.ESIMongoTester\RedHill.SalesInsight.ESIMongoTester.csproj", "{00ACD024-3BA2-4010-936E-D8CB8F9C0D91}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9F2819AB-0533-4008-A165-F6A8A49518CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F2819AB-0533-4008-A165-F6A8A49518CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F2819AB-0533-4008-A165-F6A8A49518CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F2819AB-0533-4008-A165-F6A8A49518CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1C0E63E-5D25-4032-ADBF-BF1741116960}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1C0E63E-5D25-4032-ADBF-BF1741116960}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1C0E63E-5D25-4032-ADBF-BF1741116960}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1C0E63E-5D25-4032-ADBF-BF1741116960}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E76976E7-7DF9-4E2C-AED3-326C8471A513}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E76976E7-7DF9-4E2C-AED3-326C8471A513}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E76976E7-7DF9-4E2C-AED3-326C8471A513}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E76976E7-7DF9-4E2C-AED3-326C8471A513}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4471BFB8-1F06-47B8-9EED-29C75A2B69EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4471BFB8-1F06-47B8-9EED-29C75A2B69EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4471BFB8-1F06-47B8-9EED-29C75A2B69EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4471BFB8-1F06-47B8-9EED-29C75A2B69EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A8C4572-4A14-41C2-811C-6F08D20C0274}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A8C4572-4A14-41C2-811C-6F08D20C0274}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A8C4572-4A14-41C2-811C-6F08D20C0274}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A8C4572-4A14-41C2-811C-6F08D20C0274}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1455DC8-A5CA-4C87-971E-305C5247133D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1455DC8-A5CA-4C87-971E-305C5247133D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1455DC8-A5CA-4C87-971E-305C5247133D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1455DC8-A5CA-4C87-971E-305C5247133D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D889292A-ED90-46AB-9AB2-85DFADCE61E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D889292A-ED90-46AB-9AB2-85DFADCE61E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D889292A-ED90-46AB-9AB2-85DFADCE61E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D889292A-ED90-46AB-9AB2-85DFADCE61E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3817AB13-ACFE-4375-82C9-9B9B358DDDEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3817AB13-ACFE-4375-82C9-9B9B358DDDEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3817AB13-ACFE-4375-82C9-9B9B358DDDEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3817AB13-ACFE-4375-82C9-9B9B358DDDEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D3D7F40-0A12-4A94-B462-49C638C38B16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D3D7F40-0A12-4A94-B462-49C638C38B16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D3D7F40-0A12-4A94-B462-49C638C38B16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F27DB364-FB3E-4886-B07D-5E7F3475CB73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F27DB364-FB3E-4886-B07D-5E7F3475CB73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F27DB364-FB3E-4886-B07D-5E7F3475CB73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F27DB364-FB3E-4886-B07D-5E7F3475CB73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FD8D7D9-1DE1-4C29-948D-F37E66823D63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FD8D7D9-1DE1-4C29-948D-F37E66823D63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FD8D7D9-1DE1-4C29-948D-F37E66823D63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FD8D7D9-1DE1-4C29-948D-F37E66823D63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00ACD024-3BA2-4010-936E-D8CB8F9C0D91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00ACD024-3BA2-4010-936E-D8CB8F9C0D91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00ACD024-3BA2-4010-936E-D8CB8F9C0D91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00ACD024-3BA2-4010-936E-D8CB8F9C0D91}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

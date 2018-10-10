@@ -1,0 +1,16 @@
+﻿-- Chetan : Done
+-- Bharat : Done
+-- Shelly :
+-- Avnish : Done
+-- Dinesh : Done
+-- Test Server : Done
+-- Prod Server : 
+ALTER TABLE MetricDefinition
+ALTER COLUMN ColumnProperty VARCHAR(MAX) null
+GO
+ALTER TABLE MetricDefinition
+ADD ColumnProperty2 VARCHAR(MAX) null
+GO
+ALTER TABLE MetricDefinition
+ADD IsInternal bit null
+GO

@@ -1,0 +1,81 @@
+﻿-- Chetan : Done
+-- Bharat : Done
+-- Shelly : Done
+-- Avnish : Done
+-- Dinesh : Done
+-- Driver Login Times
+CREATE TABLE [dbo].[DriverLoginTimes](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[DriverNumber] [varchar](50) NOT NULL,
+	[LoginDate] [date] NOT NULL,
+	[PunchInTime] [datetime] NULL,
+	[PunchOutTime] [datetime] NULL,
+	[TotalTime] [float] NULL,
+ CONSTRAINT [PK_DriverLoginTimes] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+-- Driver Details
+CREATE TABLE [dbo].[DriverDetails](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[DriverName] [varchar](100) NULL,
+	[DriverNumber] [varchar](50) NULL,
+ CONSTRAINT [PK_DriverDetails] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+-- Ticket History
+CREATE TABLE [dbo].[TicketDetails](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[TicketId] [varchar](50) NOT NULL,
+	[TicketNumber] [varchar](50) NOT NULL,
+	[TicketDate] [date] NULL,
+	[VoidStatus] [bit] NOT NULL,
+	[TimeDueOnJob] [datetime] NULL,
+	[TimeTicketed] [datetime] NULL,
+	[TimeBeginLoad] [datetime] NULL,
+	[TimeEndLoad] [datetime] NULL,
+	[TimeLeavePlant] [datetime] NULL,
+	[TimeArriveJob] [datetime] NULL,
+	[TimeBeginUnload] [datetime] NULL,
+	[TimeEndUnload] [datetime] NULL,
+	[TimeLeaveJob] [datetime] NULL,
+	[TimeArrivePlant] [datetime] NULL,
+	[PlantNumber] [varchar](50) NOT NULL,
+	[PlantDescription] [varchar](1000) NULL,
+	[FOB] [bit] NULL,
+	[DriverNumber] [varchar](50) NULL,
+	[DriverDescription] [varchar](50) NULL,
+	[DriverType] [varchar](50) NULL,
+	[DriveHomePlantNumber] [varchar](50) NULL,
+	[TruckNumber] [varchar](50) NULL,
+	[TruckType] [varchar](50) NULL,
+	[TruckHomePlantNumber] [varchar](50) NULL,
+	[CustomerNumber] [varchar](50) NULL,
+	[CustomerDescription] [varchar](1000) NULL,
+	[CustomerSegmentNumber] [varchar](50) NULL,
+	[CustomerSegmentDesc] [varchar](100) NULL,
+	[CustomerCity] [varchar](100) NULL,
+	[CustomerZip] [varchar](100) NULL,
+	[JobNumber] [varchar](50) NULL,
+	[JobDescription] [varchar](1000) NULL,
+	[JobSegmentNumber] [varchar](50) NULL,
+	[JobSegmentDescription] [varchar](1000) NULL,
+	[DeliveryAddress] [varchar](1000) NULL,
+	[SalesPersonNumber] [varchar](50) NULL,
+	[SalesPersonDescription] [varchar](1000) NULL,
+	[BatchmanNumber] [varchar](50) NULL,
+	[BatchmanDescription] [varchar](1000) NULL,
+	[DeliveredVolume] [float] NULL,
+	[TotalRevenue] [decimal](18, 2) NULL,
+	[MaterialCost] [decimal](18, 2) NULL,
+ CONSTRAINT [PK_TicketDetails] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] 

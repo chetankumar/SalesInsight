@@ -1,0 +1,4 @@
+﻿---2017-05-23 6:18 PM New columns added to the Project Table---- Avnish
+ALTER TABLE Project
+ADD [AggregateFreight] [decimal](18, 2) NULL,
+	[BlockFreight] [decimal](18, 2) NULL

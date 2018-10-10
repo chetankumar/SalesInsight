@@ -1,0 +1,6 @@
+﻿-----New Field Added to the Plant Table ---- Avnish --  9/3/2018
+
+	ALTER TABLE PLANT
+	ADD	[Address] [nvarchar](200) NULL,
+	[CityStateZip] [nvarchar](200) NULL,
+	[Phone] [nvarchar](200) NULL

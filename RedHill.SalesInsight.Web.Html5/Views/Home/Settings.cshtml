@@ -1,0 +1,286 @@
+﻿@{
+    ViewBag.Title = "Settings";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="page-head">
+    <h2>Settings</h2>
+    <ol class="breadcrumb">
+        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+        <li class="active">Settings</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="">
+        <div>
+            @if (ViewBag.AccessRule.HasUsersAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+            {
+                <a href="@Url.Action("Users", "Home")">
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>USERS</h2>
+                            <div>Add/Edit Users<br /> <br /></div>
+                        </div>
+                        <div class="stat">
+                            <i class="fa fa-2x text-primary fa-users"></i>
+                        </div>
+                    </div>
+                </a>
+            }
+            @if (ViewBag.AccessRule.HasRolesAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+            {
+                <a href="@Url.Action("Roles", "Home")">
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>ROLES</h2>
+                            <div>Manage Access Privileges <br /> <br /></div>
+                        </div>
+                        <div class="stat">
+                            <i class="fa fa-2x text-primary fa-key"></i>
+                        </div>
+                    </div>
+                </a>
+            }
+            @if (ViewBag.AccessRule.HasTargetsAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+            {
+                <a href="/Target">
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>TARGETS</h2>
+                            <div>Plant, Sales Pro, Segment Goals.<br /> </div>
+                        </div>
+                        <div class="stat">
+                            <i class="fa fa-2x text-primary fa-bullseye"></i>
+                        </div>
+                    </div>
+                </a>
+            }
+            @if (ViewBag.AccessRule.HasReportSettingsAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+            {
+                <a href="@Url.Action("Settings", "Reports")">
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>Reports</h2>
+                            <div>Indicators and Customer Uploads<br /> </div>
+                        </div>
+                        <div class="stat">
+                            <i class="fa fa-2x text-primary fa-bar-chart"></i>
+                        </div>
+                    </div>
+                </a>
+            }
+            @if (ViewBag.AccessRule.HasCustomersAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+            {
+                <a href="/Home/Companies/customers">
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>CUSTOMERS</h2>
+                            <div>Manage Customers<br /> <br /></div>
+                        </div>
+                        <div class="stat">
+                            <i class="fa fa-2x text-primary fa-users"></i>
+                        </div>
+                    </div>
+                </a>
+            }
+            @if (ViewBag.AccessRule.HasCompetitorsAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+            {
+                <a href="/Home/Companies/competitors">
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>COMPETITORS</h2>
+                            <div>Manage Competitors<br /> <br /></div>
+                        </div>
+                        <div class="stat">
+                            <i class="fa fa-2x text-primary fa-trophy"></i>
+                        </div>
+                    </div>
+                </a>
+            }
+            @if (ViewBag.AccessRule.HasSalesStaffAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+            {
+                <a href="/Home/Companies/salesstaff">
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>Sales Staff</h2>
+                            <div>Manage Sales Staff<br /> <br /></div>
+                        </div>
+                        <div class="stat">
+                            <i class="fa fa-2x text-primary fa-users"></i>
+                        </div>
+                    </div>
+                </a>
+            }
+            @if (ViewBag.AccessRule.HasGCAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+            {
+                <a href="/Home/Companies/contractors">
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>GENERAL CONTRACTORS</h2>
+                            <div>Manage GCs<br /><br /></div>
+                        </div>
+                        <div class="stat">
+                            <i class="fa fa-2x text-primary fa-user"></i>
+                        </div>
+                    </div>
+                </a>
+            }
+            @if (ViewBag.AccessRule.HasMarketSegmentsAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+            {
+                <a href="/Home/Companies/marketsegments">
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>MARKET SEGMENTS</h2>
+                            <div>Manage Market Segments<br /><br /></div>
+                        </div>
+                        <div class="stat">
+                            <i class="fa fa-2x text-primary fa-pie-chart"></i>
+                        </div>
+                    </div>
+                </a>
+            }
+            @if (ViewBag.AccessRule.HasStatusesReasonsLostAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+            {
+                <a href="/Home/Companies/statuses">
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>Statuses</h2>
+                            <div>Statuses and Reasons Lost<br /><br /></div>
+                        </div>
+                        <div class="stat">
+                            <i class="fa fa-2x text-primary fa-bar-chart"></i>
+                        </div>
+                    </div>
+                </a>
+            }
+            @if (ViewBag.AccessRule.HasStructureAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+            {
+                <a href="/Home/Companies/structure">
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>STRUCTURE</h2>
+                            <div>Manage Structure<br /><br /></div>
+                        </div>
+                        <div class="stat">
+                            <i class="fa fa-2x text-primary fa-sitemap"></i>
+                        </div>
+                    </div>
+                </a>
+            }
+            @if (ViewBag.AccessRule.HasRawMaterialsAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+            {
+                <a href="/Admin/ManageRawMaterials">
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>RAW MATERIALS</h2>
+                            <div>Manage Raw Materials<br /><br /></div>
+                        </div>
+                        <div class="stat">
+                            <i class="fa fa-2x text-primary fa-cog"></i>
+                        </div>
+                    </div>
+                </a>
+            }
+            @if (ViewBag.AccessRule.HasAddonsAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+            {
+                <a href="/Admin/ManageAddons">
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>ADD-ONs</h2>
+                            <div>Manage Add-Ons<br /><br /></div>
+                        </div>
+                        <div class="stat">
+                            <i class="fa fa-2x text-primary fa-plus "></i>
+                        </div>
+                    </div>
+                </a>
+            }
+            @if (ViewBag.AccessRule.HasMixDesignsAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+            {
+                <a href="/Admin/ManageMixDesigns">
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>MIX DESIGNS</h2>
+                            <div>Manage Mix Designs<br /><br /></div>
+                        </div>
+                        <div class="stat">
+                            <i class="fa fa-2x text-primary fa-archive"></i>
+                        </div>
+                    </div>
+                </a>
+            }
+            @if (ViewBag.AccessRule.HasSackPricingAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+            {
+                <a href="/Admin/ManageFSKPrices">
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>SACK PRICING</h2>
+                            <div>Manage Sack Pricing<br /><br /></div>
+                        </div>
+                        <div class="stat">
+                            <i class="fa fa-2x text-primary fa-user-secret"></i>
+                        </div>
+                    </div>
+                </a>
+            }
+            @if (ViewBag.AccessRule.HasMiscellaneousAccess != SIRolePermissionLevelConstants.NO_ACCESS)
+            {
+                <a href="/Admin/ManageMiscSettings">
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>Miscellaneous</h2>
+                            <div>Manage Miscellaneous<br /><br /></div>
+                        </div>
+                        <div class="stat">
+                            <i class="fa fa-2x text-primary fa-cogs"></i>
+                        </div>
+                    </div>
+                </a>
+            }
+            @if (ViewBag.ShowESIModules != false)
+            {
+                <a href="/Admin/ManageESIData">
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>ESI</h2>
+                            <div>
+                                Manage ESI Data
+                                <br>
+                                <br>
+                            </div>
+                        </div>
+                        <div class="stat">
+                            <i class="fa fa-2x text-primary fa-upload"></i>
+                        </div>
+                    </div>
+                </a>
+            }
+
+            @*<a href="/Admin/CustomMetrics">
+                <div class="butpro butstyle flat">
+                    <div class="sub">
+                        <h2>Custom Metrics</h2>
+                        <div>
+                            Define Custom Metrics
+                            <br>
+                            <br>
+                        </div>
+                    </div>
+                    <div class="stat">
+                        <i class="fa fa-2x text-primary fa-cart-arrow-down"></i>
+                    </div>
+                </div>
+            </a>*@
+            @* <a href="/Admin/InitialSetup">
+                    <div class="butpro butstyle flat">
+                        <div class="sub">
+                            <h2>INITIAL SETUP</h2>
+                            <div>Initial Setup<br /><br /></div>
+                        </div>
+                        <div class="stat">
+                            <i class="fa fa-2x text-primary fa-cogs"></i>
+                        </div>
+                    </div>
+                </a>*@
+        </div>
+    </div>
+</div>

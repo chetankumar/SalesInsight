@@ -1,0 +1,533 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.TargetsView
+
+@{
+    ViewBag.Title = "Manage Volume Target Distributions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.UsingDatePicker = true;
+    ViewBag.UsingFixedHeaderTable = true;
+}
+<div class="page-head">
+    <h2>Manage Volume Target Distributions</h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Home/Settings">Settings</a></li>
+        <li><a href="/Target/Index">Targets</a></li>
+        <li class="active">Volume Distributions</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="block-flat">
+        @using (@Html.BeginForm("Targets", "Home", FormMethod.Post, new { @id = "filter-form", @class = "form-horizontal" }))
+        {
+            <div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">
+                        <label>Target Year</label>
+                    </div>
+                    <div class="col-sm-3">
+                        @Html.DropDownListFor(m => m.Year,Model.AllYears, new { @class = "form-control auto_submit" })
+                    </div>
+
+                </div>
+            </div>
+            <div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">
+                        <label>Expand by</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary btn-sm show" value="SalesStaff">Sales Staffs</button>
+                            <button type="button" class="btn btn-default btn-sm show" value="MarketSegment">Market Segments</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="block-flat">
+        <div class="table-responsive" style="position: relative; max-width: 100%;">
+            <table class="table table-bordered table-condensed table-minified table-fixed-header" style="max-width: 100%;">
+                <thead class="header">
+                    <tr>
+                        <th></th>
+                        <th style="font-weight: bold; text-align: center">Plant</th>
+                        <th colspan="1" style="font-weight: bold; text-align: center">@(Model.Filter.ProjectionDateTime.Value.ToString("MMM"))</th>
+                        <th colspan="1" style="font-weight: bold; text-align: center">@(@Model.Filter.ProjectionDateTime.Value.AddMonths(1).ToString("MMM"))</th>
+                        <th colspan="1" style="font-weight: bold; text-align: center">@(@Model.Filter.ProjectionDateTime.Value.AddMonths(2).ToString("MMM"))</th>
+                        <th colspan="1" style="font-weight: bold; text-align: center">@(@Model.Filter.ProjectionDateTime.Value.AddMonths(3).ToString("MMM"))</th>
+                        <th colspan="1" style="font-weight: bold; text-align: center">@(@Model.Filter.ProjectionDateTime.Value.AddMonths(4).ToString("MMM"))</th>
+                        <th colspan="1" style="font-weight: bold; text-align: center">@(@Model.Filter.ProjectionDateTime.Value.AddMonths(5).ToString("MMM"))</th>
+                        <th colspan="1" style="font-weight: bold; text-align: center">@(@Model.Filter.ProjectionDateTime.Value.AddMonths(6).ToString("MMM"))</th>
+                        <th colspan="1" style="font-weight: bold; text-align: center">@(@Model.Filter.ProjectionDateTime.Value.AddMonths(7).ToString("MMM"))</th>
+                        <th colspan="1" style="font-weight: bold; text-align: center">@(@Model.Filter.ProjectionDateTime.Value.AddMonths(8).ToString("MMM"))</th>
+                        <th colspan="1" style="font-weight: bold; text-align: center">@(@Model.Filter.ProjectionDateTime.Value.AddMonths(9).ToString("MMM"))</th>
+                        <th colspan="1" style="font-weight: bold; text-align: center">@(@Model.Filter.ProjectionDateTime.Value.AddMonths(10).ToString("MMM"))</th>
+                        <th colspan="1" style="font-weight: bold; text-align: center">@(@Model.Filter.ProjectionDateTime.Value.AddMonths(11).ToString("MMM"))</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Projection1.Count; i++)
+                    {
+                        <tr>
+                            <td data-sales-count="@Model.Projection1[i].Columns.Values.Where(x => x.ColumnType == RedHill.SalesInsight.DAL.DataTypes.SIPlantTargetColumnType.SalesStaff).Count()">
+                                <a class="expansion_btn" data-mode="collapsed" data-row-id="@(Model.Projection1[i].Columns["Plants"].PlantID)"><span class="glyphicon glyphicon-plus"></span></a>
+                            </td>
+                            <td>@(Model.Projection1[i].Columns["Plants"].Value)</td>
+                            <td>@Model.Projection1[i].Columns["Budget"].Value</td>
+                            <td>@Model.Projection2[i].Columns["Budget"].Value</td>
+                            <td>@Model.Projection3[i].Columns["Budget"].Value</td>
+                            <td>@Model.Projection4[i].Columns["Budget"].Value</td>
+                            <td>@Model.Projection5[i].Columns["Budget"].Value</td>
+                            <td>@Model.Projection6[i].Columns["Budget"].Value</td>
+                            <td>@Model.Projection7[i].Columns["Budget"].Value</td>
+                            <td>@Model.Projection8[i].Columns["Budget"].Value</td>
+                            <td>@Model.Projection9[i].Columns["Budget"].Value</td>
+                            <td>@Model.Projection10[i].Columns["Budget"].Value</td>
+                            <td>@Model.Projection11[i].Columns["Budget"].Value</td>
+                            <td>@Model.Projection12[i].Columns["Budget"].Value</td>
+                        </tr>
+                        foreach (RedHill.SalesInsight.DAL.DataTypes.SIPlantTargetColumn col in Model.Projection1[i].Columns.Values.Where(x => x.ColumnType == RedHill.SalesInsight.DAL.DataTypes.SIPlantTargetColumnType.SalesStaff))
+                        {
+                        <tr class="SalesStaffRow"  data-row-parent="@col.PlantID" style="display:none">
+                            <td></td>
+                            <td>@col.Tag</td>
+                            <td class="data_box data_SalesStaff" data-type="SalesStaff" 
+                                data-id-1="@(Model.Projection1[i].Columns[col.Tag].PlantID)" 
+                                data-id-2="@(Model.Projection1[i].Columns[col.Tag].BudgetDate.ToString("MM-dd-yyyy"))" 
+                                data-id-3="@(Model.Projection1[i].Columns[col.Tag].SalesStaffID)" 
+                                data-id-4="@(Model.Projection1[i].Columns[col.Tag].MarketSegmentID)" 
+                                data-id-5="@(Model.Projection1[i].Columns[col.Tag].PlantBudgetMarketSegmentID)" 
+                                data-id-6="@(Model.Projection1[i].Columns[col.Tag].PlantBudgetSalesStaffID)">
+                                <div class="input-group"> 
+                                    @Html.TextBox("edit_box", Model.Projection1[i].Columns[col.Tag].Value, new { @class = "box form-control input-sm" })
+                                    <span class="input-group-addon">%</span>  
+                                </div>
+                            </td>
+                            <td class="data_box data_SalesStaff" data-type="SalesStaff" 
+                                data-id-1="@(Model.Projection2[i].Columns[col.Tag].PlantID)" 
+                                data-id-2="@(Model.Projection2[i].Columns[col.Tag].BudgetDate.ToString("MM-dd-yyyy"))" 
+                                data-id-3="@(Model.Projection2[i].Columns[col.Tag].SalesStaffID)" 
+                                data-id-4="@(Model.Projection2[i].Columns[col.Tag].MarketSegmentID)" 
+                                data-id-5="@(Model.Projection2[i].Columns[col.Tag].PlantBudgetMarketSegmentID)" 
+                                data-id-6="@(Model.Projection2[i].Columns[col.Tag].PlantBudgetSalesStaffID)"
+                                data-id-7="@(Model.Projection2[i].Columns[col.Tag].PlantBudgetID)" >
+                                <div class="input-group"> 
+                                    @Html.TextBox("edit_box", Model.Projection2[i].Columns[col.Tag].Value, new { @class = "box form-control input-sm" })
+                                    <span class="input-group-addon">%</span>  
+                                </div>
+                            </td>
+                            <td class="data_box data_SalesStaff" data-type="SalesStaff" 
+                                data-id-1="@(Model.Projection3[i].Columns[col.Tag].PlantID)" 
+                                data-id-2="@(Model.Projection3[i].Columns[col.Tag].BudgetDate.ToString("MM-dd-yyyy"))" 
+                                data-id-3="@(Model.Projection3[i].Columns[col.Tag].SalesStaffID)" 
+                                data-id-4="@(Model.Projection3[i].Columns[col.Tag].MarketSegmentID)" 
+                                data-id-5="@(Model.Projection3[i].Columns[col.Tag].PlantBudgetMarketSegmentID)" 
+                                data-id-6="@(Model.Projection3[i].Columns[col.Tag].PlantBudgetSalesStaffID)"
+                                data-id-7="@(Model.Projection3[i].Columns[col.Tag].PlantBudgetID)" >
+                                <div class="input-group"> 
+                                    @Html.TextBox("edit_box", Model.Projection3[i].Columns[col.Tag].Value, new { @class = "box form-control input-sm" })
+                                    <span class="input-group-addon">%</span>  
+                                </div>
+                            </td>
+                            <td class="data_box data_SalesStaff" data-type="SalesStaff" 
+                                data-id-1="@(Model.Projection4[i].Columns[col.Tag].PlantID)" 
+                                data-id-2="@(Model.Projection4[i].Columns[col.Tag].BudgetDate.ToString("MM-dd-yyyy"))" 
+                                data-id-3="@(Model.Projection4[i].Columns[col.Tag].SalesStaffID)" 
+                                data-id-4="@(Model.Projection4[i].Columns[col.Tag].MarketSegmentID)" 
+                                data-id-5="@(Model.Projection4[i].Columns[col.Tag].PlantBudgetMarketSegmentID)" 
+                                data-id-6="@(Model.Projection4[i].Columns[col.Tag].PlantBudgetSalesStaffID)">
+                                <div class="input-group"> 
+                                    @Html.TextBox("edit_box", Model.Projection4[i].Columns[col.Tag].Value, new { @class = "box form-control input-sm" })
+                                    <span class="input-group-addon">%</span>  
+                                </div>
+                            </td>
+                            <td class="data_box data_SalesStaff" data-type="SalesStaff" 
+                                data-id-1="@(Model.Projection5[i].Columns[col.Tag].PlantID)" 
+                                data-id-2="@(Model.Projection5[i].Columns[col.Tag].BudgetDate.ToString("MM-dd-yyyy"))" 
+                                data-id-3="@(Model.Projection5[i].Columns[col.Tag].SalesStaffID)" 
+                                data-id-4="@(Model.Projection5[i].Columns[col.Tag].MarketSegmentID)" 
+                                data-id-5="@(Model.Projection5[i].Columns[col.Tag].PlantBudgetMarketSegmentID)" 
+                                data-id-6="@(Model.Projection5[i].Columns[col.Tag].PlantBudgetSalesStaffID)"
+                                data-id-7="@(Model.Projection5[i].Columns[col.Tag].PlantBudgetID)" >
+                                <div class="input-group"> 
+                                    @Html.TextBox("edit_box", Model.Projection5[i].Columns[col.Tag].Value, new { @class = "box form-control input-sm" })
+                                    <span class="input-group-addon">%</span>  
+                                </div>
+                            </td>
+                            <td class="data_box data_SalesStaff" data-type="SalesStaff" 
+                                data-id-1="@(Model.Projection6[i].Columns[col.Tag].PlantID)" 
+                                data-id-2="@(Model.Projection6[i].Columns[col.Tag].BudgetDate.ToString("MM-dd-yyyy"))" 
+                                data-id-3="@(Model.Projection6[i].Columns[col.Tag].SalesStaffID)" 
+                                data-id-4="@(Model.Projection6[i].Columns[col.Tag].MarketSegmentID)" 
+                                data-id-5="@(Model.Projection6[i].Columns[col.Tag].PlantBudgetMarketSegmentID)" 
+                                data-id-6="@(Model.Projection6[i].Columns[col.Tag].PlantBudgetSalesStaffID)"
+                                data-id-7="@(Model.Projection6[i].Columns[col.Tag].PlantBudgetID)" >
+                                <div class="input-group"> 
+                                    @Html.TextBox("edit_box", Model.Projection6[i].Columns[col.Tag].Value, new { @class = "box form-control input-sm" })
+                                    <span class="input-group-addon">%</span>  
+                                </div>
+                            </td>
+                            <td class="data_box data_SalesStaff" data-type="SalesStaff" 
+                                data-id-1="@(Model.Projection7[i].Columns[col.Tag].PlantID)" 
+                                data-id-2="@(Model.Projection7[i].Columns[col.Tag].BudgetDate.ToString("MM-dd-yyyy"))" 
+                                data-id-3="@(Model.Projection7[i].Columns[col.Tag].SalesStaffID)" 
+                                data-id-4="@(Model.Projection7[i].Columns[col.Tag].MarketSegmentID)" 
+                                data-id-5="@(Model.Projection7[i].Columns[col.Tag].PlantBudgetMarketSegmentID)" 
+                                data-id-6="@(Model.Projection7[i].Columns[col.Tag].PlantBudgetSalesStaffID)">
+                                <div class="input-group"> 
+                                    @Html.TextBox("edit_box", Model.Projection7[i].Columns[col.Tag].Value, new { @class = "box form-control input-sm" })
+                                    <span class="input-group-addon">%</span>  
+                                </div>
+                            </td>
+                            <td class="data_box data_SalesStaff" data-type="SalesStaff" 
+                                data-id-1="@(Model.Projection8[i].Columns[col.Tag].PlantID)" 
+                                data-id-2="@(Model.Projection8[i].Columns[col.Tag].BudgetDate.ToString("MM-dd-yyyy"))" 
+                                data-id-3="@(Model.Projection8[i].Columns[col.Tag].SalesStaffID)" 
+                                data-id-4="@(Model.Projection8[i].Columns[col.Tag].MarketSegmentID)" 
+                                data-id-5="@(Model.Projection8[i].Columns[col.Tag].PlantBudgetMarketSegmentID)" 
+                                data-id-6="@(Model.Projection8[i].Columns[col.Tag].PlantBudgetSalesStaffID)"
+                                data-id-7="@(Model.Projection8[i].Columns[col.Tag].PlantBudgetID)" >
+                                <div class="input-group"> 
+                                    @Html.TextBox("edit_box", Model.Projection8[i].Columns[col.Tag].Value, new { @class = "box form-control input-sm" })
+                                    <span class="input-group-addon">%</span>  
+                                </div>
+                            </td>
+                            <td class="data_box data_SalesStaff" data-type="SalesStaff" 
+                                data-id-1="@(Model.Projection9[i].Columns[col.Tag].PlantID)" 
+                                data-id-2="@(Model.Projection9[i].Columns[col.Tag].BudgetDate.ToString("MM-dd-yyyy"))" 
+                                data-id-3="@(Model.Projection9[i].Columns[col.Tag].SalesStaffID)" 
+                                data-id-4="@(Model.Projection9[i].Columns[col.Tag].MarketSegmentID)" 
+                                data-id-5="@(Model.Projection9[i].Columns[col.Tag].PlantBudgetMarketSegmentID)" 
+                                data-id-6="@(Model.Projection9[i].Columns[col.Tag].PlantBudgetSalesStaffID)"
+                                data-id-7="@(Model.Projection9[i].Columns[col.Tag].PlantBudgetID)" >
+                                <div class="input-group"> 
+                                    @Html.TextBox("edit_box", Model.Projection9[i].Columns[col.Tag].Value, new { @class = "box form-control input-sm" })
+                                    <span class="input-group-addon">%</span>  
+                                </div>
+                            </td>
+                            <td class="data_box data_SalesStaff" data-type="SalesStaff" 
+                                data-id-1="@(Model.Projection10[i].Columns[col.Tag].PlantID)" 
+                                data-id-2="@(Model.Projection10[i].Columns[col.Tag].BudgetDate.ToString("MM-dd-yyyy"))" 
+                                data-id-3="@(Model.Projection10[i].Columns[col.Tag].SalesStaffID)" 
+                                data-id-4="@(Model.Projection10[i].Columns[col.Tag].MarketSegmentID)" 
+                                data-id-5="@(Model.Projection10[i].Columns[col.Tag].PlantBudgetMarketSegmentID)" 
+                                data-id-6="@(Model.Projection10[i].Columns[col.Tag].PlantBudgetSalesStaffID)">
+                                <div class="input-group"> 
+                                    @Html.TextBox("edit_box", Model.Projection10[i].Columns[col.Tag].Value, new { @class = "box form-control input-sm" })
+                                    <span class="input-group-addon">%</span>  
+                                </div>
+                            </td>
+                            <td class="data_box data_SalesStaff" data-type="SalesStaff" 
+                                data-id-1="@(Model.Projection11[i].Columns[col.Tag].PlantID)" 
+                                data-id-2="@(Model.Projection11[i].Columns[col.Tag].BudgetDate.ToString("MM-dd-yyyy"))" 
+                                data-id-3="@(Model.Projection11[i].Columns[col.Tag].SalesStaffID)" 
+                                data-id-4="@(Model.Projection11[i].Columns[col.Tag].MarketSegmentID)" 
+                                data-id-5="@(Model.Projection11[i].Columns[col.Tag].PlantBudgetMarketSegmentID)" 
+                                data-id-6="@(Model.Projection11[i].Columns[col.Tag].PlantBudgetSalesStaffID)"
+                                data-id-7="@(Model.Projection11[i].Columns[col.Tag].PlantBudgetID)" >
+                                <div class="input-group"> 
+                                    @Html.TextBox("edit_box", Model.Projection11[i].Columns[col.Tag].Value, new { @class = "box form-control input-sm" })
+                                    <span class="input-group-addon">%</span>  
+                                </div>
+                            </td>
+                            <td class="data_box data_SalesStaff" data-type="SalesStaff" 
+                                data-id-1="@(Model.Projection12[i].Columns[col.Tag].PlantID)" 
+                                data-id-2="@(Model.Projection12[i].Columns[col.Tag].BudgetDate.ToString("MM-dd-yyyy"))" 
+                                data-id-3="@(Model.Projection12[i].Columns[col.Tag].SalesStaffID)" 
+                                data-id-4="@(Model.Projection12[i].Columns[col.Tag].MarketSegmentID)" 
+                                data-id-5="@(Model.Projection12[i].Columns[col.Tag].PlantBudgetMarketSegmentID)" 
+                                data-id-6="@(Model.Projection12[i].Columns[col.Tag].PlantBudgetSalesStaffID)"
+                                data-id-7="@(Model.Projection12[i].Columns[col.Tag].PlantBudgetID)" >
+                                <div class="input-group"> 
+                                    @Html.TextBox("edit_box", Model.Projection12[i].Columns[col.Tag].Value, new { @class = "box form-control input-sm" })
+                                    <span class="input-group-addon">%</span>  
+                                </div>
+                            </td>
+                        </tr>
+                        }
+                        foreach (RedHill.SalesInsight.DAL.DataTypes.SIPlantTargetColumn col in Model.Projection1[i].Columns.Values.Where(x => x.ColumnType == RedHill.SalesInsight.DAL.DataTypes.SIPlantTargetColumnType.MarketSegment))
+                        {
+                        <tr class="MarketSegmentRow" style="display:none" data-row-parent="@col.PlantID">
+                            <td></td>
+                            <td>@col.Tag</td>
+                            <td class="data_box data_MarketSegment" data-type="MarketSegment" 
+                                data-id-1="@(Model.Projection1[i].Columns[col.Tag].PlantID)" 
+                                data-id-2="@(Model.Projection1[i].Columns[col.Tag].BudgetDate.ToString("MM-dd-yyyy"))" 
+                                data-id-3="@(Model.Projection1[i].Columns[col.Tag].SalesStaffID)" 
+                                data-id-4="@(Model.Projection1[i].Columns[col.Tag].MarketSegmentID)" 
+                                data-id-5="@(Model.Projection1[i].Columns[col.Tag].PlantBudgetMarketSegmentID)" 
+                                data-id-6="@(Model.Projection1[i].Columns[col.Tag].PlantBudgetSalesStaffID)">
+                                <div class="input-group"> 
+                                    @Html.TextBox("edit_box", Model.Projection1[i].Columns[col.Tag].Value, new { @class = "box form-control input-sm" })
+                                    <span class="input-group-addon">%</span>  
+                                </div>
+                            </td>
+                            <td class="data_box data_MarketSegment" data-type="MarketSegment" 
+                                data-id-1="@(Model.Projection2[i].Columns[col.Tag].PlantID)" 
+                                data-id-2="@(Model.Projection2[i].Columns[col.Tag].BudgetDate.ToString("MM-dd-yyyy"))" 
+                                data-id-3="@(Model.Projection2[i].Columns[col.Tag].SalesStaffID)" 
+                                data-id-4="@(Model.Projection2[i].Columns[col.Tag].MarketSegmentID)" 
+                                data-id-5="@(Model.Projection2[i].Columns[col.Tag].PlantBudgetMarketSegmentID)" 
+                                data-id-6="@(Model.Projection2[i].Columns[col.Tag].PlantBudgetSalesStaffID)"
+                                data-id-7="@(Model.Projection2[i].Columns[col.Tag].PlantBudgetID)" >
+                                <div class="input-group"> 
+                                    @Html.TextBox("edit_box", Model.Projection2[i].Columns[col.Tag].Value, new { @class = "box form-control input-sm" })
+                                    <span class="input-group-addon">%</span>  
+                                </div>
+                            </td>
+                            <td class="data_box data_MarketSegment" data-type="MarketSegment" 
+                                data-id-1="@(Model.Projection3[i].Columns[col.Tag].PlantID)" 
+                                data-id-2="@(Model.Projection3[i].Columns[col.Tag].BudgetDate.ToString("MM-dd-yyyy"))" 
+                                data-id-3="@(Model.Projection3[i].Columns[col.Tag].SalesStaffID)" 
+                                data-id-4="@(Model.Projection3[i].Columns[col.Tag].MarketSegmentID)" 
+                                data-id-5="@(Model.Projection3[i].Columns[col.Tag].PlantBudgetMarketSegmentID)" 
+                                data-id-6="@(Model.Projection3[i].Columns[col.Tag].PlantBudgetSalesStaffID)"
+                                data-id-7="@(Model.Projection3[i].Columns[col.Tag].PlantBudgetID)" >
+                                <div class="input-group"> 
+                                    @Html.TextBox("edit_box", Model.Projection3[i].Columns[col.Tag].Value, new { @class = "box form-control input-sm" })
+                                    <span class="input-group-addon">%</span>  
+                                </div>
+                            </td>
+                            <td class="data_box data_MarketSegment" data-type="MarketSegment" 
+                                data-id-1="@(Model.Projection4[i].Columns[col.Tag].PlantID)" 
+                                data-id-2="@(Model.Projection4[i].Columns[col.Tag].BudgetDate.ToString("MM-dd-yyyy"))" 
+                                data-id-3="@(Model.Projection4[i].Columns[col.Tag].SalesStaffID)" 
+                                data-id-4="@(Model.Projection4[i].Columns[col.Tag].MarketSegmentID)" 
+                                data-id-5="@(Model.Projection4[i].Columns[col.Tag].PlantBudgetMarketSegmentID)" 
+                                data-id-6="@(Model.Projection4[i].Columns[col.Tag].PlantBudgetSalesStaffID)">
+                                <div class="input-group"> 
+                                    @Html.TextBox("edit_box", Model.Projection4[i].Columns[col.Tag].Value, new { @class = "box form-control input-sm" })
+                                    <span class="input-group-addon">%</span>  
+                                </div>
+                            </td>
+                            <td class="data_box data_MarketSegment" data-type="MarketSegment" 
+                                data-id-1="@(Model.Projection5[i].Columns[col.Tag].PlantID)" 
+                                data-id-2="@(Model.Projection5[i].Columns[col.Tag].BudgetDate.ToString("MM-dd-yyyy"))" 
+                                data-id-3="@(Model.Projection5[i].Columns[col.Tag].SalesStaffID)" 
+                                data-id-4="@(Model.Projection5[i].Columns[col.Tag].MarketSegmentID)" 
+                                data-id-5="@(Model.Projection5[i].Columns[col.Tag].PlantBudgetMarketSegmentID)" 
+                                data-id-6="@(Model.Projection5[i].Columns[col.Tag].PlantBudgetSalesStaffID)"
+                                data-id-7="@(Model.Projection5[i].Columns[col.Tag].PlantBudgetID)" >
+                                <div class="input-group"> 
+                                    @Html.TextBox("edit_box", Model.Projection5[i].Columns[col.Tag].Value, new { @class = "box form-control input-sm" })
+                                    <span class="input-group-addon">%</span>  
+                                </div>
+                            </td>
+                            <td class="data_box data_MarketSegment" data-type="MarketSegment" 
+                                data-id-1="@(Model.Projection6[i].Columns[col.Tag].PlantID)" 
+                                data-id-2="@(Model.Projection6[i].Columns[col.Tag].BudgetDate.ToString("MM-dd-yyyy"))" 
+                                data-id-3="@(Model.Projection6[i].Columns[col.Tag].SalesStaffID)" 
+                                data-id-4="@(Model.Projection6[i].Columns[col.Tag].MarketSegmentID)" 
+                                data-id-5="@(Model.Projection6[i].Columns[col.Tag].PlantBudgetMarketSegmentID)" 
+                                data-id-6="@(Model.Projection6[i].Columns[col.Tag].PlantBudgetSalesStaffID)"
+                                data-id-7="@(Model.Projection6[i].Columns[col.Tag].PlantBudgetID)" >
+                                <div class="input-group"> 
+                                    @Html.TextBox("edit_box", Model.Projection6[i].Columns[col.Tag].Value, new { @class = "box form-control input-sm" })
+                                    <span class="input-group-addon">%</span>  
+                                </div>
+                            </td>
+                            <td class="data_box data_MarketSegment" data-type="MarketSegment" 
+                                data-id-1="@(Model.Projection7[i].Columns[col.Tag].PlantID)" 
+                                data-id-2="@(Model.Projection7[i].Columns[col.Tag].BudgetDate.ToString("MM-dd-yyyy"))" 
+                                data-id-3="@(Model.Projection7[i].Columns[col.Tag].SalesStaffID)" 
+                                data-id-4="@(Model.Projection7[i].Columns[col.Tag].MarketSegmentID)" 
+                                data-id-5="@(Model.Projection7[i].Columns[col.Tag].PlantBudgetMarketSegmentID)" 
+                                data-id-6="@(Model.Projection7[i].Columns[col.Tag].PlantBudgetSalesStaffID)">
+                                <div class="input-group"> 
+                                    @Html.TextBox("edit_box", Model.Projection7[i].Columns[col.Tag].Value, new { @class = "box form-control input-sm" })
+                                    <span class="input-group-addon">%</span>  
+                                </div>
+                            </td>
+                            <td class="data_box data_MarketSegment" data-type="MarketSegment" 
+                                data-id-1="@(Model.Projection8[i].Columns[col.Tag].PlantID)" 
+                                data-id-2="@(Model.Projection8[i].Columns[col.Tag].BudgetDate.ToString("MM-dd-yyyy"))" 
+                                data-id-3="@(Model.Projection8[i].Columns[col.Tag].SalesStaffID)" 
+                                data-id-4="@(Model.Projection8[i].Columns[col.Tag].MarketSegmentID)" 
+                                data-id-5="@(Model.Projection8[i].Columns[col.Tag].PlantBudgetMarketSegmentID)" 
+                                data-id-6="@(Model.Projection8[i].Columns[col.Tag].PlantBudgetSalesStaffID)"
+                                data-id-7="@(Model.Projection8[i].Columns[col.Tag].PlantBudgetID)" >
+                                <div class="input-group"> 
+                                    @Html.TextBox("edit_box", Model.Projection8[i].Columns[col.Tag].Value, new { @class = "box form-control input-sm" })
+                                    <span class="input-group-addon">%</span>  
+                                </div>
+                            </td>
+                            <td class="data_box data_MarketSegment" data-type="MarketSegment" 
+                                data-id-1="@(Model.Projection9[i].Columns[col.Tag].PlantID)" 
+                                data-id-2="@(Model.Projection9[i].Columns[col.Tag].BudgetDate.ToString("MM-dd-yyyy"))" 
+                                data-id-3="@(Model.Projection9[i].Columns[col.Tag].SalesStaffID)" 
+                                data-id-4="@(Model.Projection9[i].Columns[col.Tag].MarketSegmentID)" 
+                                data-id-5="@(Model.Projection9[i].Columns[col.Tag].PlantBudgetMarketSegmentID)" 
+                                data-id-6="@(Model.Projection9[i].Columns[col.Tag].PlantBudgetSalesStaffID)"
+                                data-id-7="@(Model.Projection9[i].Columns[col.Tag].PlantBudgetID)" >
+                                <div class="input-group"> 
+                                    @Html.TextBox("edit_box", Model.Projection9[i].Columns[col.Tag].Value, new { @class = "box form-control input-sm" })
+                                    <span class="input-group-addon">%</span>  
+                                </div>   
+                            </td>
+                            <td class="data_box data_MarketSegment" data-type="MarketSegment" 
+                                data-id-1="@(Model.Projection10[i].Columns[col.Tag].PlantID)" 
+                                data-id-2="@(Model.Projection10[i].Columns[col.Tag].BudgetDate.ToString("MM-dd-yyyy"))" 
+                                data-id-3="@(Model.Projection10[i].Columns[col.Tag].SalesStaffID)" 
+                                data-id-4="@(Model.Projection10[i].Columns[col.Tag].MarketSegmentID)" 
+                                data-id-5="@(Model.Projection10[i].Columns[col.Tag].PlantBudgetMarketSegmentID)" 
+                                data-id-6="@(Model.Projection10[i].Columns[col.Tag].PlantBudgetSalesStaffID)">
+                                <div class="input-group"> 
+                                    @Html.TextBox("edit_box", Model.Projection10[i].Columns[col.Tag].Value, new { @class = "box form-control input-sm" })
+                                    <span class="input-group-addon">%</span>  
+                                </div>
+                            </td>
+                            <td class="data_box data_MarketSegment" data-type="MarketSegment" 
+                                data-id-1="@(Model.Projection11[i].Columns[col.Tag].PlantID)" 
+                                data-id-2="@(Model.Projection11[i].Columns[col.Tag].BudgetDate.ToString("MM-dd-yyyy"))" 
+                                data-id-3="@(Model.Projection11[i].Columns[col.Tag].SalesStaffID)" 
+                                data-id-4="@(Model.Projection11[i].Columns[col.Tag].MarketSegmentID)" 
+                                data-id-5="@(Model.Projection11[i].Columns[col.Tag].PlantBudgetMarketSegmentID)" 
+                                data-id-6="@(Model.Projection11[i].Columns[col.Tag].PlantBudgetSalesStaffID)"
+                                data-id-7="@(Model.Projection11[i].Columns[col.Tag].PlantBudgetID)" >
+                                <div class="input-group"> 
+                                    @Html.TextBox("edit_box", Model.Projection11[i].Columns[col.Tag].Value, new { @class = "box form-control input-sm" })
+                                    <span class="input-group-addon">%</span>  
+                                </div>
+                            </td>
+                            <td class="data_box data_MarketSegment" data-type="MarketSegment" 
+                                data-id-1="@(Model.Projection12[i].Columns[col.Tag].PlantID)" 
+                                data-id-2="@(Model.Projection12[i].Columns[col.Tag].BudgetDate.ToString("MM-dd-yyyy"))" 
+                                data-id-3="@(Model.Projection12[i].Columns[col.Tag].SalesStaffID)" 
+                                data-id-4="@(Model.Projection12[i].Columns[col.Tag].MarketSegmentID)" 
+                                data-id-5="@(Model.Projection12[i].Columns[col.Tag].PlantBudgetMarketSegmentID)" 
+                                data-id-6="@(Model.Projection12[i].Columns[col.Tag].PlantBudgetSalesStaffID)"
+                                data-id-7="@(Model.Projection12[i].Columns[col.Tag].PlantBudgetID)" >
+                                <div class="input-group"> 
+                                    @Html.TextBox("edit_box", Model.Projection12[i].Columns[col.Tag].Value, new { @class = "box form-control input-sm" })
+                                    <span class="input-group-addon">%</span>  
+                                </div>
+                            </td>
+                        </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var targetAccess = '@(ViewBag.AccessRule.HasTargetsAccess == SIRolePermissionLevelConstants.FULL_ACCESS)';
+            if (targetAccess == 'False') {
+                $(":input[type=text]").attr("disabled", true);
+            }
+
+            var expansion_mode = "SalesStaff";
+            var current_expanded = null;
+            $('#Filter_ProjectionMonth').datepicker({
+                format: "M, yyyy",
+                viewMode: "months",
+                minViewMode: "months"
+            }).on("changeDate", function (e) {
+                $("#filter-form").submit();
+                $(this).datepicker('hide');
+            });
+
+            show_hide_expansion_btn();
+
+            function show_hide_expansion_btn() {
+                if (expansion_mode == "SalesStaff") {
+                    $("td[data-sales-count='0']").find(".expansion_btn").hide();
+                } else {
+                    $(".expansion_btn").show();
+                }
+            }
+
+            $(".expansion_btn").click(function () {
+                row_id = $(this).data("row-id");
+                selector = "tr." + expansion_mode + "Row[data-row-parent = " + row_id + "]";
+                console.log($(this).data("mode"));
+                if ($(this).attr("data-mode") == "expanded") {
+                    $(this).attr("data-mode", "collapsed");
+                    $(selector).hide();
+                    $(this).find("span").removeClass("glyphicon-minus").addClass("glyphicon-plus");
+                } else {
+                    $(this).attr("data-mode", "expanded");
+                    $(selector).show();
+                    $(this).find("span").removeClass("glyphicon-plus").addClass("glyphicon-minus");
+                }
+            });
+
+
+            $('input.box').keyup(function (e) {
+                console.log(e.which);
+                if (e.which == 39)
+                    $(this).closest('td').next().find('input').focus();
+                else if (e.which == 37)
+                    $(this).closest('td').prev().find('input').focus();
+                else if (e.which == 40)
+                    $(this).closest('tr').nextAll("tr:visible").first().find('td:eq(' + $(this).closest('td').index() + ')').find('input').focus();
+                else if (e.which == 38)
+                    $(this).closest('tr').prevAll("tr:visible").first().find('td:eq(' + $(this).closest('td').index() + ')').find('input').focus();
+            });
+
+
+            @if (ViewBag.AccessRule.HasTargetsAccess == SIRolePermissionLevelConstants.FULL_ACCESS || ViewBag.AccessRule.HasTargetsAccess == SIRolePermissionLevelConstants.EDIT_ONLY)
+            {
+                <text>
+
+            $(".box").blur(function () {
+                element = $(this);
+                var div = element.parents(".data_box");
+                currentVal = element.val();
+                currentVal = currentVal.replace("%", "");
+                operationType = div.attr("data-type");
+                plantId = div.attr("data-id-1");
+                budgetDate = div.attr("data-id-2");
+                salesStaff = div.attr("data-id-3");
+                marketingSegment = div.attr("data-id-4");
+                pbSalesStaff = div.attr("data-id-5");
+                pbMarketingSegment = div.attr("data-id-6");
+                plantBudgetId = div.attr("data-id-7");
+
+                postParams = { "PlantId": plantId, "BudgetDate": budgetDate, "SalesStaff": salesStaff, "MarketSegment": marketingSegment, "PlantBudgetMarketSegment": pbMarketingSegment, "PlantBudgetSalesStaff": pbSalesStaff, "PlantBudgetId": plantBudgetId, "OperationType": operationType, "Value": currentVal };
+                $.post("/Home/UpdateTarget", postParams, function (data) {
+                    element.val(currentVal);
+                });
+            });
+            </text>
+            }
+            else
+            {
+                 <text>
+            $(".ebox").attr("disabled", "disabled");
+                </text>
+            }
+
+            $(".show").click(function (e) {
+                element = $(this);
+                $(".show").removeClass("btn-primary");
+                $(".show").addClass("btn-default");
+                element.addClass("btn-primary");
+                element.removeClass("btn-default");
+                expansion_mode = element.val();
+                $("a[data-mode = 'expanded']").each(function (index, item) {
+                    row_id = $(this).data("row-id");
+                    selector = "tr[data-row-parent = " + row_id + "]";
+                    console.log(selector);
+                    $(selector).hide();
+                    selector = "tr." + expansion_mode + "Row[data-row-parent = " + row_id + "]";
+                    console.log(selector);
+                    $(selector).show();
+                });
+                show_hide_expansion_btn();
+                return false;
+            });
+
+        });
+    </script>
+    <style type="text/css">
+        input { text-align: right; }
+        .input-group { width: 80px; }
+    </style>
+}
+
+
+

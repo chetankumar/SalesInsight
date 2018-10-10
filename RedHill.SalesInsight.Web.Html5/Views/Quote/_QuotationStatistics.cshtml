@@ -1,0 +1,223 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.QuotationProfile
+@using RedHill.SalesInsight.Web.Html5.Helpers;
+@using RedHill.SalesInsight.Web.Html5.Models;
+@{
+    var company = ConfigurationHelper.Company;
+    var accessRule = ViewBag.AccessRule != null ? ViewBag.AccessRule : (new RoleAccessView());
+    var limitViolations = ViewBag.LimitViolations;
+}
+<div class="row">
+    <div class="col-md-6">
+    </div>
+    <div class="col-md-6">
+        <div class="violation-errors">
+            @if (limitViolations != null)
+            {
+                foreach (var violation in limitViolations)
+                {
+                    <div class="alert alert-warning">
+                        <i class="fa fa-exclamation-triangle"></i> @violation
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">Summary Statistics</div>
+            </div>
+            <table class="table-condensed">
+                <tbody>
+                    <tr>
+                        <td class="text-right">To Job</td>
+                        <td>@Model.ToJob min</td>
+                        <td class="text-right">Total Volume</td>
+                        <td class="quote_total_volume_box">@Model.TotalVolume.ToString("N0") @company.DeliveryQtyUomPlural</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">Wait on Job</td>
+                        <td>@Model.WaitOnJob min</td>
+                        <td class="text-right">Total Revenue</td>
+                        <td class="quote_total_revenue_box">
+                            @if (accessRule.HidePrice)
+                            {
+                                <span>NA</span>
+                            }
+                            else
+                            {
+                                <span>$</span>@Model.TotalRevenue.ToString("N2")
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">Unload</td>
+                        <td class="quote_total_unload_box">@Model.Unload min</td>
+                        <td class="text-right">Total Profit</td>
+                        <td class="quote_total_profit_box">
+                            @if (accessRule.HideProfit)
+                            {
+                                <span>NA</span>
+                            }
+                            else
+                            {
+                                <span>$</span>@Model.TotalProfit.ToString("N2")
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">Wash on Job</td>
+                        <td>@Model.Wash min</td>
+                        <td class="text-right">Avg Selling Price</td>
+                        <td class="quote_total_avg_selling_price_box">
+                            @if (accessRule.HidePrice)
+                            {
+                                <span>NA</span>
+                            }
+                            else
+                            {
+                                <span>$</span> @Model.AverageSellingPrice.ToString("N2") <span>/</span> @company.DeliveryQtyUomSingular
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">Return</td>
+                        <td>@Model.Return min</td>
+                        <td class="text-right">Avg Load</td>
+                        <td class="quote_total_avg_load_box">@Model.AverageLoad.ToString("N2") @company.DeliveryQtyUomPlural</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">Critical Performance Metrics</div>
+            </div>
+            <table class="table-condensed">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Quote</th>
+                        <th>Target</th>
+                        <th>Variance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-right">Spread</td>
+                        <td class="quote_spread_box" data-district="@Model.DistrictSpread">
+                            @if (accessRule.HideSpread)
+                            {
+                                <span>NA</span>
+                            }
+                            else
+                            {
+                                <span>$</span>@Model.QuoteSpread.ToString("N2")
+                            }
+                        </td>
+                        <td>
+                            @if (accessRule.HideSpread)
+                            {
+                                <span>NA</span>
+                            }
+                            else
+                            {
+                                <span>$</span>@Model.DistrictSpread.ToString("N2")
+                            }
+                        </td>
+                        @if (accessRule.HideSpread)
+                        {
+                            <td class="quote_spread_variance">
+                                <span>NA</span>
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="quote_spread_variance @(Model.VarianceSpread >= 0 ? "green" : "red")">
+                                $@Model.VarianceSpread.ToString("N2")
+                            </td>
+                        }
+                    </tr>
+                    <tr>
+                        <td class="text-right">Contribution</td>
+                        <td class="quote_contribution_box" data-district="@Model.DistrictContribution">
+                            @if (accessRule.HideContribution)
+                            {
+                                <span>NA</span>
+                            }
+                            else
+                            {
+                                <span>$</span>@Model.QuoteContribution.ToString("N2")
+                            }
+                        </td>
+                        <td>
+                            @if (accessRule.HideContribution)
+                            {
+                                <span>NA</span>
+                            }
+                            else
+                            {
+                                <span>$</span>@Model.DistrictContribution.ToString("N2")
+                            }
+                        </td>
+                        @if (accessRule.HideContribution)
+                        {
+                            <td class="quote_contribution_variance">
+                                <span>NA</span>
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="quote_contribution_variance @(Model.VarianceContribution >= 0 ? "green" : "red")">
+                                $@Model.VarianceContribution.ToString("N2")
+                            </td>
+                        }
+                    </tr>
+                    <tr>
+                        <td class="text-right">Profit</td>
+                        <td class="quote_profit_box" data-district="@Model.DistrictProfit">
+                            @if (accessRule.HideProfit)
+                            {
+                                <span>NA</span>
+                            }
+                            else
+                            {
+                                <span>$</span>@Model.QuoteProfit.ToString("N2")
+                            }
+                        </td>
+                        <td>
+                            @if (accessRule.HideProfit)
+                            {
+                                <span>NA</span>
+                            }
+                            else
+                            {
+                                <span>$</span>@Model.DistrictProfit.ToString("N2")
+                            }
+                        </td>
+                        @if (accessRule.HideProfit)
+                        {
+                            <td class="quote_profit_variance">
+                                <span>NA</span>
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="quote_profit_variance @(Model.VarianceProfit >= 0 ? "green" : "red")">$@Model.VarianceProfit.ToString("N2")</td>
+                        }
+                    </tr>
+                    <tr>
+                        <td class="text-right">@company.DeliveryQtyUomSingular/Hr</td>
+                        <td class="quote_cyd_hour_box" data-district="@Model.DistrictCydHr">@Model.QuoteCydHr.ToString("N2")</td>
+                        <td>@Model.DistrictCydHr.ToString("N2")</td>
+                        <td class="quote_cyd_hour_variance @(Model.VarianceCydHr >= 0 ? "green" : "red")">@Model.VarianceCydHr.ToString("N2")</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

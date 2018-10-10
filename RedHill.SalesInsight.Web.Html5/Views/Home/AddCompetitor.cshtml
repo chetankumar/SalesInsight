@@ -1,0 +1,105 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.CompetitorView
+@{
+    ViewBag.Title = (Model.CompetitorId == 0 ? "New" : Model.Name);
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="page-head">
+    <h2>
+        @if (Model.CompetitorId > 0)
+        {
+            <span>Edit Competitor</span>
+        }
+        else
+        {
+            <span>Add Competitor</span>
+        }
+    </h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Home/Settings">Settings</a></li>
+        <li><a href="/Home/Companies">Manage Company Settings</a></li>
+        <li><a href="/Home/Companies/competitors">Competitors</a></li>
+        <li class="active">@(Model.CompetitorId == 0 ? "New" : Model.Name)</li>
+    </ol>
+</div>
+<div class="cl-mcont">
+    <div class="block-flat">
+        @using (Html.BeginForm("UpdateCompetitor", "Home", FormMethod.Post, new { @class = "form-horizontal" }))
+        {
+            @Html.ValidationSummary(true)
+            <div>
+                @Html.HiddenFor(model => model.CompetitorId, new { @class = "form-control" })
+                @Html.HiddenFor(model => model.CompanyId, new { @class = "form-control" })
+                <div class="form-group">
+                    <div class="control-label col-md-2">
+                        @Html.LabelFor(model => model.Name)
+                    </div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Name, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="control-label col-md-2">
+                        <label>Reporting District</label>
+                    </div>
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.District.DistrictId, Model.AvailableDistricts, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Active, string.Empty, new { @class = "help-inline" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Active</label>
+                    <div class="col-sm-10">
+                        <div class="checkbox">
+                            <label class="form-control-static">
+                                @Html.CheckBoxFor(model => model.Active)
+                                @Html.ValidationMessageFor(model => model.Active, string.Empty, new { @class = "help-inline" })
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">
+                        @Html.LabelFor(model => model.Districts)
+                    </div>
+                    <div class="col-sm-10">
+                        @Html.CheckBoxListFor(model => model.Districts, model => model.AllDistricts, d => d.DistrictId, d => d.Name, d => d.IsSelected, Position.Vertical)
+                        <label class="field_error">@Html.ValidationMessageFor(model => model.Districts)</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-10 col-sm-offset-2">
+                        <input type="submit" value="@(Model.CompetitorId > 0 ? "Update" : "Create")" class="btn btn-primary" />
+                        @if (Model.CompetitorId > 0)
+                        {
+                            <a href="/Home/AddCompetitorPlant/@Model.CompetitorId" class="btn btn-primary not-disable" >Manage Plants</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+
+    <script>
+        $(document).ready(function () {
+            var competitorAccess = '@(ViewBag.AccessRule.HasCompetitorsAccess == SIRolePermissionLevelConstants.FULL_ACCESS)';
+            if (competitorAccess == 'False')
+            { disableEveryThing(".not-disable"); }
+        });
+        $.validator.setDefaults({
+            highlight: function (element) {
+                $(element).closest(".control-group").addClass("error");
+            },
+            unhighlight: function (element) {
+                $(element).closest(".control-group").removeClass("error");
+            }
+        });
+    </script>
+}
+
+
+

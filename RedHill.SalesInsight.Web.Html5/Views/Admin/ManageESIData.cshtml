@@ -1,0 +1,117 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.MiscView
+
+@{
+    ViewBag.Title = "Miscellaneous";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    bool aujsAPIEnabled = (ViewBag.AUJSAPIEnabled != null && ViewBag.AUJSAPIEnabled == true);
+}
+
+<div class="page-head">
+    <h2>Manage Sales Infrastructure</h2>
+    <ol class="breadcrumb">
+        <li><a href="/Home/Index">Home</a></li>
+        <li><a href="/Home/Settings">Settings</a></li>
+        <li><a href="/Home/Companies">Manage Sales Infrastructure</a></li>
+        <li class="active">ESI Data</li>
+    </ol>
+</div>
+
+<div class="cl-mcont">
+    @Html.Partial("_CompanyTabs", "esi")
+
+    <div class="tab-content">
+        @using (Html.BeginForm("UploadTickets", "Admin", FormMethod.Post, new { @enctype = "multipart/form-data", @class = "form-inline ticketUpload" }))
+        {
+            <div class="panel-body">
+                <h2>Upload Tickets</h2>
+                <p class="spacer2"></p>
+                <fieldset class="col-md-6 form form-horizontal">
+                    <legend>Upload data (Excel file only)</legend>
+
+
+                    <div class="form-group">
+                        <input type="file" name="ExcelFile" class="form-control" accept=".xlsx, .xls, .csv" />
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                        <span id="ticketFile" style="display: none;" class="field_error"></span>
+                    </div>
+                </fieldset>
+            </div>
+        }
+        @using (Html.BeginForm("UploadDriverLogins", "Admin", FormMethod.Post, new { @enctype = "multipart/form-data", @class = "form-inline" }))
+        {
+            <div class="panel-body">
+                <h2>Upload driver details and Logins</h2>
+                <p class="spacer2"></p>
+                <fieldset class="col-md-6 form form-horizontal">
+                    <legend>Upload data (Excel file only)</legend>
+
+
+                    <div class="form-group">
+                        <input type="file" name="ExcelFile" class="form-control" accept=".xlsx, .xls, .csv" />
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                        <span id="driverFile" style="display: none;" class="field_error"></span>
+                    </div>
+                </fieldset>
+
+                @*<fieldset class="col-md-6 form form-horizontal">
+                    <div class="form-group pull-right">
+                        <button type="button" class="btn btn-primary mongoUploader">Upload To Mongo</button>
+                    </div>
+                </fieldset>*@
+            </div>
+        }
+        
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $(".mongoUploader").click(function () {
+            if ($(this).find("i.fa-spinner").length == 0)
+                $(this).prepend($("<i/>").addClass("fa fa-spinner"));
+
+            $(this).find("i.fa-spinner").addClass("fa-spin");
+            $.ajax({
+                url: '/Admin/UploadToDatabase',
+                method: 'POST',
+                success: function (data) {
+                    alert(data.status);
+                    $(this).find("i").remove();
+                    if (data.status) {
+                        alert("Data uploaded to mongo.");
+                    }
+                    else {
+                        alert("Upload Failed!");
+                    }
+                },
+                error: function (res) {
+                    alert("Upload Failed!");
+                    $(this).find("i").remove();
+                },
+                
+            });
+        });
+
+        $("form").submit(function () {
+            $("#ticketFile").hide();
+            $("#driverFile").hide();
+            var form = $(this).hasClass("ticketUpload");
+            if (form) {
+                if ($(this).find("input[type=file]").val() == "") {
+                    $(this).find("#ticketFile").show().text("Please choose the Excel File");
+                    return false;
+                }
+                else { $(this).find("#ticketFile").hide(); }
+            }
+            else {
+                if ($(this).find("input[type=file]").val() == "") {
+                    $(this).find("#driverFile").show().text("Please choose the Excel File");
+                    return false;
+                }
+                else { $(this).find("#driverFile").hide(); }
+            }
+
+        });
+    });
+
+</script>

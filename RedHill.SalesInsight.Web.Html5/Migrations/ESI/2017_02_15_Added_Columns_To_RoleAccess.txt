@@ -1,0 +1,14 @@
+﻿ ----------------- 2017-02-14 --- New Column in company setting to control visibility for new Roles settings ---- Avnish 
+Alter TABLE [dbo].[CompanySettings] 
+Add [ESIModules] [bit] NULL;
+GO
+----------------- 2017-02-14 --- New Column in ROLE ACCESS table ---- Avnish 
+Alter TABLE [dbo].[RoleAccess] 
+Add [DashboardAccess] [varchar](50) NOT NULL DEFAULT ('FULL_CONTROL'),
+	[GoalAnalysisAccess] [varchar](50) NOT NULL DEFAULT ('FULL_CONTROL'),
+	[BenchmarkAnalysisAccess] [varchar](50) NOT NULL DEFAULT ('FULL_CONTROL'),
+	[TrendAnalysisAccess] [varchar](50) NOT NULL DEFAULT ('FULL_CONTROL'),
+	[DrillInAccess] [varchar](50) NOT NULL DEFAULT ('FULL_CONTROL'),
+	[AlertsManagementAccess] [varchar](50) NOT NULL DEFAULT ('FULL_CONTROL'),
+	[CustomWebDataFormAccess] [varchar](50) NOT NULL DEFAULT ('FULL_CONTROL');
+GO

@@ -1,0 +1,23 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+@section styles {
+    <link href="~/Content/esi/spectrum.css" rel="stylesheet" />
+    <link href="~/Content/esi/color-picker.css" rel="stylesheet" />
+    <link href="~/Content/esi/jquery.gridly.css" rel="stylesheet" />
+    <link href="~/Content/esi/esi-basic.css" rel="stylesheet" />
+    <link href="~/Content/esi/jquery.gridly.css" rel="stylesheet" />
+}
+
+@section scripts{
+    <script src="~/Scripts/js/gridly/jquery.gridly.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/js/spectrum/spectrum.js"></script>
+    <script src="~/Scripts/js/colorpicker/color-picker.js"></script>
+    <script src="~/Scripts/js/graph-charts/graphCharts.js"></script>
+    <script src="~/Scripts/js/graph-charts/graphExporting.js"></script>
+}
+<div>
+    @RenderBody()
+</div>

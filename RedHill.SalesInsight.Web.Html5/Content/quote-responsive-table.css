@@ -1,0 +1,22 @@
+﻿@media screen and (max-width: 200px)    {.qt-1    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 280px)    {.qt-2    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 300px)    {.qt-3    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 360px)    {.qt-4    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 414px)    {.qt-5    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 490px)    {.qt-6    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 580px)    {.qt-7    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 660px)    {.qt-8    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 700px)    {.qt-9    {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 750px)    {.qt-10   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 800px)    {.qt-11   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 850px)    {.qt-12   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 900px)    {.qt-13   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 950px)    {.qt-14   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 1000px)    {.qt-15   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 1050px)    {.qt-16   {display:none!important;visibility:hidden!important}}
+@media screen and (max-width: 1100px)    {.qt-17   {display:none!important;visibility:hidden!important}}
+
+.optional_column {
+    display:none;
+    visibility:hidden;
+}

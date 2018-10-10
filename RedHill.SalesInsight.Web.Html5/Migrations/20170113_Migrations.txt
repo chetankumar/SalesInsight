@@ -1,0 +1,36 @@
+﻿------------ 13 Jan 17 11:34 - Column Added In RoleAccess Table -------- Avnish
+Alter TABLE [dbo].[RoleAccess] 
+Add [AddonsAccess] [varchar](50) NOT NULL Default('FULL_CONTROL'),
+	[CompetitorsAccess] [varchar](50) NOT NULL Default('FULL_CONTROL'),
+	[CustomersAccess] [varchar](50) NOT NULL Default('FULL_CONTROL'),
+	[GCAccess] [varchar](50) NOT NULL Default('FULL_CONTROL'),
+	[MarketSegmentsAccess] [varchar](50) NOT NULL Default('FULL_CONTROL'),
+	[MiscellaneousAccess] [varchar](50) NOT NULL Default('FULL_CONTROL'),
+	[MixDesignsAccess] [varchar](50) NOT NULL Default('FULL_CONTROL'),
+	[QuotationAccess] [varchar](50) NOT NULL Default('FULL_CONTROL'),
+	[RawMaterialsAccess] [varchar](50) NOT NULL Default('FULL_CONTROL'),
+	[ReportSettingsAccess] [varchar](50) NOT NULL Default('FULL_CONTROL'),
+	[SackPricingAccess] [varchar](50) NOT NULL Default('FULL_CONTROL'),
+	[SalesStaffAccess] [varchar](50) NOT NULL Default('FULL_CONTROL'),
+	[StatusesReasonsLostAccess] [varchar](50) NOT NULL Default('FULL_CONTROL'),
+	[StructureAccess] [varchar](50) NOT NULL Default('FULL_CONTROL'),
+	[EnableUploadAddonPricesCosts] [bit] NULL,
+	[EnableUploadMixesFormulations] [bit] NULL,
+	[EnableUploadRawMaterialCost] [bit] NULL;
+GO
+
+----------- 13 Jan 17 11:34 - Column Added In RoleAccess Table ----------- Avnish
+DELETE FROM aspnet_Roles
+WHERE RoleName='DashboardOnly'
+GO
+
+------------ NOTE !!! The below query should only be executed when the code pushing is completed------- 13 Jan 17 11:34 AM-   Droping off a column from roleAccess ----------- Avnish
+ALTER TABLE RoleAccess DROP COLUMN CompanyAccess;
+GO
+
+----------- NOTE !!! The below query should only be executed when the code pushing is completed- 14 jan 17 11:35 PM - Changing Role Name from Adminstrator to System Admin---Avnish
+UPDATE RoleAccess SET RoleName ='System Admin' where RoleName = 'Administrator' 
+GO
+UPDATE aspnet_Roles SET RoleName ='System Admin',LoweredRoleName = 'system admin' where RoleName = 'Administrator' 
+GO
+

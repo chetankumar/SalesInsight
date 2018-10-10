@@ -1,0 +1,22 @@
+﻿@model RedHill.SalesInsight.Web.Html5.Models.ProjectSalesStaffView
+
+<div>
+    @using (Html.BeginForm("AddSalesStaff", "Home", FormMethod.Post))
+    {
+        @Html.ValidationSummary(false)
+        <div class="form-inline">
+            @Html.HiddenFor(m => m.ProjectId)
+            @Html.HiddenFor(m => m.ProjectSalesStaffId)
+            @Html.DropDownListFor(m => m.SalesStaffId, Model.AvailableSalesStaff, new { @class = "form-control" })
+            <button type="submit" class="btn btn-primary">
+                <i class="fa fa-floppy-o"></i>
+                @(Model.ProjectSalesStaffId > 0 ? "Update" : "Add")
+            </button>
+        </div>
+    }
+</div>
+
+
+
+
+

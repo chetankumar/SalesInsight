@@ -1067,7 +1067,7 @@ namespace RedHill.SalesInsight.Web.Html5.Controllers
             ESIDataManager manager = new ESIDataManager();
             try
             {
-                manager.ProcessEsiCache(Convert.ToInt32(ConfigurationManager.AppSettings["ProcessEsiCacheYear"]));
+                //manager.ProcessEsiCache(Convert.ToInt32(ConfigurationManager.AppSettings["ProcessEsiCacheYear"]));
                 manager.UpdateMongoByEsiCacheNew();
                 manager.UpdateMongoByDailyPlantSummary();
                 for (int i = 1; i <= 12; i++)

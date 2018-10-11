@@ -196,18 +196,21 @@ namespace RedHill.SalesInsight.DAL
             }
         }
 
-        public static void CleanTicketData(int year)
+        public static void CleanTicketData(int year, int month)
         {
             using (var context = GetContext())
             {
                 var drivers = context.TicketDetails.Select(x => x.DriverNumber).Distinct().ToList();
                 if (drivers != null && drivers.Count > 0)
                 {
+                    Console.WriteLine("No of Drivers : " + drivers.Count);
                     foreach (var driverNumber in drivers)
                     {
-                        var unScrubbedTickets = context.TicketDetails.Where(x => x.DriverNumber == driverNumber && x.IsScrubbed == false && x.TicketDate.Value.Year == year).OrderBy(x => x.DriverNumber).ThenBy(x => x.TimeTicketed);
+                        var unScrubbedTickets = context.TicketDetails.Where(x => x.DriverNumber == driverNumber && x.IsScrubbed == false && x.TicketDate.Value.Year == year && x.TicketDate.Value.Month == month).OrderBy(x => x.DriverNumber).ThenBy(x => x.TimeTicketed);
                         if (unScrubbedTickets != null && unScrubbedTickets.Any())
                         {
+                            Console.WriteLine("No of Tickets: " + unScrubbedTickets.Count());
+
                             foreach (var ticket in unScrubbedTickets)
                             {
                                 #region Clean Date Values
@@ -261,7 +264,7 @@ namespace RedHill.SalesInsight.DAL
             }
         }
 
-        public static void CleanDriverLoginTimes(int year)
+        public static void CleanDriverLoginTimes(int year, int month)
         {
             using (var context = GetContext())
             {
@@ -269,7 +272,7 @@ namespace RedHill.SalesInsight.DAL
                 while (continueNext)
                 {
                     var plants = context.Plants.ToList();
-                    var unScrubbedDriverLogins = context.DriverLoginTimes.Where(x => x.IsProcessed == false && x.LoginDate.Year == year).OrderBy(x => x.DriverNumber).ThenBy(x => x.LoginDate).Take(1000);
+                    var unScrubbedDriverLogins = context.DriverLoginTimes.Where(x => x.IsProcessed == false && x.LoginDate.Year == year && x.LoginDate.Month == month).OrderBy(x => x.DriverNumber).ThenBy(x => x.LoginDate).Take(1000);
                     if (unScrubbedDriverLogins != null && unScrubbedDriverLogins.Any())
                     {
                         foreach (var driverLogin in unScrubbedDriverLogins)

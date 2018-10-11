@@ -59,19 +59,43 @@ namespace RedHill.SalesInsight.ExcelUploader
             //        manager.UploadPlantDayStats(i, 2016);
             //    }
             //}
-            ESIDataManager manager = new ESIDataManager();
-                manager.ProcessEsiCache(Convert.ToInt32(ConfigurationManager.AppSettings["ProcessEsiCacheYear"]));
+            try
+            {
+
+
+                ESIDataManager manager = new ESIDataManager();
+                //Console.WriteLine("ProcessEsiCachce for " + Convert.ToInt32(ConfigurationManager.AppSettings["ProcessEsiCacheYear1"]));
+                //manager.ProcessEsiCache(Convert.ToInt32(ConfigurationManager.AppSettings["ProcessEsiCacheYear1"]));
+
+                //Console.WriteLine("ProcessEsiCachce for " + Convert.ToInt32(ConfigurationManager.AppSettings["ProcessEsiCacheYear2"]));
+                //manager.ProcessEsiCache(Convert.ToInt32(ConfigurationManager.AppSettings["ProcessEsiCacheYear2"]));
+
+                //Console.WriteLine("ProcessEsiCachce for " + Convert.ToInt32(ConfigurationManager.AppSettings["ProcessEsiCacheYear3"]));
+                //manager.ProcessEsiCache(Convert.ToInt32(ConfigurationManager.AppSettings["ProcessEsiCacheYear3"]));
+
                 manager.UpdateMongoByEsiCacheNew();
                 manager.UpdateMongoByDailyPlantSummary();
                 for (int i = 1; i <= 12; i++)
                 {
-                    //Console.WriteLine("UploadPlantDayStats 2014");
-                    manager.UploadPlantDayStats(i, 2015);
-                    //Console.WriteLine("UploadPlantDayStats 2015"); //Step 5 :  Same as step 1 
-                    manager.UploadPlantDayStats(i, 2016);
-                    //Console.WriteLine("UploadPlantDayStats 2016");
+                    Console.WriteLine("UploadPlantDayStats 2017 running loop no :" + i);
                     manager.UploadPlantDayStats(i, 2017);
+                    Console.WriteLine("UploadPlantDayStats 2018 running loop no :" + i);
+                    manager.UploadPlantDayStats(i, 2018);
+                    Console.WriteLine("UploadPlantDayStats 2019 running loop no :" + i);
+                    manager.UploadPlantDayStats(i, 2019);
                 }
+
+                Console.WriteLine("Congratulation!!Upload to mongo completed successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Exception occured:" + ex);
+            }
+            finally
+            {
+                Console.ReadLine();
+            }
         }
 
     }

@@ -75,7 +75,7 @@ namespace RedHill.SalesInsight.ESI
             collection.ReplaceOne<PlantDayStats>(x => x.Id == document.Id, document, new UpdateOptions { IsUpsert = true });
         }
 
-        public void ProcessEsiCache(int year)
+        public void ProcessEsiCache(int year, int month)
         {
             //Console.WriteLine("ProcessEsiCache");
             //Console.WriteLine("CleanTicketData");
@@ -90,8 +90,8 @@ namespace RedHill.SalesInsight.ESI
             //Console.WriteLine("ProcessOrphanTickets");
             //SIDAL.ProcessOrphanTickets();
 
-            SIDAL.CleanTicketData(year);
-            SIDAL.CleanDriverLoginTimes(year);
+            SIDAL.CleanTicketData(year, month);
+            SIDAL.CleanDriverLoginTimes(year, month);
             SIDAL.ProcessOrphanTickets();
         }
 
@@ -101,7 +101,7 @@ namespace RedHill.SalesInsight.ESI
             DateTime endDate = startDate.AddMonths(1);
             DateTime tmpDate = startDate;
             var totalDistribution = SIDAL.GetTotalWorkDays(startDate.AddDays(-1), endDate.AddDays(-1)); // The method excludes the first day, and includes the end date, so we need to decrease the end date by 1
-            
+
             while (tmpDate < endDate)
             {
                 Console.WriteLine($"UploadPlantDayStats YEAR: {year}, Month: {month}, Date : {tmpDate.ToShortDateString()}");
@@ -1003,9 +1003,9 @@ namespace RedHill.SalesInsight.ESI
                             break;
                         case ComparisionType.Range:
                             match.AddRange(new BsonDocument { { filter.PropertyName, new BsonDocument { { "$gte", filter.Value }, { "$lte", filter.Value2 } } } });
-                            break;                       
+                            break;
                     }
-              
+
                 }
             }
 
@@ -1015,7 +1015,7 @@ namespace RedHill.SalesInsight.ESI
             var aggregateOptions = new AggregateOptions { AllowDiskUse = true };//for sorting more than 100 MB
             var AggregateQuery = collection.Aggregate(aggregateOptions).Match(match);
 
-            for(int i= 0; i < query.Filters.Count; i++)
+            for (int i = 0; i < query.Filters.Count; i++)
             {
                 if (query.Filters[i].order != null)
                 {
@@ -1028,7 +1028,7 @@ namespace RedHill.SalesInsight.ESI
                         AggregateQuery = AggregateQuery.AppendStage<TicketStats>(new BsonDocument { { "$sort", new BsonDocument { { query.Filters[i].order[0].SortBy, -1 } } } }).Skip(query.Filters[i].SkipRecords).Limit(query.Filters[i].ItemsPerPage);
                     }
                 }
-                
+
             }
             count = collection.Count(match);
             LogQueryRequest($"GetRawData CollectionName: {query.CollectionName}, Query : {AggregateQuery.ToString()}");
@@ -1077,7 +1077,7 @@ namespace RedHill.SalesInsight.ESI
                             break;
 
                     }
-                    
+
                 }
             }
 
@@ -1126,11 +1126,11 @@ namespace RedHill.SalesInsight.ESI
 
             var database = GetDatabase();
             var collection = database.GetCollection<BsonDocument>(query.CollectionName);
-            
+
             var AggregateQuery = collection.Aggregate().Match(match).Group(group);
             string logMessage = $"ProcessMetricGroupRequest CollectionName: {query.CollectionName}, Group By: {query.ColumnProperty}, IsDateGroup: {query.IsDateGroup}, {(query.IsDateGroup ? $"Granularity: { query.Granularity.ToString()}, " : "")} Query : {AggregateQuery.ToString()}";
 
-           
+
 
             for (int i = 0; i < query.Filters.Count; i++)
             {
@@ -1151,7 +1151,7 @@ namespace RedHill.SalesInsight.ESI
                 }
                 if (query.Filters[i].order != null && query.Filters[i].ItemsPerPage > 0)
                 {
-                    if (query.Filters[i].order[0].IsDescending == "false" )
+                    if (query.Filters[i].order[0].IsDescending == "false")
                     {
                         AggregateQuery = AggregateQuery.AppendStage<BsonDocument>(new BsonDocument { { "$sort", new BsonDocument { { query.Filters[i].order[0].SortBy, 1 } } } }).Limit(filters[i].ItemsPerPage);
                     }
@@ -1200,7 +1200,7 @@ namespace RedHill.SalesInsight.ESI
                     }
                 }
             }
-            logMessage += $", :, { AggregateQuery.ToString()}" ;
+            logMessage += $", :, { AggregateQuery.ToString()}";
             LogQueryRequest(logMessage);
         }
 
